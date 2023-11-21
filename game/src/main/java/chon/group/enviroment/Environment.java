@@ -72,6 +72,7 @@ public class Environment {
     public final void setImage(String pathImage){
         this.image = new Image(getClass().getResource(pathImage).toExternalForm());
         this.drawBackground();
+        this.drawLifeIcon();
     }
 
     public Agent getProtagonist() {
@@ -107,13 +108,17 @@ public class Environment {
         gc.drawImage(this.image, this.positionX, this.positionY, this.width, this.height);
     }
 
+    public void drawLifeIcon() {
+        gc.drawImage(this.image, this.positionX, this.positionY, this.width, this.height);
+    }
+
     public void drawAgents(ArrayList<Agent> agents){
         for (Agent agent : agents){
             gc.drawImage(agent.getImage(), agent.getPositionX(), agent.getPositionY(), agent.getWidth(), agent.getHeight());
         }
         printStatusPanel(this.protagonist);
         printLifeEnergybar(this.protagonist);
-    }
+    }    
 
     public void clearRect(){
         gc.clearRect(0, 0, 1180, 780);
@@ -154,4 +159,14 @@ public class Environment {
 
         return true;
     }
+
+    public boolean checkCollision(Agent agent1, Agent agent2) {
+        return agent1.getPositionX() < agent2.getPositionX() + agent2.getWidth() &&
+               agent1.getPositionX() + agent1.getWidth() > agent2.getPositionX() &&
+               agent1.getPositionY() < agent2.getPositionY() + agent2.getHeight() &&
+               agent1.getPositionY() + agent1.getHeight() > agent2.getPositionY();
+    }
+    
+
+
 }

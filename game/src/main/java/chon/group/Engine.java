@@ -1,6 +1,7 @@
 package chon.group;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import chon.group.agent.Agent;
 import chon.group.enviroment.Environment;
@@ -28,10 +29,10 @@ public class Engine extends Application {
 
 			ArrayList<Agent> agents = new ArrayList<>();
 
-			Agent agentA = new Agent(920, 420, 110, 100, "/images/agent/Asteroid/asteroide1.png", false);
+			Agent agentA = new Agent(920, 420, 110, 100, "/images/agent/Asteroid/asteroide1.png", false, 0);
 			agents.add(agentA);
 
-			Agent agentB = new Agent(70, 410, 120, 100, "/images/agent/Spaceship/spaceship_andando1.png", true);
+			Agent agentB = new Agent(70, 410, 120, 100, "/images/agent/Spaceship/spaceship_andando1.png", true, 500000);
 			agents.add(agentB);
 
 			if (Agent.numberProtagonist == 1) {
@@ -50,7 +51,10 @@ public class Engine extends Application {
 				Environment atmosphere = new Environment(0, 0, 1180, 780, "/images/environment/background space.png",
 						agents, canvas.getGraphicsContext2D());
 
-				startAnimation(canvas, scene, atmosphere, agents);
+				Environment lifeIcon = new Environment(964, 638, 56, 47, "/images/agent/Spaceship/Life_icon.png",
+						agents, canvas.getGraphicsContext2D());
+
+				startAnimation(canvas, scene, atmosphere, lifeIcon, agents);
 
 				theStage.show();
 			} else {
@@ -67,7 +71,8 @@ public class Engine extends Application {
 		}
 	}
 
-	public void startAnimation(Canvas canvas, Scene scene, Environment atmosphere, ArrayList<Agent> agents) {
+	public void startAnimation(Canvas canvas, Scene scene, Environment atmosphere, Environment lifeIcon,
+			ArrayList<Agent> agents) {
 
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent e) {
@@ -92,33 +97,65 @@ public class Engine extends Application {
 			@Override
 			public void handle(long arg0) {
 				atmosphere.setGc(canvas.getGraphicsContext2D());
-				atmosphere.getAgents().get(0).move("LEFT");
+
+				if (agents.size() > 1)
+					atmosphere.getAgents().get(0).move("LEFT");
+
 				if (!input.isEmpty()) {
 					atmosphere.getProtagonist().move(input.get(0));
 					if (atmosphere.limitsApprove()) {
 						atmosphere.drawAgents(agents);
-
 					}
 				}
 				atmosphere.clearRect();
 				atmosphere.drawBackground();
+
 				if (atmosphere.limitsApprove()) {
 					atmosphere.drawAgents(agents);
+					for (int i = 0; i < 3; i++) {
+						lifeIcon.setPositionX(964 + (i * (lifeIcon.getWidth() + 10)));
+						lifeIcon.drawLifeIcon();
+					}
+				}
+
+				if (agents.size() > 1) {
+					Agent asteroid = atmosphere.getAgents().get(0); // O asteroide (primeiro agente da lista)
+					Agent spaceship = atmosphere.getAgents().get(1); // A espaçonave (segundo agente da lista)
+					// Verifica a colisão e inicia a animação de explosão
+					if (atmosphere.checkCollision(asteroid, spaceship)) {
+						System.out.println("Colisão detectada entre o asteroide e a espaçonave!");
+						asteroid.setAlive(false);
+						asteroid.startExplosion(); // Inicia a explosão do asteroide
+
+						spaceship.desacrease_life(1); // Reduz a vida em 1
+						System.out.println("A nave tem: " + spaceship.getLife() + " de vida");
+
+						if (spaceship.getLife() <= 0) {
+							spaceship.startExplosion(); // Inicia a explosão da nave ao chegar em 0 de vida
+							System.out.println("A nave foi destruída!");
+						}
+
+						// Atualiza a animação da explosão
+						asteroid.updateExplosion(); // Agora a explosão será controlada pelo tempo no método
+						// updateExplosion()
+					}
+
+				} else {
+					Agent spaceship = atmosphere.getAgents().get(0);
+				}
+
+				// Redesenha os agentes
+				for (Iterator<Agent> iterator = agents.iterator(); iterator.hasNext();) {
+					Agent agent = iterator.next();
+					if (!agent.isAlive()) {
+						iterator.remove();
+					}
 
 				}
 
+				atmosphere.drawAgents(agents);
 			}
 
-			/*
-			 * static WritableImage flip(Image image) {
-			 * ImageView iv = new ImageView(image);
-			 * iv.setScaleX(-1);
-			 * SnapshotParameters params = new SnapshotParameters();
-			 * params.setFill(Color.TRANSPARENT);
-			 * return iv.snapshot(params, null);
-			 * }
-			 */
 		}.start();
-
 	}
 }
