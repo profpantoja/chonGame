@@ -1,4 +1,5 @@
 package engine;
+
 import java.applet.Applet;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -112,7 +113,7 @@ public class Engine extends Applet implements ActionListener, KeyListener {
 		//	animator.start();
 		//}
 
-		//g.drawString("Posição de Y do Gost é " + (this.env.getGost().getP2() + this.env.getGost().getHeight()),
+		//g.drawString("Posiï¿½ï¿½o de Y do Gost ï¿½ " + (this.env.getGost().getP2() + this.env.getGost().getHeight()),
 		//		this.env.getGost().getP1() - this.env.getGost().getA_final_image(), this.env.getGost().getP2());
 		
 		//ArrayList bullets = this.env.getGost().bullets;

@@ -1,4 +1,8 @@
 module chon.group {
-    requires javafx.controls;
+    exports application;
+    requires transitive javafx.controls;
+    requires transitive javafx.graphics;
+    requires java.desktop;
     exports chon.group;
 }
+

@@ -10,9 +10,9 @@ public class Hero extends Character {
 	public Hero(int positionX, int positionY, int velocityX, int velocityY, int width, int height) {
 		super(positionX, positionY, velocityX, velocityY, width, height);
 		this.setImages(new ArrayList<Image>());
-		this.getImages().add(new Image("\\images\\hero\\heroRight001.png"));
-		this.getImages().add(new Image("\\images\\hero\\heroRight002.png"));
-		this.getImages().add(new Image("\\images\\hero\\heroRight003.png"));
+		this.getImages().add(new Image("file:images/hero/heroRight001.png"));
+		this.getImages().add(new Image("file:images/hero/heroRight002.png"));
+		this.getImages().add(new Image("file:images/hero/heroRight003.png"));
 
 		
 		ArrayList<Character> weapons = new ArrayList<>();
@@ -21,5 +21,3 @@ public class Hero extends Character {
 		this.setWeapons(weapons);
 	}
 }
-
-

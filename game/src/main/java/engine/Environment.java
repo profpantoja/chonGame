@@ -129,7 +129,8 @@ public class Environment {
 
 	public void load() {
 		try {
-			this.image = new Image("\\images\\environment3.jpg");
+			//this.image = new Image("file:images/environment3.jpg");
+			this.image = new Image(getClass().getResource("/images/environment3.jpg").toExternalForm());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

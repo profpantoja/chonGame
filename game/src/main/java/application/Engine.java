@@ -22,6 +22,10 @@ public class Engine extends Application {
 
 	private Environment environment = null;
 
+	public static void main(String[] args) {
+		launch(args);
+	}
+
 	@Override
 	public void start(Stage theStage) {
 		try {
@@ -34,8 +38,12 @@ public class Engine extends Application {
 			Canvas canvas = new Canvas(this.environment.getLargura(), this.environment.getAltura());
 
 			GraphicsContext gc = canvas.getGraphicsContext2D();
-			Image phase = new Image("\\images\\environment3.jpg");
-			gc.drawImage(phase, 0, 0, 1500, 3000);
+			//left as an example since I changed it.
+			//Image phase = new Image("\\images\\environment3.jpg");
+			
+				Image phase = new Image(getClass().getResource("/images/environment3.jpg").toExternalForm());
+				gc.drawImage(phase, 0, 0, 1500, 3000);
+
 
 			Character hero = new Hero(100, 100, 3, 3, 32, 48);
 			// Character hero = new BulletOne(100, 100, 6, 6, 32, 48);
@@ -159,10 +167,10 @@ public class Engine extends Application {
 						}
 					}
 
-					/*
-					 * int counter = 0; for (String keys : input) { if (keys == "SPACE") counter++;
-					 * } System.out.println("----------------------------->" + counter);
-					 */
+					
+					// int counter = 0; for (String keys : input) { if (keys == "SPACE") counter++;
+					// } System.out.println("----------------------------->" + counter);
+					 
 					if (input.contains("SPACE")) {
 						if (bullets.isEmpty())
 							bullets.add(hero.fire(gc));
@@ -194,14 +202,18 @@ public class Engine extends Application {
 
 				}
 			}.start();
-
+			
 			theStage.show();
 
+
+
+ 
 		} catch (
 
 		Exception e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	/*
@@ -222,7 +234,4 @@ public class Engine extends Application {
 	 * }
 	 */
 
-	public static void main(String[] args) {
-		launch(args);
-	}
 }
