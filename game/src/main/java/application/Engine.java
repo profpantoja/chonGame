@@ -38,12 +38,11 @@ public class Engine extends Application {
 			Canvas canvas = new Canvas(this.environment.getLargura(), this.environment.getAltura());
 
 			GraphicsContext gc = canvas.getGraphicsContext2D();
-			//left as an example since I changed it.
-			//Image phase = new Image("\\images\\environment3.jpg");
-			
-				Image phase = new Image(getClass().getResource("/images/environment3.jpg").toExternalForm());
-				gc.drawImage(phase, 0, 0, 1500, 3000);
+			// left as an example since I changed it.
+			// Image phase = new Image("\\images\\environment3.jpg");
 
+			Image phase = new Image(getClass().getResource("/images/environment3.jpg").toExternalForm());
+			gc.drawImage(phase, 0, 0, 1500, 3000);
 
 			Character hero = new Hero(100, 100, 3, 3, 32, 48);
 			// Character hero = new BulletOne(100, 100, 6, 6, 32, 48);
@@ -75,8 +74,9 @@ public class Engine extends Application {
 			scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 				public void handle(KeyEvent e) {
 					String code = e.getCode().toString();
+					System.out.println("CLIQUEI EM: " + code);
 					input.clear();
-					if (!input.contains(code))
+					//if (!input.contains(code))
 						input.add(code);
 				}
 			});
@@ -91,8 +91,9 @@ public class Engine extends Application {
 			new AnimationTimer() {
 
 				public void handle(long currentNanoTime) {
+						gc.clearRect(0, 0, 2000, 600);
 					// System.out.println("---> " + input.size());
-					gc.drawImage(phase, 0, 0, 2000, 600);
+						gc.drawImage(phase, 0, 0, 2000, 600);
 
 					if (input.size() >= 3)
 						input.clear();
@@ -116,19 +117,19 @@ public class Engine extends Application {
 					if (input.contains("DOWN"))
 						hero.falling(gc);
 					// hero.moveDown(gc);
-			
+
 					if (input.contains("UP")) {
 						if (!hero.isJumping()) {
 							hero.setJumping(true);
 							hero.jumping(gc);
-						} 
+						}
 						// hero.moveUp(gc);
 					}
 
 					if (hero.isJumping()) {
 						hero.falling(gc);
 					}
-					
+
 					if (input.isEmpty())
 						hero.stopped(gc);
 
@@ -167,10 +168,9 @@ public class Engine extends Application {
 						}
 					}
 
-					
 					// int counter = 0; for (String keys : input) { if (keys == "SPACE") counter++;
 					// } System.out.println("----------------------------->" + counter);
-					 
+
 					if (input.contains("SPACE")) {
 						if (bullets.isEmpty())
 							bullets.add(hero.fire(gc));
@@ -202,12 +202,9 @@ public class Engine extends Application {
 
 				}
 			}.start();
-			
+
 			theStage.show();
 
-
-
- 
 		} catch (
 
 		Exception e) {
