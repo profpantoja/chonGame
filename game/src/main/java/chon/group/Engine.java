@@ -40,15 +40,15 @@ public class Engine extends Application {
 			gc.drawImage(chonBot, 920, 440, 65, 90);
 			gc.drawImage(chonBota, 400, 390, 65, 90);
 
-			gc.fillRoundRect(770, 500, 30, 30, 0, 0);
-			gc.fillOval(650, 410, 20, 20);
+			//gc.fillRoundRect(770, 500, 30, 30, 0, 0);
+			//gc.fillOval(650, 410, 20, 20);
 
 			gc.setFill(Color.BLACK);
 			gc.setStroke(Color.BLACK);
 			gc.setLineWidth(2);
 			Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
 			gc.setFont(theFont);
-			gc.fillText("Hey, I'm ChonBota...", 365, 380);
+			//gc.fillText("Hey, I'm ChonBota...", 365, 380);
 
 			root.getChildren().add(canvas);
 			theStage.show();
