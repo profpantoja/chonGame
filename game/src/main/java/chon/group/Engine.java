@@ -1,11 +1,19 @@
 package chon.group;
 
+import java.util.ArrayList;
+
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -53,10 +61,62 @@ public class Engine extends Application {
 			root.getChildren().add(canvas);
 			theStage.show();
 
+			ArrayList<String> input = new ArrayList<String>();
+			scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+				public void handle(KeyEvent e) {
+					String code = e.getCode().toString();
+					input.clear();
+
+					System.out.println("Pressed: " + code);
+					input.add(code);
+				}
+			});
+
+			scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+				public void handle(KeyEvent e) {
+					String code = e.getCode().toString();
+					System.out.println("Released: " + code);
+					input.remove(code);
+				}
+			});
+
+			new AnimationTimer() {
+				int position = 200;
+
+				@Override
+				public void handle(long arg0) {
+					if (!input.isEmpty()) {
+						gc.clearRect(0, 0, 640, 480);
+						gc.drawImage(background, 0, 0, canvas.getWidth(), canvas.getHeight());
+						if (input.contains("RIGHT")) {
+							gc.drawImage(chonBota, position += 1, 200);
+						} else if (input.contains("LEFT")) {
+							var chonBotaFlipado = flip(chonBota);
+							gc.drawImage(chonBotaFlipado, position -= 1, 200);
+						} else if (input.contains("UP")) {
+							gc.drawImage(chonBota, position, position -= 1);
+						} else if (input.contains("DOWN")) {
+							gc.drawImage(chonBota, position, position += 1);
+						}
+						gc.fillText(input.get(0), 10, 10);
+					}
+				}
+
+			}.start();
+
+			theStage.show();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
 
+	static WritableImage flip(Image image) {
+		ImageView iv = new ImageView(image);
+		iv.setScaleX(-1);
+		SnapshotParameters params = new SnapshotParameters();
+		params.setFill(Color.TRANSPARENT);
+		return iv.snapshot(params, null);
 	}
 
 }
