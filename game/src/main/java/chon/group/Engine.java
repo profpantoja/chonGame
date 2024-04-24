@@ -48,15 +48,15 @@ public class Engine extends Application {
 			gc.drawImage(chonBot, 920, 440, 65, 90);
 			gc.drawImage(chonBota, 400, 390, 65, 90);
 
-			gc.fillRoundRect(770, 500, 30, 30, 0, 0);
-			gc.fillOval(650, 410, 20, 20);
+			// gc.fillRoundRect(770, 500, 30, 30, 0, 0);
+			// gc.fillOval(650, 410, 20, 20);
 
-			gc.setFill(Color.BLACK);
-			gc.setStroke(Color.BLACK);
-			gc.setLineWidth(2);
-			Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
-			gc.setFont(theFont);
-			gc.fillText("Hey, I'm ChonBota...", 365, 380);
+			// gc.setFill(Color.BLACK);
+			// gc.setStroke(Color.BLACK);
+			// gc.setLineWidth(2);
+			// Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
+			// gc.setFont(theFont);
+			// gc.fillText("Hey, I'm ChonBota...", 365, 380);
 
 			root.getChildren().add(canvas);
 			theStage.show();
@@ -81,25 +81,34 @@ public class Engine extends Application {
 			});
 
 			new AnimationTimer() {
-				int position = 200;
+				int positionX = 400;
+				int positionY = 390;
 
 				@Override
 				public void handle(long arg0) {
 					if (!input.isEmpty()) {
-						gc.clearRect(0, 0, 640, 480);
+						gc.clearRect(0, 0, 1280, 780);
 						gc.drawImage(background, 0, 0, canvas.getWidth(), canvas.getHeight());
 						if (input.contains("RIGHT")) {
-							gc.drawImage(chonBota, position += 1, 200);
+							gc.drawImage(chonBota, positionX += 1, positionY, 65, 90);
+							printStatusPanel(gc, positionX, positionY);
 						} else if (input.contains("LEFT")) {
-							var chonBotaFlipado = flip(chonBota);
-							gc.drawImage(chonBotaFlipado, position -= 1, 200);
+							gc.drawImage(chonBota, positionX -= 1, positionY, 65, 90);
+							printStatusPanel(gc, positionX, positionY);
+							//gc.drawImage(flip(chonBota), positionX -= 1, positionY, 65, 90);
 						} else if (input.contains("UP")) {
-							gc.drawImage(chonBota, position, position -= 1);
+							gc.drawImage(chonBota, positionX, positionY -= 1, 65, 90);
+							printStatusPanel(gc, positionX, positionY);
 						} else if (input.contains("DOWN")) {
-							gc.drawImage(chonBota, position, position += 1);
+							gc.drawImage(chonBota, positionX, positionY += 1, 65, 90);
+							printStatusPanel(gc, positionX, positionY);
+						} else {
+							gc.drawImage(chonBota, positionX, positionY, 65, 90);
+							printStatusPanel(gc, positionX, positionY);
 						}
 						gc.fillText(input.get(0), 10, 10);
 					}
+					gc.drawImage(chonBot, 920, 440, 65, 90);
 				}
 
 			}.start();
@@ -118,5 +127,15 @@ public class Engine extends Application {
 		params.setFill(Color.TRANSPARENT);
 		return iv.snapshot(params, null);
 	}
+
+	public static void printStatusPanel(GraphicsContext gc, int positionX, int positionY) {
+			gc.setFill(Color.BLACK);
+			gc.setStroke(Color.BLACK);
+			gc.setLineWidth(2);
+			Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
+			gc.setFont(theFont);
+			gc.fillText("Hey, I'm ChonBota...", positionX + 10, positionY -10);
+	}
+
 
 }
