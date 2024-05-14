@@ -1,4 +1,4 @@
-package com.hiro;
+package chon.group;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
