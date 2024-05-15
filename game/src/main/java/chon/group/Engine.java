@@ -3,6 +3,7 @@ package chon.group;
 import chon.group.agent.Agent;
 import chon.group.enviroment.Environment;
 import javafx.application.Application;
+import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
@@ -11,7 +12,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 public class Engine extends Application {
 
@@ -37,10 +37,10 @@ public class Engine extends Application {
 			Environment background = new Environment(0, 0, 1280, 780, "/images/environment/castle.png", canvas.getGraphicsContext2D());
 			background.drawBackground();
 
-			Agent chonBot = new Agent(920, 440, 90, 65, "/images/agents/chonBot.png", canvas.getGraphicsContext2D());
+			Agent chonBot = new Agent(920, 440, 90, 65, "/images/agent/chonBot.png", canvas.getGraphicsContext2D());
 			chonBot.draw();
 
-			Agent chonBota = new Agent(400, 390, 90, 65, "/images/agents/chonBota.png", canvas.getGraphicsContext2D());
+			Agent chonBota = new Agent(400, 390, 90, 65, "/images/agent/chonBota.png", canvas.getGraphicsContext2D());
 			chonBota.draw();
 
 			chonBota.startAnimation(canvas, scene, background, chonBot);
@@ -59,5 +59,5 @@ public class Engine extends Application {
 		params.setFill(Color.TRANSPARENT);
 		return iv.snapshot(params, null);
 	}
-    
+
 }
