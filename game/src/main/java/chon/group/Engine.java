@@ -1,15 +1,17 @@
 package chon.group;
 
+import chon.group.agent.Agent;
+import chon.group.enviroment.Environment;
 import javafx.application.Application;
-import javafx.stage.Stage;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
 
 public class Engine extends Application {
 
@@ -27,34 +29,35 @@ public class Engine extends Application {
 			theStage.setScene(scene);
 			Canvas canvas = new Canvas(1280, 780);
 
-			GraphicsContext gc = canvas.getGraphicsContext2D();
-
 			System.out.println("Working Directory = " + System.getProperty("user.dir"));
-			Image background = new Image(getClass().getResource("/images/environment/castle.png").toExternalForm());
-			Image chonBot = new Image(getClass().getResource("/images/agents/chonBot.png").toExternalForm());
-			Image chonBota = new Image(getClass().getResource("/images/agents/chonBota.png").toExternalForm());
-
-			gc.drawImage(background, 0, 0, 1280, 780);
-			gc.drawImage(chonBot, 920, 440, 65, 90);
-			gc.drawImage(chonBota, 400, 390, 65, 90);
-
-			gc.fillRoundRect(770, 500, 30, 30, 0, 0);
-			gc.fillOval(650, 410, 20, 20);
-
-			gc.setFill(Color.BLACK);
-			gc.setStroke(Color.BLACK);
-			gc.setLineWidth(2);
-			Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
-			gc.setFont(theFont);
-			gc.fillText("Hey, I'm ChonBota...", 365, 380);
 
 			root.getChildren().add(canvas);
+			theStage.show();
+
+			Environment background = new Environment(0, 0, 1280, 780, "/images/environment/castle.png", canvas.getGraphicsContext2D());
+			background.drawBackground();
+
+			Agent chonBot = new Agent(920, 440, 90, 65, "/images/agents/chonBot.png", canvas.getGraphicsContext2D());
+			chonBot.draw();
+
+			Agent chonBota = new Agent(400, 390, 90, 65, "/images/agents/chonBota.png", canvas.getGraphicsContext2D());
+			chonBota.draw();
+
+			chonBota.startAnimation(canvas, scene, background, chonBot);
+
 			theStage.show();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
+	static WritableImage flip(Image image) {
+		ImageView iv = new ImageView(image);
+		iv.setScaleX(-1);
+		SnapshotParameters params = new SnapshotParameters();
+		params.setFill(Color.TRANSPARENT);
+		return iv.snapshot(params, null);
+	}
+    
 }
