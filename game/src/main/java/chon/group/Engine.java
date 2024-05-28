@@ -91,7 +91,7 @@ public class Engine extends Application {
 				public void handle(long arg0) {
 					if (!input.isEmpty()) {
 						gc.clearRect(0, 0, 1280, 780);
-						//gc.drawImage(background, 0, 0, canvas.getWidth(), canvas.getHeight());
+						gc.drawImage(background, 0, 0, canvas.getWidth(), canvas.getHeight());
 						if (input.contains("RIGHT")) {
 							if (positionX < 1215) {
 								positionX += 1;
