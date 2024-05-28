@@ -61,6 +61,8 @@ public class Engine extends Application {
 			root.getChildren().add(canvas);
 			theStage.show();
 
+
+
 			ArrayList<String> input = new ArrayList<String>();
 			scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 				public void handle(KeyEvent e) {
@@ -80,6 +82,7 @@ public class Engine extends Application {
 				}
 			});
 
+			 
 			new AnimationTimer() {
 				int positionX = 400;
 				int positionY = 390;
@@ -88,7 +91,7 @@ public class Engine extends Application {
 				public void handle(long arg0) {
 					if (!input.isEmpty()) {
 						gc.clearRect(0, 0, 1280, 780);
-						gc.drawImage(background, 0, 0, canvas.getWidth(), canvas.getHeight());
+						//gc.drawImage(background, 0, 0, canvas.getWidth(), canvas.getHeight());
 						if (input.contains("RIGHT")) {
 							if (positionX < 1215) {
 								positionX += 1;
@@ -127,13 +130,13 @@ public class Engine extends Application {
 
 						} else {
 							gc.drawImage(chonBota, positionX, positionY, 65, 90);
-							printStatusPanel(gc, positionX, positionY);
+							//printStatusPanel(gc, positionX, positionY);
 						}
 
 						gc.drawImage(chonBota, positionX, positionY, 65, 90);
-						printStatusPanel(gc, positionX, positionY);
+						//printStatusPanel(gc, positionX, positionY);
 
-						gc.fillText(input.get(0), 10, 10);
+						//gc.fillText(input.get(0), 10, 10);
 					}
 					gc.drawImage(chonBot, 920, 440, 65, 90);
 				}
