@@ -90,30 +90,30 @@ public class Engine extends Application {
 						gc.clearRect(0, 0, 1280, 780);
 						gc.drawImage(background, 0, 0, canvas.getWidth(), canvas.getHeight());
 						if (input.contains("LEFT")) {
-							if (xImage - 1 > 0) {
+							if (xImage - 1 > 0)
 								xImage -= 1;
-							} else {
+							else
 								xImage = 0;
-							}
+
 						} else if (input.contains("RIGHT")) {
-							if ((xImage + wImageBot) + 1 < (wCanvas)) {
+							if ((xImage + wImageBot) + 1 < (wCanvas))
 								xImage += 1;
-							} else {
+							else
 								xImage = wCanvas - wImageBot;
-							}
+
 						} else if (input.contains("UP")) {
-							if (yImage - 1 > 0) {
+							if (yImage - 1 > 0)
 								yImage -= 1;
-							} else {
+							else
 								yImage = 0;
-							}
+
 						} else if (input.contains("DOWN")) {
-							if ((yImage + hImageBot) + 1 < hCanvas) {
+							if ((yImage + hImageBot) + 1 < hCanvas)
 								yImage += 1;
-							} else {
+							else
 								yImage = (hCanvas - hImageBot);
-							}
 						}
+
 						gc.drawImage(chonBota, xImage, yImage, wImageBot, hImageBot);
 						printStatusPanel(gc, xImage, yImage);
 					}
