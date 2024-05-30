@@ -42,7 +42,6 @@ public class Engine extends Application {
 			Image chonBota = new Image(getClass().getResource("/images/agents/chonBota.png").toExternalForm());
 			Image chonBot = new Image(getClass().getResource("/images/agents/chonBot.png").toExternalForm());
 
-
 			int wImageBot = 65;
 			int hImageBot = 90;
 			gc.drawImage(background, 0, 0, 1280, 780);
