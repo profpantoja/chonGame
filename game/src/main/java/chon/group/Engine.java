@@ -7,12 +7,9 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -42,14 +39,16 @@ public class Engine extends Application {
 
 			System.out.println("Working Directory = " + System.getProperty("user.dir"));
 			Image background = new Image(getClass().getResource("/images/environment/castle.png").toExternalForm());
-			Image chonBot = new Image(getClass().getResource("/images/agents/chonBot.png").toExternalForm());
 			Image chonBota = new Image(getClass().getResource("/images/agents/chonBota.png").toExternalForm());
+			Image chonBot = new Image(getClass().getResource("/images/agents/chonBot.png").toExternalForm());
+
 
 			int wImageBot = 65;
 			int hImageBot = 90;
 			gc.drawImage(background, 0, 0, 1280, 780);
-			gc.drawImage(chonBot, 920, 440, wImageBot, hImageBot);
 			gc.drawImage(chonBota, 400, 390, wImageBot, hImageBot);
+			gc.drawImage(chonBot, 920, 440, wImageBot, hImageBot);
+
 
 			gc.setFill(Color.BLACK);
 			gc.setStroke(Color.BLACK);
@@ -127,14 +126,6 @@ public class Engine extends Application {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	static WritableImage flip(Image image) {
-		ImageView iv = new ImageView(image);
-		iv.setScaleX(-1);
-		SnapshotParameters params = new SnapshotParameters();
-		params.setFill(Color.TRANSPARENT);
-		return iv.snapshot(params, null);
 	}
 
 	public static void printStatusPanel(GraphicsContext gc, int xImage, int yImage) {
