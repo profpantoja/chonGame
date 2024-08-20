@@ -24,6 +24,7 @@ public class App extends Application {
     public static void main(String[] args) {
         launch();
         System.out.println("MOdificado");
+        System.out.println("MOdificado");
         
     }
 
