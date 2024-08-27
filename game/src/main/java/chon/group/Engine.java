@@ -36,10 +36,10 @@ public class Engine extends Application {
 
 			ArrayList<Agent> agents = new ArrayList<Agent>();
 			
-			Agent agentA = new Agent(920, 440, 90, 65, "/images/agent/chonBot.png", true);
+			Agent agentA = new Agent(920, 440, 90, 65, "/images/agent/chonBot.png", false);
 			agents.add(agentA);
 			
-			Agent agentB = new Agent(400, 390, 90, 65, "/images/agent/chonBota.png", false);
+			Agent agentB = new Agent(400, 390, 90, 65, "/images/agent/chonBota.png", true);
 			agents.add(agentB);
 
 			if(Agent.qtdProtagonist == 1){
