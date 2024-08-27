@@ -86,19 +86,12 @@ public class Environment {
 
     public void setAgents(ArrayList<Agent> agents){
         this.agents = agents;
-
-        // Simplificacao para capturar o primeiro protagonista
         for (Agent agent : agents){
             if(agent.getIsProtagonist()){
                 this.protagonist = agent;
                 break;
             }
         }
-
-        // this.protagonist = agents.stream()
-        //                           .filter(Agent::getIsProtagonist)
-        //                           .findFirst()
-        //                           .orElseThrow(() -> new RuntimeException("No protagonist found"));
 
         this.drawAgents(agents);
     }
@@ -118,7 +111,6 @@ public class Environment {
     public void drawAgents(ArrayList<Agent> agents){
         for (Agent agent : agents){
             gc.drawImage(agent.getImage(), agent.getPositionX(), agent.getPositionY(), agent.getWidth(), agent.getHeight());
-            // printStatusPanel(agent);
         }
         printStatusPanel(this.protagonist);
     }
@@ -128,8 +120,6 @@ public class Environment {
     }
 
     public void printStatusPanel(Agent agent) {
-        //Caso ele esteja sendo controlado, a sua coordenada é exposta na tela 
-
         gc.setFill(Color.BLACK);
         gc.setStroke(Color.BLACK);
         gc.setLineWidth(2);
@@ -140,7 +130,6 @@ public class Environment {
         
 	}
 
-    // Futuramente essa classe deve receber um tipo Object q verificará tanto se personagens ou qlqr coisa estão dentro dos limites do ambiente
     public Boolean limitsApprove(){
 
         if(this.protagonist.getPositionX() == 0){

@@ -69,7 +69,7 @@ public class Agent {
         this.isProtagonist = isProtagonist;
     }
 
-    public void movimentar(ArrayList<String> input){
+    public void move(ArrayList<String> input){
 		if (input.contains("RIGHT")) {
 			setPositionX(positionX += 1);	
 		} else if (input.contains("LEFT")) {

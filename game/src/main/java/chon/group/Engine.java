@@ -31,9 +31,6 @@ public class Engine extends Application {
 	@Override
 	public void start(Stage theStage) {
 		try {
-
-			// ajuste no hoisting do código, para antes de qualquer coisa , saber se há a quantidade ideal de protagonistas.
-
 			ArrayList<Agent> agents = new ArrayList<Agent>();
 			
 			Agent agentA = new Agent(920, 440, 90, 65, "/images/agent/chonBot.png", false);
@@ -55,9 +52,9 @@ public class Engine extends Application {
 				root.getChildren().add(canvas);
 				theStage.show();
 				
-				Environment ambiente = new Environment(0, 0, 1280, 780, "/images/environment/castle.png", agents, canvas.getGraphicsContext2D());
+				Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/backgroundSpace.png", agents, canvas.getGraphicsContext2D());
 				
-				startAnimation(canvas, scene, ambiente, agents);
+				startAnimation(canvas, scene, environment, agents);
 	
 				theStage.show();
 			}else{
@@ -80,7 +77,7 @@ public class Engine extends Application {
 		return iv.snapshot(params, null);
 	}
 	
-	public void startAnimation(Canvas canvas, Scene scene, Environment ambiente, ArrayList<Agent> agents) {
+	public void startAnimation(Canvas canvas, Scene scene, Environment environment, ArrayList<Agent> agents) {
 
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent e) {
@@ -105,19 +102,13 @@ public class Engine extends Application {
 
 			@Override
 			public void handle(long arg0) {
-				ambiente.setGc(canvas.getGraphicsContext2D());
+				environment.setGc(canvas.getGraphicsContext2D());
 				if (!input.isEmpty()) {
-					ambiente.clearRect();
-					ambiente.drawBackground();
-					
-					//Pega o protagonista do ambiente e movimenta o mesmo, após isso, printa todos os agentes do ambiente.
-					
-					
-
-					ambiente.getProtagonist().movimentar(input);
-					if(ambiente.limitsApprove()){
-						ambiente.drawAgents(agents);				
-
+					environment.clearRect();
+					environment.drawBackground();
+					environment.getProtagonist().move(input);
+					if(environment.limitsApprove()){
+						environment.drawAgents(agents);
 					}
 				}
 			}
@@ -126,8 +117,3 @@ public class Engine extends Application {
 		
 	}
 }
-
-
-//NOTAS:
-
-//Reparei que ele fica um pouco negrito os status de cima quando começamos a andar com o personagem, talvez seja o caso dos eventos estarem sendo disparados duas vezes, por algum motivo...
