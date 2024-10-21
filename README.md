@@ -17,7 +17,8 @@ Teaching Units: <strong>Linguagens e Técnicas de Programação II</strong> e <s
 
 > Exemplo de criação de uma branch para resolução de uma lista de exercícios:
   ```
-  git checkout -b wip-exercicios-14-ao-20
+  git checkout -b wip-primeiro-último-nome-projeto
+  git checkout -b feature-primeiro-último_nome-feature-em-desenvolvimento
   ```
 
 - **Adicionar os arquivos**: após a implementação das funcionalidades, adicione os arquivos alterados para prepará-los para confirmação e envio a este repositório.
