@@ -66,7 +66,7 @@ public class Engine extends Application {
         }
 	}
 
-	public void startAnimation(Canvas canvas, Scene scene, Environment atmosphere, ArrayList<Agent> agents) {
+	public void startAnimation(Canvas canvas, Scene scene, @SuppressWarnings("exports") Environment atmosphere, @SuppressWarnings("exports") ArrayList<Agent> agents) {
 
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent e) {
