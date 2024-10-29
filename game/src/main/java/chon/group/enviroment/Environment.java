@@ -1,10 +1,8 @@
 package chon.group.enviroment;
 
-import chon.group.agent.Agent;
-
 import java.util.ArrayList;
 
-
+import chon.group.agent.Agent;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -115,11 +113,21 @@ public class Environment {
 
         }
         printStatusPanel(this.protagonist);
+        printLifeEnergybar(this.protagonist);
     }
 
     public void clearRect(){
         gc.clearRect(0, 0, 1180, 780);
     }
+
+    public void printLifeEnergybar(Agent agent) {
+        Image lifeBarImage = new Image
+        (getClass().getResource("/images/agent/Life_bar and energy_bar/barra de vida1.png").toExternalForm());
+        gc.drawImage(lifeBarImage, agent.getPositionX() + 10, agent.getPositionY() - 5);
+        Image energyBarImage = new Image
+        (getClass().getResource("/images/agent/Life_bar and energy_bar/barra de energia 1.png").toExternalForm());
+        gc.drawImage(energyBarImage, agent.getPositionX() + 10, agent.getPositionY() - -6);
+	}
 
     public void printStatusPanel(Agent agent) {
 
@@ -135,11 +143,11 @@ public class Environment {
 
     public Boolean limitsApprove(){
 
-        if(this.protagonist.getPositionX() == 0){
+        if(this.protagonist.getPositionX() <= 0){
             this.protagonist.setPositionX(1);
         }else if(this.width == (this.protagonist.getPositionX() + this.protagonist.getWidth())){
             this.protagonist.setPositionX(this.protagonist.getPositionX() - 1);
-        }else if(this.protagonist.getPositionY() == 0){
+        }else if(this.protagonist.getPositionY() <= 0){
             this.protagonist.setPositionY(1);
         }else if(this.height == (this.protagonist.getPositionY() + this.protagonist.getHeight())){
             this.protagonist.setPositionY(this.protagonist.getPositionY() - 1);
