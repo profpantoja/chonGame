@@ -122,10 +122,10 @@ public class Environment {
 
     public void printLifeEnergybar(Agent agent) {
         Image lifeBarImage = new Image
-        (getClass().getResource("/images/agent/Life_bar and energy_bar/barra de vida1.png").toExternalForm());
+        (getClass().getResource("/images/agent/Life_bar_and_energy_bar/barra de vida1.png").toExternalForm());
         gc.drawImage(lifeBarImage, agent.getPositionX() + 10, agent.getPositionY() - 5);
         Image energyBarImage = new Image
-        (getClass().getResource("/images/agent/Life_bar and energy_bar/barra de energia 1.png").toExternalForm());
+        (getClass().getResource("/images/agent/Life_bar_and_energy_bar/barra de energia 1.png").toExternalForm());
         gc.drawImage(energyBarImage, agent.getPositionX() + 10, agent.getPositionY() - -6);
 	}
 
