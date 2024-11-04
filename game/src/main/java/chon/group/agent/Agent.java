@@ -69,16 +69,19 @@ public class Agent {
 		return image;
 	}    
 
+    /*
+     * Adicionando movimentação via WASD
+    */
     public void move(ArrayList<String> input){
-		if (input.contains("RIGHT")) {
+		if (input.contains("RIGHT") || input.contains("D")) {
 			setPositionX(positionX += 1);	
-		} else if (input.contains("LEFT")) {
+		} else if (input.contains("LEFT") || input.contains("A")) {
 			setPositionX(positionX -= 1);
-		} else if (input.contains("UP")) {
+		} else if (input.contains("UP") || input.contains("W")) {
 			setPositionY(positionY -= 1);
-		} else if (input.contains("DOWN")) {
+		} else if (input.contains("DOWN") || input.contains("S")) {
 			setPositionY(positionY += 1);
-		}
+        }
 	}
 
     public boolean isProtagonist() {

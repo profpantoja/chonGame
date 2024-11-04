@@ -8,10 +8,12 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class Engine extends Application {
@@ -28,6 +30,8 @@ public class Engine extends Application {
 
 
 			ArrayList<Agent> agents = new ArrayList<>();
+
+			Rectangle2D screenBounds = Screen.getPrimary().getBounds();
 			
 			Agent agentA = new Agent(920, 420, 110, 100, "/images/agent/Asteroid/asteroide1.png", false);
 			agents.add(agentA);
@@ -38,19 +42,30 @@ public class Engine extends Application {
 			if(Agent.numberProtagonist == 1){
 
 				StackPane root = new StackPane();
-				Scene scene = new Scene(root, 1180, 780);
+
+				/*
+				 * Dimensionando o programa
+				*/
+				int width = (int) screenBounds.getWidth();
+				int height = (int) screenBounds.getHeight();
+				
+				theStage.setX(screenBounds.getMinX());
+				theStage.setY(screenBounds.getMinY());
+
+				theStage.setMaximized(true);
+				Scene scene = new Scene(root, width, height);
 				theStage.setTitle("Chon: The Learning Game");
 				theStage.setScene(scene);
-				Canvas canvas = new Canvas(1180, 780);
+				Canvas canvas = new Canvas(width, height);
 
 				System.out.println("Working Directory = " + System.getProperty("user.dir"));
 
 				root.getChildren().add(canvas);
 				theStage.show();
 				
-				Environment atmosphere = new Environment(0, 0, 1180, 780, "/images/environment/background space.png", agents, canvas.getGraphicsContext2D());
+				Environment atmosphere = new Environment(0, 0, width, height, "/images/environment/background space.png", agents, canvas.getGraphicsContext2D());
 				
-				startAnimation(canvas, scene, atmosphere, agents);
+				startAnimation(canvas, scene, atmosphere, agents, theStage);
 	
 				theStage.show();
 			}else{
@@ -66,7 +81,7 @@ public class Engine extends Application {
         }
 	}
 
-	public void startAnimation(Canvas canvas, Scene scene, @SuppressWarnings("exports") Environment atmosphere, @SuppressWarnings("exports") ArrayList<Agent> agents) {
+	public void startAnimation(Canvas canvas, Scene scene, @SuppressWarnings("exports") Environment atmosphere, @SuppressWarnings("exports") ArrayList<Agent> agents, Stage theStage) {
 
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent e) {
@@ -100,6 +115,13 @@ public class Engine extends Application {
 					if(atmosphere.limitsApprove()){
 						atmosphere.drawAgents(agents);				
 
+					}
+
+					/*
+					 * ESC para fechar a tela
+					*/
+					if (input.contains("ESCAPE")) {
+						theStage.close();
 					}
 				}
 			}
