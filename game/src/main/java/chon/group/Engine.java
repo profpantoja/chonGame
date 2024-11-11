@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
-import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -15,119 +14,122 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
 
-public class Engine extends Application {
+public class Engine extends Application{
 
-	public static void main(String[] args) {
-		launch(args);
-	}
-
-	@Override
-	public void start(Stage theStage) {
-		try {
-
-			StackPane root = new StackPane();
-			Scene scene = new Scene(root, 1280, 780);
-			theStage.setTitle("Chon: The Learning Game");
-			theStage.setScene(scene);
-
-			int wCanvas = 1280;
-			int hCanvas = 780;
-			Canvas canvas = new Canvas(wCanvas, hCanvas);
-
-			GraphicsContext gc = canvas.getGraphicsContext2D();
-
-			System.out.println("Working Directory = " + System.getProperty("user.dir"));
-			Image background = new Image(getClass().getResource("/images/environment/castle.png").toExternalForm());
-			Image chonBota = new Image(getClass().getResource("/images/agents/chonBota.png").toExternalForm());
-			Image chonBot = new Image(getClass().getResource("/images/agents/chonBot.png").toExternalForm());
-
-			int wImageBot = 65;
-			int hImageBot = 90;
-			gc.drawImage(background, 0, 0, 1280, 780);
-			gc.drawImage(chonBota, 400, 390, wImageBot, hImageBot);
-			gc.drawImage(chonBot, 920, 440, wImageBot, hImageBot);
+    static int xImage1 = 400;
+        static int yImage1 = 390;
+        static int xImage2 = 920;
+        static int yImage2 = 440;
 
 
-			gc.setFill(Color.BLACK);
-			gc.setStroke(Color.BLACK);
-			gc.setLineWidth(2);
-			Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
-			gc.setFont(theFont);
-			gc.fillText("Hey, I'm ChonBota...", 365, 380);
+    public static void main(String[] args) {
+        launch();
+    }
 
-			root.getChildren().add(canvas);
-			theStage.show();
+    @Override
+    public void start(Stage theStage) throws Exception {
+        StackPane root = new StackPane();
+        Scene scene = new Scene(root, 1280, 780);
+        theStage.setTitle("Chon: The Learning Game");
+        theStage.setScene(scene);
 
-			ArrayList<String> input = new ArrayList<String>();
-			scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-				public void handle(KeyEvent e) {
-					String code = e.getCode().toString();
-					input.clear();
+        int vCanvas = 1280;
+        int hCanvas = 780;
+        Canvas canvas = new Canvas(vCanvas, hCanvas);
 
-					System.out.println("Pressed: " + code);
-					input.add(code);
-				}
-			});
+        GraphicsContext gc = canvas.getGraphicsContext2D(); 
 
-			scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
-				public void handle(KeyEvent e) {
-					String code = e.getCode().toString();
-					System.out.println("Released: " + code);
-					input.remove(code);
-				}
-			});
+        Image background = new Image(getClass().getResource("/images/environment/castle.png").toExternalForm());
+        Image chonBota = new Image(getClass().getResource("/images/agents/chonBota.png").toExternalForm());
+        Image chonBot = new Image(getClass().getResource("/images/agents/chonBot.png").toExternalForm());
+        
+        int wImageBot = 65;
+		int hImageBot = 90;
 
-			new AnimationTimer() {
-				int xImage = 400;
-				int yImage = 390;
+        int wImageBota = 65;
+		int hImageBota = 90;
+        gc.drawImage(background, 0, 0, 1280, 780);
+        gc.drawImage(chonBota, 400, 390, wImageBota, hImageBota);
+        gc.drawImage(chonBot, 920, 440, wImageBot, hImageBot);
 
-				@Override
-				public void handle(long arg0) {
-					if (!input.isEmpty()) {
-						gc.clearRect(0, 0, 1280, 780);
-						gc.drawImage(background, 0, 0, canvas.getWidth(), canvas.getHeight());
-						if (input.contains("LEFT")) {
-							if (xImage - 1 > 0)
-								xImage -= 1;
-							else
-								xImage = 0;
+        gc.setFill(Color.WHITE);
+        gc.setStroke(Color.RED);
+        gc.setLineWidth(20);
+        Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
+        gc.setFont(theFont);
+        gc.fillText("Hey, I'm ChonBota...", 365, 380);
 
-						} else if (input.contains("RIGHT")) {
-							if ((xImage + wImageBot) + 1 < (wCanvas))
-								xImage += 1;
-							else
-								xImage = wCanvas - wImageBot;
+        ArrayList<String> input = new ArrayList<String>();
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            public void handle(KeyEvent e) {
+                String code = e.getCode().toString();
+                input.clear();
 
-						} else if (input.contains("UP")) {
-							if (yImage - 1 > 0)
-								yImage -= 1;
-							else
-								yImage = 0;
+                System.out.println("Pressed: " + code);
+                input.add(code);
+            }
+        });
 
-						} else if (input.contains("DOWN")) {
-							if ((yImage + hImageBot) + 1 < hCanvas)
-								yImage += 1;
-							else
-								yImage = (hCanvas - hImageBot);
-						}
+        scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+            public void handle(KeyEvent e) {
+                String code = e.getCode().toString();
+                System.out.println("Released: " + code);
+                input.remove(code);
+            }
+        });
+        
+        root.getChildren().add(canvas);
+        
+        new AnimationTimer() {
+        
+            @Override
+            public void handle(long arg0) {
+                //if (!input.isEmpty()) {
+                    gc.clearRect(0, 0, 1280, 780);
+                    gc.drawImage(background, 0, 0, canvas.getWidth(), canvas.getHeight());
+                    if (input.contains("LEFT")) {
+                        if (xImage1 - 1 > 0)
+                            xImage1 -= 2;
+                        else
+                            xImage1 = 0;
 
-						gc.drawImage(chonBota, xImage, yImage, wImageBot, hImageBot);
-						printStatusPanel(gc, xImage, yImage);
-					}
-					gc.drawImage(chonBot, 920, 440, 65, 90);
-				}
+                    } else if (input.contains("RIGHT")) {
+                        if ((xImage1 + wImageBota) + 1 < (vCanvas))
+                            xImage1 += 2;
+                        else
+                            xImage1 = vCanvas - wImageBota;
 
-			}.start();
+                    } else if (input.contains("UP")) {
+                        if (yImage1 - 1 > 0)
+                            yImage1 -= 2;
+                        else
+                            yImage1 = 0;
 
-			theStage.show();
+                    } else if (input.contains("DOWN")) {
+                        if ((yImage1 + hImageBota) + 1 < hCanvas)
+                            yImage1 += 2;
+                        else
+                            yImage1 = (hCanvas - hImageBota);
+                    }
+                    gc.drawImage(chonBota, xImage1, yImage1, wImageBota, hImageBota);
+                    gc.drawImage(chonBot, xImage2, yImage2, wImageBot, hImageBot);
+					printStatusPanel(gc, xImage1, yImage1);
+                //}
+                if (xImage1 > xImage2){ xImage2 += 1 ;
+                } else if  (xImage1 < xImage2) { xImage2 -= 1;}
+                
+                if (yImage1 > yImage2){ yImage2 += 1 ;
+                } else if  (yImage1 < yImage2) { yImage2 -= 1;}
+            }
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+        }.start();
+        theStage.show();
+        
+    }
 
-	public static void printStatusPanel(GraphicsContext gc, int xImage, int yImage) {
+    public static void printStatusPanel(GraphicsContext gc, int xImage, int yImage) {
 		gc.setFill(Color.BLACK);
 		gc.setStroke(Color.BLACK);
 		gc.setLineWidth(2);
@@ -136,5 +138,4 @@ public class Engine extends Application {
 		gc.fillText("X: " + xImage, xImage + 10, yImage - 25);
 		gc.fillText("Y: " + yImage, xImage + 10, yImage - 10);
 	}
-
 }
