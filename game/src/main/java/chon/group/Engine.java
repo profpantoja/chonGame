@@ -45,7 +45,7 @@ public class Engine extends Application {
 			int wImageBot = 65;
 			int hImageBot = 90;
 			gc.drawImage(background, 0, 0, 1280, 780);
-			gc.drawImage(chonBota, 400, 390, wImageBot, hImageBot);
+			gc.drawImage(chonBota, 608, 615, wImageBot, hImageBot);
 			gc.drawImage(chonBot, 920, 440, wImageBot, hImageBot);
 
 
@@ -54,10 +54,10 @@ public class Engine extends Application {
 			gc.setLineWidth(2);
 			Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
 			gc.setFont(theFont);
-			gc.fillText("Hey, I'm ChonBota...", 365, 380);
+			gc.fillText("Hey, I'm ChonBota!", 566, 585);
+			gc.fillText("Press any of the arrow keys to start", 510, 605);
 
 			root.getChildren().add(canvas);
-			theStage.show();
 
 			ArrayList<String> input = new ArrayList<String>();
 			scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -79,8 +79,8 @@ public class Engine extends Application {
 			});
 
 			new AnimationTimer() {
-				int xImage = 400;
-				int yImage = 390;
+				int xImage = 608;
+				int yImage = 615;
 
 				@Override
 				public void handle(long arg0) {
@@ -89,27 +89,27 @@ public class Engine extends Application {
 						gc.drawImage(background, 0, 0, canvas.getWidth(), canvas.getHeight());
 						if (input.contains("LEFT")) {
 							if (xImage - 1 > 0)
-								xImage -= 1;
+								xImage -= 3;
 							else
 								xImage = 0;
 
 						} else if (input.contains("RIGHT")) {
 							if ((xImage + wImageBot) + 1 < (wCanvas))
-								xImage += 1;
+								xImage += 3;
 							else
 								xImage = wCanvas - wImageBot;
 
 						} else if (input.contains("UP")) {
-							if (yImage - 1 > 0)
-								yImage -= 1;
+							if (yImage - 1 > 615)
+								yImage -= 3;
 							else
-								yImage = 0;
+								yImage = 615;
 
 						} else if (input.contains("DOWN")) {
-							if ((yImage + hImageBot) + 1 < hCanvas)
-								yImage += 1;
+							if ((yImage + hImageBot) + 1 < (hCanvas - 165))
+								yImage += 3;
 							else
-								yImage = (hCanvas - hImageBot);
+								yImage = ((hCanvas - 75) - hImageBot);
 						}
 
 						gc.drawImage(chonBota, xImage, yImage, wImageBot, hImageBot);
