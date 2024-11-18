@@ -110,7 +110,6 @@ public class Environment {
     public void drawAgents(ArrayList<Agent> agents){
         for (Agent agent : agents){
             gc.drawImage(agent.getImage(), agent.getPositionX(), agent.getPositionY(), agent.getWidth(), agent.getHeight());
-
         }
         printStatusPanel(this.protagonist);
         printLifeEnergybar(this.protagonist);

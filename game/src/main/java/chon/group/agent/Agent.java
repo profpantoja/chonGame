@@ -69,7 +69,7 @@ public class Agent {
 		return image;
 	}    
 
-    public void move(ArrayList<String> input){
+    public void move(String input){
 		if (input.contains("RIGHT")) {
 			setPositionX(positionX += 1);	
 		} else if (input.contains("LEFT")) {

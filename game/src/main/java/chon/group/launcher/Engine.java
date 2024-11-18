@@ -26,16 +26,15 @@ public class Engine extends Application {
 	public void start(Stage theStage) {
 		try {
 
-
 			ArrayList<Agent> agents = new ArrayList<>();
-			
+
 			Agent agentA = new Agent(920, 420, 110, 100, "/images/agent/Asteroid/asteroide1.png", false);
 			agents.add(agentA);
-			
-			Agent agentB = new Agent(70, 410, 120, 100 , "/images/agent/Spaceship/spaceship_andando1.png", true );
+
+			Agent agentB = new Agent(70, 410, 120, 100, "/images/agent/Spaceship/spaceship_andando1.png", true);
 			agents.add(agentB);
 
-			if(Agent.numberProtagonist == 1){
+			if (Agent.numberProtagonist == 1) {
 
 				StackPane root = new StackPane();
 				Scene scene = new Scene(root, 1180, 780);
@@ -47,23 +46,25 @@ public class Engine extends Application {
 
 				root.getChildren().add(canvas);
 				theStage.show();
-				
-				Environment atmosphere = new Environment(0, 0, 1180, 780, "/images/environment/background space.png", agents, canvas.getGraphicsContext2D());
-				
+
+				Environment atmosphere = new Environment(0, 0, 1180, 780, "/images/environment/background space.png",
+						agents, canvas.getGraphicsContext2D());
+
 				startAnimation(canvas, scene, atmosphere, agents);
-	
+
 				theStage.show();
-			}else{
-				throw new IllegalArgumentException("The number of protagonists didn't reach the minimum number or exceeded it");
+			} else {
+				throw new IllegalArgumentException(
+						"The number of protagonists didn't reach the minimum number or exceeded it");
 			}
 
 		} catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-            Platform.exit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Platform.exit();
-        }
+			System.out.println(e.getMessage());
+			Platform.exit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Platform.exit();
+		}
 	}
 
 	public void startAnimation(Canvas canvas, Scene scene, Environment atmosphere, ArrayList<Agent> agents) {
@@ -77,7 +78,7 @@ public class Engine extends Application {
 				input.add(code);
 			}
 		});
-	
+
 		scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent e) {
 				String code = e.getCode().toString();
@@ -85,33 +86,39 @@ public class Engine extends Application {
 				input.remove(code);
 			}
 		});
-		
-		
-		new AnimationTimer() { 
+
+		new AnimationTimer() {
 
 			@Override
 			public void handle(long arg0) {
 				atmosphere.setGc(canvas.getGraphicsContext2D());
+				atmosphere.getAgents().get(0).move("LEFT");
 				if (!input.isEmpty()) {
-					atmosphere.clearRect();
-					atmosphere.drawBackground();					
-					
-					atmosphere.getProtagonist().move(input);
-					if(atmosphere.limitsApprove()){
-						atmosphere.drawAgents(agents);				
+					atmosphere.getProtagonist().move(input.get(0));
+					if (atmosphere.limitsApprove()) {
+						atmosphere.drawAgents(agents);
 
 					}
 				}
+				atmosphere.clearRect();
+				atmosphere.drawBackground();
+				if (atmosphere.limitsApprove()) {
+					atmosphere.drawAgents(agents);
+
+				}
+
 			}
-		
-			 /*static WritableImage flip(Image image) {
-		ImageView iv = new ImageView(image);
-		iv.setScaleX(-1);
-		SnapshotParameters params = new SnapshotParameters();
-		params.setFill(Color.TRANSPARENT);
-		return iv.snapshot(params, null);
-	}*/	
+
+			/*
+			 * static WritableImage flip(Image image) {
+			 * ImageView iv = new ImageView(image);
+			 * iv.setScaleX(-1);
+			 * SnapshotParameters params = new SnapshotParameters();
+			 * params.setFill(Color.TRANSPARENT);
+			 * return iv.snapshot(params, null);
+			 * }
+			 */
 		}.start();
-		
+
 	}
 }
