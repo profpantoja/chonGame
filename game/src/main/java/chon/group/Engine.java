@@ -78,11 +78,16 @@ public class Engine extends Application {
 				int yImageChonBota = 390;
 				int wImageChonBota = 65;
 				int hImageChonBota = 90;
+				/* ChonBota's Speed */
+				int speedChonBota = 2;
+
 				/* ChonBot's Attributes */
 				int xImageChonBot = 920;
 				int yImageChonBot = 440;
 				int wImageChonBot = 65;
 				int hImageChonBot = 90;
+				/* ChonBot's Speed */
+				int speedChonBot = 1;
 
 				@Override
 				public void handle(long arg0) {
@@ -90,26 +95,26 @@ public class Engine extends Application {
 					if (!input.isEmpty()) {
 						/* ChonBota's Movements */
 						if (input.contains("LEFT")) {
-							if (xImageChonBota - 1 > 0)
-								xImageChonBota -= 1;
+							if (xImageChonBota - speedChonBota > 0)
+								xImageChonBota -= speedChonBota;
 							else
 								xImageChonBota = 0;
 
 						} else if (input.contains("RIGHT")) {
-							if ((xImageChonBota + wImageChonBota) + 1 < (wCanvas))
-								xImageChonBota += 1;
+							if ((xImageChonBota + wImageChonBota) + speedChonBota < (wCanvas))
+								xImageChonBota += speedChonBota;
 							else
 								xImageChonBota = wCanvas - wImageChonBota;
 
 						} else if (input.contains("UP")) {
-							if (yImageChonBota - 1 > 0)
-								yImageChonBota -= 1;
+							if (yImageChonBota - speedChonBota > 0)
+								yImageChonBota -= speedChonBota;
 							else
 								yImageChonBota = 0;
 
 						} else if (input.contains("DOWN")) {
-							if ((yImageChonBota + hImageChonBota) + 1 < hCanvas)
-								yImageChonBota += 1;
+							if ((yImageChonBota + hImageChonBota) + speedChonBota < hCanvas)
+								yImageChonBota += speedChonBota;
 							else
 								yImageChonBota = (hCanvas - hImageChonBota);
 						}
@@ -130,16 +135,31 @@ public class Engine extends Application {
 					// xImageChonBot += 1;
 
 					/* Chasing the Player */
+					/*
+					 * if (xImageChonBota > xImageChonBot) {
+					 * xImageChonBot += 1;
+					 * } else if (xImageChonBota < xImageChonBot) {
+					 * xImageChonBot -= 1;
+					 * }
+					 * 
+					 * if (yImageChonBota > yImageChonBot) {
+					 * yImageChonBot += 1;
+					 * } else if (yImageChonBota < yImageChonBot) {
+					 * yImageChonBot -= 1;
+					 * }
+					 */
+
+					/* Chasing the Player with Speed */
 					if (xImageChonBota > xImageChonBot) {
-						xImageChonBot += 1;
+						xImageChonBot += speedChonBot;
 					} else if (xImageChonBota < xImageChonBot) {
-						xImageChonBot -= 1;
+						xImageChonBot -= speedChonBot;
 					}
 
 					if (yImageChonBota > yImageChonBot) {
-						yImageChonBot += 1;
+						yImageChonBot += speedChonBot;
 					} else if (yImageChonBota < yImageChonBot) {
-						yImageChonBot -= 1;
+						yImageChonBot -= speedChonBot;
 					}
 
 					/* Rendering Objects */
