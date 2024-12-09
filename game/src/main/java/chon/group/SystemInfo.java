@@ -1,4 +1,4 @@
-package chon.group.launcher;
+package chon.group;
 
 public class SystemInfo {
 

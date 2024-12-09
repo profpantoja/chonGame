@@ -1,7 +1,5 @@
 package chon.group.agent;
 
-import java.util.ArrayList;
-
 import javafx.scene.image.Image;
 
 public class Agent {
@@ -71,13 +69,13 @@ public class Agent {
 
     public void move(String input){
 		if (input.contains("RIGHT")) {
-			setPositionX(positionX += 1);	
+			setPositionX(positionX += 4);	
 		} else if (input.contains("LEFT")) {
-			setPositionX(positionX -= 1);
+			setPositionX(positionX -= 4);
 		} else if (input.contains("UP")) {
-			setPositionY(positionY -= 1);
+			setPositionY(positionY -= 4);
 		} else if (input.contains("DOWN")) {
-			setPositionY(positionY += 1);
+			setPositionY(positionY += 4);
 		}
 	}
 
