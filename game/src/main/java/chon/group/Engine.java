@@ -24,8 +24,8 @@ public class Engine extends Application {
 	public void start(Stage theStage) {
 		try {
 			Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
-			Agent chonBota = new Agent(400, 390, 90, 65, 2, "/images/agents/chonBota.png");
-			Agent chonBot = new Agent(920, 440, 90, 65, 1, "/images/agents/chonBot.png");
+			Agent chonBota = new Agent(400, 390, 90, 65, 20, "/images/agents/chonBota.png");
+			Agent chonBot = new Agent(920, 440, 90, 65, 10, "/images/agents/chonBot.png");
 			environment.setProtagonist(chonBota);
 			environment.getAgents().add(chonBot);
 
@@ -67,12 +67,22 @@ public class Engine extends Application {
 					/* ChonBota Only Moves if the Player Press Something */
 					if (!input.isEmpty()) {
 						/* ChonBota's Movements */
+                        environment.getProtagonist().setUp("UP");
+                        environment.getProtagonist().setDown("DOWN");
+                        environment.getProtagonist().setLeft("LEFT");
+                        environment.getProtagonist().setRight("RIGHT");
+
 						environment.getProtagonist().move(input);
 						environment.checkBorders();
 					} 
+                    environment.getAgents().get(0).setUp("W");
+                    environment.getAgents().get(0).setDown("S");
+                    environment.getAgents().get(0).setLeft("A");
+                    environment.getAgents().get(0).setRight("D");
+                    environment.getAgents().get(0).move(input);
 					/* ChonBot's Automatic Movements */
-					environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
-							environment.getProtagonist().getPosY());
+					//environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
+					//		environment.getProtagonist().getPosY());
 					/* Rendering Objects */
 					environment.drawBackground();
 					environment.drawAgents();

@@ -1,11 +1,11 @@
 package chon.group.game.domain.agent;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import chon.group.game.domain.movement.MovementImpl;
 import javafx.scene.image.Image;
 
-public class Agent {
+public class Agent implements MovementImpl {
 
     private int posX;
     private int posY;
@@ -13,6 +13,11 @@ public class Agent {
     private int width;
     private int speed;
     private Image image;
+
+    private String moveUp;
+    private String moveDown;
+    private String moveLeft;
+    private String moveRight;
 
     public Agent(int posX, int posY, int height, int width, int speed, String pathImage) {
         this.posX = posX;
@@ -71,19 +76,56 @@ public class Agent {
         this.image = image;
     }
 
+    public String getMoveUp() {
+        return moveUp;
+    }
+
+    public String getMoveDown() {
+        return moveDown;
+    }
+
+    public String getMoveLeft() {
+        return moveLeft;
+    }
+
+    public String getMoveRight() {
+        return moveRight;
+    }
+
+    @Override
+    public void setUp(String up) {
+        this.moveUp = up;
+    }
+
+    @Override
+    public void setDown(String down) {
+        this.moveDown = down;
+    }
+
+    @Override
+    public void setLeft(String left) {
+        this.moveLeft = left;
+    }
+
+    @Override
+    public void setRight(String right) {
+        this.moveRight = right;
+    }
+
     public void move(List<String> movements) {
-        if (movements.contains("RIGHT")) {
+        if (movements.contains(getMoveRight())) {
             setPosX(posX += speed);
-        } else if (movements.contains("LEFT")) {
+        } else if (movements.contains(getMoveLeft())) {
             setPosX(posX -= speed);
-        } else if (movements.contains("UP")) {
+        } else if (movements.contains(getMoveUp())) {
             setPosY(posY -= speed);
-        } else if (movements.contains("DOWN")) {
+        } else if (movements.contains(getMoveDown())) {
             setPosY(posY += speed);
         }
     }
 
-    /* Chasing the Player with Speed */
+    /*
+    /* Chasing the Player with Speed 
     public void chase(int targetX, int targetY) {
         if (targetX > this.posX) {
             this.move(new ArrayList<String>(List.of("RIGHT")));
@@ -96,5 +138,5 @@ public class Agent {
             this.move(new ArrayList<String>(List.of("UP")));
         }
     }
-
+    */
 }
