@@ -181,14 +181,14 @@ public class Agent {
      */
     public void chase(int targetX, int targetY) {
         if (targetX > this.posX) {
-            this.move(new ArrayList<>(List.of("RIGHT")));
+            this.move(new ArrayList<String>(List.of("RIGHT")));
         } else if (targetX < this.posX) {
-            this.move(new ArrayList<>(List.of("LEFT")));
+            this.move(new ArrayList<String>(List.of("LEFT")));
         }
         if (targetY > this.posY) {
-            this.move(new ArrayList<>(List.of("DOWN")));
+            this.move(new ArrayList<String>(List.of("DOWN")));
         } else if (targetY < this.posY) {
-            this.move(new ArrayList<>(List.of("UP")));
+            this.move(new ArrayList<String>(List.of("UP")));
         }
     }
 }
