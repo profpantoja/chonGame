@@ -4,6 +4,7 @@ import java.util.List;
 
 import chon.group.game.domain.movement.MovementImpl;
 import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
 public class Agent implements MovementImpl {
 
@@ -18,6 +19,7 @@ public class Agent implements MovementImpl {
     private String moveDown;
     private String moveLeft;
     private String moveRight;
+    private String finish;
 
     public Agent(int posX, int posY, int height, int width, int speed, String pathImage) {
         this.posX = posX;
@@ -76,20 +78,29 @@ public class Agent implements MovementImpl {
         this.image = image;
     }
 
-    public String getMoveUp() {
+    @Override
+    public String getUp() {
         return moveUp;
     }
 
-    public String getMoveDown() {
+    @Override
+    public String getDown() {
         return moveDown;
     }
 
-    public String getMoveLeft() {
+    @Override
+    public String getLeft() {
         return moveLeft;
     }
 
-    public String getMoveRight() {
+    @Override
+    public String getRight() {
         return moveRight;
+    }
+
+    @Override
+    public String getFinish() {
+        return finish;
     }
 
     @Override
@@ -112,15 +123,22 @@ public class Agent implements MovementImpl {
         this.moveRight = right;
     }
 
-    public void move(List<String> movements) {
-        if (movements.contains(getMoveRight())) {
+    @Override
+    public void setFinish(String finish) {
+        this.finish = finish;
+    }
+
+    public void move(List<String> movements, Stage theStage) {
+        if (movements.contains(getRight())) {
             setPosX(posX += speed);
-        } else if (movements.contains(getMoveLeft())) {
+        } else if (movements.contains(getLeft())) {
             setPosX(posX -= speed);
-        } else if (movements.contains(getMoveUp())) {
+        } else if (movements.contains(getUp())) {
             setPosY(posY -= speed);
-        } else if (movements.contains(getMoveDown())) {
+        } else if (movements.contains(getDown())) {
             setPosY(posY += speed);
+        } else if (movements.contains(getFinish())) {
+            theStage.close();
         }
     }
 

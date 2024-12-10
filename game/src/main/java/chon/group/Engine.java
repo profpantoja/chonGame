@@ -41,16 +41,16 @@ public class Engine extends Application {
 			root.getChildren().add(canvas);
 			theStage.show();
 
-			ArrayList<String> input = new ArrayList<String>();
-			scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-				public void handle(KeyEvent e) {
-					String code = e.getCode().toString();
-					input.clear();
-
-					System.out.println("Pressed: " + code);
-					input.add(code);
-				}
-			});
+            ArrayList<String> input = new ArrayList<String>();
+            scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+                public void handle(KeyEvent e) {
+                    String code = e.getCode().toString();
+                    if (!input.contains(code)) {
+                        System.out.println("Pressed: " + code);
+                        input.add(code);
+                    }
+                }
+            });
 
 			scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
 				public void handle(KeyEvent e) {
@@ -62,37 +62,36 @@ public class Engine extends Application {
 
 			new AnimationTimer() {
 
-				@Override
-				public void handle(long arg0) {
-					/* ChonBota Only Moves if the Player Press Something */
-					if (!input.isEmpty()) {
-						/* ChonBota's Movements */
-                        environment.getProtagonist().setUp("UP");
-                        environment.getProtagonist().setDown("DOWN");
-                        environment.getProtagonist().setLeft("LEFT");
-                        environment.getProtagonist().setRight("RIGHT");
+                @Override
+                public void handle(long arg0) {
+                    /* ChonBota's Movements */
+                    chonBota.setUp("W");
+                    chonBota.setDown("S");
+                    chonBota.setLeft("A");
+                    chonBota.setRight("D");
+                    chonBota.setFinish("ESCAPE");
+                    chonBota.move(input, theStage);
 
-						environment.getProtagonist().move(input);
-						environment.checkBorders();
-					} 
-                    environment.getAgents().get(0).setUp("W");
-                    environment.getAgents().get(0).setDown("S");
-                    environment.getAgents().get(0).setLeft("A");
-                    environment.getAgents().get(0).setRight("D");
-                    environment.getAgents().get(0).move(input);
-					/* ChonBot's Automatic Movements */
+                    /* ChonBot's Movements */
+                    chonBot.setUp("UP");
+                    chonBot.setDown("DOWN");
+                    chonBot.setLeft("LEFT");
+                    chonBot.setRight("RIGHT");
+                    chonBot.setFinish("ESCAPE");
+                    chonBot.move(input, theStage);
+
+                    /* ChonBot's Automatic Movements */
 					//environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
 					//		environment.getProtagonist().getPosY());
 					/* Rendering Objects */
-					environment.drawBackground();
-					environment.drawAgents();
-				}
-			}.start();
-			theStage.show();
+                    environment.drawBackground();
+                    environment.drawAgents();
+                }
+            }.start();
+            theStage.show();
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
