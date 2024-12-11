@@ -147,4 +147,28 @@ public class Environment {
             this.protagonist.setPosY(this.height - this.protagonist.getHeight());
         }
     }
+
+    public void printCollision(Agent agent) {
+        gc.setFill(Color.RED);
+        gc.setLineWidth(2);
+        Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
+        gc.setFont(theFont);
+        gc.fillText("COLLISION!", agent.getPosX() - 10, agent.getPosY() - 20);
+    }
+    
+    public void detectCollision() {
+        for (Agent agent : this.agents) {
+            if (intersect(this.protagonist, agent)) {
+                System.out.println("Collision detected with agent: " + agent);
+                printCollision(agent);
+            }
+        }
+    }
+    
+    private boolean intersect(Agent a, Agent b) {
+        return a.getPosX() < b.getPosX() + b.getWidth() &&
+               a.getPosX() + a.getWidth() > b.getPosX() &&
+               a.getPosY() < b.getPosY() + b.getHeight() &&
+               a.getPosY() + a.getHeight() > b.getPosY();
+    }
 }
