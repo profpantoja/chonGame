@@ -77,6 +77,7 @@ public class Engine extends Application {
 					environment.drawBackground();
 					environment.drawAgents();
 				}
+				
 			}.start();
 			theStage.show();
 
