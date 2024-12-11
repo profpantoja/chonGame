@@ -70,7 +70,7 @@ public class Engine extends Application {
                     chonBota.setLeft("A");
                     chonBota.setRight("D");
                     chonBota.setFinish("ESCAPE");
-                    chonBota.move(input, theStage);
+                    chonBota.move(input, chonBota, environment, theStage);
 
                     /* ChonBot's Movements */
                     chonBot.setUp("UP");
@@ -78,7 +78,7 @@ public class Engine extends Application {
                     chonBot.setLeft("LEFT");
                     chonBot.setRight("RIGHT");
                     chonBot.setFinish("ESCAPE");
-                    chonBot.move(input, theStage);
+                    chonBot.move(input, chonBot, environment, theStage);
 
                     /* ChonBot's Automatic Movements */
 					//environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
