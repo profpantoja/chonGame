@@ -290,34 +290,4 @@ public class Environment {
         }
     }
 
-    /**
-     * Detects collisions between the protagonist and other agents in the
-     * environment.
-     */
-    public void detectCollision() {
-        for (Agent agent : this.agents) {
-            if (intersect(this.protagonist, agent)) {
-                System.out.println("Collision detected with agent: " + agent);
-            }
-        }
-    }
-
-    /**
-     * Checks if two agents collide with each other based on their positions and
-     * dimensions.
-     *
-     * This method uses the coordinates and dimensions of both agents to determine
-     * if their areas overlap. The collision is calculated by comparing the edges
-     * of the image represented by each agent.
-     *
-     * @param a the first agent
-     * @param b the second agent
-     * @return true if the agents collide, otherwise false
-     */
-    private boolean intersect(Agent a, Agent b) {
-        return a.getPosX() < b.getPosX() + b.getWidth() &&
-                a.getPosX() + a.getWidth() > b.getPosX() &&
-                a.getPosY() < b.getPosY() + b.getHeight() &&
-                a.getPosY() + a.getHeight() > b.getPosY();
-    }
 }

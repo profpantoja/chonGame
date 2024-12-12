@@ -69,8 +69,7 @@ public class Engine extends Application {
 						/* ChonBota's Movements */
 						environment.getProtagonist().move(input);
 						environment.checkBorders();
-						environment.detectCollision();
-					}
+					} 
 					/* ChonBot's Automatic Movements */
 
 					environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
@@ -78,7 +77,6 @@ public class Engine extends Application {
 					/* Rendering Objects */
 					environment.drawBackground();
 					environment.drawAgents();
-					environment.detectCollision();
 				}
 
 			}.start();
