@@ -75,6 +75,7 @@ public class Engine extends Application {
 					environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
 							environment.getProtagonist().getPosY());
 					/* Rendering Objects */
+					environment.detectCollision();
 					environment.drawBackground();
 					environment.drawAgents();
 				}
