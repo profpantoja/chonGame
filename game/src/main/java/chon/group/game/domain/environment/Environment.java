@@ -11,24 +11,26 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 /**
- * Represents the game environment, including properties such as dimensions, position,
+ * Represents the game environment, including properties such as dimensions,
+ * position,
  * background image, agents, and the protagonist.
  * The environment also controls rendering, restricts the environment area,
- * prints an agent's coordinates, and detects collisions between the protagonist and agents.
+ * prints an agent's coordinates, and detects collisions between the protagonist
+ * and agents.
  */
 public class Environment {
-
-    /** The width of the environment. */
-    private int width;
-
-    /** The height of the environment. */
-    private int height;
 
     /** The X (horizontal) position of the environment. */
     private int posX;
 
     /** The Y (vertical) position of the environment. */
     private int posY;
+
+    /** The width of the environment. */
+    private int width;
+
+    /** The height of the environment. */
+    private int height;
 
     /** The background image of the environment. */
     private Image image;
@@ -49,12 +51,13 @@ public class Environment {
     }
 
     /**
-     * Constructor to initialize the environment with dimensions, position, and a background image.
+     * Constructor to initialize the environment with dimensions, position, and a
+     * background image.
      *
-     * @param posX the initial X (horizontal) position of the environment
-     * @param posY the initial Y (vertical) position of the environment
-     * @param width the width of the environment
-     * @param height the height of the environment
+     * @param posX      the initial X (horizontal) position of the environment
+     * @param posY      the initial Y (vertical) position of the environment
+     * @param width     the width of the environment
+     * @param height    the height of the environment
      * @param pathImage the path to the background image
      */
     public Environment(int posX, int posY, int width, int height, String pathImage) {
@@ -67,14 +70,15 @@ public class Environment {
     }
 
     /**
-     * Constructor to initialize the environment with dimensions, position, a background image, and a list of agents.
+     * Constructor to initialize the environment with dimensions, position, a
+     * background image, and a list of agents.
      *
-     * @param posX the initial X (horizontal) position of the environment
-     * @param posY the initial Y (vertical) position of the environment
-     * @param width the width of the environment
-     * @param height the height of the environment
+     * @param posX      the initial X (horizontal) position of the environment
+     * @param posY      the initial Y (vertical) position of the environment
+     * @param width     the width of the environment
+     * @param height    the height of the environment
      * @param pathImage the path to the background image
-     * @param agents the list of agents in the environment
+     * @param agents    the list of agents in the environment
      */
     public Environment(int posX, int posY, int width, int height, String pathImage, ArrayList<Agent> agents) {
         this.posX = posX;
@@ -83,42 +87,6 @@ public class Environment {
         this.width = width;
         this.setImage(pathImage);
         this.setAgents(agents);
-    }
-
-    /**
-     * Gets the width of the environment.
-     *
-     * @return the width of the environment
-     */
-    public int getWidth() {
-        return width;
-    }
-
-    /**
-     * Sets the width of the environment.
-     *
-     * @param width the new width of the environment
-     */
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    /**
-     * Gets the height of the environment.
-     *
-     * @return the height of the environment
-     */
-    public int getHeight() {
-        return height;
-    }
-
-    /**
-     * Sets the height of the environment.
-     *
-     * @param height the new height of the environment
-     */
-    public void setHeight(int height) {
-        this.height = height;
     }
 
     /**
@@ -155,6 +123,42 @@ public class Environment {
      */
     public void setPosY(int posY) {
         this.posY = posY;
+    }
+
+    /**
+     * Gets the width of the environment.
+     *
+     * @return the width of the environment
+     */
+    public int getWidth() {
+        return width;
+    }
+
+    /**
+     * Sets the width of the environment.
+     *
+     * @param width the new width of the environment
+     */
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    /**
+     * Gets the height of the environment.
+     *
+     * @return the height of the environment
+     */
+    public int getHeight() {
+        return height;
+    }
+
+    /**
+     * Sets the height of the environment.
+     *
+     * @param height the new height of the environment
+     */
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     /**
@@ -251,7 +255,7 @@ public class Environment {
     /**
      * Clears the environment area, removing previously drawn elements.
      */
-    public void clearRect() {
+    public void clearEnvironment() {
         gc.clearRect(0, 0, this.width, this.height);
     }
 
@@ -271,7 +275,8 @@ public class Environment {
     }
 
     /**
-     * Checks if the protagonist is within the environment's boundaries and adjusts its position if necessary.
+     * Checks if the protagonist is within the environment's boundaries and adjusts
+     * its position if necessary.
      */
     public void checkBorders() {
         if (this.protagonist.getPosX() < 0) {
@@ -286,7 +291,8 @@ public class Environment {
     }
 
     /**
-     * Detects collisions between the protagonist and other agents in the environment.
+     * Detects collisions between the protagonist and other agents in the
+     * environment.
      */
     public void detectCollision() {
         for (Agent agent : this.agents) {
@@ -297,10 +303,11 @@ public class Environment {
     }
 
     /**
-     * Checks if two agents collide with each other based on their positions and dimensions.
+     * Checks if two agents collide with each other based on their positions and
+     * dimensions.
      *
      * This method uses the coordinates and dimensions of both agents to determine
-     * if their areas overlap. The collision is calculated by comparing the edges 
+     * if their areas overlap. The collision is calculated by comparing the edges
      * of the image represented by each agent.
      *
      * @param a the first agent
@@ -309,8 +316,8 @@ public class Environment {
      */
     private boolean intersect(Agent a, Agent b) {
         return a.getPosX() < b.getPosX() + b.getWidth() &&
-               a.getPosX() + a.getWidth() > b.getPosX() &&
-               a.getPosY() < b.getPosY() + b.getHeight() &&
-               a.getPosY() + a.getHeight() > b.getPosY();
+                a.getPosX() + a.getWidth() > b.getPosX() &&
+                a.getPosY() < b.getPosY() + b.getHeight() &&
+                a.getPosY() + a.getHeight() > b.getPosY();
     }
 }
