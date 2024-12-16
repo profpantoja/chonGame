@@ -18,6 +18,12 @@ public class Engine extends Application {
 
 	private final ArrayList<String> input = new ArrayList<>();
 
+	// Limites de movimento dos agentes
+	private static final int UPPER_LIMIT = 100; // Limite superior
+	private static final int LOWER_LIMIT = 680; // Limite inferior
+	private static final int LEFT_LIMIT = 0; // Limite esquerdo
+	private static final int RIGHT_LIMIT = 1080; // Limite direito
+
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -25,7 +31,6 @@ public class Engine extends Application {
 	@Override
 	public void start(Stage theStage) {
 		try {
-
 
 			ArrayList<Agent> agents = new ArrayList<>();
 			
@@ -97,13 +102,32 @@ public class Engine extends Application {
 					atmosphere.drawBackground();					
 					
 					atmosphere.getProtagonist().move(input);
+					
+					for (Agent agent : agents) {
+						// Limite superior
+						if(agent.getPositionY() < UPPER_LIMIT) {
+							agent.setPositionY(UPPER_LIMIT);
+						}
+						// Limite inferior
+						if(agent.getPositionY() > LOWER_LIMIT) {
+							agent.setPositionY(LOWER_LIMIT);
+						}
+						// Limite esquerdo
+						if(agent.getPositionX() < LEFT_LIMIT) {
+							agent.setPositionX(LEFT_LIMIT);
+						}
+						// Limite direito
+						if(agent.getPositionX() > RIGHT_LIMIT) {
+							agent.setPositionX(RIGHT_LIMIT);
+						}
+					}
+					
 					if(atmosphere.limitsApprove()){
 						atmosphere.drawAgents(agents);				
-
 					}
 				}
 			}
-		
+	
 			 /*static WritableImage flip(Image image) {
 		ImageView iv = new ImageView(image);
 		iv.setScaleX(-1);

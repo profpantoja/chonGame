@@ -71,17 +71,20 @@ public class Agent {
 
     public void move(ArrayList<String> input){
 		if (input.contains("RIGHT")) {
-			setPositionX(positionX += 1);	
-		} else if (input.contains("LEFT")) {
-			setPositionX(positionX -= 1);
-		} else if (input.contains("UP")) {
-			setPositionY(positionY -= 1);
-		} else if (input.contains("DOWN")) {
-			setPositionY(positionY += 1);
+			setPositionX(positionX + 1); // corrigido para utilizar setPositionX
+		} 
+		if (input.contains("LEFT")) {
+			setPositionX(positionX - 1); // corrigido para utilizar setPositionX
+		} 
+		if (input.contains("UP")) {
+			setPositionY(positionY - 1); // corrigido para utilizar setPositionY
+		} 
+		if (input.contains("DOWN")) {
+			setPositionY(positionY + 1); // corrigido para utilizar setPositionY
 		}
 	}
 
     public boolean isProtagonist() {
-        throw new UnsupportedOperationException("Unimplemented method 'isProtagonist'");
+        return isProtagonist;
     }
 }
