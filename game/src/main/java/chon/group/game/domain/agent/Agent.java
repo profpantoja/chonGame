@@ -31,10 +31,19 @@ public class Agent implements MovementImpl {
     /** Image representing the agent. */
     private Image image;
 
+    /** Key mapping for moving up. */
     private String moveUp;
+
+    /** Key mapping for moving down. */
     private String moveDown;
+
+    /** Key mapping for moving left. */
     private String moveLeft;
+
+    /** Key mapping for moving right. */
     private String moveRight;
+
+    /** Key mapping to finish the game. */
     private String finish;
 
     /**
@@ -164,51 +173,81 @@ public class Agent implements MovementImpl {
         this.image = image;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUp() {
         return moveUp;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDown() {
         return moveDown;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getLeft() {
         return moveLeft;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getRight() {
         return moveRight;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getFinish() {
         return finish;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setUp(String up) {
         this.moveUp = up;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setDown(String down) {
         this.moveDown = down;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setLeft(String left) {
         this.moveLeft = left;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setRight(String right) {
         this.moveRight = right;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setFinish(String finish) {
         this.finish = finish;
