@@ -20,6 +20,8 @@ import javafx.scene.text.FontWeight;
  */
 public class Environment {
 
+    public static Object addObject;
+
     /** The X (horizontal) position of the environment. */
     private int posX;
 
@@ -291,6 +293,75 @@ public class Environment {
     }
 
     /**
+     * Defines the upper, lower, left, and right boundaries of the environment.
+     * The agent's positions are adjusted to remain within these boundaries.
+     */
+    private static final int UPPER_LIMIT = 230; 
+    private static final int LOWER_LIMIT = 580; 
+    private static final int LEFT_LIMIT = 0;    
+    private static final int RIGHT_LIMIT = 1280;
+
+    /**
+     * Adjusts an agent's position to ensure it stays within the defined boundaries.
+     *
+     * @param agent the agent whose position will be checked and adjusted.
+     */
+    public void checkAndAdjustPosition(Agent agent) {
+        // Upper boundary
+        if (agent.getPosY() < UPPER_LIMIT) {
+            agent.setPosY(UPPER_LIMIT);
+        }
+        // Lower boundary
+        if (agent.getPosY() > LOWER_LIMIT) {
+            agent.setPosY(LOWER_LIMIT);
+        }
+        // Left boundary
+        if (agent.getPosX() < LEFT_LIMIT) {
+            agent.setPosX(LEFT_LIMIT);
+        }
+        // Right boundary
+        if (agent.getPosX() > RIGHT_LIMIT) {
+            agent.setPosX(RIGHT_LIMIT);
+        }
+
+        // Restricted special area: top-left corner
+        if ((agent.getPosY() < 375) && (agent.getPosX() < 110)) {
+            if (agent.getPosX() >= 105) {
+                agent.setPosX(110);
+            } else {
+                agent.setPosY(375);
+            }
+        }
+
+        // Restricted special area: top-right corner
+        if ((agent.getPosY() < 405) && (agent.getPosX() > 1050)) {
+            if (agent.getPosX() <= 1055) {
+                agent.setPosX(1050);
+            } else {
+                agent.setPosY(405);
+            }
+        }
+    }
+
+    /**
+     * Displays a collision message when the protagonist collides with an agent.
+     * 
+     * @param agent the agent involved in the collision, used to determine the message position.
+     */
+    public void printColisao(Agent agent) {
+        // Visual settings for the message
+        gc.setFill(Color.RED);
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(1);
+        Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
+        gc.setFont(theFont);
+
+        // Displays the collision message
+        gc.fillText("YOU HAVE BEEN BITTEN!", agent.getPosX() - 30, agent.getPosY() - 20);
+        gc.strokeText("YOU HAVE BEEN BITTEN!", agent.getPosX() - 30, agent.getPosY() - 20);
+    }
+
+    /**
      * Detects collisions between the protagonist and other agents in the
      * environment.
      */
@@ -298,6 +369,7 @@ public class Environment {
         for (Agent agent : this.agents) {
             if (intersect(this.protagonist, agent)) {
                 System.out.println("Collision detected with agent: " + agent);
+                printColisao(agent);
             }
         }
     }
@@ -319,6 +391,6 @@ public class Environment {
                 a.getPosX() + a.getWidth() > b.getPosX() &&
                 a.getPosY() < b.getPosY() + b.getHeight() &&
                 a.getPosY() + a.getHeight() > b.getPosY();
-    }
-
+    }     
 }
+
