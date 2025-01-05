@@ -17,6 +17,7 @@ public class Environment {
     private int posX;
     private int posY;
     private Image image;
+    private Image pauseImage;
     private Agent protagonist;
     private List<Agent> agents = new ArrayList<Agent>();
     private GraphicsContext gc;
@@ -82,6 +83,14 @@ public class Environment {
     public void setImage(String pathImage) {
         this.image = new Image(getClass().getResource(pathImage).toExternalForm());
     }
+    
+    public Image getPauseImage() {
+        return pauseImage;
+    }
+
+    public void setPauseImage(String pathImage) {
+        this.pauseImage = new Image(getClass().getResource(pathImage).toExternalForm());
+    }
 
     public void setProtagonist(Agent protagonist) {
         this.protagonist = protagonist;
@@ -109,6 +118,18 @@ public class Environment {
 
     public void drawBackground() {
         gc.drawImage(this.image, this.posX, this.posY, this.width, this.height);
+    }
+
+    public void drawPauseScreen() {
+        if (pauseImage != null && gc != null) {
+            double centerX = (this.width - pauseImage.getWidth()) / 2;
+            double centerY = (this.height - pauseImage.getHeight()) / 2;
+
+            // Draw image on the center of screen
+            gc.drawImage(pauseImage, centerX, centerY);
+        } else {
+            System.out.println("Pause image not set or GraphicsContext is null.");
+        }
     }
 
     public void drawAgents() {

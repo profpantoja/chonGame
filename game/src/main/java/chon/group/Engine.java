@@ -16,6 +16,8 @@ import javafx.scene.layout.StackPane;
 
 public class Engine extends Application {
 
+	private boolean isPaused = false;
+
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -28,6 +30,7 @@ public class Engine extends Application {
 			Agent chonBot = new Agent(920, 440, 90, 65, 1, "/images/agents/chonBot.png");
 			environment.setProtagonist(chonBota);
 			environment.getAgents().add(chonBot);
+			environment.setPauseImage("/images/environment/pause_icon.png");
 
 			Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
 			GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -48,7 +51,15 @@ public class Engine extends Application {
 					input.clear();
 
 					System.out.println("Pressed: " + code);
-					input.add(code);
+					
+					if (code.equals("P")) {
+                        isPaused = !isPaused;
+                    }
+					
+					if (!isPaused && !input.contains(code)) {
+                        input.add(code);
+                    }
+
 				}
 			});
 
@@ -64,6 +75,13 @@ public class Engine extends Application {
 
 				@Override
 				public void handle(long arg0) {
+
+					if (isPaused) {
+                        // Render pause image
+						environment.drawBackground();
+						environment.drawAgents();
+                        environment.drawPauseScreen();
+                    } else{
 					/* ChonBota Only Moves if the Player Press Something */
 					if (!input.isEmpty()) {
 						/* ChonBota's Movements */
@@ -77,6 +95,9 @@ public class Engine extends Application {
 					environment.drawBackground();
 					environment.drawAgents();
 				}
+					}
+
+
 			}.start();
 			theStage.show();
 
