@@ -2,193 +2,170 @@ package chon.group.game.domain.agent;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javafx.scene.image.Image;
 
-/**
- * Represents an agent in the game, with properties such as position, size, speed, and image.
- * The agent can move in specific directions and chase a target.
-*/
 public class Agent {
 
-    /** X position (horizontal) of the agent. */
     private int posX;
-
-    /** Y (vertical) position of the agent. */
-    private int posY;
-
-    /** Height of the agent. */
-    private int height;
-
-    /** Width of the agent. */
+    private int posY; 
+    private int height;  
     private int width;
+    private int speed;  
+    private Image image;  
+    private int health;  
+    private long lastAttackTime = 0;  // The time of the last attack (for cooldown)
+    private static final long ATTACK_COOLDOWN = 2000;  // Cooldown duration for attacks (in milliseconds)
+    private boolean invulnerable;  // Flag to control the invulnerability status of the agent
 
-    /** Agent speed. */
-    private int speed;
-
-    /** Image representing the agent. */
-    private Image image;
-
-    /**
-     * Constructor to initialize the agent properties.
-     *
-     * @param posX the agent's initial X (horizontal) position
-     * @param posY the agent's initial Y (vertical) position
-     * @param height the agent's height
-     * @param width the agent's width
-     * @param speed the agent's speed
-     * @param pathImage the path to the agent's image
-     */
-    public Agent(int posX, int posY, int height, int width, int speed, String pathImage) {
+    // Constructor to initialize the agent's properties
+    public Agent(int posX, int posY, int height, int width, int speed, String pathImage, int health) {
         this.posX = posX;
         this.posY = posY;
         this.height = height;
         this.width = width;
         this.speed = speed;
-        this.image = new Image(getClass().getResource(pathImage).toExternalForm());
+        this.health = health;
+        this.image = new Image(getClass().getResource(pathImage).toExternalForm());  // Load the agent's image
+        this.lastAttackTime = 0;  // Initial state with no previous attack
+        this.invulnerable = false;  // Initially, the agent is not invulnerable
     }
 
-    /**
-     * Gets the X (horizontal) position of the agent.
-     *
-     * @return the X (horizontal) position of the agent
-     */
+    // Getters and setters
+
     public int getPosX() {
         return posX;
     }
 
-    /**
-     * Sets the agent's X (horizontal) position.
-     *
-     * @param posX the new X (horizontal) position
-     */
     public void setPosX(int posX) {
         this.posX = posX;
     }
 
-    /**
-     * Gets the Y (vertical) position of the agent.
-     *
-     * @return the Y (vertical) position of the agent
-     */
     public int getPosY() {
         return posY;
     }
 
-    /**
-     * Sets the Y (vertical) position of the agent.
-     *
-     * @param posY the new Y (vertical) position
-     */
     public void setPosY(int posY) {
         this.posY = posY;
     }
 
-    /**
-     * Gets the height of the agent.
-     *
-     * @return the height of the agent
-     */
     public int getHeight() {
         return height;
     }
 
-    /**
-     * Sets the height of the agent.
-     *
-     * @param height the new height
-     */
     public void setHeight(int height) {
         this.height = height;
     }
 
-    /**
-     * Gets the width of the agent.
-     *
-     * @return the width of the agent
-     */
     public int getWidth() {
         return width;
     }
 
-    /**
-     * Sets the width of the agent.
-     *
-     * @param width the new width
-     */
     public void setWidth(int width) {
         this.width = width;
     }
 
-    /**
-     * Gets the agent's speed.
-     *
-     * @return the agent's speed
-     */
     public int getSpeed() {
         return speed;
     }
 
-    /**
-     * Sets the speed of the agent.
-     *
-     * @param speed the new speed
-     */
     public void setSpeed(int speed) {
         this.speed = speed;
     }
 
-    /**
-     * Gets the agent image.
-     *
-     * @return the agent image
-     */
     public Image getImage() {
         return image;
     }
 
-    /**
-     * Sets the agent image.
-     *
-     * @param image the new image
-     */
     public void setImage(Image image) {
         this.image = image;
     }
 
-    /**
-     * Moves the agent based on the movement commands provided.
-     *
-     * @param movements a list of movement directions ("RIGHT", "LEFT", "UP", "DOWN")
-     */
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public boolean isInvulnerable() {
+        return invulnerable;
+    }
+
+    public void setInvulnerable(boolean invulnerable) {
+        this.invulnerable = invulnerable;
+    }
+
+    // Method to move the agent based on a list of movement commands
     public void move(List<String> movements) {
         if (movements.contains("RIGHT")) {
-            setPosX(posX += speed);
+            setPosX(posX += speed); 
         } else if (movements.contains("LEFT")) {
-            setPosX(posX -= speed);
+            setPosX(posX -= speed);  
         } else if (movements.contains("UP")) {
-            setPosY(posY -= speed);
+            setPosY(posY -= speed);  
         } else if (movements.contains("DOWN")) {
-            setPosY(posY += speed);
+            setPosY(posY += speed);  
         }
     }
 
-    /**
-     * Makes the agent chase a target based on its coordinates.
-     *
-     * @param targetX the target's X (horizontal) position
-     * @param targetY the target's Y (vertical) position
-     */
+    // Method for the agent to chase a target (another agent)
     public void chase(int targetX, int targetY) {
         if (targetX > this.posX) {
-            this.move(new ArrayList<String>(List.of("RIGHT")));
+            this.move(new ArrayList<>(List.of("RIGHT")));  
         } else if (targetX < this.posX) {
-            this.move(new ArrayList<String>(List.of("LEFT")));
+            this.move(new ArrayList<>(List.of("LEFT")));  
         }
         if (targetY > this.posY) {
-            this.move(new ArrayList<String>(List.of("DOWN")));
+            this.move(new ArrayList<>(List.of("DOWN")));  
         } else if (targetY < this.posY) {
-            this.move(new ArrayList<String>(List.of("UP")));
+            this.move(new ArrayList<>(List.of("UP")));
         }
+    }
+
+    // Method to check if the agent is dead (health <= 0)
+    public boolean isDead() {
+        return health <= 0;
+    }
+
+    // Method to make the agent take damage, if not invulnerable
+    public void takeDamage() {
+        if (!invulnerable && health > 0) {
+            health--;  // Decrease health
+            activateInvulnerability(ATTACK_COOLDOWN);  // Activate invulnerability for a cooldown period
+        }
+    }
+
+    // Method to check if the agent can attack (based on cooldown)
+    public boolean canAttack() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastAttackTime >= ATTACK_COOLDOWN) {
+            lastAttackTime = currentTime;
+            return true;
+        }
+        return false;
+    }
+
+    // Method for the agent to attack another agent (target)
+    public void attack(Agent target) {
+        if (canAttack()) {
+            target.takeDamage();
+            System.out.println("Attack successful! Target's remaining health: " + target.getHealth());
+        } else {
+            System.out.println("Still in cooldown!");
+        }
+    }
+    
+    // Method to activate invulnerability for a given duration (in milliseconds)
+    public void activateInvulnerability(long duration) {
+        setInvulnerable(true); 
+        new Thread(() -> {
+            try {
+                Thread.sleep(duration);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            setInvulnerable(false); 
+        }).start();
     }
 }
