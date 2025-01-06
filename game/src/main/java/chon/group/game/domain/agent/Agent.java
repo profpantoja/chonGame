@@ -2,11 +2,13 @@ package chon.group.game.domain.agent;
 
 import java.util.List;
 
+import chon.group.game.domain.environment.Environment;
+import chon.group.game.domain.image.ImageImpl;
 import chon.group.game.domain.movement.MovementImpl;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-public class Agent implements MovementImpl {
+public class Agent implements MovementImpl, ImageImpl {
 
     private int posX;
     private int posY;
@@ -14,6 +16,9 @@ public class Agent implements MovementImpl {
     private int width;
     private int speed;
     private Image image;
+
+    private Image leftImage;
+    private Image rightImage;
 
     private String moveUp;
     private String moveDown;
@@ -128,15 +133,50 @@ public class Agent implements MovementImpl {
         this.finish = finish;
     }
 
-    public void move(List<String> movements, Stage theStage) {
+    @Override
+    public void setImageLeft(String pathImage) {
+        try {
+            this.leftImage = new Image(getClass().getResource(pathImage).toExternalForm());
+
+        } catch (Exception e) {
+            System.out.println("ESQUERDA");
+        }
+    }
+
+    @Override
+    public void setImageRight(String pathImage) {
+        try {
+            this.rightImage = new Image(getClass().getResource(pathImage).toExternalForm());
+        } catch (Exception e) {
+            System.out.println(pathImage);
+        }
+    }
+
+    public void move(List<String> movements, Agent agent, Environment environment, Stage theStage) {
         if (movements.contains(getRight())) {
-            setPosX(posX += speed);
+            if ((posX + width) + speed < (environment.getWidth()))
+                setPosX(posX += speed);
+            else
+                setPosX(environment.getWidth() - width);
+            
+            agent.setImage(this.rightImage);
         } else if (movements.contains(getLeft())) {
-            setPosX(posX -= speed);
+            if (posX - speed > 0)
+                setPosX(posX -= speed);
+            else
+                posX = 0;
+
+            agent.setImage(this.leftImage);
         } else if (movements.contains(getUp())) {
-            setPosY(posY -= speed);
+            if (posY - speed > 20)
+                setPosY(posY -= speed);
+            else
+                posY = 20;
         } else if (movements.contains(getDown())) {
-            setPosY(posY += speed);
+            if ((posY + height) + speed < environment.getHeight() - 45)
+                setPosY(posY += speed);
+            else
+                setPosY((environment.getHeight() - height) - 45);
         } else if (movements.contains(getFinish())) {
             theStage.close();
         }

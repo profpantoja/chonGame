@@ -64,13 +64,21 @@ public class Engine extends Application {
 
                 @Override
                 public void handle(long arg0) {
+					/* ChonBota's Images */
+					chonBota.setImageLeft("/images/agents/chonBotaLeft.png");
+					chonBota.setImageRight("/images/agents/chonBota.png");
+
                     /* ChonBota's Movements */
                     chonBota.setUp("W");
                     chonBota.setDown("S");
                     chonBota.setLeft("A");
                     chonBota.setRight("D");
                     chonBota.setFinish("ESCAPE");
-                    chonBota.move(input, theStage);
+                    chonBota.move(input, chonBota, environment, theStage);
+
+					/* ChonBot's Images */
+					chonBot.setImageLeft("/images/agents/chonBot.png");
+					chonBot.setImageRight("/images/agents/chonBotRight.png");
 
                     /* ChonBot's Movements */
                     chonBot.setUp("UP");
@@ -78,7 +86,7 @@ public class Engine extends Application {
                     chonBot.setLeft("LEFT");
                     chonBot.setRight("RIGHT");
                     chonBot.setFinish("ESCAPE");
-                    chonBot.move(input, theStage);
+                    chonBot.move(input, chonBot, environment, theStage);
 
                     /* ChonBot's Automatic Movements */
 					//environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
