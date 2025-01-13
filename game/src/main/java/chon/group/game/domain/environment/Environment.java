@@ -265,20 +265,11 @@ public class Environment {
      * @param agent the protagonist whose information will be displayed
      */
     public void printStatusPanel(Agent agent) {
-        gc.setFill(Color.ROSYBROWN);
-        gc.fillRoundRect(100, 100, 185, 70, 50, 50);
-        gc.setFill(Color.NAVY);
-        gc.fillRoundRect(900, 100, 270, 70, 50, 50);
-        gc.setFill(Color.BLACK);
-        gc.setStroke(Color.BLACK);
-        gc.setLineWidth(2);
         Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
         gc.setFont(theFont);
         gc.fillText("X: " + agent.getPosX(), agent.getPosX() + 10, agent.getPosY() - 25);
         gc.fillText("Y: " + agent.getPosY(), agent.getPosX() + 10, agent.getPosY() - 10);
-        gc.setFill(Color.WHITE);
-        gc.fillText("Life: 100/100", 140, 140);
-        gc.fillText("Boss Health: 100/100", 950, 140);
+        gc.setFill(Color.BLACK);
     }
 
     /**
