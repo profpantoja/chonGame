@@ -245,14 +245,14 @@ public class Environment {
      */
     public void drawAgents() {
         for (Agent agent : this.agents) {
-            if (agent.isAlive()){
+            if (agent.isAlive()) {
                 gc.drawImage(agent.getImage(), agent.getPosX(), agent.getPosY(), agent.getWidth(), agent.getHeight());
             }
         }
         if (this.protagonist.isAlive()) {
-        gc.drawImage(this.protagonist.getImage(), this.protagonist.getPosX(), this.protagonist.getPosY(),
-                this.protagonist.getWidth(), this.protagonist.getHeight());
-        printStatusPanel(this.protagonist);
+            gc.drawImage(this.protagonist.getImage(), this.protagonist.getPosX(), this.protagonist.getPosY(),
+                    this.protagonist.getWidth(), this.protagonist.getHeight());
+            printStatusPanel(this.protagonist);
         }
     }
 
@@ -295,14 +295,22 @@ public class Environment {
     }
 
     /**
-     * Detects collisions between the protagonist and other agents in the
-     * environment, if detected, the protagonist dies.
+     * Detects collisions between the protagonist and other agents in the environment.
+     * If a collision is detected, the agent dies if the protagonist is above,
+     * otherwise the protagonist dies.
      */
     public void detectCollision() {
         for (Agent agent : this.agents) {
-            if (intersect(this.protagonist, agent)) {
-                System.out.println("Collision detected with agent: " + agent);
-                this.protagonist.kill();
+            if (agent.isAlive() && this.protagonist.isAlive()) {
+                if (intersect(this.protagonist, agent)) {
+                    if (this.protagonist.getPosY() < agent.getPosY()) {
+                        System.out.println("Agent eliminated by protagonist!");
+                        agent.kill();
+                    } else {
+                        System.out.println("Protagonist eliminated by agent!");
+                        this.protagonist.kill();
+                    }
+                }
             }
         }
     }
