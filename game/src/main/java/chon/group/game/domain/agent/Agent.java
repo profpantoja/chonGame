@@ -6,9 +6,10 @@ import java.util.List;
 import javafx.scene.image.Image;
 
 /**
- * Represents an agent in the game, with properties such as position, size, speed, and image.
+ * Represents an agent in the game, with properties such as position, size,
+ * speed, and image.
  * The agent can move in specific directions and chase a target.
-*/
+ */
 public class Agent {
 
     /** X position (horizontal) of the agent. */
@@ -29,14 +30,17 @@ public class Agent {
     /** Image representing the agent. */
     private Image image;
 
+    /** Indicates whether the agent is alive */
+    private boolean alive = true;
+
     /**
      * Constructor to initialize the agent properties.
      *
-     * @param posX the agent's initial X (horizontal) position
-     * @param posY the agent's initial Y (vertical) position
-     * @param height the agent's height
-     * @param width the agent's width
-     * @param speed the agent's speed
+     * @param posX      the agent's initial X (horizontal) position
+     * @param posY      the agent's initial Y (vertical) position
+     * @param height    the agent's height
+     * @param width     the agent's width
+     * @param speed     the agent's speed
      * @param pathImage the path to the agent's image
      */
     public Agent(int posX, int posY, int height, int width, int speed, String pathImage) {
@@ -159,7 +163,8 @@ public class Agent {
     /**
      * Moves the agent based on the movement commands provided.
      *
-     * @param movements a list of movement directions ("RIGHT", "LEFT", "UP", "DOWN")
+     * @param movements a list of movement directions ("RIGHT", "LEFT", "UP",
+     *                  "DOWN")
      */
     public void move(List<String> movements) {
         if (movements.contains("RIGHT")) {
@@ -191,4 +196,21 @@ public class Agent {
             this.move(new ArrayList<String>(List.of("UP")));
         }
     }
+
+    /**
+     * Checks if the agent is alive
+     * 
+     * @return true if the agent is alive, false otherwise
+     */
+    public boolean isAlive() {
+        return alive;
+    }
+
+    /**
+     * Kills the agent
+     */
+    public void kill() {
+        this.alive = false;
+    }
+
 }
