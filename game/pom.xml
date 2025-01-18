@@ -17,6 +17,12 @@
             <version>16</version>
         </dependency>
     </dependencies>
+    <repositories>
+        <repository>
+            <id>openjfx</id>
+            <url>https://maven-central.storage.googleapis.com/maven2</url>
+        </repository>
+    </repositories>
     <build>
         <plugins>
             <plugin>
@@ -37,7 +43,30 @@
                         <!-- Usage: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>chon.group.App</mainClass>
+                            <mainClass>chon.group.Engine</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.4.1</version> <!-- Replace with the latest version -->
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <!-- Add the Main-Class to the manifest -->
+                                <transformer
+                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>chon.group.Engine</mainClass> <!-- Replace with your
+                                    main class -->
+                                </transformer>
+                            </transformers>
                         </configuration>
                     </execution>
                 </executions>
