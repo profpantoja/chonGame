@@ -3,12 +3,16 @@ package chon.group.game.domain.agent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 
 /**
- * Represents an agent in the game, with properties such as position, size, speed, and image.
+ * Represents an agent in the game, with properties such as position, size,
+ * speed, and image.
  * The agent can move in specific directions and chase a target.
-*/
+ */
 public class Agent {
 
     /** X position (horizontal) of the agent. */
@@ -29,14 +33,17 @@ public class Agent {
     /** Image representing the agent. */
     private Image image;
 
+    /** Indicates if the agent is facing left. */
+    private boolean flipped = false;
+
     /**
      * Constructor to initialize the agent properties.
      *
-     * @param posX the agent's initial X (horizontal) position
-     * @param posY the agent's initial Y (vertical) position
-     * @param height the agent's height
-     * @param width the agent's width
-     * @param speed the agent's speed
+     * @param posX      the agent's initial X (horizontal) position
+     * @param posY      the agent's initial Y (vertical) position
+     * @param height    the agent's height
+     * @param width     the agent's width
+     * @param speed     the agent's speed
      * @param pathImage the path to the agent's image
      */
     public Agent(int posX, int posY, int height, int width, int speed, String pathImage) {
@@ -46,6 +53,27 @@ public class Agent {
         this.width = width;
         this.speed = speed;
         this.image = new Image(getClass().getResource(pathImage).toExternalForm());
+    }
+
+    /**
+     * Constructor to initialize the agent properties including its direction.
+     *
+     * @param posX      the agent's initial X (horizontal) position
+     * @param posY      the agent's initial Y (vertical) position
+     * @param height    the agent's height
+     * @param width     the agent's width
+     * @param speed     the agent's speed
+     * @param pathImage the path to the agent's image
+     * @param flipped   the agent's direction (RIGHT=0 or LEFT=1)
+     */
+    public Agent(int posX, int posY, int height, int width, int speed, String pathImage, boolean flipped) {
+        this.posX = posX;
+        this.posY = posY;
+        this.height = height;
+        this.width = width;
+        this.speed = speed;
+        this.image = new Image(getClass().getResource(pathImage).toExternalForm());
+        this.flipped = flipped;
     }
 
     /**
@@ -148,7 +176,7 @@ public class Agent {
     }
 
     /**
-     * Sets the agent image.
+     * Gets the agent flipped status.
      *
      * @param image the new image
      */
@@ -156,15 +184,45 @@ public class Agent {
         this.image = image;
     }
 
+    public boolean isFlipped() {
+        return flipped;
+    }
+
+    /**
+     * Sets the agent flipped status.
+     *
+     * @param image the new image
+     */
+    public void setFlipped(boolean flipped) {
+        this.flipped = flipped;
+    }
+
+    /**
+     * Flips the Image horizontally.
+     */
+    private void flipImage() {
+        ImageView flippedImage = new ImageView(image);
+        flippedImage.setScaleX(-1);
+        SnapshotParameters params = new SnapshotParameters();
+        params.setFill(Color.TRANSPARENT);
+        this.flipped = !this.flipped;
+        this.image = flippedImage.snapshot(params, null);
+    }
+
     /**
      * Moves the agent based on the movement commands provided.
      *
-     * @param movements a list of movement directions ("RIGHT", "LEFT", "UP", "DOWN")
+     * @param movements a list of movement directions ("RIGHT", "LEFT", "UP",
+     *                  "DOWN")
      */
     public void move(List<String> movements) {
         if (movements.contains("RIGHT")) {
+            if (flipped)
+                this.flipImage();
             setPosX(posX += speed);
         } else if (movements.contains("LEFT")) {
+            if (!flipped)
+                this.flipImage();
             setPosX(posX -= speed);
         } else if (movements.contains("UP")) {
             setPosY(posY -= speed);
@@ -191,4 +249,5 @@ public class Agent {
             this.move(new ArrayList<String>(List.of("UP")));
         }
     }
+
 }

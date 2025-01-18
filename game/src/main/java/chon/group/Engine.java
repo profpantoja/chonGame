@@ -58,8 +58,8 @@ public class Engine extends Application {
 		try {
 			// Initialize the game environment and agents
 			Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
-			Agent chonBota = new Agent(400, 390, 90, 65, 2, "/images/agents/chonBota.png");
-			Agent chonBot = new Agent(920, 440, 90, 65, 1, "/images/agents/chonBot.png");
+			Agent chonBota = new Agent(400, 390, 90, 65, 2, "/images/agents/chonBota.png", false);
+			Agent chonBot = new Agent(920, 440, 90, 65, 1, "/images/agents/chonBot.png", true);
 			environment.setProtagonist(chonBota);
 			environment.getAgents().add(chonBot);
 			environment.setPauseImage("/images/environment/pause.png");
