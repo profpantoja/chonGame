@@ -13,8 +13,9 @@ public class Agent {
     private int speed;  
     private Image image;  
     private int health;  
+    private int fullHealth;
     private long lastAttackTime = 0;  // The time of the last attack (for cooldown)
-    private static final long ATTACK_COOLDOWN = 2000;  // Cooldown duration for attacks (in milliseconds)
+    private static final long ATTACK_COOLDOWN = 1000;  // Cooldown duration for attacks (in milliseconds)
     private boolean invulnerable;  // Flag to control the invulnerability status of the agent
 
     // Constructor to initialize the agent's properties
@@ -25,6 +26,7 @@ public class Agent {
         this.width = width;
         this.speed = speed;
         this.health = health;
+        this.fullHealth = health;
         this.image = new Image(getClass().getResource(pathImage).toExternalForm());  // Load the agent's image
         this.lastAttackTime = 0;  // Initial state with no previous attack
         this.invulnerable = false;  // Initially, the agent is not invulnerable
@@ -86,6 +88,14 @@ public class Agent {
 
     public void setHealth(int health) {
         this.health = health;
+    }
+
+    public int getFullHealth() {
+        return fullHealth;
+    }
+
+    public void setFullHealth(int fullHealth) {
+        this.fullHealth = fullHealth;
     }
 
     public boolean isInvulnerable() {
