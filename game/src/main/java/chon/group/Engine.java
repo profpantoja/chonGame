@@ -15,30 +15,31 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 
 /**
- * The {@code Engine} class represents the main entry point of the application 
+ * The {@code Engine} class represents the main entry point of the application
  * and serves as the game engine for "Chon: The Learning Game."
  * <p>
- * This class extends {@link javafx.application.Application} and manages the 
- * game initialization, rendering, and main game loop using {@link javafx.animation.AnimationTimer}.
+ * This class extends {@link javafx.application.Application} and manages the
+ * game initialization, rendering, and main game loop using
+ * {@link javafx.animation.AnimationTimer}.
  * </p>
  * 
  * <h2>Responsibilities</h2>
  * <ul>
- *   <li>Set up the game environment, agents, and graphical components.</li>
- *   <li>Handle keyboard input for controlling the protagonist agent.</li>
- *   <li>Execute the game loop for updating and rendering the game state.</li>
+ * <li>Set up the game environment, agents, and graphical components.</li>
+ * <li>Handle keyboard input for controlling the protagonist agent.</li>
+ * <li>Execute the game loop for updating and rendering the game state.</li>
  * </ul>
  */
 public class Engine extends Application {
 
-    private long invulnerableTimeEnd = 0; // Tempo final da invulnerabilidade
-    private boolean isInvulnerable = false; // Flag para invulnerabilidade
+    private boolean isPaused = false;
 
     /**
      * Main entry point of the application.
      *
      * @param args command-line arguments passed to the application.
      */
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -58,17 +59,16 @@ public class Engine extends Application {
         try {
             // Initialize the game environment and agents
             Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
-            Agent chonBota = new Agent(400, 390, 90, 65, 3, "/images/agents/chonBota.png", 100); // Protagonista
-            Agent chonBot = new Agent(920, 440, 90, 65, 1, "/images/agents/chonBot.png", 3); // Inimigo
-            //Agent chonBot = new Agent(400, 490, 90, 65, 1, "/images/agents/chonBot.png", 3); // Inimigo
-
+            Agent chonBota = new Agent(400, 390, 90, 65, 3, 100, "/images/agents/chonBota.png", false);
+            Agent chonBot = new Agent(920, 440, 90, 65, 1, 3, "/images/agents/chonBot.png", true);
             environment.setProtagonist(chonBota);
             environment.getAgents().add(chonBot);
+            environment.setPauseImage("/images/environment/pause.png");
 
             // Set up the graphical canvas
             Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
             GraphicsContext gc = canvas.getGraphicsContext2D();
-            environment.setGraphicsContext(gc);
+            environment.setGc(gc);
 
             // Set up the scene and stage
             StackPane root = new StackPane();
@@ -80,21 +80,29 @@ public class Engine extends Application {
             theStage.show();
 
             // Handle keyboard input
-            ArrayList<String> input = new ArrayList<>();
+            ArrayList<String> input = new ArrayList<String>();
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-                @Override
                 public void handle(KeyEvent e) {
                     String code = e.getCode().toString();
-                    if (!input.contains(code)) {
+                    input.clear();
+
+                    System.out.println("Pressed: " + code);
+
+                    if (code.equals("P")) {
+                        isPaused = !isPaused;
+                    }
+
+                    if (!isPaused && !input.contains(code)) {
                         input.add(code);
                     }
+
                 }
             });
 
             scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
-                @Override
                 public void handle(KeyEvent e) {
                     String code = e.getCode().toString();
+                    System.out.println("Released: " + code);
                     input.remove(code);
                 }
             });
@@ -108,48 +116,40 @@ public class Engine extends Application {
                  * @param now the timestamp of the current frame in nanoseconds.
                  */
                 @Override
-                public void handle(long now) {
-                    // Clear the canvas
-                    gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                public void handle(long arg0) {
 
-                    // verify if the character are invunerable
-                    if (isInvulnerable && now > invulnerableTimeEnd) {
-                        isInvulnerable = false; // Fim da invulnerabilidade
-                    }
+                    if (isPaused) {
+                        // Render pause image
+                        environment.drawBackground();
+                        environment.drawAgents();
+                        environment.drawPauseScreen();
+                    } else {
+                        /* ChonBota Only Moves if the Player Press Something */
+                        // Update the protagonist's movements if input exists
+                        if (!input.isEmpty()) {
+                            /* ChonBota's Movements */
+                            environment.getProtagonist().move(input);
+                            environment.checkBorders();
+                        }
 
-                    // Continuously update the protagonist's movements based on input
-                    if (!input.isEmpty()) {
-                        environment.getProtagonist().move(input); // Continuar o movimento
-                        environment.checkBorders();
-                    }
+                        /* ChonBot's Automatic Movements */
+                        // Update the other agents' movements
+                        environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
+                                environment.getProtagonist().getPosY());
 
-                    // ChonBot's automatic movements
-                    environment.getAgents().get(0).chase(
-                        environment.getProtagonist().getPosX(),
-                        environment.getProtagonist().getPosY()
-                    );
-
-                    // Detect collisions and handle health reduction
-                    if (!isInvulnerable) {
-                        environment.detectCollision(); // Detecta colisões apenas quando não estiver invulnerável
-                    }
-
-                    // Render the environment and agents
-                    environment.render();
-
-                    // Check if the protagonist is dead
-                    if (environment.getProtagonist().isDead()) {
-                        
-                        environment.getProtagonist().setPosX(-100);  // Move the protagonist out of the screen
-                        environment.getProtagonist().setPosY(-100);
-                        stop(); // Stop the game loop if the protagonist dies
-                        System.out.println("Game Over!");
+                        // Render the game environment and agents
+                        environment.detectCollision();
+                        environment.drawBackground();
+                        environment.drawAgents();
                     }
                 }
+
             }.start();
+            theStage.show();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 }
