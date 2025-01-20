@@ -36,6 +36,12 @@ public class Agent {
     /** Indicates if the agent is facing left. */
     private boolean flipped = false;
 
+    /** The initial agent's health. */
+    private int health;
+
+    /** The maximum agent's health. */
+    private int fullHealth;
+
     /**
      * Constructor to initialize the agent properties.
      *
@@ -44,14 +50,17 @@ public class Agent {
      * @param height    the agent's height
      * @param width     the agent's width
      * @param speed     the agent's speed
+     * @param health    the agent's health
      * @param pathImage the path to the agent's image
      */
-    public Agent(int posX, int posY, int height, int width, int speed, String pathImage) {
+    public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage) {
         this.posX = posX;
         this.posY = posY;
         this.height = height;
         this.width = width;
         this.speed = speed;
+        this.health = health;
+        this.fullHealth = health;
         this.image = new Image(getClass().getResource(pathImage).toExternalForm());
     }
 
@@ -63,15 +72,18 @@ public class Agent {
      * @param height    the agent's height
      * @param width     the agent's width
      * @param speed     the agent's speed
+     * @param health    the agent's health
      * @param pathImage the path to the agent's image
      * @param flipped   the agent's direction (RIGHT=0 or LEFT=1)
      */
-    public Agent(int posX, int posY, int height, int width, int speed, String pathImage, boolean flipped) {
+    public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped) {
         this.posX = posX;
         this.posY = posY;
         this.height = height;
         this.width = width;
         this.speed = speed;
+        this.health = health;
+        this.fullHealth = health;
         this.image = new Image(getClass().getResource(pathImage).toExternalForm());
         this.flipped = flipped;
     }
@@ -164,6 +176,42 @@ public class Agent {
      */
     public void setSpeed(int speed) {
         this.speed = speed;
+    }
+
+    /**
+     * Gets the agent's health.
+     *
+     * @return the agent's health
+     */
+    public int getHealth() {
+        return health;
+    }
+
+    /**
+     * Sets the health of the agent.
+     *
+     * @param health the new health
+     */
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    /**
+     * Gets the agent's maximum health.
+     *
+     * @return the agent's maximum health
+     */
+    public int getFullHealth() {
+        return fullHealth;
+    }
+
+    /**
+     * Sets the maximum health of the agent.
+     *
+     * @param fullHealth the new maximum health
+     */
+    public void setFullHealth(int fullHealth) {
+        this.fullHealth = fullHealth;
     }
 
     /**

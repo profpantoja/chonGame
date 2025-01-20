@@ -181,7 +181,7 @@ public class Environment {
     public void setImage(String pathImage) {
         this.image = new Image(getClass().getResource(pathImage).toExternalForm());
     }
-    
+
     public Image getPauseImage() {
         return pauseImage;
     }
@@ -273,6 +273,7 @@ public class Environment {
         gc.drawImage(this.protagonist.getImage(), this.protagonist.getPosX(), this.protagonist.getPosY(),
                 this.protagonist.getWidth(), this.protagonist.getHeight());
         printStatusPanel(this.protagonist);
+        drawLifeBar();
     }
 
     /**
@@ -290,9 +291,68 @@ public class Environment {
     public void printStatusPanel(Agent agent) {
         Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
         gc.setFont(theFont);
-        gc.fillText("X: " + agent.getPosX(), agent.getPosX() + 10, agent.getPosY() - 25);
-        gc.fillText("Y: " + agent.getPosY(), agent.getPosX() + 10, agent.getPosY() - 10);
         gc.setFill(Color.BLACK);
+        gc.fillText("X: " + agent.getPosX(), agent.getPosX() + 10, agent.getPosY() - 40);
+        gc.fillText("Y: " + agent.getPosY(), agent.getPosX() + 10, agent.getPosY() - 25);
+    }
+
+    /**
+     * Draws a health bar above the protagonist to represent their current health
+     * visually.
+     * The health bar consists of:
+     * <ul>
+     * <li>A black border representing the health bar's background.</li>
+     * <li>A green inner bar representing the actual health percentage of the
+     * protagonist.</li>
+     * </ul>
+     * 
+     * The size of the health bar is dynamically calculated based on the
+     * protagonist's
+     * current health (`getHealth()`), maximum health (`getFullHealth()`), and width
+     * (`getWidth()`).
+     * 
+     * <p>
+     * The health bar is drawn a fixed distance above the protagonist's position.
+     * </p>
+     *
+     * <p>
+     * <strong>Key Calculations:</strong>
+     * </p>
+     * <ul>
+     * <li><strong>lifePercentage:</strong> Percentage of current health relative to
+     * maximum health.</li>
+     * <li><strong>lifeSpan:</strong> Width of the green inner bar based on health
+     * percentage.</li>
+     * </ul>
+     */
+    public void drawLifeBar() {
+        // The border's thickness.
+        int borderThickness = 2;
+        // The border's height.
+        int barHeight = 5;
+        // The life span proportion calculated based on actual and maximum health.
+        int lifePercentage = Math.round((float) (protagonist.getHealth() * 100 / protagonist.getFullHealth()));
+        int lifeSpan = (lifePercentage * protagonist.getWidth()) / 100;
+        // Int points before the agent's y position.
+        int barY = 15;
+        // The outside background of the health bar.
+        gc.setFill(Color.BLACK);
+        // The height is a little bit bigger to give a border experience.
+        gc.fillRect(protagonist.getPosX(),
+                protagonist.getPosY() - barY,
+                protagonist.getWidth(),
+                barHeight + (borderThickness * 2));
+        // The inside of the health bar. It is the effective life of the agent.
+        // The border height plus the thickness multiplied by two (beggining and end at
+        // X).
+        gc.setFill(Color.GREEN);
+        // The initial position considering the border from both X and Y points.
+        // The life span less the border thickness multiplied by two (beggining and end
+        // at Y).
+        gc.fillRect(protagonist.getPosX() + borderThickness,
+                protagonist.getPosY() - (barY - borderThickness),
+                (lifeSpan - (borderThickness * 2)),
+                barHeight);
     }
 
     /**
@@ -319,6 +379,8 @@ public class Environment {
         for (Agent agent : this.agents) {
             if (intersect(this.protagonist, agent)) {
                 System.out.println("Collision detected with agent: " + agent);
+                if (!(this.protagonist.getHealth() <= 0))
+                    this.protagonist.setHealth(this.protagonist.getHealth() - 1);
             }
         }
     }
