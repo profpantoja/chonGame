@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import chon.group.agent.Agent;
+import chon.group.agent.HeroMovement;
 import chon.group.enviroment.Environment;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -32,7 +33,7 @@ public class Engine extends Application {
 			Agent agentA = new Agent(920, 420, 110, 100, "/images/agent/Asteroid/asteroide1.png", false, 0);
 			agents.add(agentA);
 
-			Agent agentB = new Agent(70, 410, 120, 100, "/images/agent/Spaceship/spaceship_andando1.png", true, 500000);
+			Agent agentB = new HeroMovement(70, 410, 120, 100, "/images/agent/Spaceship/spaceship_andando1.png", true, 500000);
 			agents.add(agentB);
 
 			if (Agent.numberProtagonist == 1) {

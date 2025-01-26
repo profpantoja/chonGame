@@ -87,8 +87,8 @@ public class Agent {
         return image;
     }
 
-    public void setImage(Image image) {
-        this.image = image;
+    public void setImage(String pathImage) {
+        this.image = new Image(getClass().getResource(pathImage).toExternalForm());
     }
 
     public boolean isAlive() {
