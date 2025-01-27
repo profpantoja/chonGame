@@ -39,17 +39,17 @@ public class Engine extends Application {
 			if (Agent.numberProtagonist == 1) {
 
 				StackPane root = new StackPane();
-				Scene scene = new Scene(root, 1180, 780);
+				Scene scene = new Scene(root, 960, 870);
 				theStage.setTitle("Chon: The Learning Game");
 				theStage.setScene(scene);
-				Canvas canvas = new Canvas(1180, 780);
+				Canvas canvas = new Canvas(960, 870);
 
 				System.out.println("Working Directory = " + System.getProperty("user.dir"));
 
 				root.getChildren().add(canvas);
 				theStage.show();
 
-				Environment atmosphere = new Environment(0, 0, 1180, 780, "/images/environment/background space.png",
+				Environment atmosphere = new Environment(0, 0, 960, 870, "/images/environment/background space.png",
 						agents, canvas.getGraphicsContext2D());
 
 				Environment lifeIcon = new Environment(964, 638, 56, 47, "/images/agent/Spaceship/Life_icon.png",
