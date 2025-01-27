@@ -336,7 +336,7 @@ public class Environment {
                 System.out.println("Collision detected with agent: " + agent);
                 if (!(this.protagonist.getHealth() <= 0)) {
                     // call the method takeDamage of the protagonist
-                    this.protagonist.takeDamage(33); //
+                    this.protagonist.takeDamage(20); //
                 }
             }
         }
