@@ -30,7 +30,7 @@ public class Engine extends Application {
 
 			ArrayList<Agent> agents = new ArrayList<>();
 
-			Agent agentA = new Agent(920, 420, 110, 100, "/images/agent/Asteroid/asteroide1.png", false, 0);
+			Agent agentA = new Agent(920, 420, 134, 80, "/images/agent/Asteroid/asteroide1.png", false, 0);
 			agents.add(agentA);
 
 			Agent agentB = new HeroMovement(70, 410, 120, 100, "/images/agent/Spaceship/spaceship_andando1.png", true, 500000);
