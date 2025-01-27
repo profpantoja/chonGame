@@ -25,6 +25,9 @@ public class Agent {
     private int health;
     private int fullHealth;
     private boolean gameOver = false;  // New field to track the game state
+    private long lastAttackTime = 0;  // The time of the last attack (for cooldown)
+    private static final long ATTACK_COOLDOWN = 2000;  // Cooldown duration for attacks (in milliseconds)
+    private boolean invulnerable;  // Flag to control the invulnerability status of the agent
 
     /**
      * Constructor to initialize the agent properties.
@@ -46,6 +49,8 @@ public class Agent {
         this.health = health;
         this.fullHealth = health;
         this.image = new Image(getClass().getResource(pathImage).toExternalForm());
+        this.lastAttackTime = 0;  // Initial state with no previous attack
+        this.invulnerable = false;  // Initially, the agent is not invulnerable
     }
 
     /**
@@ -72,6 +77,7 @@ public class Agent {
         this.flipped = flipped;
     }
 
+    //Getters and Setters
     public int getPosX() {
         return posX;
     }
@@ -142,6 +148,30 @@ public class Agent {
 
     public boolean isGameOver() {
         return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
+    public long getLastAttackTime() {
+        return lastAttackTime;
+    }
+
+    public void setLastAttackTime(long lastAttackTime) {
+        this.lastAttackTime = lastAttackTime;
+    }
+
+    public static long getAttackCooldown() {
+        return ATTACK_COOLDOWN;
+    }
+
+    public boolean isInvulnerable() {
+        return invulnerable;
+    }
+
+    public void setInvulnerable(boolean invulnerable) {
+        this.invulnerable = invulnerable;
     }
 
     /**
@@ -231,15 +261,25 @@ public class Agent {
      *
      * @param damage the amount of damage to be applied
      */
-    public void takeDamage(int damage) {
-        this.health -= damage;
-        if (this.health < 0) {
-            this.health = 0;
-        }
-        if (this.health == 0 && !gameOver) {
-            gameOver = true;
-            System.out.println("Game Over! Agent has died.");
+    // Method to make the agent take damage, if not invulnerable
+    public void takeDamage() {
+        if (!invulnerable && health > 0) {
+            health = health - 20;  // Decrease health
         }
     }
 
+    // Method to check if the agent is dead (health <= 0)
+    public boolean isDead() {
+        return health <= 0;
+    }
+
+    // Method to check if the agent can attack (based on cooldown)
+    public boolean canAttack() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastAttackTime >= ATTACK_COOLDOWN) {
+            lastAttackTime = currentTime;
+            return true;
+        }
+        return false;
+    }
 }

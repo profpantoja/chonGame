@@ -332,11 +332,13 @@ public class Environment {
      */
     public void detectCollision() {
         for (Agent agent : this.agents) {
-            if (intersect(this.protagonist, agent)) {
-                System.out.println("Collision detected with agent: " + agent);
-                if (!(this.protagonist.getHealth() <= 0)) {
-                    // call the method takeDamage of the protagonist
-                    this.protagonist.takeDamage(20); //
+            // Check if the protagonist is invulnerable; if not, check for collision
+            if (protagonist != null && !protagonist.isInvulnerable() && intersect(agent, protagonist)) {
+                // The protagonist takes damage when colliding with an agent
+                protagonist.takeDamage();
+                // If the protagonist's health is 0 or below, the protagonist is dead
+                if (protagonist.isDead()) {
+                    System.out.println("The protagonist is dead!");
                 }
             }
         }
@@ -354,7 +356,9 @@ public class Environment {
      * @param b the second agent
      * @return true if the agents collide, otherwise false
      */
+    
     private boolean intersect(Agent a, Agent b) {
+        // Returns true if there is a collision between two agents
         return a.getPosX() < b.getPosX() + b.getWidth() &&
                 a.getPosX() + a.getWidth() > b.getPosX() &&
                 a.getPosY() < b.getPosY() + b.getHeight() &&
