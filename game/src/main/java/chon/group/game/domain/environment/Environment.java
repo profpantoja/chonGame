@@ -20,31 +20,14 @@ import javafx.scene.text.FontWeight;
  */
 public class Environment {
 
-    /** The X (horizontal) position of the environment. */
     private int posX;
-
-    /** The Y (vertical) position of the environment. */
     private int posY;
-
-    /** The width of the environment. */
     private int width;
-
-    /** The height of the environment. */
     private int height;
-
-    /** The background image of the environment. */
     private Image image;
-
-    /** The background image of the pause. */
     private Image pauseImage;
-
-    /** The protagonist instance. */
     private Agent protagonist;
-
-    /** List of agents present in the environment. */
     private List<Agent> agents = new ArrayList<Agent>();
-
-    /** The graphics context used to render the environment. */
     private GraphicsContext gc;
 
     /**
@@ -296,35 +279,7 @@ public class Environment {
         gc.fillText("Y: " + agent.getPosY(), agent.getPosX() + 10, agent.getPosY() - 25);
     }
 
-    /**
-     * Draws a health bar above the protagonist to represent their current health
-     * visually.
-     * The health bar consists of:
-     * <ul>
-     * <li>A black border representing the health bar's background.</li>
-     * <li>A green inner bar representing the actual health percentage of the
-     * protagonist.</li>
-     * </ul>
-     * 
-     * The size of the health bar is dynamically calculated based on the
-     * protagonist's
-     * current health (`getHealth()`), maximum health (`getFullHealth()`), and width
-     * (`getWidth()`).
-     * 
-     * <p>
-     * The health bar is drawn a fixed distance above the protagonist's position.
-     * </p>
-     *
-     * <p>
-     * <strong>Key Calculations:</strong>
-     * </p>
-     * <ul>
-     * <li><strong>lifePercentage:</strong> Percentage of current health relative to
-     * maximum health.</li>
-     * <li><strong>lifeSpan:</strong> Width of the green inner bar based on health
-     * percentage.</li>
-     * </ul>
-     */
+    
     public void drawLifeBar() {
         // The border's thickness.
         int borderThickness = 2;
@@ -379,8 +334,10 @@ public class Environment {
         for (Agent agent : this.agents) {
             if (intersect(this.protagonist, agent)) {
                 System.out.println("Collision detected with agent: " + agent);
-                if (!(this.protagonist.getHealth() <= 0))
-                    this.protagonist.setHealth(this.protagonist.getHealth() - 1);
+                if (!(this.protagonist.getHealth() <= 0)) {
+                    // call the method takeDamage of the protagonist
+                    this.protagonist.takeDamage(33); //
+                }
             }
         }
     }
