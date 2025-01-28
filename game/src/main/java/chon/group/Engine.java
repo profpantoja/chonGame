@@ -33,17 +33,14 @@ import javafx.scene.layout.StackPane;
 public class Engine extends Application {
 
     private boolean isPaused = false;
-
     /**
      * Main entry point of the application.
      *
      * @param args command-line arguments passed to the application.
      */
-
     public static void main(String[] args) {
         launch(args);
     }
-
     /**
      * Starts the JavaFX application and initializes the game environment, agents,
      * and graphical components.
