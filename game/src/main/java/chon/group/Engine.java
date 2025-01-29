@@ -14,96 +14,168 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 
+/**
+ * The {@code Engine} class represents the main entry point of the application
+ * and serves as the game engine for "Chon: The Learning Game."
+ * <p>
+ * This class extends {@link javafx.application.Application} and manages the
+ * game initialization, rendering, and main game loop using
+ * {@link javafx.animation.AnimationTimer}.
+ * </p>
+ * 
+ * <h2>Responsibilities</h2>
+ * <ul>
+ * <li>Set up the game environment, agents, and graphical components.</li>
+ * <li>Handle keyboard input for controlling the protagonist agent.</li>
+ * <li>Execute the game loop for updating and rendering the game state.</li>
+ * </ul>
+ */
 public class Engine extends Application {
 
-	private boolean isPaused = false;
+    private boolean isPaused = false;
+    private boolean gameOver = false;
 
-	public static void main(String[] args) {
-		launch(args);
-	}
+    /**
+     * Main entry point of the application.
+     *
+     * @param args command-line arguments passed to the application.
+     */
 
-	@Override
-	public void start(Stage theStage) {
-		try {
-			Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
-			Agent chonBota = new Agent(400, 390, 90, 65, 2, "/images/agents/chonBota.png");
-			Agent chonBot = new Agent(920, 440, 90, 65, 1, "/images/agents/chonBot.png");
-			environment.setProtagonist(chonBota);
-			environment.getAgents().add(chonBot);
-			environment.setPauseImage("/images/environment/pause_icon.png");
+    public static void main(String[] args) {
+        launch(args);
+    }
 
-			Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
-			GraphicsContext gc = canvas.getGraphicsContext2D();
-			environment.setGc(gc);
+    /**
+     * Starts the JavaFX application and initializes the game environment, agents,
+     * and graphical components.
+     * <p>
+     * This method sets up the game scene, handles input events, and starts the
+     * game loop using {@link AnimationTimer}.
+     * </p>
+     *
+     * @param theStage the primary stage for the application.
+     */
+    @Override
+    public void start(Stage theStage) {
+        try {
+            // Initialize the game environment and agents
+            Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/SquidGameEnvironment.jpg");
+            Agent chonBota = new Agent(400, 390, 150, 80, 6, 100, "/images/agents/protagonistasg.png", false);
+            Agent chonBot = new Agent(-400, -390, 0, 0, 0, 3, "/images/agents/chonBot.png", true);
+            environment.setProtagonist(chonBota);
+            environment.getAgents().add(chonBot);
+            environment.setPauseImage("/images/environment/pause.png");
+            environment.setGameOverImage("/images/environment/SG_GAMEOVER.png");
 
-			StackPane root = new StackPane();
-			Scene scene = new Scene(root, environment.getWidth(), environment.getHeight());
-			theStage.setTitle("Chon: The Learning Game");
-			theStage.setScene(scene);
+            // Set up the graphical canvas
+            Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
+            GraphicsContext gc = canvas.getGraphicsContext2D();
+            environment.setGc(gc);
 
-			root.getChildren().add(canvas);
-			theStage.show();
+            // Set up the scene and stage
+            StackPane root = new StackPane();
+            Scene scene = new Scene(root, environment.getWidth(), environment.getHeight());
+            theStage.setTitle("Chon: The Learning Game");
+            theStage.setScene(scene);
 
-			ArrayList<String> input = new ArrayList<String>();
-			scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-				public void handle(KeyEvent e) {
-					String code = e.getCode().toString();
-					input.clear();
+            root.getChildren().add(canvas);
+            theStage.show();
 
-					System.out.println("Pressed: " + code);
-					
-					if (code.equals("P")) {
+            // Handle keyboard input
+            ArrayList<String> input = new ArrayList<String>();
+            scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+                public void handle(KeyEvent e) {
+                    String code = e.getCode().toString();
+                    input.clear();
+
+                    System.out.println("Pressed: " + code);
+
+                    if (code.equals("P")) {
                         isPaused = !isPaused;
                     }
-					
-					if (!isPaused && !input.contains(code)) {
+
+                    if (!isPaused && !input.contains(code)) {
                         input.add(code);
                     }
 
-				}
-			});
+                }
+            });
 
-			scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
-				public void handle(KeyEvent e) {
-					String code = e.getCode().toString();
-					System.out.println("Released: " + code);
-					input.remove(code);
-				}
-			});
+            scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+                public void handle(KeyEvent e) {
+                    String code = e.getCode().toString();
+                    System.out.println("Released: " + code);
+                    input.remove(code);
+                }
+            });
 
-			new AnimationTimer() {
+            // Start the game loop
+            new AnimationTimer() {
 
-				@Override
-				public void handle(long arg0) {
+                /**
+                 * The game loop, called on each frame.
+                 *
+                 * @param now the timestamp of the current frame in nanoseconds.
+                 */
+                @Override
+                public void handle(long arg0) {
 
-					if (isPaused) {
+                    // Render gameOver image
+                    if (gameOver) {
+                        environment.drawBackground();
+                        environment.drawAgents();
+                        environment.drawGameOverScreen();
+                        return;
+                    }
+
+                    if (isPaused) {
                         // Render pause image
-						environment.drawBackground();
-						environment.drawAgents();
+                        environment.drawBackground();
+                        environment.drawAgents();
                         environment.drawPauseScreen();
-                    } else{
-					/* ChonBota Only Moves if the Player Press Something */
-					if (!input.isEmpty()) {
-						/* ChonBota's Movements */
-						environment.getProtagonist().move(input);
-						environment.checkBorders();
-					} 
-					/* ChonBot's Automatic Movements */
-					environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
-							environment.getProtagonist().getPosY());
-					/* Rendering Objects */
-					environment.drawBackground();
-					environment.drawAgents();
-				}
-					}
+                    } else {
+                        /* ChonBota Only Moves if the Player Press Something */
+                        // Update the protagonist's movements if input exists
+                        if (!input.isEmpty()) {
+                            /* ChonBota's Movements */
+                            environment.getProtagonist().move(input);
+                            environment.checkBorders();
+                        }
 
+                        /* ChonBot's Automatic Movements */
+                        // Update the other agents' movements
+                        environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
+                                environment.getProtagonist().getPosY());
 
-			}.start();
-			theStage.show();
+                        for (Agent enemy : environment.getAgents()) {
+                            enemy.chase(environment.getProtagonist().getPosX(), environment.getProtagonist().getPosY());
+                        }
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+                        environment.detectCollision();
+
+                        // Verifica se o protagonista morreu
+                        if (environment.getProtagonist().isDead()) {
+                            gameOver = true;
+                            environment.setGameOver(true);
+                        }
+
+                        // Render the game environment and agents
+                        environment.drawBackground();
+                        environment.drawAgents();
+
+                        // Update the enemies if gameover false
+                        if (!gameOver) {
+                            environment.updateEnemies();
+                        }
+                    }
+                }
+
+            }.start();
+            theStage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }
