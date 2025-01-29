@@ -77,7 +77,6 @@ public class Agent {
         this.flipped = flipped;
     }
 
-    //Getters and Setters
     public int getPosX() {
         return posX;
     }
@@ -265,6 +264,7 @@ public class Agent {
     public void takeDamage() {
         if (!invulnerable && health > 0) {
             health = health - 20;  // Decrease health
+            activateInvulnerability(ATTACK_COOLDOWN);  // Activate invulnerability for a cooldown period
         }
     }
 
@@ -282,4 +282,18 @@ public class Agent {
         }
         return false;
     }
+
+    // Method to activate invulnerability for a given duration (in milliseconds)
+    public void activateInvulnerability(long duration) {
+        setInvulnerable(true); 
+        new Thread(() -> {
+            try {
+                Thread.sleep(duration);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            setInvulnerable(false); 
+        }).start();
+    }
+
 }

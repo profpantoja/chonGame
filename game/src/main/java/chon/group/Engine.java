@@ -58,11 +58,11 @@ public class Engine extends Application {
     public void start(Stage theStage) {
         try {
             // Initialize the game environment and agents
-            Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
-            Agent chonBota = new Agent(400, 390, 90, 65, 3, 100, "/images/agents/chonBota.png", false);
-            Agent chonBot = new Agent(920, 440, 90, 65, 1, 3, "/images/agents/chonBot.png", true);
-            environment.setProtagonist(chonBota);
-            environment.getAgents().add(chonBot);
+            Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/backgroundGPT.jpg");
+            Agent jerry = new Agent(400, 390, 70, 85, 4, 100, "/images/agents/jerrySprite.png", false);
+            Agent tom = new Agent(920, 440, 130, 96, 2, 3, "/images/agents/tom.png", true);
+            environment.setProtagonist(jerry);
+            environment.getAgents().add(tom);
             environment.setPauseImage("/images/environment/pause.png");
 
             // Set up the graphical canvas
@@ -124,15 +124,15 @@ public class Engine extends Application {
                         environment.drawAgents();
                         environment.drawPauseScreen();
                     } else {
-                        /* ChonBota Only Moves if the Player Press Something */
+                        /* jerry Only Moves if the Player Press Something */
                         // Update the protagonist's movements if input exists
                         if (!input.isEmpty()) {
-                            /* ChonBota's Movements */
+                            /* jerry's Movements */
                             environment.getProtagonist().move(input);
                             environment.checkBorders();
                         }
 
-                        /* ChonBot's Automatic Movements */
+                        /* tom's Automatic Movements */
                         // Update the other agents' movements
                         environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
                                 environment.getProtagonist().getPosY());
@@ -151,4 +151,5 @@ public class Engine extends Application {
             e.printStackTrace();
         }
     }
+
 }
