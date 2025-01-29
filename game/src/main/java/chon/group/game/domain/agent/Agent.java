@@ -42,9 +42,6 @@ public class Agent {
     /** The maximum agent's health. */
     private int fullHealth;
 
-    // New field to track the game state
-    private boolean gameOver = false;
-
     // The time of the last attack (for cooldown)
     private long lastAttackTime = 0;
 
@@ -259,13 +256,6 @@ public class Agent {
         this.flipped = flipped;
     }
 
-    public boolean isGameOver() {
-        return gameOver;
-    }
-
-    public void setGameOver(boolean gameOver) {
-        this.gameOver = gameOver;
-    }
 
     public long getLastAttackTime() {
         return lastAttackTime;

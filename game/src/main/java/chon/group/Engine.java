@@ -64,7 +64,7 @@ public class Engine extends Application {
             Agent chonBot = new Agent(-400, -390, 0, 0, 0, 3, "/images/agents/chonBot.png", true);
             environment.setProtagonist(chonBota);
             environment.getAgents().add(chonBot);
-            environment.setPauseImage("/images/environment/pause.png");
+            environment.setPauseImage("/images/environment/SquidGamePause.png");
             environment.setGameOverImage("/images/environment/SG_GAMEOVER.png");
 
             // Set up the graphical canvas
@@ -125,6 +125,7 @@ public class Engine extends Application {
                         environment.drawBackground();
                         environment.drawAgents();
                         environment.drawGameOverScreen();
+
                         return;
                     }
 
@@ -167,6 +168,7 @@ public class Engine extends Application {
                         if (!gameOver) {
                             environment.updateEnemies();
                         }
+
                     }
                 }
 
@@ -176,6 +178,7 @@ public class Engine extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
 }

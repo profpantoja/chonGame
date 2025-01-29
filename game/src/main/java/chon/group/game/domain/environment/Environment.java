@@ -2,7 +2,6 @@ package chon.group.game.domain.environment;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import chon.group.game.domain.agent.Agent;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -47,19 +46,19 @@ public class Environment {
     /** The graphics context used to render the environment. */
     private GraphicsContext gc;
 
-    //Max enemies that can spawn - 1
+    // Max enemies that can spawn - 1
     private int maxEnemies = 5;
 
     // Spawn interval in milliseconds (6 seconds)
-    private int spawnInterval = 6000; 
+    private int spawnInterval = 6000;
 
     // Last time an enemy was spawned (0)
-    private long lastSpawnTime = 0; 
+    private long lastSpawnTime = 0;
 
-    //Background image of the GameOver
+    // Background image of the GameOver
     private Image gameOverImage;
 
-    //Controls the state of gameOver
+    // Controls the state of gameOver
     private boolean gameOver = false;
 
     /**
@@ -215,7 +214,7 @@ public class Environment {
         return gameOver;
     }
 
-    //Set game over state
+    // Set game over state
     public void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;
     }
@@ -274,23 +273,22 @@ public class Environment {
         this.gc = gc;
     }
 
-
-    //Gets the max enemies 
+    // Gets the max enemies
     public int getMaxEnemies() {
         return maxEnemies;
     }
-    
-    //Set the max enemies
+
+    // Set the max enemies
     public void setMaxEnemies(int maxEnemies) {
         this.maxEnemies = maxEnemies;
     }
 
-    //Gets the spawn interval
+    // Gets the spawn interval
     public int getSpawnInterval() {
         return spawnInterval;
     }
 
-    //Set spawn interval
+    // Set spawn interval
     public void setSpawnInterval(int spawnInterval) {
         this.spawnInterval = spawnInterval;
     }
@@ -484,11 +482,11 @@ public class Environment {
                 enemyPosX = (int) (Math.random() * (this.width - 50));
                 enemyPosY = (int) (Math.random() * (this.height - 50));
                 validPosition = true;
-                //Prevents the enemy from spawning too close to the protagonist
+                // Prevents the enemy from spawning too close to the protagonist
                 for (Agent agent : agents) {
                     double distance = Math
                             .sqrt(Math.pow(agent.getPosX() - enemyPosX, 2) + Math.pow(agent.getPosY() - enemyPosY, 2));
-                    if (distance < 300) { 
+                    if (distance < 300) {
                         validPosition = false;
                         break;
                     }
@@ -497,7 +495,7 @@ public class Environment {
 
             Agent newChonbot = new Agent(enemyPosX, enemyPosY, 130, 70, 2, 3, "/images/agents/enemysg.png", true);
 
-            //Add new agent to the list
+            // Add new agent to the list
             agents.add(newChonbot);
         }
     }
