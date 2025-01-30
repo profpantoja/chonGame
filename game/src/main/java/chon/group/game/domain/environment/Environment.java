@@ -382,8 +382,8 @@ public class Environment {
         for (Agent agent : this.agents) {
             if (intersect(this.protagonist, agent)) {
                 System.out.println("Collision detected with agent: " + agent);
-                //if (!(this.protagonist.getHealth() <= 0))
-                //    this.protagonist.setHealth(this.protagonist.getHealth() - 1);
+                if (!(this.protagonist.getHealth() <= 0))
+                    this.protagonist.setHealth(this.protagonist.getHealth() - 1);
             }
         }
     }
