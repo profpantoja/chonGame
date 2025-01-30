@@ -20,31 +20,14 @@ import javafx.scene.text.FontWeight;
  */
 public class Environment {
 
-    /** The X (horizontal) position of the environment. */
     private int posX;
-
-    /** The Y (vertical) position of the environment. */
     private int posY;
-
-    /** The width of the environment. */
     private int width;
-
-    /** The height of the environment. */
     private int height;
-
-    /** The background image of the environment. */
     private Image image;
-
-    /** The background image of the pause. */
     private Image pauseImage;
-
-    /** The protagonist instance. */
     private Agent protagonist;
-
-    /** List of agents present in the environment. */
     private List<Agent> agents = new ArrayList<Agent>();
-
-    /** The graphics context used to render the environment. */
     private GraphicsContext gc;
 
     /**
@@ -255,8 +238,7 @@ public class Environment {
         if (pauseImage != null && gc != null) {
             double centerX = (this.width - pauseImage.getWidth()) / 2;
             double centerY = (this.height - pauseImage.getHeight()) / 2;
-
-            // Draw image on the center of screen
+            /* Draw image on the center of screen */
             gc.drawImage(pauseImage, centerX, centerY);
         } else {
             System.out.println("Pause image not set or GraphicsContext is null.");
@@ -296,42 +278,14 @@ public class Environment {
         gc.fillText("Y: " + agent.getPosY(), agent.getPosX() + 10, agent.getPosY() - 25);
     }
 
-    /**
-     * Draws a health bar above the protagonist to represent their current health
-     * visually.
-     * The health bar consists of:
-     * <ul>
-     * <li>A black border representing the health bar's background.</li>
-     * <li>A green inner bar representing the actual health percentage of the
-     * protagonist.</li>
-     * </ul>
-     * 
-     * The size of the health bar is dynamically calculated based on the
-     * protagonist's
-     * current health (`getHealth()`), maximum health (`getFullHealth()`), and width
-     * (`getWidth()`).
-     * 
-     * <p>
-     * The health bar is drawn a fixed distance above the protagonist's position.
-     * </p>
-     *
-     * <p>
-     * <strong>Key Calculations:</strong>
-     * </p>
-     * <ul>
-     * <li><strong>lifePercentage:</strong> Percentage of current health relative to
-     * maximum health.</li>
-     * <li><strong>lifeSpan:</strong> Width of the green inner bar based on health
-     * percentage.</li>
-     * </ul>
-     */
     public void drawLifeBar() {
         /* The border's thickness. */
         int borderThickness = 2;
         /* The bar's height. */
         int barHeight = 5;
-        /* The life span proportion calculated based on actual and maximum health. */ 
-        int lifeSpan = Math.round((float) ((protagonist.getHealth() * 100 / protagonist.getFullHealth()) * protagonist.getWidth()) / 100);
+        /* The life span proportion calculated based on actual and maximum health. */
+        int lifeSpan = Math.round(
+                (float) ((protagonist.getHealth() * 100 / protagonist.getFullHealth()) * protagonist.getWidth()) / 100);
         /* Int points before the agent's y position. The initial bar's position. */
         int barY = 15;
         /* The outside background of the health bar. */
@@ -341,17 +295,17 @@ public class Environment {
                 protagonist.getPosY() - barY,
                 protagonist.getWidth(),
                 barHeight + (borderThickness * 2));
-        /** 
+        /**
          * The inside of the health bar. It is the effective life of the agent.
          * The border height plus the thickness multiplied by two (beggining and end at
-         * X).  
+         * X).
          */
         gc.setFill(Color.GREEN);
-        /** 
+        /**
          * The initial position considering the border from both X and Y points.
          * The life span less the border thickness multiplied by two (beggining and end
          * at Y).
-         */ 
+         */
         gc.fillRect(protagonist.getPosX() + borderThickness,
                 protagonist.getPosY() - (barY - borderThickness),
                 (lifeSpan - (borderThickness * 2)),
@@ -380,10 +334,10 @@ public class Environment {
      */
     public void detectCollision() {
         for (Agent agent : this.agents) {
-            if (intersect(this.protagonist, agent)) {
+            if (protagonist != null && intersect(this.protagonist, agent)) {
                 System.out.println("Collision detected with agent: " + agent);
-                //if (!(this.protagonist.getHealth() <= 0))
-                //    this.protagonist.setHealth(this.protagonist.getHealth() - 1);
+                /* The protagonist takes damage when colliding with an agent. */
+                protagonist.takeDamage(1);
             }
         }
     }
@@ -400,7 +354,9 @@ public class Environment {
      * @param b the second agent
      * @return true if the agents collide, otherwise false
      */
+
     private boolean intersect(Agent a, Agent b) {
+        // Returns true if there is a collision between two agents
         return a.getPosX() < b.getPosX() + b.getWidth() &&
                 a.getPosX() + a.getWidth() > b.getPosX() &&
                 a.getPosY() < b.getPosY() + b.getHeight() &&

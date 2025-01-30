@@ -298,4 +298,21 @@ public class Agent {
         }
     }
 
+    /**
+     * Makes the agent take damage.
+     * If health reaches 0, the game ends.
+     *
+     * @param damage the amount of damage to be applied
+     */
+    public void takeDamage(int damage) {
+        if (health > 0) {
+            /* Decrease health. */
+            health = health - damage;
+            /* After taking the damage, the health must not be negative. */
+            if (health < 0)
+                health = 0;
+        }
+
+    }
+
 }
