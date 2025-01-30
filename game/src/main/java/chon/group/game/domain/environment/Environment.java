@@ -336,10 +336,8 @@ public class Environment {
         for (Agent agent : this.agents) {
             if (protagonist != null && intersect(this.protagonist, agent)) {
                 System.out.println("Collision detected with agent: " + agent);
-                /* If the protagonist's health is 0 or below, the protagonist is dead */
-                if (!(this.protagonist.getHealth() <= 0))
-                    /* The protagonist takes damage when colliding with an agent. */
-                    protagonist.takeDamage();
+                /* The protagonist takes damage when colliding with an agent. */
+                protagonist.takeDamage(1);
             }
         }
     }
