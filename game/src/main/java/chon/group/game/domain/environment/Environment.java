@@ -326,29 +326,32 @@ public class Environment {
      * </ul>
      */
     public void drawLifeBar() {
-        // The border's thickness.
+        /* The border's thickness. */
         int borderThickness = 2;
-        // The border's height.
+        /* The bar's height. */
         int barHeight = 5;
-        // The life span proportion calculated based on actual and maximum health.
-        int lifePercentage = Math.round((float) (protagonist.getHealth() * 100 / protagonist.getFullHealth()));
-        int lifeSpan = (lifePercentage * protagonist.getWidth()) / 100;
-        // Int points before the agent's y position.
+        /* The life span proportion calculated based on actual and maximum health. */ 
+        int lifeSpan = Math.round((float) ((protagonist.getHealth() * 100 / protagonist.getFullHealth()) * protagonist.getWidth()) / 100);
+        /* Int points before the agent's y position. The initial bar's position. */
         int barY = 15;
-        // The outside background of the health bar.
+        /* The outside background of the health bar. */
         gc.setFill(Color.BLACK);
-        // The height is a little bit bigger to give a border experience.
+        /* The height is a little bit bigger to give a border experience. */
         gc.fillRect(protagonist.getPosX(),
                 protagonist.getPosY() - barY,
                 protagonist.getWidth(),
                 barHeight + (borderThickness * 2));
-        // The inside of the health bar. It is the effective life of the agent.
-        // The border height plus the thickness multiplied by two (beggining and end at
-        // X).
+        /** 
+         * The inside of the health bar. It is the effective life of the agent.
+         * The border height plus the thickness multiplied by two (beggining and end at
+         * X).  
+         */
         gc.setFill(Color.GREEN);
-        // The initial position considering the border from both X and Y points.
-        // The life span less the border thickness multiplied by two (beggining and end
-        // at Y).
+        /** 
+         * The initial position considering the border from both X and Y points.
+         * The life span less the border thickness multiplied by two (beggining and end
+         * at Y).
+         */ 
         gc.fillRect(protagonist.getPosX() + borderThickness,
                 protagonist.getPosY() - (barY - borderThickness),
                 (lifeSpan - (borderThickness * 2)),
@@ -379,8 +382,8 @@ public class Environment {
         for (Agent agent : this.agents) {
             if (intersect(this.protagonist, agent)) {
                 System.out.println("Collision detected with agent: " + agent);
-                if (!(this.protagonist.getHealth() <= 0))
-                    this.protagonist.setHealth(this.protagonist.getHealth() - 1);
+                //if (!(this.protagonist.getHealth() <= 0))
+                //    this.protagonist.setHealth(this.protagonist.getHealth() - 1);
             }
         }
     }
