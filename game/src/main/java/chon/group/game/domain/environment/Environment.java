@@ -20,14 +20,31 @@ import javafx.scene.text.FontWeight;
  */
 public class Environment {
 
+    /** The X (horizontal) position of the environment. */
     private int posX;
+
+    /** The Y (vertical) position of the environment. */
     private int posY;
+
+    /** The width of the environment. */
     private int width;
+
+    /** The height of the environment. */
     private int height;
+
+    /** The background image of the environment. */
     private Image image;
+
+    /** The background image of the pause. */
     private Image pauseImage;
+
+    /** The protagonist instance. */
     private Agent protagonist;
+
+    /** List of agents present in the environment. */
     private List<Agent> agents = new ArrayList<Agent>();
+
+    /** The graphics context used to render the environment. */
     private GraphicsContext gc;
 
     /**

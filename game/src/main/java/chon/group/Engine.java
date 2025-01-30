@@ -32,6 +32,7 @@ import javafx.scene.layout.StackPane;
  */
 public class Engine extends Application {
 
+    /* If the game is paused or not. */
     private boolean isPaused = false;
 
     /**
