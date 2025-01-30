@@ -268,18 +268,4 @@ public class Agent {
         }
     }
 
-    // Method to check if the agent is dead (health <= 0)
-    public boolean isDead() {
-        return health <= 0;
-    }
-
-    // Method to check if the agent can attack (based on cooldown)
-    public boolean canAttack() {
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - lastAttackTime >= ATTACK_COOLDOWN) {
-            lastAttackTime = currentTime;
-            return true;
-        }
-        return false;
-    }
 }
