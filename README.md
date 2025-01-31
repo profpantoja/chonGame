@@ -61,3 +61,9 @@ git checkout -b wip-nova-branch
 ```
 git merge <target-branch>
 ```
+
+- **Abortar um Processo de Merge**: se precisar abortar um merge em andamento.
+> No terminal da branch onde está ocorrendo o processo de merge.
+```
+git merge --abort
+```
