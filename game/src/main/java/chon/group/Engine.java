@@ -58,13 +58,13 @@ public class Engine extends Application {
     public void start(Stage theStage) {
         try {
             // Initialize the game environment and agents
-            Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/backgroundGPT.jpg");
+            Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/backgroundGPT.png");
             Agent jerry = new Agent(400, 390, 70, 85, 4, 100, "/images/agents/jerrySprite.png", false);
             Agent tom = new Agent(920, 440, 130, 96, 2, 3, "/images/agents/tom.png", true);
             environment.setProtagonist(jerry);
             environment.getAgents().add(tom);
             environment.setPauseImage("/images/environment/pause.png");
-            environment.setGameOverImage("/images/environment/gameOver3.jpeg");
+            environment.setGameOverImage("/images/environment/gameOver3.png");
 
             // Set up the graphical canvas
             Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
