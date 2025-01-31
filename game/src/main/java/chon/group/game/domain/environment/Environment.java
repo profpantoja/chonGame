@@ -245,12 +245,15 @@ public class Environment {
     }
 
     /**
-     * Draws the environment's background on the graphics context.
+     * Renders the environment's background on the graphics context.
      */
     public void drawBackground() {
         gc.drawImage(this.image, this.posX, this.posY, this.width, this.height);
     }
 
+    /**
+     * Renders the Game Paused Screen.
+     */
     public void drawPauseScreen() {
         if (pauseImage != null && gc != null) {
             double centerX = (this.width - pauseImage.getWidth()) / 2;
@@ -295,6 +298,9 @@ public class Environment {
         gc.fillText("Y: " + agent.getPosY(), agent.getPosX() + 10, agent.getPosY() - 25);
     }
 
+    /**
+     * Renders the Protagonist's Life Bar.
+     */
     public void drawLifeBar() {
         /* The border's thickness. */
         int borderThickness = 2;
@@ -354,7 +360,7 @@ public class Environment {
             if (protagonist != null && intersect(this.protagonist, agent)) {
                 System.out.println("Collision detected with agent: " + agent);
                 /* The protagonist takes damage when colliding with an agent. */
-                protagonist.takeDamage(1);
+                protagonist.takeDamage(10);
             }
         }
     }

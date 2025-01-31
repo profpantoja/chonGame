@@ -42,6 +42,15 @@ public class Agent {
     /** The maximum agent's health. */
     private int fullHealth;
 
+    /* The time of the last hit taken. */
+    private long lastHitTime = 0;
+
+    /* Flag to control the invulnerability status of the agent. */
+    private boolean invulnerable;
+
+    /* Invulnerability (in milliseconds) */
+    private final long INVULNERABILITY_COOLDOWN = 500;
+
     /**
      * Constructor to initialize the agent properties.
      *
@@ -62,6 +71,8 @@ public class Agent {
         this.health = health;
         this.fullHealth = health;
         this.image = new Image(getClass().getResource(pathImage).toExternalForm());
+        this.lastHitTime = 0;
+        this.invulnerable = false;
     }
 
     /**
@@ -232,6 +243,11 @@ public class Agent {
         this.image = image;
     }
 
+    /**
+     * Gets if the agent is flipped.
+     *
+     * @return if the agent is flipped
+     */
     public boolean isFlipped() {
         return flipped;
     }
@@ -239,10 +255,53 @@ public class Agent {
     /**
      * Sets the agent flipped status.
      *
-     * @param image the new image
+     * @param flipped the new flipped status
      */
     public void setFlipped(boolean flipped) {
         this.flipped = flipped;
+    }
+
+    /**
+     * Gets the last hit taken.
+     */
+    public long getlastHitTime() {
+        return lastHitTime;
+    }
+
+    /**
+     * Sets the last hit taken.
+     *
+     * @param lastHitTime the new image
+     */
+    public void setlastHitTime(long lastHitTime) {
+        this.lastHitTime = lastHitTime;
+    }
+
+    /**
+     * Gets invulnerable cooldown time.
+     *
+     * @return the time is milliseconds
+     */
+    public long getInvulnerabilityCooldown() {
+        return INVULNERABILITY_COOLDOWN;
+    }
+
+    /**
+     * Gets if the agent is invulnerable.
+     *
+     * @return if the agent is invulnerable
+     */
+    public boolean isInvulnerable() {
+        return invulnerable;
+    }
+
+    /**
+     * Sets the agent invulnerable status.
+     *
+     * @param invulnerable the new invulnerable status
+     */
+    public void setInvulnerable(boolean invulnerable) {
+        this.invulnerable = invulnerable;
     }
 
     /**
@@ -300,19 +359,33 @@ public class Agent {
 
     /**
      * Makes the agent take damage.
-     * If health reaches 0, the game ends.
+     * If health reaches 0, the game must end.
      *
      * @param damage the amount of damage to be applied
      */
     public void takeDamage(int damage) {
-        if (health > 0) {
+        this.invulnerable = this.updateInvulnerability();
+        if (!this.invulnerable && this.health > 0) {
             /* Decrease health. */
-            health = health - damage;
+            this.health = health - damage;
             /* After taking the damage, the health must not be negative. */
-            if (health < 0)
-                health = 0;
+            if (this.health < 0)
+                this.health = 0;
+            else
+                this.lastHitTime = System.currentTimeMillis();
         }
+    }
 
+    /**
+     * Method to update the invulnerable status.
+     *
+     * @return if the agent is still invulnerable
+     */
+    private boolean updateInvulnerability() {
+        if (System.currentTimeMillis() - lastHitTime >= INVULNERABILITY_COOLDOWN) {
+            return false;
+        }
+        return true;
     }
 
 }
