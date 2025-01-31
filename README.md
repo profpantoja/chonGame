@@ -55,3 +55,15 @@ Teaching Units: <strong>Linguagens e Técnicas de Programação II</strong> e <s
 git checkout -b wip-nova-branch
 ```
 
+
+- **Realizar um Merge e Resolver Conflitos**: se precisar realizar um merge entre uma branch e outra.
+> Fazer o checkout para a base com modificações e iniciar o merge com o branch de destino.
+```
+git merge <target-branch>
+```
+
+- **Abortar um Processo de Merge**: se precisar abortar um merge em andamento.
+> No terminal da branch onde está ocorrendo o processo de merge.
+```
+git merge --abort
+```

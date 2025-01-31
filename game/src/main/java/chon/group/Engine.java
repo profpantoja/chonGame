@@ -32,6 +32,7 @@ import javafx.scene.layout.StackPane;
  */
 public class Engine extends Application {
 
+    /* If the game is paused or not. */
     private boolean isPaused = false;
 
     /**
@@ -57,20 +58,20 @@ public class Engine extends Application {
     @Override
     public void start(Stage theStage) {
         try {
-            // Initialize the game environment and agents
+            /* Initialize the game environment and agents */ 
             Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
-            Agent chonBota = new Agent(400, 390, 90, 65, 3, 100, "/images/agents/chonBota.png", false);
+            Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
             Agent chonBot = new Agent(920, 440, 90, 65, 1, 3, "/images/agents/chonBot.png", true);
             environment.setProtagonist(chonBota);
             environment.getAgents().add(chonBot);
             environment.setPauseImage("/images/environment/pause.png");
 
-            // Set up the graphical canvas
+            /* Set up the graphical canvas */ 
             Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
             GraphicsContext gc = canvas.getGraphicsContext2D();
             environment.setGc(gc);
 
-            // Set up the scene and stage
+            /* Set up the scene and stage */ 
             StackPane root = new StackPane();
             Scene scene = new Scene(root, environment.getWidth(), environment.getHeight());
             theStage.setTitle("Chon: The Learning Game");
@@ -79,7 +80,7 @@ public class Engine extends Application {
             root.getChildren().add(canvas);
             theStage.show();
 
-            // Handle keyboard input
+            /* Handle keyboard input */
             ArrayList<String> input = new ArrayList<String>();
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
@@ -107,7 +108,7 @@ public class Engine extends Application {
                 }
             });
 
-            // Start the game loop
+            /* Start the game loop */ 
             new AnimationTimer() {
 
                 /**
@@ -117,15 +118,16 @@ public class Engine extends Application {
                  */
                 @Override
                 public void handle(long arg0) {
-
+                    environment.clearEnvironment();
+                    /* Branching the Game Loop */
                     if (isPaused) {
-                        // Render pause image
                         environment.drawBackground();
                         environment.drawAgents();
+                        /* Rendering the Pause Screen */
                         environment.drawPauseScreen();
                     } else {
                         /* ChonBota Only Moves if the Player Press Something */
-                        // Update the protagonist's movements if input exists
+                        /* Update the protagonist's movements if input exists */
                         if (!input.isEmpty()) {
                             /* ChonBota's Movements */
                             environment.getProtagonist().move(input);
@@ -133,11 +135,11 @@ public class Engine extends Application {
                         }
 
                         /* ChonBot's Automatic Movements */
-                        // Update the other agents' movements
+                        /* Update the other agents' movements */ 
                         environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
                                 environment.getProtagonist().getPosY());
 
-                        // Render the game environment and agents
+                        /* Render the game environment and agents */ 
                         environment.detectCollision();
                         environment.drawBackground();
                         environment.drawAgents();
@@ -151,5 +153,4 @@ public class Engine extends Application {
             e.printStackTrace();
         }
     }
-
 }

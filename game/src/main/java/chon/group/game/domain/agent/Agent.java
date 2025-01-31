@@ -15,19 +15,41 @@ import javafx.scene.paint.Color;
  */
 public class Agent {
 
+    /** X position (horizontal) of the agent. */
     private int posX;
+
+    /** Y (vertical) position of the agent. */
     private int posY;
+
+    /** Height of the agent. */
     private int height;
+
+    /** Width of the agent. */
     private int width;
+
+    /** Agent speed. */
     private int speed;
+
+    /** Image representing the agent. */
     private Image image;
+
+    /** Indicates if the agent is facing left. */
     private boolean flipped = false;
+
+    /** The initial agent's health. */
     private int health;
+
+    /** The maximum agent's health. */
     private int fullHealth;
-    private boolean gameOver = false;  // New field to track the game state
-    private long lastAttackTime = 0;  // The time of the last attack (for cooldown)
-    private static final long ATTACK_COOLDOWN = 2000;  // Cooldown duration for attacks (in milliseconds)
-    private boolean invulnerable;  // Flag to control the invulnerability status of the agent
+
+    /* The time of the last hit taken. */
+    private long lastHitTime = 0;
+
+    /* Flag to control the invulnerability status of the agent. */
+    private boolean invulnerable;
+
+    /* Invulnerability (in milliseconds) */
+    private final long INVULNERABILITY_COOLDOWN = 500;
 
     /**
      * Constructor to initialize the agent properties.
@@ -49,8 +71,8 @@ public class Agent {
         this.health = health;
         this.fullHealth = health;
         this.image = new Image(getClass().getResource(pathImage).toExternalForm());
-        this.lastAttackTime = 0;  // Initial state with no previous attack
-        this.invulnerable = false;  // Initially, the agent is not invulnerable
+        this.lastHitTime = 0;
+        this.invulnerable = false;
     }
 
     /**
@@ -77,109 +99,157 @@ public class Agent {
         this.flipped = flipped;
     }
 
+    /**
+     * Gets the X (horizontal) position of the agent.
+     *
+     * @return the X (horizontal) position of the agent
+     */
     public int getPosX() {
         return posX;
     }
 
+    /**
+     * Sets the agent's X (horizontal) position.
+     *
+     * @param posX the new X (horizontal) position
+     */
     public void setPosX(int posX) {
         this.posX = posX;
     }
 
+    /**
+     * Gets the Y (vertical) position of the agent.
+     *
+     * @return the Y (vertical) position of the agent
+     */
     public int getPosY() {
         return posY;
     }
 
+    /**
+     * Sets the Y (vertical) position of the agent.
+     *
+     * @param posY the new Y (vertical) position
+     */
     public void setPosY(int posY) {
         this.posY = posY;
     }
 
+    /**
+     * Gets the height of the agent.
+     *
+     * @return the height of the agent
+     */
     public int getHeight() {
         return height;
     }
 
+    /**
+     * Sets the height of the agent.
+     *
+     * @param height the new height
+     */
     public void setHeight(int height) {
         this.height = height;
     }
 
+    /**
+     * Gets the width of the agent.
+     *
+     * @return the width of the agent
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * Sets the width of the agent.
+     *
+     * @param width the new width
+     */
     public void setWidth(int width) {
         this.width = width;
     }
 
+    /**
+     * Gets the agent's speed.
+     *
+     * @return the agent's speed
+     */
     public int getSpeed() {
         return speed;
     }
 
+    /**
+     * Sets the speed of the agent.
+     *
+     * @param speed the new speed
+     */
     public void setSpeed(int speed) {
         this.speed = speed;
     }
 
-    public Image getImage() {
-        return image;
-    }
-
-    public void setImage(Image image) {
-        this.image = image;
-    }
-
-    public boolean isFlipped() {
-        return flipped;
-    }
-
+    /**
+     * Gets the agent's health.
+     *
+     * @return the agent's health
+     */
     public int getHealth() {
         return health;
     }
 
+    /**
+     * Sets the health of the agent.
+     *
+     * @param health the new health
+     */
     public void setHealth(int health) {
         this.health = health;
     }
 
+    /**
+     * Gets the agent's maximum health.
+     *
+     * @return the agent's maximum health
+     */
     public int getFullHealth() {
         return fullHealth;
     }
 
+    /**
+     * Sets the maximum health of the agent.
+     *
+     * @param fullHealth the new maximum health
+     */
     public void setFullHealth(int fullHealth) {
         this.fullHealth = fullHealth;
     }
 
-    public boolean isGameOver() {
-        return gameOver;
-    }
-
-    public void setGameOver(boolean gameOver) {
-        this.gameOver = gameOver;
-    }
-
-    public long getLastAttackTime() {
-        return lastAttackTime;
-    }
-
-    public void setLastAttackTime(long lastAttackTime) {
-        this.lastAttackTime = lastAttackTime;
-    }
-
-    public static long getAttackCooldown() {
-        return ATTACK_COOLDOWN;
-    }
-
-    public boolean isInvulnerable() {
-        return invulnerable;
-    }
-
-    public void setInvulnerable(boolean invulnerable) {
-        this.invulnerable = invulnerable;
+    /**
+     * Gets the agent image.
+     *
+     * @return the agent image
+     */
+    public Image getImage() {
+        return image;
     }
 
     /**
-     * Checks if the agent is alive.
+     * Gets the agent flipped status.
      *
-     * @return true if the agent's health is greater than 0, false otherwise.
+     * @param image the new image
      */
-    public boolean isAlive() {
-        return health > 0;
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    /**
+     * Gets if the agent is flipped.
+     *
+     * @return if the agent is flipped
+     */
+    public boolean isFlipped() {
+        return flipped;
     }
 
     /**
@@ -189,6 +259,49 @@ public class Agent {
      */
     public void setFlipped(boolean flipped) {
         this.flipped = flipped;
+    }
+
+    /**
+     * Gets the last hit taken.
+     */
+    public long getlastHitTime() {
+        return lastHitTime;
+    }
+
+    /**
+     * Sets the last hit taken.
+     *
+     * @param lastHitTime the new image
+     */
+    public void setlastHitTime(long lastHitTime) {
+        this.lastHitTime = lastHitTime;
+    }
+
+    /**
+     * Gets invulnerable cooldown time.
+     *
+     * @return the time is milliseconds
+     */
+    public long getInvulnerabilityCooldown() {
+        return INVULNERABILITY_COOLDOWN;
+    }
+
+    /**
+     * Gets if the agent is invulnerable.
+     *
+     * @return if the agent is invulnerable
+     */
+    public boolean isInvulnerable() {
+        return invulnerable;
+    }
+
+    /**
+     * Sets the agent invulnerable status.
+     *
+     * @param invulnerable the new invulnerable status
+     */
+    public void setInvulnerable(boolean invulnerable) {
+        this.invulnerable = invulnerable;
     }
 
     /**
@@ -210,11 +323,6 @@ public class Agent {
      *                  "DOWN")
      */
     public void move(List<String> movements) {
-        if (gameOver) {
-            System.out.println("Game Over! Agent cannot move.");
-            return; // Prevent movement if the game is over
-        }
-
         if (movements.contains("RIGHT")) {
             if (flipped)
                 this.flipImage();
@@ -237,11 +345,6 @@ public class Agent {
      * @param targetY the target's Y (vertical) position
      */
     public void chase(int targetX, int targetY) {
-        if (gameOver) {
-            System.out.println("Game Over! Agent cannot chase.");
-            return; // Prevent chasing if the game is over
-        }
-
         if (targetX > this.posX) {
             this.move(new ArrayList<String>(List.of("RIGHT")));
         } else if (targetX < this.posX) {
@@ -256,44 +359,33 @@ public class Agent {
 
     /**
      * Makes the agent take damage.
-     * If health reaches 0, the game ends.
+     * If health reaches 0, the game must end.
      *
      * @param damage the amount of damage to be applied
      */
-    // Method to make the agent take damage, if not invulnerable
-    public void takeDamage() {
-        if (!invulnerable && health > 0) {
-            health = health - 20;  // Decrease health
-            activateInvulnerability(ATTACK_COOLDOWN);  // Activate invulnerability for a cooldown period
+    public void takeDamage(int damage) {
+        this.invulnerable = this.updateInvulnerability();
+        if (!this.invulnerable && this.health > 0) {
+            /* Decrease health. */
+            this.health = health - damage;
+            /* After taking the damage, the health must not be negative. */
+            if (this.health < 0)
+                this.health = 0;
+            else
+                this.lastHitTime = System.currentTimeMillis();
         }
     }
 
-    // Method to check if the agent is dead (health <= 0)
-    public boolean isDead() {
-        return health <= 0;
-    }
-
-    // Method to check if the agent can attack (based on cooldown)
-    public boolean canAttack() {
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - lastAttackTime >= ATTACK_COOLDOWN) {
-            lastAttackTime = currentTime;
-            return true;
+    /**
+     * Method to update the invulnerable status.
+     *
+     * @return if the agent is still invulnerable
+     */
+    private boolean updateInvulnerability() {
+        if (System.currentTimeMillis() - lastHitTime >= INVULNERABILITY_COOLDOWN) {
+            return false;
         }
-        return false;
-    }
-
-    // Method to activate invulnerability for a given duration (in milliseconds)
-    public void activateInvulnerability(long duration) {
-        setInvulnerable(true); 
-        new Thread(() -> {
-            try {
-                Thread.sleep(duration);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            setInvulnerable(false); 
-        }).start();
+        return true;
     }
 
 }
