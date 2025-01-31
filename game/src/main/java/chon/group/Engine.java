@@ -33,7 +33,7 @@ import javafx.scene.layout.StackPane;
 public class Engine extends Application {
 
     private boolean isPaused = false;
-
+    private boolean gameOver = false;
     /**
      * Main entry point of the application.
      *
@@ -64,6 +64,7 @@ public class Engine extends Application {
             environment.setProtagonist(jerry);
             environment.getAgents().add(tom);
             environment.setPauseImage("/images/environment/pause.png");
+            environment.setGameOverImage("/images/environment/gameOver3.jpeg");
 
             // Set up the graphical canvas
             Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
@@ -118,6 +119,15 @@ public class Engine extends Application {
                 @Override
                 public void handle(long arg0) {
 
+                    // Render gameOver image
+                    if (gameOver) {
+                        environment.drawBackground();
+                        environment.drawAgents();
+                        environment.drawGameOverScreen();
+
+                        return;
+                    }
+
                     if (isPaused) {
                         // Render pause image
                         environment.drawBackground();
@@ -136,6 +146,12 @@ public class Engine extends Application {
                         // Update the other agents' movements
                         environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
                                 environment.getProtagonist().getPosY());
+
+                        // Verifica se o protagonista morreu
+                        if (environment.getProtagonist().isDead()) {
+                            gameOver = true;
+                            environment.setGameOver(true);
+                        }
 
                         // Render the game environment and agents
                         environment.detectCollision();

@@ -26,6 +26,8 @@ public class Environment {
     private int height;
     private Image image;
     private Image pauseImage;
+    private Image gameOverImage;
+    private boolean gameOver = false;
     private Agent protagonist;
     private List<Agent> agents = new ArrayList<Agent>();
     private GraphicsContext gc;
@@ -172,6 +174,8 @@ public class Environment {
     public void setPauseImage(String pathImage) {
         this.pauseImage = new Image(getClass().getResource(pathImage).toExternalForm());
     }
+    
+
 
     /**
      * Gets the protagonist of the environment.
@@ -217,6 +221,18 @@ public class Environment {
     public GraphicsContext getGc() {
         return gc;
     }
+    
+    public void setGameOverImage(String pathImage) {
+        this.gameOverImage = new Image(getClass().getResource(pathImage).toExternalForm());
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
 
     /**
      * Sets the graphics context used to render the environment.
@@ -241,6 +257,19 @@ public class Environment {
 
             // Draw image on the center of screen
             gc.drawImage(pauseImage, centerX, centerY);
+        } else {
+            System.out.println("Pause image not set or GraphicsContext is null.");
+        }
+    }
+
+    // Draw game over image on the screen
+    public void drawGameOverScreen() {
+        if (gameOverImage != null && gc != null) {
+            double centerX = (this.width - gameOverImage.getWidth()) / 2;
+            double centerY = (this.height - gameOverImage.getHeight()) / 2;
+
+            // Draw image on the center of screen
+            gc.drawImage(gameOverImage, centerX, centerY);
         } else {
             System.out.println("Pause image not set or GraphicsContext is null.");
         }
