@@ -1,4 +1,4 @@
-# The Chon Game
+# <img src="https://raw.githubusercontent.com/profpantoja/chonGame/main/course/img/chon.png" width="30"> The Chon Game
 A JavaFX game for learning the main concepts from the object-oriented approach.
 Teaching Units: <strong>Linguagens e Técnicas de Programação II</strong> e <strong>Introdução a Orientação a Objetos</Strong>.
 
