@@ -20,31 +20,16 @@ import javafx.scene.text.FontWeight;
  */
 public class Environment {
 
-    /** The X (horizontal) position of the environment. */
     private int posX;
-
-    /** The Y (vertical) position of the environment. */
     private int posY;
-
-    /** The width of the environment. */
     private int width;
-
-    /** The height of the environment. */
     private int height;
-
-    /** The background image of the environment. */
     private Image image;
-
-    /** The background image of the pause. */
     private Image pauseImage;
-
-    /** The protagonist instance. */
+    private Image gameOverImage;
+    private boolean gameOver = false;
     private Agent protagonist;
-
-    /** List of agents present in the environment. */
     private List<Agent> agents = new ArrayList<Agent>();
-
-    /** The graphics context used to render the environment. */
     private GraphicsContext gc;
 
     /**
@@ -189,6 +174,8 @@ public class Environment {
     public void setPauseImage(String pathImage) {
         this.pauseImage = new Image(getClass().getResource(pathImage).toExternalForm());
     }
+    
+
 
     /**
      * Gets the protagonist of the environment.
@@ -234,6 +221,18 @@ public class Environment {
     public GraphicsContext getGc() {
         return gc;
     }
+    
+    public void setGameOverImage(String pathImage) {
+        this.gameOverImage = new Image(getClass().getResource(pathImage).toExternalForm());
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
 
     /**
      * Sets the graphics context used to render the environment.
@@ -245,21 +244,32 @@ public class Environment {
     }
 
     /**
-     * Renders the environment's background on the graphics context.
+     * Draws the environment's background on the graphics context.
      */
     public void drawBackground() {
         gc.drawImage(this.image, this.posX, this.posY, this.width, this.height);
     }
 
-    /**
-     * Renders the Game Paused Screen.
-     */
     public void drawPauseScreen() {
         if (pauseImage != null && gc != null) {
             double centerX = (this.width - pauseImage.getWidth()) / 2;
             double centerY = (this.height - pauseImage.getHeight()) / 2;
-            /* Draw image on the center of screen */
+
+            // Draw image on the center of screen
             gc.drawImage(pauseImage, centerX, centerY);
+        } else {
+            System.out.println("Pause image not set or GraphicsContext is null.");
+        }
+    }
+
+    // Draw game over image on the screen
+    public void drawGameOverScreen() {
+        if (gameOverImage != null && gc != null) {
+            double centerX = (this.width - gameOverImage.getWidth()) / 2;
+            double centerY = (this.height - gameOverImage.getHeight()) / 2;
+
+            // Draw image on the center of screen
+            gc.drawImage(gameOverImage, centerX, centerY);
         } else {
             System.out.println("Pause image not set or GraphicsContext is null.");
         }
@@ -298,37 +308,31 @@ public class Environment {
         gc.fillText("Y: " + agent.getPosY(), agent.getPosX() + 10, agent.getPosY() - 25);
     }
 
-    /**
-     * Renders the Protagonist's Life Bar.
-     */
+    
     public void drawLifeBar() {
-        /* The border's thickness. */
+        // The border's thickness.
         int borderThickness = 2;
-        /* The bar's height. */
+        // The border's height.
         int barHeight = 5;
-        /* The life span proportion calculated based on actual and maximum health. */
-        int lifeSpan = Math.round(
-                (float) ((protagonist.getHealth() * 100 / protagonist.getFullHealth()) * protagonist.getWidth()) / 100);
-        /* Int points before the agent's y position. The initial bar's position. */
+        // The life span proportion calculated based on actual and maximum health.
+        int lifePercentage = Math.round((float) (protagonist.getHealth() * 100 / protagonist.getFullHealth()));
+        int lifeSpan = (lifePercentage * protagonist.getWidth()) / 100;
+        // Int points before the agent's y position.
         int barY = 15;
-        /* The outside background of the health bar. */
+        // The outside background of the health bar.
         gc.setFill(Color.BLACK);
-        /* The height is a little bit bigger to give a border experience. */
+        // The height is a little bit bigger to give a border experience.
         gc.fillRect(protagonist.getPosX(),
                 protagonist.getPosY() - barY,
                 protagonist.getWidth(),
                 barHeight + (borderThickness * 2));
-        /**
-         * The inside of the health bar. It is the effective life of the agent.
-         * The border height plus the thickness multiplied by two (beggining and end at
-         * X).
-         */
+        // The inside of the health bar. It is the effective life of the agent.
+        // The border height plus the thickness multiplied by two (beggining and end at
+        // X).
         gc.setFill(Color.GREEN);
-        /**
-         * The initial position considering the border from both X and Y points.
-         * The life span less the border thickness multiplied by two (beggining and end
-         * at Y).
-         */
+        // The initial position considering the border from both X and Y points.
+        // The life span less the border thickness multiplied by two (beggining and end
+        // at Y).
         gc.fillRect(protagonist.getPosX() + borderThickness,
                 protagonist.getPosY() - (barY - borderThickness),
                 (lifeSpan - (borderThickness * 2)),
@@ -357,10 +361,14 @@ public class Environment {
      */
     public void detectCollision() {
         for (Agent agent : this.agents) {
-            if (protagonist != null && intersect(this.protagonist, agent)) {
-                System.out.println("Collision detected with agent: " + agent);
-                /* The protagonist takes damage when colliding with an agent. */
-                protagonist.takeDamage(10);
+            // Check if the protagonist is invulnerable; if not, check for collision
+            if (protagonist != null && !protagonist.isInvulnerable() && intersect(agent, protagonist)) {
+                // The protagonist takes damage when colliding with an agent
+                protagonist.takeDamage();
+                // If the protagonist's health is 0 or below, the protagonist is dead
+                if (protagonist.isDead()) {
+                    System.out.println("The protagonist is dead!");
+                }
             }
         }
     }
@@ -377,7 +385,7 @@ public class Environment {
      * @param b the second agent
      * @return true if the agents collide, otherwise false
      */
-
+    
     private boolean intersect(Agent a, Agent b) {
         // Returns true if there is a collision between two agents
         return a.getPosX() < b.getPosX() + b.getWidth() &&
