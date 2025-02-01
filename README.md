@@ -8,6 +8,6 @@ Welcome to the **Course Repository**! This repository contains materials, notes,
 
 📖 **Full Course Documentation:**  
 
-👉 [Visit the Course Wiki](https://github.com/yourusername/repositoryname/wiki)
+👉 [Visit the Course Wiki](https://github.com/profpantoja/chonGame/wiki)
 
 ---
