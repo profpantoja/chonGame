@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.environment.Environment;
+import chon.group.game.drawer.EnvironmentDrawer;
+import chon.group.game.drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -69,7 +71,7 @@ public class Engine extends Application {
             /* Set up the graphical canvas */ 
             Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
             GraphicsContext gc = canvas.getGraphicsContext2D();
-            environment.setGc(gc);
+            EnvironmentDrawer mediator = new JavaFxMediator(environment, gc);
 
             /* Set up the scene and stage */ 
             StackPane root = new StackPane();
@@ -118,13 +120,13 @@ public class Engine extends Application {
                  */
                 @Override
                 public void handle(long arg0) {
-                    environment.clearEnvironment();
+                    mediator.clearEnvironment();
                     /* Branching the Game Loop */
                     if (isPaused) {
-                        environment.drawBackground();
-                        environment.drawAgents();
+                        mediator.drawBackground();
+                        mediator.drawAgents();
                         /* Rendering the Pause Screen */
-                        environment.drawPauseScreen();
+                        mediator.drawPauseScreen();
                     } else {
                         /* ChonBota Only Moves if the Player Press Something */
                         /* Update the protagonist's movements if input exists */
@@ -141,8 +143,8 @@ public class Engine extends Application {
 
                         /* Render the game environment and agents */ 
                         environment.detectCollision();
-                        environment.drawBackground();
-                        environment.drawAgents();
+                        mediator.drawBackground();
+                        mediator.drawAgents();
                     }
                 }
 
