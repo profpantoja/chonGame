@@ -23,23 +23,16 @@ public class JavaFxDrawer {
     }
 
     /**
-     * Clears the environment area, removing previously drawn elements.
+     * Clears the canvas area, removing previously drawn elements.
      */
-    public void clearEnvironment(int width, int height) {
+    public void clearScreen(int width, int height) {
         this.gc.clearRect(0, 0, width, height);
     }
 
     /**
      * Renders the environment's background on the graphics context.
      */
-    public void drawBackground(Image image, int posX, int posY, int width, int height) {
-        this.gc.drawImage(image, posX, posY, width, height);
-    }
-
-    /**
-     * Renders all agents and the protagonist in the environment.
-     */
-    public void drawAgent(Image image, int posX, int posY, int width, int height) {
+    public void drawImage(Image image, int posX, int posY, int width, int height) {
         this.gc.drawImage(image, posX, posY, width, height);
     }
 

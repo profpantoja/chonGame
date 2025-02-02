@@ -17,22 +17,25 @@ public class JavaFxMediator implements EnvironmentDrawer {
 
     @Override
     public void clearEnvironment() {
-        drawer.clearEnvironment(this.environment.getWidth(), this.environment.getHeight());
+        drawer.clearScreen(this.environment.getWidth(), this.environment.getHeight());
     }
 
     @Override
     public void drawBackground() {
-        drawer.drawBackground(this.environment.getImage(),
+        drawer.drawImage(this.environment.getImage(),
                 this.environment.getPosX(),
                 this.environment.getPosY(),
                 this.environment.getWidth(),
                 this.environment.getHeight());
     }
 
+    /**
+     * Renders all agents and the protagonist in the environment.
+     */
     @Override
     public void drawAgents() {
         for (Agent agent : this.environment.getAgents()) {
-            drawer.drawAgent(agent.getImage(),
+            drawer.drawImage(agent.getImage(),
                     agent.getPosX(),
                     agent.getPosY(),
                     agent.getWidth(),
@@ -44,7 +47,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     agent.getPosY(),
                     Color.DARKRED);
         }
-        drawer.drawAgent(this.environment.getProtagonist().getImage(),
+        drawer.drawImage(this.environment.getProtagonist().getImage(),
                 this.environment.getProtagonist().getPosX(),
                 this.environment.getProtagonist().getPosY(),
                 this.environment.getProtagonist().getWidth(),
