@@ -1,7 +1,11 @@
 package chon.group.game.drawer;
 
+import java.util.List;
+
+import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.environment.Environment;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 
 public class JavaFxMediator implements EnvironmentDrawer {
 
@@ -10,27 +14,27 @@ public class JavaFxMediator implements EnvironmentDrawer {
 
     public JavaFxMediator(Environment environment, GraphicsContext gc) {
         this.environment = environment;
-        this.drawer = new JavaFxDrawer(gc);
+        this.drawer = new JavaFxDrawer(gc, this);
     }
 
     @Override
     public void clearEnvironment() {
-        drawer.clearEnvironment(environment);
+        drawer.clearEnvironment();
     }
 
     @Override
     public void drawBackground() {
-        drawer.drawBackground(environment);
+        drawer.drawBackground();
     }
 
     @Override
     public void drawAgents() {
-        drawer.drawAgents(environment);
+        drawer.drawAgents();
     }
 
     @Override
     public void drawLifeBar() {
-        drawer.drawLifeBar(environment);
+        drawer.drawLifeBar();
     }
 
     @Override
@@ -40,7 +44,47 @@ public class JavaFxMediator implements EnvironmentDrawer {
 
     @Override
     public void drawPauseScreen() {
-        drawer.drawPauseScreen(environment);
+        drawer.drawPauseScreen();
+    }
+
+    @Override
+    public int getEnvironmentWidth() {
+        return environment.getWidth();
+    }
+
+    @Override
+    public int getEnvironmentHeight() {
+        return environment.getHeight();
+    }
+
+    @Override
+    public int getEnvironmentPosX() {
+        return environment.getPosX();
+    }
+
+    @Override
+    public int getEnvironmentPosY() {
+        return environment.getPosY();
+    }
+
+    @Override
+    public Image getEnvironmentImage() {
+        return environment.getImage();
+    }
+
+    @Override
+    public Image getPauseImage() {
+        return environment.getPauseImage();
+    }
+
+    @Override
+    public List<Agent> getAgents() {
+        return environment.getAgents();
+    }
+
+    @Override
+    public Agent getProtagonist() {
+        return environment.getProtagonist();
     }
 
 }
