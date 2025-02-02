@@ -1,7 +1,7 @@
 package chon.group.game.drawer;
 
-import chon.group.game.domain.agent.Agent;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -25,71 +25,58 @@ public class JavaFxDrawer {
     /**
      * Clears the environment area, removing previously drawn elements.
      */
-    public void clearEnvironment() {
-        this.gc.clearRect(0, 0, mediator.getEnvironmentWidth(), mediator.getEnvironmentHeight());
+    public void clearEnvironment(int width, int height) {
+        this.gc.clearRect(0, 0, width, height);
     }
 
     /**
      * Renders the environment's background on the graphics context.
      */
-    public void drawBackground() {
-        this.gc.drawImage(mediator.getEnvironmentImage(),
-                mediator.getEnvironmentPosX(),
-                mediator.getEnvironmentPosY(),
-                mediator.getEnvironmentWidth(),
-                mediator.getEnvironmentHeight());
+    public void drawBackground(Image image, int posX, int posY, int width, int height) {
+        this.gc.drawImage(image, posX, posY, width, height);
     }
 
     /**
      * Renders all agents and the protagonist in the environment.
      */
-    public void drawAgents() {
-        for (Agent agent : mediator.getAgents()) {
-            this.gc.drawImage(agent.getImage(), agent.getPosX(), agent.getPosY(), agent.getWidth(), agent.getHeight());
-        }
-        this.gc.drawImage(mediator.getProtagonist().getImage(),
-                mediator.getProtagonist().getPosX(),
-                mediator.getProtagonist().getPosY(),
-                mediator.getProtagonist().getWidth(),
-                mediator.getProtagonist().getHeight());
-        this.drawStatusPanel(mediator.getProtagonist());
-        this.drawLifeBar();
+    public void drawAgent(Image image, int posX, int posY, int width, int height) {
+        this.gc.drawImage(image, posX, posY, width, height);
     }
 
     /**
      * Renders the Protagonist's Life Bar.
      */
-    public void drawLifeBar() {
+    public void drawLifeBar(int health, int fullHealth, int width, int posX, int posY, Color color) {
         /* The border's thickness. */
         int borderThickness = 2;
         /* The bar's height. */
         int barHeight = 5;
         /* The life span proportion calculated based on actual and maximum health. */
         int lifeSpan = Math.round(
-                (float) ((mediator.getProtagonist().getHealth() * 100 / mediator.getProtagonist().getFullHealth())
-                        * mediator.getProtagonist().getWidth()) / 100);
+                (float) ((health * 100 / fullHealth)
+                        * width) / 100);
         /* Int points before the agent's y position. The initial bar's position. */
         int barY = 15;
         /* The outside background of the health bar. */
         this.gc.setFill(Color.BLACK);
         /* The height is a little bit bigger to give a border experience. */
-        this.gc.fillRect(mediator.getProtagonist().getPosX(),
-                mediator.getProtagonist().getPosY() - barY,
-                mediator.getProtagonist().getWidth(),
+        this.gc.fillRect(posX,
+                posY - barY,
+                width,
                 barHeight + (borderThickness * 2));
         /**
          * The inside of the health bar. It is the effective life of the agent.
          * The border height plus the thickness multiplied by two (beggining and end at
          * X).
          */
-        this.gc.setFill(Color.GREEN);
+        this.gc.setFill(color);
         /**
          * The initial position considering the border from both X and Y points.
          * The life span less the border thickness multiplied by two (beggining and end
          * at Y).
          */
-        this.gc.fillRect(mediator.getProtagonist().getPosX() + borderThickness,
-                mediator.getProtagonist().getPosY() - (barY - borderThickness),
+        this.gc.fillRect(posX + borderThickness,
+                posY - (barY - borderThickness),
                 (lifeSpan - (borderThickness * 2)),
                 barHeight);
     }
@@ -99,25 +86,23 @@ public class JavaFxDrawer {
      *
      * @param agent the protagonist whose information will be displayed
      */
-    public void drawStatusPanel(Agent agent) {
+    public void drawStatusPanel(int posX, int posY) {
         Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
         this.gc.setFont(theFont);
         this.gc.setFill(Color.BLACK);
-        this.gc.fillText("X: " + agent.getPosX(), agent.getPosX() + 10, agent.getPosY() - 40);
-        this.gc.fillText("Y: " + agent.getPosY(), agent.getPosX() + 10, agent.getPosY() - 25);
+        this.gc.fillText("X: " + posX, posX + 10, posY - 40);
+        this.gc.fillText("Y: " + posY, posX + 10, posY - 25);
     }
 
     /**
      * Renders the Game Paused Screen.
      */
-    public void drawPauseScreen() {
-        if (mediator.getPauseImage() != null && this.gc != null) {
-            double centerX = (mediator.getEnvironmentWidth() - mediator.getPauseImage().getWidth()) / 2;
-            double centerY = (mediator.getEnvironmentHeight() - mediator.getPauseImage().getHeight()) / 2;
+    public void drawPauseScreen(Image image, int imageWidth, int imageHeight, int width, int height) {
+        if (image != null && this.gc != null) {
+            double centerX = (width - imageWidth) / 2;
+            double centerY = (height - imageHeight) / 2;
             /* Draw image on the center of screen */
-            this.gc.drawImage(mediator.getPauseImage(), centerX, centerY);
-        } else {
-            System.out.println("Pause image not set or GraphicsContext is null.");
+            this.gc.drawImage(image, centerX, centerY);
         }
     }
 
