@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.environment.Environment;
+import chon.group.game.Drawer.EnvironmentDrawer;
+import chon.group.game.Drawer.JavaFxDrawer;
+import chon.group.game.Drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -64,11 +67,12 @@ public class Engine extends Application {
             environment.setProtagonist(jerry);
             environment.getAgents().add(tom);
             environment.setPauseImage("/images/environment/pause.png");
-            environment.setGameOverImage("/images/environment/gameOver3.png");
+            environment.setGameOverImage("/images/environment/gameOver1.png");
 
             // Set up the graphical canvas
             Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
             GraphicsContext gc = canvas.getGraphicsContext2D();
+            EnvironmentDrawer mediator = new JavaFxMediator(environment, gc);
             environment.setGc(gc);
 
             // Set up the scene and stage
@@ -121,18 +125,18 @@ public class Engine extends Application {
 
                     // Render gameOver image
                     if (gameOver) {
-                        environment.drawBackground();
-                        environment.drawAgents();
-                        environment.drawGameOverScreen();
+                        mediator.drawBackground();
+                        mediator.drawAgents();
+                        mediator.drawGameOverScreen();
 
                         return;
                     }
 
                     if (isPaused) {
                         // Render pause image
-                        environment.drawBackground();
-                        environment.drawAgents();
-                        environment.drawPauseScreen();
+                        mediator.drawBackground();
+                        mediator.drawAgents();
+                        mediator.drawPauseScreen();
                     } else {
                         /* jerry Only Moves if the Player Press Something */
                         // Update the protagonist's movements if input exists
@@ -155,8 +159,8 @@ public class Engine extends Application {
 
                         // Render the game environment and agents
                         environment.detectCollision();
-                        environment.drawBackground();
-                        environment.drawAgents();
+                        mediator.drawBackground();
+                        mediator.drawAgents();
                     }
                 }
 
