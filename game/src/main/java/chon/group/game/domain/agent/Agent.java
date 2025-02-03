@@ -2,8 +2,9 @@ package chon.group.game.domain.agent;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Iterator;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -51,6 +52,11 @@ public class Agent {
     /* Invulnerability (in milliseconds) */
     private final long INVULNERABILITY_COOLDOWN = 500;
 
+    private List<Projectile> projectiles;
+    public boolean canShoot = true;
+
+
+
     /**
      * Constructor to initialize the agent properties.
      *
@@ -73,6 +79,7 @@ public class Agent {
         this.image = new Image(getClass().getResource(pathImage).toExternalForm());
         this.lastHitTime = 0;
         this.invulnerable = false;
+        this.projectiles = new ArrayList<>();
     }
 
     /**
@@ -97,6 +104,7 @@ public class Agent {
         this.fullHealth = health;
         this.image = new Image(getClass().getResource(pathImage).toExternalForm());
         this.flipped = flipped;
+        this.projectiles = new ArrayList<>();
     }
 
     /**
@@ -327,14 +335,52 @@ public class Agent {
             if (flipped)
                 this.flipImage();
             setPosX(posX += speed);
-        } else if (movements.contains("LEFT")) {
+        }
+        if (movements.contains("LEFT")) {
             if (!flipped)
                 this.flipImage();
             setPosX(posX -= speed);
-        } else if (movements.contains("UP")) {
+        }
+        if (movements.contains("UP")) {
             setPosY(posY -= speed);
-        } else if (movements.contains("DOWN")) {
+        }
+        if (movements.contains("DOWN")) {
             setPosY(posY += speed);
+        }
+        if (movements.contains("SPACE")) {
+            if (canShoot) {
+                shoot();
+                canShoot = false; // Bloqueia o disparo contínuo
+            }
+        }
+    }
+
+    public void shoot() {
+        int projectileX = flipped ? posX - 20 : posX + width + 10; // Ajuste da posição inicial
+        int projectileY = posY + height / 3; // Ajuste para sair do meio do agente
+    
+        projectiles.add(new Projectile(projectileX, projectileY, !flipped)); // Corrigindo a direção
+    }
+    
+
+    // Atualiza a posição do agente e dos projéteis
+    public void updateShot() {
+        Iterator<Projectile> iterator = projectiles.iterator();
+        while (iterator.hasNext()) {
+            Projectile p = iterator.next();
+            p.update();
+
+            if (p.isOffScreenRight(1025) || p.isOffScreenLeft()) {
+                iterator.remove(); // Remover com segurança
+            }
+        }
+    }
+
+    // Renderiza o agente e seus projéteis
+    public void renderShot(GraphicsContext gc) {
+        gc.drawImage(image, posX, posY, width, height);
+        for (Projectile p : projectiles) {
+            p.render(gc);
         }
     }
 

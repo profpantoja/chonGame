@@ -1,6 +1,8 @@
 package chon.group;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.environment.Environment;
@@ -9,12 +11,12 @@ import chon.group.game.drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
-import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 /**
  * The {@code Engine} class represents the main entry point of the application
@@ -34,6 +36,7 @@ import javafx.scene.layout.StackPane;
  */
 public class Engine extends Application {
 
+    private Set<String> inputKeys = new HashSet<>();
     /* If the game is paused or not. */
     private boolean isPaused = false;
 
@@ -87,7 +90,7 @@ public class Engine extends Application {
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
                     String code = e.getCode().toString();
-                    input.clear();
+                    inputKeys.add(code); // 🔥 Armazena a tecla pressionada
 
                     System.out.println("Pressed: " + code);
 
@@ -95,24 +98,30 @@ public class Engine extends Application {
                         isPaused = !isPaused;
                     }
 
-                    if (!isPaused && !input.contains(code)) {
-                        input.add(code);
+                    if (code.equals("SPACE") && environment.getProtagonist().canShoot) {
+                        environment.getProtagonist().shoot();
+                        environment.getProtagonist().canShoot = false;
                     }
-
                 }
             });
+
 
             scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
                     String code = e.getCode().toString();
+                    inputKeys.remove(code); // 🔥 Remove a tecla solta
+            
                     System.out.println("Released: " + code);
-                    input.remove(code);
+            
+                    if (code.equals("SPACE")) {
+                        environment.getProtagonist().canShoot = true;
+                    }
                 }
-            });
+            });            
 
             /* Start the game loop */ 
             new AnimationTimer() {
-
+                GraphicsContext gc = canvas.getGraphicsContext2D();
                 /**
                  * The game loop, called on each frame.
                  *
@@ -121,32 +130,34 @@ public class Engine extends Application {
                 @Override
                 public void handle(long arg0) {
                     mediator.clearEnvironment();
-                    /* Branching the Game Loop */
+
                     if (isPaused) {
                         mediator.drawBackground();
                         mediator.drawAgents();
-                        /* Rendering the Pause Screen */
                         mediator.drawPauseScreen();
                     } else {
-                        /* ChonBota Only Moves if the Player Press Something */
-                        /* Update the protagonist's movements if input exists */
-                        if (!input.isEmpty()) {
-                            /* ChonBota's Movements */
-                            environment.getProtagonist().move(input);
-                            environment.checkBorders();
-                        }
+                        // 🔥 Movimento do personagem INDEPENDENTE
+                        environment.getProtagonist().move(new ArrayList<>(inputKeys));
+                        environment.checkBorders();
 
-                        /* ChonBot's Automatic Movements */
-                        /* Update the other agents' movements */ 
+                        // 🔥 Atualização dos tiros INDEPENDENTE
+                        environment.getProtagonist().updateShot();
+
+                        // 🔥 Movimentação dos inimigos INDEPENDENTE
                         environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
                                 environment.getProtagonist().getPosY());
 
-                        /* Render the game environment and agents */ 
+                        // 🔥 Renderiza os elementos
                         environment.detectCollision();
                         mediator.drawBackground();
                         mediator.drawAgents();
+                        environment.getProtagonist().renderShot(gc);
+                        for (Agent agent : environment.getAgents()) {
+                            agent.renderShot(gc);
+                        }
                     }
                 }
+
 
             }.start();
             theStage.show();
