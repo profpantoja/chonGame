@@ -34,11 +34,31 @@ public class Environment {
     /** The background image of the pause. */
     private Image pauseImage;
 
+    // Background image of the GameOver
+    private Image gameOverImage;
+
+    // Controls the state of gameOver
+    private boolean gameOver = false;
+
     /** The protagonist instance. */
     private Agent protagonist;
 
     /** List of agents present in the environment. */
     private List<Agent> agents = new ArrayList<Agent>();
+
+    // List of collectibles in the environment
+    private List<Agent> collectibles = new ArrayList<Agent>();
+
+    // Default settings for collectibles, image, widht, height
+    private String defaultCollectibleImage;
+    private int defaultCollectibleWidth;
+    private int defaultCollectibleHeight;
+    // Max collectibles that can spawn on screen
+    private int maxCollectibles = 3;
+    // Spawn interval in milliseconds (3 seconds)
+    private int collectibleSpawnInterval = 3000;
+    // Last time a collectible spawned
+    private long lastCollectibleSpawnTime = 0;
 
     /**
      * Default constructor to create an empty environment.
@@ -183,6 +203,26 @@ public class Environment {
         this.pauseImage = new Image(getClass().getResource(pathImage).toExternalForm());
     }
 
+    //Get game over image
+    public Image getGameOverImage(){
+        return gameOverImage;
+    }
+
+    // Set the backgournd of Game Over image
+    public void setGameOverImage(String pathImage) {
+        this.gameOverImage = new Image(getClass().getResource(pathImage).toExternalForm());
+    }
+    
+    //Get game over state
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    //Set game over state
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
     /**
      * Gets the protagonist of the environment.
      *
@@ -210,6 +250,10 @@ public class Environment {
         return agents;
     }
 
+    public List<Agent> getCollectibles() {
+        return collectibles;
+    }
+
     /**
      * Sets the list of agents present in the environment.
      *
@@ -217,6 +261,15 @@ public class Environment {
      */
     public void setAgents(ArrayList<Agent> agents) {
         this.agents = agents;
+    }
+
+    public void setDefaultCollectibleProperties(String path, int width, int height, int maxCollectibles,
+            int collectibleSpawnInterval) {
+        this.defaultCollectibleImage = path;
+        this.defaultCollectibleWidth = width;
+        this.defaultCollectibleHeight = height;
+        this.maxCollectibles = maxCollectibles;
+        this.collectibleSpawnInterval = collectibleSpawnInterval;
     }
 
     /**
@@ -268,6 +321,34 @@ public class Environment {
                 a.getPosX() + a.getWidth() > b.getPosX() &&
                 a.getPosY() < b.getPosY() + b.getHeight() &&
                 a.getPosY() + a.getHeight() > b.getPosY();
+    }
+
+    // Gera um novo colecionável aleatoriamente na tela
+    public void spawnCollectible() {
+        if (collectibles.size() < maxCollectibles) { // Limite máximo de colecionáveis na tela
+            int x = (int) (Math.random() * (this.width - 50));
+            int y = (int) (Math.random() * (this.height - 50));
+            Agent collectible = new Agent(x, y, defaultCollectibleHeight, defaultCollectibleWidth, 0, 0,
+                    defaultCollectibleImage, false);
+            collectibles.add(collectible);
+        }
+    }
+
+    // Atualiza e verifica a coleta dos colecionáveis
+    public void updateCollectibles() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastCollectibleSpawnTime >= collectibleSpawnInterval) {
+            spawnCollectible();
+            lastCollectibleSpawnTime = currentTime;
+        }
+
+        collectibles.removeIf(collectible -> {
+            if (intersect(collectible, protagonist)) {
+                // protagonist.increaseScore(10); // Aumenta 10 pontos ao coletar
+                return true;
+            }
+            return false;
+        });
     }
 
 }

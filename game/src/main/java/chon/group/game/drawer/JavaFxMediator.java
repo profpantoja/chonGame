@@ -60,6 +60,14 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 Color.GREEN);
         drawer.drawStatusPanel(this.environment.getProtagonist().getPosX(),
                 this.environment.getProtagonist().getPosY());
+
+        for (Agent collectible : this.environment.getCollectibles()) {
+            drawer.drawImage(collectible.getImage(),
+                    collectible.getPosX(),
+                    collectible.getPosY(),
+                    collectible.getWidth(),
+                    collectible.getHeight());
+        }
     }
 
     @Override
@@ -88,4 +96,12 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 this.environment.getHeight());
     }
 
+    @Override
+    public void drawGameOverScreen() {
+        drawer.drawPauseScreen(this.environment.getGameOverImage(),
+                (int) this.environment.getGameOverImage().getWidth(),
+                (int) this.environment.getGameOverImage().getHeight(),
+                this.environment.getWidth(),
+                this.environment.getHeight());
+    }
 }

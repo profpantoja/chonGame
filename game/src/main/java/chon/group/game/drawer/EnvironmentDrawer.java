@@ -14,4 +14,5 @@ public interface EnvironmentDrawer {
 
     void drawPauseScreen();
 
+    void drawGameOverScreen();
 }

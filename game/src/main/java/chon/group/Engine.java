@@ -36,6 +36,7 @@ public class Engine extends Application {
 
     /* If the game is paused or not. */
     private boolean isPaused = false;
+    private boolean isGameOver = false;
 
     /**
      * Main entry point of the application.
@@ -60,20 +61,22 @@ public class Engine extends Application {
     @Override
     public void start(Stage theStage) {
         try {
-            /* Initialize the game environment and agents */ 
-            Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
-            Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
-            Agent chonBot = new Agent(920, 440, 90, 65, 1, 3, "/images/agents/chonBot.png", true);
-            environment.setProtagonist(chonBota);
-            environment.getAgents().add(chonBot);
-            environment.setPauseImage("/images/environment/pause.png");
+            /* Initialize the game environment and agents */
+            Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/environmentSG.png");
+            Agent saeByeok = new Agent(400, 390, 150, 80, 6, 50, "/images/agents/saeByeok.png", false);
+            Agent triangleGuard = new Agent(920, 440, 130, 70, 2, 3, "/images/agents/triangleGuard.png", true);
+            environment.setProtagonist(saeByeok);
+            environment.getAgents().add(triangleGuard);
+            environment.setPauseImage("/images/environment/pauseSG.png");
+            environment.setGameOverImage("/images/environment/gameoverSG.png");
+            environment.setDefaultCollectibleProperties("/images/environment/cookieSG.png", 45, 80, 3, 3000);
 
-            /* Set up the graphical canvas */ 
+            /* Set up the graphical canvas */
             Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
             GraphicsContext gc = canvas.getGraphicsContext2D();
             EnvironmentDrawer mediator = new JavaFxMediator(environment, gc);
 
-            /* Set up the scene and stage */ 
+            /* Set up the scene and stage */
             StackPane root = new StackPane();
             Scene scene = new Scene(root, environment.getWidth(), environment.getHeight());
             theStage.setTitle("Chon: The Learning Game");
@@ -110,7 +113,7 @@ public class Engine extends Application {
                 }
             });
 
-            /* Start the game loop */ 
+            /* Start the game loop */
             new AnimationTimer() {
 
                 /**
@@ -121,6 +124,16 @@ public class Engine extends Application {
                 @Override
                 public void handle(long arg0) {
                     mediator.clearEnvironment();
+
+                    /* Branching the Game Loop */
+                    if (isGameOver) {
+                        mediator.drawBackground();
+                        mediator.drawAgents();
+                        /* Rendering the Pause Screen */
+                        mediator.drawGameOverScreen();
+
+                        return;
+                    }
                     /* Branching the Game Loop */
                     if (isPaused) {
                         mediator.drawBackground();
@@ -137,14 +150,20 @@ public class Engine extends Application {
                         }
 
                         /* ChonBot's Automatic Movements */
-                        /* Update the other agents' movements */ 
+                        /* Update the other agents' movements */
                         environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
                                 environment.getProtagonist().getPosY());
 
-                        /* Render the game environment and agents */ 
+                        // Verifica se o protagonista morreu
+                        if (environment.getProtagonist().isDead()) {
+                            isGameOver = true;
+                            environment.setGameOver(true);
+                        }
+                        /* Render the game environment and agents */
                         environment.detectCollision();
                         mediator.drawBackground();
                         mediator.drawAgents();
+                        environment.updateCollectibles();
                     }
                 }
 

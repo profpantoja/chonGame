@@ -304,6 +304,11 @@ public class Agent {
         this.invulnerable = invulnerable;
     }
 
+    //Method to check if the agent is dead
+    public boolean isDead() {
+        return health <= 0;
+    }
+
     /**
      * Flips the Image horizontally.
      */

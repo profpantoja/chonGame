@@ -99,4 +99,16 @@ public class JavaFxDrawer {
         }
     }
 
+        /**
+     * Renders the Game Over Screen.
+     */
+    public void drawGameOverScreen(Image image, int imageWidth, int imageHeight, int width, int height) {
+        if (image != null && this.gc != null) {
+            double centerX = (width - imageWidth) / 2;
+            double centerY = (height - imageHeight) / 2;
+            /* Draw image on the center of screen */
+            this.gc.drawImage(image, centerX, centerY);
+        }
+    }
+
 }
