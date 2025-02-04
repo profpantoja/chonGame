@@ -1,6 +1,7 @@
 package chon.group.game.drawer;
 
 import chon.group.game.domain.agent.Agent;
+import chon.group.game.domain.collectibles.Collectible;
 import chon.group.game.domain.environment.Environment;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -60,13 +61,13 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 Color.GREEN);
         drawer.drawStatusPanel(this.environment.getProtagonist().getPosX(),
                 this.environment.getProtagonist().getPosY());
+    }
 
-        for (Agent collectible : this.environment.getCollectibles()) {
-            drawer.drawImage(collectible.getImage(),
-                    collectible.getPosX(),
-                    collectible.getPosY(),
-                    collectible.getWidth(),
-                    collectible.getHeight());
+    @Override
+    public void drawCollectibles() {
+        for (Collectible colecionavel : this.environment.getCollectibles()) {
+            drawer.drawImage(colecionavel.getImage(), colecionavel.getPosX(), colecionavel.getPosY(),
+                    colecionavel.getWidth(), colecionavel.getHeight());
         }
     }
 

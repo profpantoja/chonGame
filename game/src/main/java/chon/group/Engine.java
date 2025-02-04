@@ -3,6 +3,7 @@ package chon.group;
 import java.util.ArrayList;
 
 import chon.group.game.domain.agent.Agent;
+import chon.group.game.domain.collectibles.Item;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.drawer.JavaFxMediator;
@@ -63,13 +64,19 @@ public class Engine extends Application {
         try {
             /* Initialize the game environment and agents */
             Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/environmentSG.png");
-            Agent saeByeok = new Agent(400, 390, 150, 80, 6, 50, "/images/agents/saeByeok.png", false);
-            Agent triangleGuard = new Agent(920, 440, 130, 70, 2, 3, "/images/agents/triangleGuard.png", true);
+            Agent saeByeok = new Agent(400, 390, 150, 80, 9, 50, "/images/agents/saeByeok.png", false);
+            Agent triangleGuard = new Agent(920, 440, 130, 70, 3, 3, "/images/agents/triangleGuard.png", true);
+            Agent circleGuard = new Agent(0, 390, 130, 60, 3 / 2, 3, "/images/agents/circleGuard.png");
+
             environment.setProtagonist(saeByeok);
             environment.getAgents().add(triangleGuard);
+            environment.getAgents().add(circleGuard);
             environment.setPauseImage("/images/environment/pauseSG.png");
             environment.setGameOverImage("/images/environment/gameoverSG.png");
-            environment.setDefaultCollectibleProperties("/images/environment/cookieSG.png", 45, 80, 3, 3000);
+
+            Item modelo = new Item(0, 0, 45, 80, "/images/environment/cookieSG.png");
+            environment.setModel(modelo);
+            environment.setSpawnInterval(2000);
 
             /* Set up the graphical canvas */
             Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
@@ -129,6 +136,7 @@ public class Engine extends Application {
                     if (isGameOver) {
                         mediator.drawBackground();
                         mediator.drawAgents();
+                        mediator.drawCollectibles();
                         /* Rendering the Pause Screen */
                         mediator.drawGameOverScreen();
 
@@ -138,6 +146,7 @@ public class Engine extends Application {
                     if (isPaused) {
                         mediator.drawBackground();
                         mediator.drawAgents();
+                        mediator.drawCollectibles();
                         /* Rendering the Pause Screen */
                         mediator.drawPauseScreen();
                     } else {
@@ -153,6 +162,8 @@ public class Engine extends Application {
                         /* Update the other agents' movements */
                         environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
                                 environment.getProtagonist().getPosY());
+                        environment.getAgents().get(1).chase(environment.getProtagonist().getPosX(),
+                                environment.getProtagonist().getPosY());
 
                         // Verifica se o protagonista morreu
                         if (environment.getProtagonist().isDead()) {
@@ -161,9 +172,10 @@ public class Engine extends Application {
                         }
                         /* Render the game environment and agents */
                         environment.detectCollision();
+                        environment.updateCollectible();
                         mediator.drawBackground();
                         mediator.drawAgents();
-                        environment.updateCollectibles();
+                        mediator.drawCollectibles();
                     }
                 }
 

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import chon.group.game.domain.agent.Agent;
+import chon.group.game.domain.collectibles.Collectible;
+import chon.group.game.domain.collectibles.Item;
 import javafx.scene.image.Image;
 
 /**
@@ -46,18 +48,19 @@ public class Environment {
     /** List of agents present in the environment. */
     private List<Agent> agents = new ArrayList<Agent>();
 
-    // List of collectibles in the environment
-    private List<Agent> collectibles = new ArrayList<Agent>();
+    /** List of collectibles present in the environment. */
+    private List<Collectible> collectibles = new ArrayList<Collectible>();
 
-    // Default settings for collectibles, image, widht, height
-    private String defaultCollectibleImage;
-    private int defaultCollectibleWidth;
-    private int defaultCollectibleHeight;
-    // Max collectibles that can spawn on screen
-    private int maxCollectibles = 3;
-    // Spawn interval in milliseconds (3 seconds)
-    private int collectibleSpawnInterval = 3000;
-    // Last time a collectible spawned
+    /** Control the max of collectibles entities that can be on environment */
+    private int maxCollectibles = 10;
+
+    /** The model of a item */
+    private Item model;
+
+    /** The spawn interval of an collectible */
+    private long spawnInterval = 3000;
+
+    /** Last time a collectible was generated */
     private long lastCollectibleSpawnTime = 0;
 
     /**
@@ -203,8 +206,8 @@ public class Environment {
         this.pauseImage = new Image(getClass().getResource(pathImage).toExternalForm());
     }
 
-    //Get game over image
-    public Image getGameOverImage(){
+    // Get game over image
+    public Image getGameOverImage() {
         return gameOverImage;
     }
 
@@ -212,13 +215,13 @@ public class Environment {
     public void setGameOverImage(String pathImage) {
         this.gameOverImage = new Image(getClass().getResource(pathImage).toExternalForm());
     }
-    
-    //Get game over state
+
+    // Get game over state
     public boolean isGameOver() {
         return gameOver;
     }
 
-    //Set game over state
+    // Set game over state
     public void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;
     }
@@ -250,10 +253,6 @@ public class Environment {
         return agents;
     }
 
-    public List<Agent> getCollectibles() {
-        return collectibles;
-    }
-
     /**
      * Sets the list of agents present in the environment.
      *
@@ -263,13 +262,36 @@ public class Environment {
         this.agents = agents;
     }
 
-    public void setDefaultCollectibleProperties(String path, int width, int height, int maxCollectibles,
-            int collectibleSpawnInterval) {
-        this.defaultCollectibleImage = path;
-        this.defaultCollectibleWidth = width;
-        this.defaultCollectibleHeight = height;
+    public List<Collectible> getCollectibles() {
+        return collectibles;
+    }
+
+    public void setCollectibles(List<Collectible> collectibles) {
+        this.collectibles = collectibles;
+    }
+
+    public int getMaxCollectibles() {
+        return maxCollectibles;
+    }
+
+    public void setMaxCollectibles(int maxCollectibles) {
         this.maxCollectibles = maxCollectibles;
-        this.collectibleSpawnInterval = collectibleSpawnInterval;
+    }
+
+    public Item getModel() {
+        return model;
+    }
+
+    public void setModel(Item model) {
+        this.model = model;
+    }
+
+    public long getSpawnInterval() {
+        return spawnInterval;
+    }
+
+    public void setSpawnInterval(long spawnInterval) {
+        this.spawnInterval = spawnInterval;
     }
 
     /**
@@ -300,6 +322,14 @@ public class Environment {
                 protagonist.takeDamage(10);
             }
         }
+
+        collectibles.removeIf(collectible -> {
+            if (intersectCollectible(protagonist, collectible)) {
+                collectible.onCollect();
+                return true; // Remove o item após ser coletado
+            }
+            return false;
+        });
     }
 
     /**
@@ -323,32 +353,33 @@ public class Environment {
                 a.getPosY() + a.getHeight() > b.getPosY();
     }
 
-    // Gera um novo colecionável aleatoriamente na tela
-    public void spawnCollectible() {
-        if (collectibles.size() < maxCollectibles) { // Limite máximo de colecionáveis na tela
-            int x = (int) (Math.random() * (this.width - 50));
-            int y = (int) (Math.random() * (this.height - 50));
-            Agent collectible = new Agent(x, y, defaultCollectibleHeight, defaultCollectibleWidth, 0, 0,
-                    defaultCollectibleImage, false);
-            collectibles.add(collectible);
-        }
+    private boolean intersectCollectible(Agent a, Collectible b) {
+        // Returns true if there is a collision between two agents
+        return a.getPosX() < b.getPosX() + b.getWidth() &&
+                a.getPosX() + a.getWidth() > b.getPosX() &&
+                a.getPosY() < b.getPosY() + b.getHeight() &&
+                a.getPosY() + a.getHeight() > b.getPosY();
     }
 
-    // Atualiza e verifica a coleta dos colecionáveis
-    public void updateCollectibles() {
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - lastCollectibleSpawnTime >= collectibleSpawnInterval) {
-            spawnCollectible();
-            lastCollectibleSpawnTime = currentTime;
+    // Generate the collectibles using model properties
+    public void generateCollectible() {
+        if (collectibles.size() < maxCollectibles) {
+            int x = (int) (Math.random() * (this.width - model.getWidth()));
+            int y = (int) (Math.random() * (this.height - model.getHeight()));
+
+            collectibles.add(new Item(x, y, model.getWidth(), model.getHeight(), model.getPathImage()));
         }
 
-        collectibles.removeIf(collectible -> {
-            if (intersect(collectible, protagonist)) {
-                // protagonist.increaseScore(10); // Aumenta 10 pontos ao coletar
-                return true;
-            }
-            return false;
-        });
+    }
+
+    // Update collectibles based on his spawn interval
+    public void updateCollectible() {
+        long currentTime = System.currentTimeMillis();
+
+        if (currentTime - lastCollectibleSpawnTime >= spawnInterval) {
+            generateCollectible();
+            lastCollectibleSpawnTime = currentTime;
+        }
     }
 
 }
