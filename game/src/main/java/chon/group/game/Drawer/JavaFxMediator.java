@@ -94,4 +94,10 @@ public class JavaFxMediator implements EnvironmentDrawer {
             (int) this.environment.getGameOverImage().getWidth(),
             (int) this.environment.getGameOverImage().getHeight());
     }
+
+    public void drawVictoryImage(){
+        drawer.drawVictoryImage(this.environment.getVictoryImage(),
+                this.environment.getWidth(),
+                this.environment.getHeight());
+    }
 }

@@ -263,7 +263,10 @@ public class Agent {
     // Method to make the agent take damage, if not invulnerable
     public void takeDamage() {
         if (!invulnerable && health > 0) {
-            health = health - 20;  // Decrease health
+            health -= 20;  // Decrease health
+            if (health <= 0) {
+                setGameOver(true);  // Trigger game over when health reaches zero
+            }
             activateInvulnerability(ATTACK_COOLDOWN);  // Activate invulnerability for a cooldown period
         }
     }

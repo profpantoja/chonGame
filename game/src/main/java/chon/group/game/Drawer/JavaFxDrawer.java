@@ -110,4 +110,18 @@ public class JavaFxDrawer {
         }
     }
 
+    public void drawVictoryImage(Image image, int width, int height) {
+        if (image != null && this.gc != null) {
+            double imageWidth = image.getWidth();
+            double imageHeight = image.getHeight();
+
+            double centerX = (width - imageWidth) / 2;
+            double centerY = (height - imageHeight) / 2;
+
+            this.gc.drawImage(image, centerX, centerY, imageWidth, imageHeight);
+        } else {
+            System.out.println("Victory image not set or GraphicsContext is null.");
+        }
+    }
+
 }

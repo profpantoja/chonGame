@@ -16,4 +16,5 @@ public interface EnvironmentDrawer {
 
     void drawGameOverScreen();
 
+    void drawVictoryImage();
 }

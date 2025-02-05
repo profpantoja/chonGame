@@ -23,6 +23,7 @@ public class Environment {
     private Image image;
     private Image pauseImage;
     private Image gameOverImage;
+    private Image victoryImage;
     private boolean gameOver = false;
     private Agent protagonist;
     private List<Agent> agents = new ArrayList<Agent>();
@@ -171,6 +172,14 @@ public class Environment {
         this.pauseImage = new Image(getClass().getResource(pathImage).toExternalForm());
     }
     
+    public Image getVictoryImage() {
+        return victoryImage;
+    }
+
+    public void setVictoryImage(String victoryImage) {
+        this.victoryImage = new Image(getClass().getResource(victoryImage).toExternalForm());;
+    }
+
     /**
      * Gets the protagonist of the environment.
      *
