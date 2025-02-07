@@ -60,6 +60,9 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 Color.GREEN);
         drawer.drawStatusPanel(this.environment.getProtagonist().getPosX(),
                 this.environment.getProtagonist().getPosY());
+
+        drawer.drawFallingItems(this.environment.getFallingItems());
+        drawer.drawScore(this.environment.getScore());
     }
 
     @Override

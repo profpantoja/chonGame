@@ -1,5 +1,8 @@
 package chon.group.game.drawer;
 
+import java.util.List;
+
+import chon.group.game.domain.item.FallingItem;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -97,6 +100,23 @@ public class JavaFxDrawer {
             /* Draw image on the center of screen */
             this.gc.drawImage(image, centerX, centerY);
         }
+    }
+
+    // Adiciona os itens que caem do céu
+    public void drawFallingItems(List<FallingItem> items) {
+        for (FallingItem item : items) {
+            this.gc.drawImage(new Image(getClass().getResource(item.getImagePath()).toExternalForm()),
+                    item.getPosX(),
+                    item.getPosY(),
+                    item.getWidth(),
+                    item.getHeight());
+        }
+    }
+
+    public void drawScore(int score) {
+        this.gc.setFill(Color.WHITE);
+        this.gc.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        this.gc.fillText("Score: " + score, 10, 30);
     }
 
 }

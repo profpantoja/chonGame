@@ -322,7 +322,7 @@ public class Agent {
      * @param movements a list of movement directions ("RIGHT", "LEFT", "UP",
      *                  "DOWN")
      */
-    public void move(List<String> movements) {
+    public void move(List<String> movements) {  // Retirada as movimentações UP and DOWN
         if (movements.contains("RIGHT")) {
             if (flipped)
                 this.flipImage();
@@ -331,29 +331,30 @@ public class Agent {
             if (!flipped)
                 this.flipImage();
             setPosX(posX -= speed);
-        } else if (movements.contains("UP")) {
-            setPosY(posY -= speed);
-        } else if (movements.contains("DOWN")) {
-            setPosY(posY += speed);
         }
     }
 
-    /**
-     * Makes the agent chase a target based on its coordinates.
-     *
-     * @param targetX the target's X (horizontal) position
-     * @param targetY the target's Y (vertical) position
-     */
-    public void chase(int targetX, int targetY) {
-        if (targetX > this.posX) {
-            this.move(new ArrayList<String>(List.of("RIGHT")));
-        } else if (targetX < this.posX) {
-            this.move(new ArrayList<String>(List.of("LEFT")));
-        }
-        if (targetY > this.posY) {
-            this.move(new ArrayList<String>(List.of("DOWN")));
-        } else if (targetY < this.posY) {
-            this.move(new ArrayList<String>(List.of("UP")));
+    // Retirado o método chase 
+    public void patrol(int minX, int maxX) {
+        // Se estiver indo para a direita
+        if (!flipped) {
+            if (posX >= maxX - width) {
+                // Chegou no limite direito, inverte direção
+                this.move(new ArrayList<String>(List.of("LEFT")));
+            } else {
+                // Continua movendo para direita
+                this.move(new ArrayList<String>(List.of("RIGHT")));
+            }
+        } 
+        // Se estiver indo para a esquerda
+        else {
+            if (posX <= minX) {
+                // Chegou no limite esquerdo, inverte direção
+                this.move(new ArrayList<String>(List.of("RIGHT")));
+            } else {
+                // Continua movendo para esquerda
+                this.move(new ArrayList<String>(List.of("LEFT")));
+            }
         }
     }
 

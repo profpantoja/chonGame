@@ -1,9 +1,11 @@
 package chon.group;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.environment.Environment;
+import chon.group.game.domain.item.FallingItem;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
@@ -37,6 +39,10 @@ public class Engine extends Application {
     /* If the game is paused or not. */
     private boolean isPaused = false;
 
+    private Random random = new Random();
+    private long lastItemSpawn = 0;
+    private static final long ITEM_SPAWN_DELAY = 2000; // 2 segundo
+
     /**
      * Main entry point of the application.
      *
@@ -60,20 +66,29 @@ public class Engine extends Application {
     @Override
     public void start(Stage theStage) {
         try {
-            /* Initialize the game environment and agents */ 
+            /* Initialize the game environment and agents */
             Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
-            Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
-            Agent chonBot = new Agent(920, 440, 90, 65, 1, 3, "/images/agents/chonBot.png", true);
+            Agent chonBota = new Agent(400, 690, 90, 65, 3, 1000, "/images/agents/chonBota.png", false); // Alterado
+                                                                                                         // posição da
+                                                                                                         // chonBota
+                                                                                                         // para ficar
+                                                                                                         // na parte
+                                                                                                         // inferior da
+                                                                                                         // tela
+            Agent chonBot = new Agent(920, 20, 90, 65, 2, 3, "/images/agents/chonBot.png", true); // Alterado posição da
+                                                                                                  // chonBota para ficar
+                                                                                                  // na parte superior
+                                                                                                  // da tela
             environment.setProtagonist(chonBota);
             environment.getAgents().add(chonBot);
             environment.setPauseImage("/images/environment/pause.png");
 
-            /* Set up the graphical canvas */ 
+            /* Set up the graphical canvas */
             Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
             GraphicsContext gc = canvas.getGraphicsContext2D();
             EnvironmentDrawer mediator = new JavaFxMediator(environment, gc);
 
-            /* Set up the scene and stage */ 
+            /* Set up the scene and stage */
             StackPane root = new StackPane();
             Scene scene = new Scene(root, environment.getWidth(), environment.getHeight());
             theStage.setTitle("Chon: The Learning Game");
@@ -110,7 +125,7 @@ public class Engine extends Application {
                 }
             });
 
-            /* Start the game loop */ 
+            /* Start the game loop */
             new AnimationTimer() {
 
                 /**
@@ -136,12 +151,33 @@ public class Engine extends Application {
                             environment.checkBorders();
                         }
 
-                        /* ChonBot's Automatic Movements */
-                        /* Update the other agents' movements */ 
-                        environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
-                                environment.getProtagonist().getPosY());
+                        // Spawn new items 
+                        long currentTime = System.currentTimeMillis();
+                        if (currentTime - lastItemSpawn > ITEM_SPAWN_DELAY) {
+                            int minGap = 100;
+                            int spawnX = random.nextInt(environment.getWidth() - minGap);
+                            boolean isBomb = random.nextBoolean();
+                            String imagePath = isBomb ? "/images/items/bomb.png" : "/images/items/hextech.png";
 
-                        /* Render the game environment and agents */ 
+                            FallingItem item = new FallingItem(spawnX, 60, 60, 2, imagePath, isBomb);
+                            environment.getFallingItems().add(item);
+                            lastItemSpawn = currentTime;
+                        }
+
+                        // Update falling items
+
+                        environment.getFallingItems().forEach(FallingItem::fall);
+                        environment.detectFallingItemCollision();
+
+                        // Remove items that are off screen
+                        environment.getFallingItems().removeIf(item -> item.getPosY() > environment.getHeight());
+
+                        // Alterado metodo de movimentação do chonBot para patrol
+
+                        /* ChonBot's Automatic Movements */
+                        /* Update the other agents' movements */
+                        environment.getAgents().get(0).patrol(50, 1230);
+                        /* Render the game environment and agents */
                         environment.detectCollision();
                         mediator.drawBackground();
                         mediator.drawAgents();

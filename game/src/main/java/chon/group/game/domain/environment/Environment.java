@@ -2,8 +2,12 @@ package chon.group.game.domain.environment;
 
 import java.util.ArrayList;
 import java.util.List;
+// Adicionado biblioteca Iterator (Dizer o que é)
+import java.util.Iterator;
 
 import chon.group.game.domain.agent.Agent;
+// Importa Falling Item
+import chon.group.game.domain.item.FallingItem;
 import javafx.scene.image.Image;
 
 /**
@@ -40,10 +44,16 @@ public class Environment {
     /** List of agents present in the environment. */
     private List<Agent> agents = new ArrayList<Agent>();
 
+    // Itens que caem do céu
+    private List<FallingItem> fallingItems = new ArrayList<>();
+
+    // Pontuação do jogador
+    private int score;
     /**
      * Default constructor to create an empty environment.
      */
     public Environment() {
+        this.fallingItems = new ArrayList<>();
     }
 
     /**
@@ -63,6 +73,7 @@ public class Environment {
         this.width = width;
         this.setImage(pathImage);
         this.agents = new ArrayList<Agent>();
+        this.fallingItems = new ArrayList<>(); // Inicializar a lista
     }
 
     /**
@@ -219,6 +230,22 @@ public class Environment {
         this.agents = agents;
     }
 
+    public List<FallingItem> getFallingItems() {
+        return fallingItems;
+    }
+
+    public void setFallingItems(List<FallingItem> fallingItems) {
+        this.fallingItems = fallingItems;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
     /**
      * Checks if the protagonist is within the environment's boundaries and adjusts
      * its position if necessary.
@@ -268,6 +295,30 @@ public class Environment {
                 a.getPosX() + a.getWidth() > b.getPosX() &&
                 a.getPosY() < b.getPosY() + b.getHeight() &&
                 a.getPosY() + a.getHeight() > b.getPosY();
+    }
+
+    // Detecta a colisão entre o protagonista e os itens que caem do céu
+    public void detectFallingItemCollision() {
+        Iterator<FallingItem> iterator = fallingItems.iterator();
+        while (iterator.hasNext()) {
+            FallingItem item = iterator.next();
+            if (intersectWithItem(protagonist, item)) {
+                if (item.isBomb()) {
+                    protagonist.takeDamage(1000); // Game Over
+                } else {
+                    score++;
+                }
+                iterator.remove();
+            }
+        }
+    }
+
+    // Verifica se teve interseção entre o protagonista e os itens que caem do ceu
+    private boolean intersectWithItem(Agent agent, FallingItem item) {
+        return agent.getPosX() < item.getPosX() + item.getWidth() &&
+               agent.getPosX() + agent.getWidth() > item.getPosX() &&
+               agent.getPosY() < item.getPosY() + item.getHeight() &&
+               agent.getPosY() + agent.getHeight() > item.getPosY();
     }
 
 }
