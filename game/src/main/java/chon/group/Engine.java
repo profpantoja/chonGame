@@ -74,8 +74,15 @@ public class Engine extends Application {
             environment.setGameOverImage("/images/environment/gameoverSG.png");
             environment.setVictoryImage("/images/environment/victorySG2.png");
 
-            PointsItem cookie = new PointsItem(0, 0, 45, 80, "/images/environment/cookieSG.png", 2000, 10);
-            environment.setModel(cookie);
+            PointsItem cookie = new PointsItem(0, 0, 45, 80, "/images/environment/cookieSG.png", 10);
+            PointsItem cookie2 = new PointsItem(0, 0, 45, 80, "/images/environment/cookieSG2.png", 5);
+            PointsItem cookie3 = new PointsItem(0, 0, 45, 80, "/images/environment/cookieSG3.png", 2);
+            PointsItem cookie4 = new PointsItem(0, 0, 45, 80, "/images/environment/cookieSG4.png", 1);
+            environment.setPiSpawnInterval(2000);
+            environment.getModels().add(cookie);
+            environment.getModels().add(cookie2);
+            environment.getModels().add(cookie3);
+            environment.getModels().add(cookie4);
 
             /* Set up the graphical canvas */
             Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());

@@ -54,8 +54,10 @@ public class Environment {
     /** Control the max of collectibles entities that can be on environment */
     private int maxCollectibles = 10;
 
-    /** The model of a item */
-    private PointsItem model;
+    private List<PointsItem> models = new ArrayList<PointsItem>();
+
+    // Spawn Interval for a points Item;
+    private long piSpawnInterval = 5000;
 
     /** Last time a collectible was generated */
     private long lastCollectibleSpawnTime = 0;
@@ -265,20 +267,20 @@ public class Environment {
         this.collectibles = collectibles;
     }
 
-    public int getMaxCollectibles() {
-        return maxCollectibles;
-    }
-
     public void setMaxCollectibles(int maxCollectibles) {
         this.maxCollectibles = maxCollectibles;
     }
 
-    public PointsItem getModel() {
-        return model;
+    public List<PointsItem> getModels() {
+        return models;
     }
 
-    public void setModel(PointsItem model) {
-        this.model = model;
+    public void setModels(List<PointsItem> models) {
+        this.models = models;
+    }
+
+    public void setPiSpawnInterval(long piSpawnInterval) {
+        this.piSpawnInterval = piSpawnInterval;
     }
 
     /**
@@ -348,14 +350,20 @@ public class Environment {
                 a.getPosY() + a.getHeight() > b.getPosY();
     }
 
-    // Generate the collectibles using model properties
-    public void generateCollectible() {
-        if (collectibles.size() < maxCollectibles) {
-            int x = (int) (Math.random() * (this.width - model.getWidth()));
-            int y = (int) (Math.random() * (this.height - model.getHeight()));
+    // Generate Points items
+    public void generatePointsItem() {
 
-            collectibles.add(new PointsItem(x, y, model.getWidth(), model.getHeight(), model.getPathImage(),
-                    model.getSpawnInterval(), model.getPoints()));
+        //Pick a random model in pointsItem list and use to add to Collectibles list
+        PointsItem randomModel = models.get((int) (Math.random() * models.size()));
+
+        //Set an random x and y position and add the random model to the collectibles list
+        if (collectibles.size() < maxCollectibles && !models.isEmpty()) {
+            int x = (int) (Math.random() * (this.width - randomModel.getWidth()));
+            int y = (int) (Math.random() * (this.height - randomModel.getHeight()));
+
+            collectibles.add(
+                    new PointsItem(x, y, randomModel.getWidth(), randomModel.getHeight(), randomModel.getPathImage(),
+                            randomModel.getPoints()));
         }
 
     }
@@ -363,9 +371,9 @@ public class Environment {
     // Update collectibles based on his spawn interval
     public void updateCollectible() {
         long currentTime = System.currentTimeMillis();
-
-        if (currentTime - lastCollectibleSpawnTime >= model.getSpawnInterval()) {
-            generateCollectible();
+        //Update Points Item 
+        if (currentTime - lastCollectibleSpawnTime >= piSpawnInterval) {
+            generatePointsItem();
             lastCollectibleSpawnTime = currentTime;
         }
     }

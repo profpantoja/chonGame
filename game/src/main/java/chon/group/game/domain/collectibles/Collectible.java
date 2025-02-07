@@ -11,15 +11,13 @@ public abstract class Collectible {
     protected int width;
     protected int height;
     protected Image image;
-    protected long spawnInterval;
 
-    public Collectible(int posX, int posY, int width, int height, String pathImage, long spawnInterval) {
+    public Collectible(int posX, int posY, int width, int height, String pathImage) {
         this.posX = posX;
         this.posY = posY;
         this.width = width;
         this.height = height;
         this.image = new Image(getClass().getResource(pathImage).toExternalForm());
-        this.spawnInterval = spawnInterval;
     }
 
     public int getPosX() {
@@ -40,10 +38,6 @@ public abstract class Collectible {
 
     public Image getImage() {
         return image;
-    }
-
-    public long getSpawnInterval() {
-        return spawnInterval;
     }
 
     // A method to do something when protagonist collect a collectible

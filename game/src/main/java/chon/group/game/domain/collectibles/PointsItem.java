@@ -11,8 +11,8 @@ public class PointsItem extends Collectible {
     private String pathImage; // store just the path of the image
     private int points;
 
-    public PointsItem(int posX, int posY, int width, int height, String pathImage, long spawnInterval, int points) {
-        super(posX, posY, width, height, pathImage, spawnInterval);
+    public PointsItem(int posX, int posY, int width, int height, String pathImage, int points) {
+        super(posX, posY, width, height, pathImage);
         this.pathImage = pathImage;
         this.points = points;
     }
