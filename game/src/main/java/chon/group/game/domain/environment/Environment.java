@@ -5,7 +5,7 @@ import java.util.List;
 
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.collectibles.Collectible;
-import chon.group.game.domain.collectibles.Item;
+import chon.group.game.domain.collectibles.PointsItem;
 import javafx.scene.image.Image;
 
 /**
@@ -55,10 +55,7 @@ public class Environment {
     private int maxCollectibles = 10;
 
     /** The model of a item */
-    private Item model;
-
-    /** The spawn interval of an collectible */
-    private long spawnInterval = 3000;
+    private PointsItem model;
 
     /** Last time a collectible was generated */
     private long lastCollectibleSpawnTime = 0;
@@ -278,20 +275,12 @@ public class Environment {
         this.maxCollectibles = maxCollectibles;
     }
 
-    public Item getModel() {
+    public PointsItem getModel() {
         return model;
     }
 
-    public void setModel(Item model) {
+    public void setModel(PointsItem model) {
         this.model = model;
-    }
-
-    public long getSpawnInterval() {
-        return spawnInterval;
-    }
-
-    public void setSpawnInterval(long spawnInterval) {
-        this.spawnInterval = spawnInterval;
     }
 
     /**
@@ -325,8 +314,8 @@ public class Environment {
 
         collectibles.removeIf(collectible -> {
             if (intersectCollectible(protagonist, collectible)) {
-                collectible.onCollect();
-                return true; // Remove o item após ser coletado
+                collectible.onCollect(protagonist);
+                return true; // Remove the item when collected
             }
             return false;
         });
@@ -367,7 +356,8 @@ public class Environment {
             int x = (int) (Math.random() * (this.width - model.getWidth()));
             int y = (int) (Math.random() * (this.height - model.getHeight()));
 
-            collectibles.add(new Item(x, y, model.getWidth(), model.getHeight(), model.getPathImage()));
+            collectibles.add(new PointsItem(x, y, model.getWidth(), model.getHeight(), model.getPathImage(),
+                    model.getSpawnInterval(), model.getPoints()));
         }
 
     }
@@ -376,7 +366,7 @@ public class Environment {
     public void updateCollectible() {
         long currentTime = System.currentTimeMillis();
 
-        if (currentTime - lastCollectibleSpawnTime >= spawnInterval) {
+        if (currentTime - lastCollectibleSpawnTime >= model.getSpawnInterval()) {
             generateCollectible();
             lastCollectibleSpawnTime = currentTime;
         }

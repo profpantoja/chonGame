@@ -3,7 +3,7 @@ package chon.group;
 import java.util.ArrayList;
 
 import chon.group.game.domain.agent.Agent;
-import chon.group.game.domain.collectibles.Item;
+import chon.group.game.domain.collectibles.PointsItem;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.drawer.JavaFxMediator;
@@ -63,20 +63,19 @@ public class Engine extends Application {
     public void start(Stage theStage) {
         try {
             /* Initialize the game environment and agents */
-            Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/environmentSG.png");
-            Agent saeByeok = new Agent(400, 390, 150, 80, 9, 50, "/images/agents/saeByeok.png", false);
-            Agent triangleGuard = new Agent(920, 440, 130, 70, 3, 3, "/images/agents/triangleGuard.png", true);
-            Agent circleGuard = new Agent(0, 390, 130, 60, 3 / 2, 3, "/images/agents/circleGuard.png");
+            Environment environment = new Environment(0, 0, 1366, 780, "/images/environment/environmentSG2.png");
+            Agent saeByeok = new Agent(670, 390, 150, 80, 10, 30, "/images/agents/saeByeok.png", false);
+            Agent triangleGuard = new Agent(1350, 390, 130, 70, 4, 3, "/images/agents/triangleGuard.png", true);
+            Agent circleGuard = new Agent(0, 390, 130, 60, 3, 2, "/images/agents/circleGuard.png", true);
 
             environment.setProtagonist(saeByeok);
             environment.getAgents().add(triangleGuard);
             environment.getAgents().add(circleGuard);
-            environment.setPauseImage("/images/environment/pauseSG.png");
+            environment.setPauseImage("/images/environment/sgpause.png");
             environment.setGameOverImage("/images/environment/gameoverSG.png");
 
-            Item modelo = new Item(0, 0, 45, 80, "/images/environment/cookieSG.png");
-            environment.setModel(modelo);
-            environment.setSpawnInterval(2000);
+            PointsItem cookie = new PointsItem(0, 0, 45, 80, "/images/environment/cookieSG.png", 2000, 10);
+            environment.setModel(cookie);
 
             /* Set up the graphical canvas */
             Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
@@ -137,8 +136,9 @@ public class Engine extends Application {
                         mediator.drawBackground();
                         mediator.drawAgents();
                         mediator.drawCollectibles();
-                        /* Rendering the Pause Screen */
+                        /* Rendering the Game Over Screen */
                         mediator.drawGameOverScreen();
+                        mediator.drawScore();
 
                         return;
                     }
@@ -149,6 +149,7 @@ public class Engine extends Application {
                         mediator.drawCollectibles();
                         /* Rendering the Pause Screen */
                         mediator.drawPauseScreen();
+                        mediator.drawScore();
                     } else {
                         /* ChonBota Only Moves if the Player Press Something */
                         /* Update the protagonist's movements if input exists */
@@ -165,7 +166,7 @@ public class Engine extends Application {
                         environment.getAgents().get(1).chase(environment.getProtagonist().getPosX(),
                                 environment.getProtagonist().getPosY());
 
-                        // Verifica se o protagonista morreu
+                        // Check if the protagonist is dead
                         if (environment.getProtagonist().isDead()) {
                             isGameOver = true;
                             environment.setGameOver(true);
@@ -176,6 +177,7 @@ public class Engine extends Application {
                         mediator.drawBackground();
                         mediator.drawAgents();
                         mediator.drawCollectibles();
+                        mediator.drawScore();
                     }
                 }
 

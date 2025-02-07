@@ -51,6 +51,8 @@ public class Agent {
     /* Invulnerability (in milliseconds) */
     private final long INVULNERABILITY_COOLDOWN = 500;
 
+    private int score;
+
     /**
      * Constructor to initialize the agent properties.
      *
@@ -304,9 +306,13 @@ public class Agent {
         this.invulnerable = invulnerable;
     }
 
-    //Method to check if the agent is dead
+    // Method to check if the agent is dead
     public boolean isDead() {
         return health <= 0;
+    }
+
+    public int getScore() {
+        return score;
     }
 
     /**
@@ -391,6 +397,11 @@ public class Agent {
             return false;
         }
         return true;
+    }
+
+    //Method update the protagonist score (adding score)
+    public void addScore(int points) {
+        this.score += points;
     }
 
 }

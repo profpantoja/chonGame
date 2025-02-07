@@ -105,4 +105,10 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 this.environment.getWidth(),
                 this.environment.getHeight());
     }
+
+    @Override
+    public void drawScore() {
+        drawer.drawScore(environment.getProtagonist().getScore());
+    }
+
 }

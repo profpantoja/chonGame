@@ -99,7 +99,7 @@ public class JavaFxDrawer {
         }
     }
 
-        /**
+    /**
      * Renders the Game Over Screen.
      */
     public void drawGameOverScreen(Image image, int imageWidth, int imageHeight, int width, int height) {
@@ -109,6 +109,31 @@ public class JavaFxDrawer {
             /* Draw image on the center of screen */
             this.gc.drawImage(image, centerX, centerY);
         }
+    }
+
+    /**
+     * Renders the Score Screen.
+     */
+    public void drawScore(int score) {
+        // The text of score
+        String text = "Score: " + score;
+        // X and Y position of the score
+        int posX = 20;
+        int posY = 30;
+        // The font itself
+        Font font = Font.font("Verdana", FontWeight.BOLD, 30);
+        gc.setFont(font);
+
+        // Draw a black border around
+        gc.setFill(Color.BLACK);
+        gc.fillText(text, posX - 1, posY - 1);
+        gc.fillText(text, posX + 1, posY - 1);
+        gc.fillText(text, posX - 1, posY + 1);
+        gc.fillText(text, posX + 1, posY + 1);
+
+        // Draw the text itSelf
+        gc.setFill(Color.RED);
+        gc.fillText(text, posX, posY);
     }
 
 }
