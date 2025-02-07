@@ -39,9 +39,11 @@ public class Engine extends Application {
     /* If the game is paused or not. */
     private boolean isPaused = false;
 
+    // Novos atributos para os falling items
     private Random random = new Random();
     private long lastItemSpawn = 0;
-    private static final long ITEM_SPAWN_DELAY = 2000; // 2 segundo
+    private static final long ITEM_SPAWN_DELAY = 350; 
+    private static final int MAX_ITEMS = 50; 
 
     /**
      * Main entry point of the application.
@@ -68,19 +70,11 @@ public class Engine extends Application {
         try {
             /* Initialize the game environment and agents */
             Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
-            Agent chonBota = new Agent(400, 690, 90, 65, 3, 1000, "/images/agents/chonBota.png", false); // Alterado
-                                                                                                         // posição da
-                                                                                                         // chonBota
-                                                                                                         // para ficar
-                                                                                                         // na parte
-                                                                                                         // inferior da
-                                                                                                         // tela
-            Agent chonBot = new Agent(920, 20, 90, 65, 2, 3, "/images/agents/chonBot.png", true); // Alterado posição da
-                                                                                                  // chonBota para ficar
-                                                                                                  // na parte superior
-                                                                                                  // da tela
-            environment.setProtagonist(chonBota);
-            environment.getAgents().add(chonBot);
+            Agent vi = new Agent(400, 690, 160, 150, 3, 1000, "/images/agents/vi.png", false);             
+            Agent jinx = new Agent(920, 20, 160, 150, 2, 3, "/images/agents/jinx.png", true); 
+                                                                                                                                                                                      
+            environment.setProtagonist(vi);
+            environment.getAgents().add(jinx);
             environment.setPauseImage("/images/environment/pause.png");
 
             /* Set up the graphical canvas */
@@ -153,15 +147,24 @@ public class Engine extends Application {
 
                         // Spawn new items 
                         long currentTime = System.currentTimeMillis();
-                        if (currentTime - lastItemSpawn > ITEM_SPAWN_DELAY) {
+                        if (currentTime - lastItemSpawn > ITEM_SPAWN_DELAY && 
+                        environment.getFallingItems().size() < MAX_ITEMS) {
                             int minGap = 100;
                             int spawnX = random.nextInt(environment.getWidth() - minGap);
-                            boolean isBomb = random.nextBoolean();
-                            String imagePath = isBomb ? "/images/items/bomb.png" : "/images/items/hextech.png";
 
-                            FallingItem item = new FallingItem(spawnX, 60, 60, 2, imagePath, isBomb);
+                            boolean isBomb = random.nextDouble() < 0.8;
+                            String imagePath = isBomb ? "/images/items/bomb.png" : "/images/items/hextech.png";
+                            double speed = 2.0; // velocidade padrão
+
+
+                            if (isBomb && random.nextDouble() < 0.4) { // 40% das bombas serão mais rápidas
+                                speed = 6.0; // velocidade dobrada para bombas rápidas
+                            }
+
+                            FallingItem item = new FallingItem(spawnX, 60, 60, speed, imagePath, isBomb);
                             environment.getFallingItems().add(item);
                             lastItemSpawn = currentTime;
+
                         }
 
                         // Update falling items
@@ -172,7 +175,7 @@ public class Engine extends Application {
                         // Remove items that are off screen
                         environment.getFallingItems().removeIf(item -> item.getPosY() > environment.getHeight());
 
-                        // Alterado metodo de movimentação do chonBot para patrol
+                        // Alterado metodo de movimentação do jinx para patrol
 
                         /* ChonBot's Automatic Movements */
                         /* Update the other agents' movements */

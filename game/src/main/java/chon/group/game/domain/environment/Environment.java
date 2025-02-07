@@ -44,11 +44,10 @@ public class Environment {
     /** List of agents present in the environment. */
     private List<Agent> agents = new ArrayList<Agent>();
 
-    // Itens que caem do céu
     private List<FallingItem> fallingItems = new ArrayList<>();
 
-    // Pontuação do jogador
     private int score;
+    
     /**
      * Default constructor to create an empty environment.
      */
@@ -297,20 +296,31 @@ public class Environment {
                 a.getPosY() + a.getHeight() > b.getPosY();
     }
 
+    public void cleanupItems() {
+        fallingItems.removeIf(item -> 
+            item.getPosY() > height || // Remove itens fora da tela
+            (item.getPosY() + item.getHeight() > height) // Remove itens parcialmente fora
+        );
+    }
+
     // Detecta a colisão entre o protagonista e os itens que caem do céu
     public void detectFallingItemCollision() {
+        // Usar um iterator para remover itens de forma mais eficiente
         Iterator<FallingItem> iterator = fallingItems.iterator();
         while (iterator.hasNext()) {
             FallingItem item = iterator.next();
             if (intersectWithItem(protagonist, item)) {
                 if (item.isBomb()) {
-                    protagonist.takeDamage(1000); // Game Over
+                    protagonist.takeDamage(1000);
                 } else {
                     score++;
                 }
                 iterator.remove();
+                break; // Sai do loop após primeira colisão
             }
         }
+        // Limpa itens fora da tela
+        cleanupItems();
     }
 
     // Verifica se teve interseção entre o protagonista e os itens que caem do ceu

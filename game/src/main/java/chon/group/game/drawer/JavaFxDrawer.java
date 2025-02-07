@@ -105,7 +105,7 @@ public class JavaFxDrawer {
     // Adiciona os itens que caem do céu
     public void drawFallingItems(List<FallingItem> items) {
         for (FallingItem item : items) {
-            this.gc.drawImage(new Image(getClass().getResource(item.getImagePath()).toExternalForm()),
+            this.gc.drawImage(item.getCachedImage(),
                     item.getPosX(),
                     item.getPosY(),
                     item.getWidth(),

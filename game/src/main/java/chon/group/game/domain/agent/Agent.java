@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 /**
  * Represents an agent in the game, with properties such as position, size,
  * speed, and image.
- * The agent can move in specific directions and chase a target.
+ * The agent can move in specific directions and patrol.
  */
 public class Agent {
 
