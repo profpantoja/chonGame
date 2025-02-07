@@ -16,6 +16,8 @@ public interface EnvironmentDrawer {
 
     void drawGameOverScreen();
 
+    void drawVictoryScreen();
+
     void drawCollectibles();
 
     void drawScore();

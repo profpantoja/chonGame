@@ -39,8 +39,8 @@ public class Environment {
     // Background image of the GameOver
     private Image gameOverImage;
 
-    // Controls the state of gameOver
-    private boolean gameOver = false;
+    // Background image of victory
+    private Image victoryImage;
 
     /** The protagonist instance. */
     private Agent protagonist;
@@ -213,14 +213,12 @@ public class Environment {
         this.gameOverImage = new Image(getClass().getResource(pathImage).toExternalForm());
     }
 
-    // Get game over state
-    public boolean isGameOver() {
-        return gameOver;
+    public Image getVictoryImage() {
+        return victoryImage;
     }
 
-    // Set game over state
-    public void setGameOver(boolean gameOver) {
-        this.gameOver = gameOver;
+    public void setVictoryImage(String pathImage) {
+        this.victoryImage = new Image(getClass().getResource(pathImage).toExternalForm());
     }
 
     /**

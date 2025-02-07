@@ -37,7 +37,6 @@ public class Engine extends Application {
 
     /* If the game is paused or not. */
     private boolean isPaused = false;
-    private boolean isGameOver = false;
 
     /**
      * Main entry point of the application.
@@ -73,6 +72,7 @@ public class Engine extends Application {
             environment.getAgents().add(circleGuard);
             environment.setPauseImage("/images/environment/sgpause.png");
             environment.setGameOverImage("/images/environment/gameoverSG.png");
+            environment.setVictoryImage("/images/environment/victorySG2.png");
 
             PointsItem cookie = new PointsItem(0, 0, 45, 80, "/images/environment/cookieSG.png", 2000, 10);
             environment.setModel(cookie);
@@ -131,25 +131,38 @@ public class Engine extends Application {
                 public void handle(long arg0) {
                     mediator.clearEnvironment();
 
-                    /* Branching the Game Loop */
-                    if (isGameOver) {
+                    /* If protagonist dies Game Over screen appears */
+                    if (saeByeok.isDead()) {
                         mediator.drawBackground();
                         mediator.drawAgents();
                         mediator.drawCollectibles();
+                        mediator.drawScore();
                         /* Rendering the Game Over Screen */
                         mediator.drawGameOverScreen();
-                        mediator.drawScore();
 
                         return;
                     }
+
+                    /* If protagonist scores above 200 Victory Screen appears */
+                    if (saeByeok.getScore() >= 100) {
+                        mediator.drawBackground();
+                        mediator.drawAgents();
+                        mediator.drawCollectibles();
+                        mediator.drawScore();
+                        /* Rendering the Game Over Screen */
+                        mediator.drawVictoryScreen();
+
+                        return;
+                    }
+
                     /* Branching the Game Loop */
                     if (isPaused) {
                         mediator.drawBackground();
                         mediator.drawAgents();
                         mediator.drawCollectibles();
+                        mediator.drawScore();
                         /* Rendering the Pause Screen */
                         mediator.drawPauseScreen();
-                        mediator.drawScore();
                     } else {
                         /* ChonBota Only Moves if the Player Press Something */
                         /* Update the protagonist's movements if input exists */
@@ -166,11 +179,6 @@ public class Engine extends Application {
                         environment.getAgents().get(1).chase(environment.getProtagonist().getPosX(),
                                 environment.getProtagonist().getPosY());
 
-                        // Check if the protagonist is dead
-                        if (environment.getProtagonist().isDead()) {
-                            isGameOver = true;
-                            environment.setGameOver(true);
-                        }
                         /* Render the game environment and agents */
                         environment.detectCollision();
                         environment.updateCollectible();
