@@ -61,17 +61,22 @@ public class Engine extends Application {
     public void start(Stage theStage) {
         try {
             /* Initialize the game environment and agents */ 
-            Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
-            Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
-            Agent chonBot = new Agent(920, 440, 90, 65, 1, 3, "/images/agents/chonBot.png", true);
-            environment.setProtagonist(chonBota);
-            environment.getAgents().add(chonBot);
+            Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/forest.png");
+			Agent jon = new Agent(400, 390, 165, 68, 5, 200, "/images/agents/jon.png", true);
+			Agent zumbi1 = new Agent(920, 400, 110, 130, 1, 100, "/images/agents/zumbi.png", true);
+			Agent zumbi2 = new Agent(820, 400, 110, 130, 1, 100, "/images/agents/zumbi.png", true);
+			Environment environment2 = new Environment(0, 0, 1280, 780, "/images/environment/forest2.png");
+            environment.setProtagonist(jon);
+			environment.getAgents().add(zumbi1);
+			environment.getAgents().add(zumbi2);
             environment.setPauseImage("/images/environment/pause.png");
 
             /* Set up the graphical canvas */ 
             Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
             GraphicsContext gc = canvas.getGraphicsContext2D();
             EnvironmentDrawer mediator = new JavaFxMediator(environment, gc);
+            EnvironmentDrawer mediator2 = new JavaFxMediator(environment2, gc);
+
 
             /* Set up the scene and stage */ 
             StackPane root = new StackPane();
@@ -139,12 +144,18 @@ public class Engine extends Application {
                         /* ChonBot's Automatic Movements */
                         /* Update the other agents' movements */ 
                         environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
-                                environment.getProtagonist().getPosY());
+                        environment.getProtagonist().getPosY());
+                        environment.getAgents().get(1).chase(environment.getProtagonist().getPosX(),
+                        environment.getProtagonist().getPosY());
 
                         /* Render the game environment and agents */ 
-                        environment.detectCollision();
                         mediator.drawBackground();
                         mediator.drawAgents();
+                        environment.checkAndAdjustPosition(environment.getAgents().get(0));
+						environment.checkAndAdjustPosition(environment.getAgents().get(1));
+						environment.checkAndAdjustPosition(environment.getProtagonist());
+                        environment.detectCollision();
+                        mediator2.drawBackground();
                     }
                 }
 

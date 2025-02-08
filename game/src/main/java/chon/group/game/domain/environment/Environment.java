@@ -270,4 +270,54 @@ public class Environment {
                 a.getPosY() + a.getHeight() > b.getPosY();
     }
 
+     /**
+     * Defines the upper, lower, left, and right boundaries of the environment.
+     * The agent's positions are adjusted to remain within these boundaries.
+     */
+    private static final int UPPER_LIMIT = 230; 
+    private static final int LOWER_LIMIT = 580; 
+    private static final int LEFT_LIMIT = 0;    
+    private static final int RIGHT_LIMIT = 1280;
+
+    /**
+     * Adjusts an agent's position to ensure it stays within the defined boundaries.
+     *
+     * @param agent the agent whose position will be checked and adjusted.
+     */
+    public void checkAndAdjustPosition(Agent agent) {
+        // Upper boundary
+        if (agent.getPosY() < UPPER_LIMIT) {
+            agent.setPosY(UPPER_LIMIT);
+        }
+        // Lower boundary
+        if (agent.getPosY() > LOWER_LIMIT) {
+            agent.setPosY(LOWER_LIMIT);
+        }
+        // Left boundary
+        if (agent.getPosX() < LEFT_LIMIT) {
+            agent.setPosX(LEFT_LIMIT);
+        }
+        // Right boundary
+        if (agent.getPosX() > RIGHT_LIMIT) {
+            agent.setPosX(RIGHT_LIMIT);
+        }
+
+        // Restricted special area: top-left corner
+        if ((agent.getPosY() < 375) && (agent.getPosX() < 110)) {
+            if (agent.getPosX() >= 105) {
+                agent.setPosX(110);
+            } else {
+                agent.setPosY(375);
+            }
+        }
+
+        // Restricted special area: top-right corner
+        if ((agent.getPosY() < 405) && (agent.getPosX() > 1050)) {
+            if (agent.getPosX() <= 1055) {
+                agent.setPosX(1050);
+            } else {
+                agent.setPosY(405);
+            }
+        }
+    }
 }
