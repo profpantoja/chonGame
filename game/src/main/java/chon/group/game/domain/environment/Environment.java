@@ -269,5 +269,6 @@ public class Environment {
                 a.getPosY() < b.getPosY() + b.getHeight() &&
                 a.getPosY() + a.getHeight() > b.getPosY();
     }
+    
 
 }
