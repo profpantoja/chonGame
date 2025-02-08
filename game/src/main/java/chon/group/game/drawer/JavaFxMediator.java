@@ -91,4 +91,27 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 this.environment.getHeight());
     }
 
+    // Adicionar os outros metodos correspondentes que existem no JavaFxDrawer
+
+    // metodo correspondente ao que existe no JavaFxDrawer
+    public void drawGameOverScreen() {
+        drawer.drawGameOverScreen(
+                this.environment.getWidth(),
+                this.environment.getHeight(),
+                this.environment.getScore());
+    }
+
+    public JavaFxDrawer getDrawer() {
+        return drawer;
+    }
+
+    @Override
+    public void drawScorePanel() {
+        drawer.drawScorePanel(
+                this.environment.getScoreImage(),
+                this.environment.getScore(),
+                0, 0, 0, 0 // Os valores serão ignorados pois estão definidos no próprio drawer
+        );
+
+    } 
 }

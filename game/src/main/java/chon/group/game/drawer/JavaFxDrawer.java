@@ -4,9 +4,15 @@ import java.util.List;
 
 import chon.group.game.domain.item.FallingItem;
 import javafx.scene.canvas.GraphicsContext;
+
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
+import javafx.application.Platform;
+
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 
 public class JavaFxDrawer {
@@ -14,6 +20,10 @@ public class JavaFxDrawer {
     /** The graphics context used to render the environment. */
     private final GraphicsContext gc;
     private final EnvironmentDrawer mediator;
+
+    private Button restartButton;
+    private Button exitButton;
+    private VBox buttonContainer;
 
     /**
      * Constructor to initialize the JavaFx Drawer.
@@ -23,6 +33,22 @@ public class JavaFxDrawer {
     public JavaFxDrawer(GraphicsContext gc, EnvironmentDrawer mediator) {
         this.gc = gc;
         this.mediator = mediator;
+
+        // Inicializa os botões
+        this.restartButton = new Button("Voltar ao Jogo");
+        this.exitButton = new Button("Sair");
+
+        // Estiliza os botões
+        String buttonStyle = "-fx-background-color: #4A4A4A; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10 20; -fx-min-width: 150px;";
+        restartButton.setStyle(buttonStyle);
+        exitButton.setStyle(buttonStyle);
+
+        // Cria container para os botões
+        this.buttonContainer = new VBox(10); // 10 pixels de espaçamento
+        this.buttonContainer.getChildren().addAll(restartButton, exitButton);
+
+        // Configura ações dos botões
+        exitButton.setOnAction(e -> Platform.exit());
     }
 
     /**
@@ -119,4 +145,82 @@ public class JavaFxDrawer {
         this.gc.fillText("Score: " + score, 10, 30);
     }
 
+    public void drawGameOverScreen(int width, int height, int score) {
+        this.gc.setFill(new Color(0, 0, 0, 0.7));
+        this.gc.fillRect(0, 0, width, height);
+
+        // Texto "GAME OVER"
+        this.gc.setFill(Color.RED);
+        this.gc.setFont(Font.font("Verdana", FontWeight.BOLD, 50));
+        String gameOverText = "GAME OVER";
+        double textWidth = this.gc.getFont().getSize() * gameOverText.length() * 0.5;
+        this.gc.fillText(gameOverText, (width - textWidth) / 2, height / 2 - 50);
+
+        // Score final
+        this.gc.setFill(Color.WHITE);
+        this.gc.setFont(Font.font("Verdana", FontWeight.NORMAL, 30));
+        String scoreText = "Final Score: " + score;
+        double scoreWidth = this.gc.getFont().getSize() * scoreText.length() * 0.4;
+        this.gc.fillText(scoreText, (width - scoreWidth) / 2, height / 2 + 20);
+
+        // Posiciona os botões
+        buttonContainer.setTranslateX((width - 150) / 2);
+        buttonContainer.setTranslateY(height / 2 + 50);
+    }
+
+    public Button getRestartButton() {
+        return restartButton;
+    }
+
+    public Button getExitButton() {
+        return exitButton;
+    }
+
+    public VBox getButtonContainer() {
+        return buttonContainer;
+    }
+
+   public void drawScorePanel(Image scoreImage, int score, int x, int y, int width, int height) {
+        // Define valores padrão para o painel de score
+        int panelX = 1058;
+        int panelY = 120;
+        int panelWidth = 221;
+        int panelHeight = 67;
+        
+        // Desenha o fundo do score
+        this.gc.drawImage(scoreImage, panelX, panelY, panelWidth, panelHeight);
+        
+        try {
+            // Carrega a fonte personalizada
+            Font customFont = Font.loadFont(
+                getClass().getResourceAsStream("/fonts/rittswoodProfile.ttf"), 
+                30 // tamanho da fonte
+            );
+            
+            // Posição do texto do score
+            int scoreTextX = panelX + 200;
+            int scoreTextY = panelY + 45;
+            
+            // Aplica a transformação para simular itálico
+            this.gc.save();
+            this.gc.transform(1, 0, -0.2, 1, 0, 0);
+            
+            String scoreText = String.valueOf(score);
+            
+            // Desenha a sombra
+            this.gc.setFill(Color.rgb(0, 0, 0, 0.5)); // Cor preta semi-transparente para sombra
+            this.gc.setFont(Font.font(customFont.getFamily(), 30));
+            this.gc.fillText(scoreText, scoreTextX + 2, scoreTextY + 2); // Offset da sombra
+            
+            // Desenha o texto principal
+            this.gc.setFill(Color.WHITE);
+            this.gc.setFont(Font.font(customFont.getFamily(), 30));
+            this.gc.fillText(scoreText, scoreTextX, scoreTextY);
+            
+            this.gc.restore();
+        } catch (Exception e) {
+            System.out.println("Erro ao carregar fonte personalizada: " + e.getMessage());
+            this.gc.setFont(Font.font("Verdana", FontPosture.ITALIC, 30));
+        } 
+    }
 }

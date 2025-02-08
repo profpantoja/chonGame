@@ -7,6 +7,7 @@ import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.domain.item.FallingItem;
 import chon.group.game.drawer.EnvironmentDrawer;
+import chon.group.game.drawer.JavaFxDrawer;
 import chon.group.game.drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -38,12 +39,13 @@ public class Engine extends Application {
 
     /* If the game is paused or not. */
     private boolean isPaused = false;
+    private boolean gameOver = false; // Novo atributo
 
     // Novos atributos para os falling items
     private Random random = new Random();
     private long lastItemSpawn = 0;
-    private static final long ITEM_SPAWN_DELAY = 350; 
-    private static final int MAX_ITEMS = 50; 
+    private static final long ITEM_SPAWN_DELAY = 700;
+    private static final int MAX_ITEMS = 40;
 
     /**
      * Main entry point of the application.
@@ -69,13 +71,9 @@ public class Engine extends Application {
     public void start(Stage theStage) {
         try {
             /* Initialize the game environment and agents */
-            Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
-            Agent vi = new Agent(400, 690, 160, 150, 3, 1000, "/images/agents/vi.png", false);             
-            Agent jinx = new Agent(920, 20, 160, 150, 2, 3, "/images/agents/jinx.png", true); 
-                                                                                                                                                                                      
-            environment.setProtagonist(vi);
-            environment.getAgents().add(jinx);
-            environment.setPauseImage("/images/environment/pause.png");
+            Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/zaun.png");
+            Agent vi = new Agent(400, 630, 140, 84, 2, 1000, "/images/agents/vi.png", false);
+            Agent jinx = new Agent(920, 35, 145, 135, 2, 3, "/images/agents/jinx.png", true);
 
             /* Set up the graphical canvas */
             Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
@@ -85,11 +83,60 @@ public class Engine extends Application {
             /* Set up the scene and stage */
             StackPane root = new StackPane();
             Scene scene = new Scene(root, environment.getWidth(), environment.getHeight());
-            theStage.setTitle("Chon: The Learning Game");
+
+            theStage.setMinWidth(640); // metade da largura original
+            theStage.setMinHeight(390); // metade da altura original
+
+            JavaFxMediator javaFxMediator = (JavaFxMediator) mediator;
+            JavaFxDrawer drawer = javaFxMediator.getDrawer();
+
+            // Impedir que a janela seja redimensionada para uma proporção diferente de
+            // 16:10
+            theStage.widthProperty().addListener((obs, oldVal, newVal) -> {
+                double newHeight = newVal.doubleValue() * (780.0 / 1280.0);
+                theStage.setHeight(newHeight);
+            });
+
+            theStage.heightProperty().addListener((obs, oldVal, newVal) -> {
+                double newWidth = newVal.doubleValue() * (1280.0 / 780.0);
+                theStage.setWidth(newWidth);
+            });
+
+            // Tornar o conteúdo redimensionável mantendo a proporção
+            root.scaleXProperty().bind(scene.widthProperty().divide(1280));
+            root.scaleYProperty().bind(scene.heightProperty().divide(780));
+
             theStage.setScene(scene);
+            theStage.setTitle("Chon: The Learning Game");
+
+            // Definir tamanho inicial
+            theStage.setWidth(1000);
+            theStage.setHeight(625);
+
+            // Definir tamanho mínimo
+            theStage.setMinWidth(640);
+            theStage.setMinHeight(390);
+
+            environment.setProtagonist(vi);
+            environment.getAgents().add(jinx);
+            environment.setPauseImage("/images/environment/pause.png");
+            environment.setScoreImage("/images/environment/score.png");
 
             root.getChildren().add(canvas);
-            theStage.show();
+
+            // Adiciona container de botões ao root
+            root.getChildren().add(drawer.getButtonContainer());
+            drawer.getButtonContainer().setVisible(false);
+
+            // Configura ação do botão de voltar
+            drawer.getRestartButton().setOnAction(e -> {
+                gameOver = false;
+                environment.getProtagonist().setHealth(1000); // Reseta vida
+                environment.setScore(0); // Reseta score
+                environment.getFallingItems().clear(); // Limpa itens
+                drawer.getButtonContainer().setVisible(false);
+                isPaused = false;
+            });
 
             /* Handle keyboard input */
             ArrayList<String> input = new ArrayList<String>();
@@ -131,12 +178,25 @@ public class Engine extends Application {
                 public void handle(long arg0) {
                     mediator.clearEnvironment();
                     /* Branching the Game Loop */
+
+                    if (gameOver) {
+                        mediator.drawGameOverScreen();
+                        drawer.getButtonContainer().setVisible(true);
+                        return;
+                    }
+
                     if (isPaused) {
                         mediator.drawBackground();
                         mediator.drawAgents();
+                        mediator.drawScorePanel();
                         /* Rendering the Pause Screen */
                         mediator.drawPauseScreen();
                     } else {
+
+                        // Verifique se o protagonista morreu
+                        if (environment.getProtagonist().getHealth() <= 0) {
+                            gameOver = true;
+                        }
                         /* ChonBota Only Moves if the Player Press Something */
                         /* Update the protagonist's movements if input exists */
                         if (!input.isEmpty()) {
@@ -145,20 +205,19 @@ public class Engine extends Application {
                             environment.checkBorders();
                         }
 
-                        // Spawn new items 
+                        // Spawn new items
                         long currentTime = System.currentTimeMillis();
-                        if (currentTime - lastItemSpawn > ITEM_SPAWN_DELAY && 
-                        environment.getFallingItems().size() < MAX_ITEMS) {
-                            int minGap = 100;
+                        if (currentTime - lastItemSpawn > ITEM_SPAWN_DELAY &&
+                                environment.getFallingItems().size() < MAX_ITEMS) {
+                            int minGap = 140;
                             int spawnX = random.nextInt(environment.getWidth() - minGap);
 
                             boolean isBomb = random.nextDouble() < 0.8;
                             String imagePath = isBomb ? "/images/items/bomb.png" : "/images/items/hextech.png";
                             double speed = 2.0; // velocidade padrão
 
-
                             if (isBomb && random.nextDouble() < 0.4) { // 40% das bombas serão mais rápidas
-                                speed = 6.0; // velocidade dobrada para bombas rápidas
+                                speed = 4.5; // velocidade dobrada para bombas rápidas
                             }
 
                             FallingItem item = new FallingItem(spawnX, 60, 60, speed, imagePath, isBomb);
@@ -172,9 +231,6 @@ public class Engine extends Application {
                         environment.getFallingItems().forEach(FallingItem::fall);
                         environment.detectFallingItemCollision();
 
-                        // Remove items that are off screen
-                        environment.getFallingItems().removeIf(item -> item.getPosY() > environment.getHeight());
-
                         // Alterado metodo de movimentação do jinx para patrol
 
                         /* ChonBot's Automatic Movements */
@@ -184,6 +240,7 @@ public class Engine extends Application {
                         environment.detectCollision();
                         mediator.drawBackground();
                         mediator.drawAgents();
+                        mediator.drawScorePanel();
                     }
                 }
 

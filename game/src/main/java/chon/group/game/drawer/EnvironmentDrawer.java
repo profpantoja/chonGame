@@ -14,4 +14,8 @@ public interface EnvironmentDrawer {
 
     void drawPauseScreen();
 
+    void drawGameOverScreen(); // New method added (Desenhar Game Over)
+
+    void drawScorePanel(); // Novo método adicionado (Desenhar painel de pontuação)
+
 }

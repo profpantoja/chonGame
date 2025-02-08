@@ -47,6 +47,29 @@ public class Environment {
     private List<FallingItem> fallingItems = new ArrayList<>();
 
     private int score;
+
+    private Image scoreImage; // Imagem do painel de score
+
+    private int scorePanelX ; // Posição X do painel
+
+    private int scorePanelY; // Posição Y do painel
+
+    private int scorePanelWidth; // Largura do painel
+    
+    private int scorePanelHeight; // Altura do painel
+
+    public Image getScoreImage() {
+        return scoreImage;
+    }
+
+    public void setScoreImage(String pathImage) {
+        this.scoreImage = new Image(getClass().getResource(pathImage).toExternalForm());
+    }
+
+    public int getScorePanelX() { return scorePanelX; }
+    public int getScorePanelY() { return scorePanelY; }
+    public int getScorePanelWidth() { return scorePanelWidth; }
+    public int getScorePanelHeight() { return scorePanelHeight; }
     
     /**
      * Default constructor to create an empty environment.
@@ -297,9 +320,10 @@ public class Environment {
     }
 
     public void cleanupItems() {
+        int groundOffset = 50; // ajuste esse valor conforme necessário
         fallingItems.removeIf(item -> 
-            item.getPosY() > height || // Remove itens fora da tela
-            (item.getPosY() + item.getHeight() > height) // Remove itens parcialmente fora
+            item.getPosY() > (height - groundOffset) || 
+            (item.getPosY() + item.getHeight() > (height - groundOffset))
         );
     }
 
