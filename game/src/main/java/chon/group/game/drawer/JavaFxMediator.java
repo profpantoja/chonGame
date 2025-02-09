@@ -1,5 +1,6 @@
 package chon.group.game.drawer;
 
+import chon.group.game.domain.Projectile.Projectile;
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.environment.Environment;
 import javafx.scene.canvas.GraphicsContext;
@@ -28,6 +29,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 this.environment.getWidth(),
                 this.environment.getHeight());
     }
+
 
     /**
      * Renders all agents and the protagonist in the environment.
@@ -86,6 +88,36 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 (int) this.environment.getPauseImage().getHeight(),
                 this.environment.getWidth(),
                 this.environment.getHeight());
+    }
+
+    @Override
+    public void drawVictoryScreen() {
+        drawer.drawVictoryScreen(this.environment.getVictoryImage(),
+                (int) this.environment.getVictoryImage().getWidth(),
+                (int) this.environment.getVictoryImage().getHeight(),
+                this.environment.getWidth(),
+                this.environment.getHeight(), 1.5);
+    }
+
+    @Override
+    public void drawGameOverScreen() {
+        drawer.drawGameOverScreen(this.environment.getImageGameOver(),
+                (int) this.environment.getImageGameOver().getWidth(),
+                (int) this.environment.getImageGameOver().getHeight(),
+                this.environment.getWidth(),
+                this.environment.getHeight());
+    }
+
+    @Override
+    public void drawProjectile(Projectile projectile) {
+                
+        drawer.drawImage(
+            projectile.getImage(),
+            projectile.getX(),
+            projectile.getY()+30,
+            80, // Largura (ajuste conforme necessário)
+            60  // Altura (ajuste conforme necessário)
+        );
     }
 
 }

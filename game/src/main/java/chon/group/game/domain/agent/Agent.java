@@ -48,6 +48,9 @@ public class Agent {
     /* Flag to control the invulnerability status of the agent. */
     private boolean invulnerable;
 
+    @SuppressWarnings("unused")
+    private boolean alive;
+
     /* Invulnerability (in milliseconds) */
     private final long INVULNERABILITY_COOLDOWN = 500;
 
@@ -73,6 +76,7 @@ public class Agent {
         this.image = new Image(getClass().getResource(pathImage).toExternalForm());
         this.lastHitTime = 0;
         this.invulnerable = false;
+        alive = true;
     }
 
     /**
@@ -243,11 +247,19 @@ public class Agent {
         this.image = image;
     }
 
+    
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
+
     /**
      * Gets if the agent is flipped.
      *
      * @return if the agent is flipped
      */
+
+
     public boolean isFlipped() {
         return flipped;
     }
@@ -357,6 +369,7 @@ public class Agent {
         }
     }
 
+
     /**
      * Makes the agent take damage.
      * If health reaches 0, the game must end.
@@ -386,6 +399,10 @@ public class Agent {
             return false;
         }
         return true;
+    }
+
+    public boolean isAlive() {
+        return this.health > 0; // Verifica se a vida é maior que 0
     }
 
 }

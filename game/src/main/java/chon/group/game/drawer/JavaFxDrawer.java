@@ -1,6 +1,5 @@
 package chon.group.game.drawer;
 
-import chon.group.game.domain.agent.Agent;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -11,6 +10,7 @@ public class JavaFxDrawer {
 
     /** The graphics context used to render the environment. */
     private final GraphicsContext gc;
+    @SuppressWarnings("unused")
     private final EnvironmentDrawer mediator;
 
     /**
@@ -98,6 +98,34 @@ public class JavaFxDrawer {
             /* Draw image on the center of screen */
             this.gc.drawImage(image, centerX, centerY);
         }
+    }
+
+    public void drawVictoryScreen(Image image, int imageWidth, int imageHeight, int width, int height, double scaleFactor) {
+        if (image != null && this.gc != null) {
+            // Aumenta o tamanho da imagem pelo fator definido
+            int newWidth = (int) (imageWidth * scaleFactor);
+            int newHeight = (int) (imageHeight * scaleFactor);
+    
+            // Recalcula a posição para manter a imagem centralizada
+            double centerX = (width - newWidth) / 2;
+            double centerY = (height - newHeight) / 2;
+    
+            // Desenha a imagem com o novo tamanho
+            this.gc.drawImage(image, centerX, centerY, newWidth, newHeight);
+        }
+    }
+
+    /**
+     * Renders the Game Over Screen.
+     */
+    public void drawGameOverScreen(Image image, int imageWidth, int imageHeight, int width, int height) {
+        double centerX = (width - imageWidth) / 2;
+        double centerY = (height - imageHeight) / 2;
+        this.gc.drawImage(image, centerX, centerY, imageWidth, imageHeight);
+    }
+
+    public void drawImage(Image image, double x, double y, int width, int height) {
+        this.gc.drawImage(image, x, y, width, height);
     }
 
 }
