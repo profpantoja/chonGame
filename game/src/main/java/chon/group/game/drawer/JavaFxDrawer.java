@@ -1,5 +1,8 @@
 package chon.group.game.drawer;
 
+import java.util.List;
+
+import chon.group.game.domain.effects.DamageNumber;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -99,4 +102,44 @@ public class JavaFxDrawer {
         }
     }
 
+    /**
+     * Draws damage numbers that appear when agents take damage.
+     * The numbers float upward and fade out over time.
+     * 
+     * @param damageNumbers list of damage numbers to render
+     */
+    public void drawDamageNumbers(List<DamageNumber> damageNumbers) {
+        Font damageFont = Font.font("Verdana", FontWeight.BOLD, 20);
+        gc.setFont(damageFont);
+
+        for (DamageNumber number : damageNumbers) {
+            gc.setGlobalAlpha(number.getOpacity());
+
+            gc.setFill(Color.BLACK);
+            double offset = 1.5;
+            gc.fillText(
+                    String.valueOf(number.getDamage()),
+                    number.getX() - offset,
+                    number.getY());
+            gc.fillText(
+                    String.valueOf(number.getDamage()),
+                    number.getX() + offset,
+                    number.getY());
+            gc.fillText(
+                    String.valueOf(number.getDamage()),
+                    number.getX(),
+                    number.getY() - offset);
+            gc.fillText(
+                    String.valueOf(number.getDamage()),
+                    number.getX(),
+                    number.getY() + offset);
+
+            gc.setFill(Color.rgb(255, 30, 30));
+            gc.fillText(
+                    String.valueOf(number.getDamage()),
+                    number.getX(),
+                    number.getY());
+        }
+        gc.setGlobalAlpha(1.0);
+    }
 }

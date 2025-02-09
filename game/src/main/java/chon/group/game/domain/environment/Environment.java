@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import chon.group.game.domain.agent.Agent;
+import chon.group.game.domain.effects.DamageNumber;
 import javafx.scene.image.Image;
 
 /**
@@ -39,6 +40,9 @@ public class Environment {
 
     /** List of agents present in the environment. */
     private List<Agent> agents = new ArrayList<Agent>();
+
+    /** List of damage number effects to display */
+    private List<DamageNumber> damageNumbers = new ArrayList<>();
 
     /**
      * Default constructor to create an empty environment.
@@ -217,6 +221,25 @@ public class Environment {
      */
     public void setAgents(ArrayList<Agent> agents) {
         this.agents = agents;
+
+    }
+
+    /**
+     * Gets the list of active damage number effects.
+     * 
+     * @return List of DamageNumber objects currently being displayed
+     */
+    public List<DamageNumber> getDamageNumbers() {
+        return damageNumbers;
+    }
+
+    /**
+     * Sets the list of damage number effects.
+     * 
+     * @param damageNumbers The new list of damage numbers to display
+     */
+    public void setDamageNumbers(List<DamageNumber> damageNumbers) {
+        this.damageNumbers = damageNumbers;
     }
 
     /**
@@ -238,15 +261,28 @@ public class Environment {
     /**
      * Detects collisions between the protagonist and other agents in the
      * environment.
+     * When a collision occurs and the protagonist takes damage, a damage number
+     * effect
+     * is created to display the damage amount.
      */
     public void detectCollision() {
         for (Agent agent : this.agents) {
             if (protagonist != null && intersect(this.protagonist, agent)) {
                 System.out.println("Collision detected with agent: " + agent);
+                int damage = 10;
+                int healthBefore = protagonist.getHealth();
                 /* The protagonist takes damage when colliding with an agent. */
-                protagonist.takeDamage(10);
+                protagonist.takeDamage(damage);
+
+                if (protagonist.getHealth() < healthBefore) {
+                    damageNumbers.add(new DamageNumber(
+                            damage,
+                            protagonist.getPosX() + protagonist.getWidth() / 2,
+                            protagonist.getPosY()));
+                }
             }
         }
+        damageNumbers.removeIf(number -> !number.update());
     }
 
     /**
