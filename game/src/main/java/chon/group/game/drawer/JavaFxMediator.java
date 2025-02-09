@@ -60,6 +60,11 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 Color.GREEN);
         drawer.drawStatusPanel(this.environment.getProtagonist().getPosX(),
                 this.environment.getProtagonist().getPosY());
+        drawer.drawStatusPanel(this.environment.getProtagonist().getPosX(),
+                this.environment.getProtagonist().getPosY());
+        /* Render floating damage numbers that appear when agents take damage */
+        drawer.drawDamageNumbers(this.environment.getDamageNumbers());
+
     }
 
     @Override
@@ -86,6 +91,11 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 (int) this.environment.getPauseImage().getHeight(),
                 this.environment.getWidth(),
                 this.environment.getHeight());
+    }
+
+    @Override
+    public void drawDamageNumbers() {
+        drawer.drawDamageNumbers(this.environment.getDamageNumbers());
     }
 
 }
