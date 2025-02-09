@@ -24,6 +24,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/**
+ * The main game engine for the Air Hockey game using JavaFX.
+ * This class is responsible for initializing the environment,
+ * handling user input, and managing game logic.
+ */
 public class Engine extends Application {
     private static final double WIDTH = 800;
     private static final double HEIGHT = 400;
@@ -50,10 +55,18 @@ public class Engine extends Application {
     private Text winnerText;
     private Stage mainStage;
     
+    /**
+     * The entry point of the application.
+     * @param args Command line arguments.
+     */
     public static void main(String[] args) {
         launch(args);
     }
 
+    /**
+     * Starts the game by initializing the main stage and showing the team selection screen.
+     * @param primaryStage The primary stage of the JavaFX application.
+     */
     @Override
     public void start(Stage primaryStage) {
         this.mainStage = primaryStage;
@@ -65,6 +78,10 @@ public class Engine extends Application {
         showTeamSelectionScreen(primaryStage);
     }
 
+    /**
+     * Displays the team selection screen before starting the game.
+     * @param primaryStage The primary stage where the selection UI is displayed.
+     */
     private void showTeamSelectionScreen(Stage primaryStage) {
         VBox root = new VBox(20);
         root.setStyle("-fx-alignment: center; -fx-padding: 20px;");
@@ -112,6 +129,10 @@ public class Engine extends Application {
         mainStage.show();
     }    
 
+    /**
+     * Starts the game by initializing the playing field, agents, and UI components.
+     * @param primaryStage The primary stage where the game UI is displayed.
+     */
     private void startGame(Stage primaryStage) {
         Pane root = new Pane();
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
@@ -244,6 +265,9 @@ public class Engine extends Application {
         primaryStage.show();
     }
 
+    /**
+     * Updates the appearance of the paddles based on the selected teams.
+     */
     private void updatePlayerAppearance() {
         if (!team1.equals("Player 1")) {
             Image team1Image = new Image(getClass().getResource("/images/agents/" + team1.toLowerCase() + ".png").toExternalForm());
@@ -256,17 +280,30 @@ public class Engine extends Application {
         }
     }
 
+    /**
+     * Toggles the pause state of the game.
+     * @param pauseImageView The image displayed when the game is paused.
+     */
     private void togglePause(ImageView pauseImageView) {
         isPaused = !isPaused;
         pauseImageView.setVisible(isPaused);
     }
 
+    /**
+     * Resets the puck to the center of the field.
+     * @param puck The puck object to be reset.
+     */
     private void resetPuck(Circle puck) {
         puck.setTranslateX(WIDTH / 2);
         puck.setTranslateY(HEIGHT / 2);
         puckSpeedX *= -1;
     }
 
+    /**
+     * Checks if a player has won and updates the score accordingly.
+     * @param scoreText The text UI element displaying the current score.
+     * @param scorer The player who scored (1 for Player 1, 2 for Player 2).
+     */
     private void checkWinner(Text scoreText, int scorer) {
         if (scorer == 1) {
             scorePlayer1++;
@@ -286,6 +323,11 @@ public class Engine extends Application {
         }
     }      
 
+    /**
+     * Resets the game state including the score and positions of the paddles and puck.
+     * @param puck The puck to be reset.
+     * @param scoreText The score text UI to be updated.
+     */
     private void resetGame(Circle puck, Text scoreText) {
         scorePlayer1 = 0;
         scorePlayer2 = 0;
