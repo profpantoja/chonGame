@@ -347,21 +347,4 @@ public class Environment {
         }
     }
 
-    public void maintainDistance(Agent agent1, Agent agent2, double minDistance) {
-        int dx = agent2.getPosX() - agent1.getPosX();
-        int dy = agent2.getPosY() - agent1.getPosY();
-        int distance = (int) Math.sqrt(dx * dx + dy * dy);
-    
-        if (distance < minDistance && distance > 0) { // Evita divisão por zero
-            // Calcula a direção de afastamento
-            int adjustX = (int) ((dx / distance) * (minDistance - distance) * 1);
-            int adjustY = (int) ((dy / distance) * (minDistance - distance) * 1);
-    
-            // Aplica o afastamento
-            agent1.setPosX(agent1.getPosX() - adjustX);
-            agent1.setPosY(agent1.getPosY() - adjustY);
-            agent2.setPosX(agent2.getPosX() + adjustX);
-            agent2.setPosY(agent2.getPosY() + adjustY);
-        }
-    }
 }
