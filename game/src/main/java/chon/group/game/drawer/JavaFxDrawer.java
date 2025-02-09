@@ -3,19 +3,23 @@ package chon.group.game.drawer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Paint;
 
+/**
+ * A utility class for drawing elements on a JavaFX canvas.
+ */
 public class JavaFxDrawer {
-
-    /** The graphics context used to render the environment. */
     private final GraphicsContext gc;
+
+    @SuppressWarnings("unused")
     private final EnvironmentDrawer mediator;
 
     /**
-     * Constructor to initialize the JavaFx Drawer.
+     * Constructs a JavaFxDrawer with the specified graphics context and environment drawer.
      *
-     * @param gc the GraphicsContext instance
+     * @param gc       The graphics context used for drawing.
+     * @param mediator The environment drawer that manages the environment rendering.
      */
     public JavaFxDrawer(GraphicsContext gc, EnvironmentDrawer mediator) {
         this.gc = gc;
@@ -23,80 +27,75 @@ public class JavaFxDrawer {
     }
 
     /**
-     * Clears the canvas area, removing previously drawn elements.
-     */
-    public void clearScreen(int width, int height) {
-        this.gc.clearRect(0, 0, width, height);
-    }
-
-    /**
-     * Renders the environment's background on the graphics context.
-     */
-    public void drawImage(Image image, int posX, int posY, int width, int height) {
-        this.gc.drawImage(image, posX, posY, width, height);
-    }
-
-    /**
-     * Renders the Protagonist's Life Bar.
-     */
-    public void drawLifeBar(int health, int fullHealth, int width, int posX, int posY, Color color) {
-        /* The border's thickness. */
-        int borderThickness = 2;
-        /* The bar's height. */
-        int barHeight = 5;
-        /* The life span proportion calculated based on actual and maximum health. */
-        int lifeSpan = Math.round(
-                (float) ((health * 100 / fullHealth)
-                        * width) / 100);
-        /* Int points before the agent's y position. The initial bar's position. */
-        int barY = 15;
-        /* The outside background of the health bar. */
-        this.gc.setFill(Color.BLACK);
-        /* The height is a little bit bigger to give a border experience. */
-        this.gc.fillRect(posX,
-                posY - barY,
-                width,
-                barHeight + (borderThickness * 2));
-        /**
-         * The inside of the health bar. It is the effective life of the agent.
-         * The border height plus the thickness multiplied by two (beggining and end at
-         * X).
-         */
-        this.gc.setFill(color);
-        /**
-         * The initial position considering the border from both X and Y points.
-         * The life span less the border thickness multiplied by two (beggining and end
-         * at Y).
-         */
-        this.gc.fillRect(posX + borderThickness,
-                posY - (barY - borderThickness),
-                (lifeSpan - (borderThickness * 2)),
-                barHeight);
-    }
-
-    /**
-     * Displays a status panel showing the protagonist's coordinates.
+     * Clears the screen by removing all drawn elements.
      *
-     * @param agent the protagonist whose information will be displayed
+     * @param width  The width of the canvas.
+     * @param height The height of the canvas.
      */
-    public void drawStatusPanel(int posX, int posY) {
-        Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
-        this.gc.setFont(theFont);
-        this.gc.setFill(Color.BLACK);
-        this.gc.fillText("X: " + posX, posX + 10, posY - 40);
-        this.gc.fillText("Y: " + posY, posX + 10, posY - 25);
+    public void clearScreen(double width, double height) {
+        gc.clearRect(0, 0, width, height);
     }
 
     /**
-     * Renders the Game Paused Screen.
+     * Draws a shape or image pattern on the canvas.
+     *
+     * @param fill   The fill color or image pattern.
+     * @param x      The x-coordinate of the top-left corner.
+     * @param y      The y-coordinate of the top-left corner.
+     * @param width  The width of the shape.
+     * @param height The height of the shape.
      */
-    public void drawPauseScreen(Image image, int imageWidth, int imageHeight, int width, int height) {
-        if (image != null && this.gc != null) {
-            double centerX = (width - imageWidth) / 2;
-            double centerY = (height - imageHeight) / 2;
-            /* Draw image on the center of screen */
-            this.gc.drawImage(image, centerX, centerY);
+    public void drawImage(Paint fill, double x, double y, double width, double height) {
+        if (fill instanceof Color) {
+            gc.setFill((Color) fill);
+            gc.fillRect(x, y, width, height);
+        } else if (fill instanceof ImagePattern) {
+            ImagePattern imagePattern = (ImagePattern) fill;
+            gc.drawImage(imagePattern.getImage(), x, y, width, height);
         }
     }
 
+    /**
+     * Draws an image on the canvas.
+     *
+     * @param image  The image to be drawn.
+     * @param x      The x-coordinate of the top-left corner.
+     * @param y      The y-coordinate of the top-left corner.
+     * @param width  The width of the image.
+     * @param height The height of the image.
+     */
+    public void drawImage(Image image, double x, double y, double width, double height) {
+        gc.drawImage(image, x, y, width, height);
+    }
+
+    /**
+     * Draws a life bar representing the player's health.
+     *
+     * @param health      The current health of the player.
+     * @param fullHealth  The maximum health of the player.
+     * @param width       The total width of the life bar.
+     * @param x           The x-coordinate of the life bar.
+     * @param y           The y-coordinate of the life bar.
+     * @param color       The color of the life bar.
+     */
+    public void drawLifeBar(double health, double fullHealth, double width, double x, double y, Color color) {
+        double barWidth = (health / fullHealth) * width;
+        gc.setFill(color);
+        gc.fillRect(x, y - 10, barWidth, 5);
+    }
+
+    /**
+     * Draws the pause screen with a centered pause image.
+     *
+     * @param pauseImage   The image to display when the game is paused.
+     * @param imageWidth   The width of the pause image.
+     * @param imageHeight  The height of the pause image.
+     * @param canvasWidth  The width of the canvas.
+     * @param canvasHeight The height of the canvas.
+     */
+    public void drawPauseScreen(Image pauseImage, int imageWidth, int imageHeight, double canvasWidth, double canvasHeight) {
+        double x = (canvasWidth - imageWidth) / 2;
+        double y = (canvasHeight - imageHeight) / 2;
+        gc.drawImage(pauseImage, x, y);
+    }
 }
