@@ -88,7 +88,7 @@ public class Engine extends Application {
             // Set up the scene and stage
             StackPane root = new StackPane();
             Scene scene = new Scene(root, environment.getWidth(), environment.getHeight());
-            theStage.setTitle("Chon: The Learning Game");
+            theStage.setTitle("Tom and Jerry Chase");
             theStage.setScene(scene);
 
             // Add elements to the scene
