@@ -29,39 +29,21 @@ import javafx.scene.layout.StackPane;
  * @see javafx.application.Application
  */
 public class Engine extends Application {
-
     private boolean isPaused = false;
     private final int ZOMBIES_TO_SPAWN = 1;
-    private long startTime;
-    private final long GAME_DURATION = 1 * 60 * 1000; // 2 minutes in milliseconds
+    private Timeline gameTimer; // Declare global gameTimer
+    private final long GAME_DURATION = 1 * 60 * 1000; // 1 minute in milliseconds
     private boolean gameOver = false; // Controls when the game ends
-
+    private long startTime; // Variable to store the start time of the game
     private boolean isVictory = false; // Variable to control victory condition
-
-    // Defines the time limit for spawning zombies
     private static final long ZOMBIE_SPAWN_TIME_LIMIT = 50 * 1000; // 1 minute in milliseconds
     private long zombieSpawnStartTime; // Stores the time when zombie spawning starts
     private boolean canSpawnZombies = true; // Controls when zombies can be spawned
 
-    /**
-     * The main entry point of the game.
-     * Launches the game application.
-     *
-     * @param args Command line arguments (not used)
-     */
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    /**
-     * Starts the game. This method sets up the environment, protagonist, zombies, projectiles, and manages game timers.
-     * 
-     * @param theStage The primary stage for this game.
-     */
     @Override
     public void start(Stage theStage) {
         try {
-            // Set up the environment and characters
+            // Set up environment and characters
             Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/forest.png");
             Agent jon = new Agent(400, 390, 165, 68, 5, 200, "/images/agents/jon.png", true);
             environment.setProtagonist(jon);
@@ -131,9 +113,9 @@ public class Engine extends Application {
             zombieSpawnTimer.setCycleCount(Timeline.INDEFINITE);
             zombieSpawnTimer.play();
 
-            // Game duration - 2 minutes
+            // Game duration - 1 minute
             startTime = System.currentTimeMillis();
-            Timeline gameTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            gameTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
                 long elapsedTime = System.currentTimeMillis() - startTime;
                 if (elapsedTime >= GAME_DURATION && !gameOver) {
                     isVictory = true; // Game wins after time limit
@@ -141,7 +123,7 @@ public class Engine extends Application {
                 }
             }));
             gameTimer.setCycleCount(Timeline.INDEFINITE);
-            gameTimer.play();
+            gameTimer.play(); // Start the timer
 
             new AnimationTimer() {
                 @Override
@@ -241,43 +223,51 @@ public class Engine extends Application {
         }
     }
 
-    /**
-     * Spawns a specified number of zombies at random positions in the environment.
-     *
-     * @param environment The environment where the zombies will be spawned.
-     * @param numberOfZombies The number of zombies to spawn.
-     */
     private void spawnZombies(Environment environment, int numberOfZombies) {
         for (int i = 0; i < numberOfZombies; i++) {
             int randomX = (int) (Math.random() * environment.getWidth());
             int randomY = (int) (Math.random() * environment.getHeight());
             Agent zombie = new Agent(randomX, randomY, 110, 130, 1, 100, "/images/agents/zumbi.png", true);
-            
-            // Ensure the zombie is correctly added to the environment's agent list
             environment.getAgents().add(zombie);
         }
     }
 
-    /**
-     * Resets the game, clearing agents and projectiles, and reinitializing the protagonist and zombies.
-     *
-     * @param environment The environment to reset.
-     * @param projectiles The list of projectiles to reset.
-     */
     private void resetGame(Environment environment, ArrayList<Projectile> projectiles) {
-        // Reset all relevant variables
+        // Parar o timer atual antes de reiniciar
+        if (gameTimer != null) {
+            gameTimer.stop();
+        }
+    
+        // Resetar as variáveis de estado do jogo
         gameOver = false;
         isVictory = false;
         isPaused = false;
-        startTime = System.currentTimeMillis();
-        
-        // Clear zombies and projectiles
+    
+        // Resetar o tempo do jogo
+        startTime = System.currentTimeMillis(); // Reinicia o tempo de jogo
+    
+        // Limpar zombies e projectiles
         environment.getAgents().clear();
         projectiles.clear();
-        
-        // Recreate protagonist and zombies
+    
+        // Recriar o protagonista e spawnar novos zombies
         Agent jon = new Agent(400, 390, 165, 68, 5, 200, "/images/agents/jon.png", true);
         environment.setProtagonist(jon);
         spawnZombies(environment, ZOMBIES_TO_SPAWN);
+    
+        // Reiniciar o timer do jogo de 1 minuto
+        gameTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            long elapsedTime = System.currentTimeMillis() - startTime;
+            if (elapsedTime >= GAME_DURATION && !gameOver) {
+                isVictory = true; // Game wins after time limit
+                gameOver = true;
+            }
+        }));
+        gameTimer.setCycleCount(Timeline.INDEFINITE);
+        gameTimer.play(); // Inicia o timer novamente
+    
+        // Certificar-se de que o tempo de spawn dos zombies também foi reiniciado
+        zombieSpawnStartTime = System.currentTimeMillis();
+        canSpawnZombies = true;
     }
 }
