@@ -7,11 +7,4 @@ public interface EnvironmentDrawer {
     void drawBackground();
 
     void drawAgents();
-
-    void drawLifeBar();
-
-    void drawStatusPanel();
-
-    void drawPauseScreen();
-
 }
