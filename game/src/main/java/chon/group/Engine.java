@@ -32,16 +32,21 @@ public class Engine extends Application {
     private boolean isPaused = false;
     private final int ZOMBIES_TO_SPAWN = 1;
     private Timeline gameTimer; // Declare global gameTimer
-    private final long GAME_DURATION = 1 * 60 * 1000; // 1 minute in milliseconds
+    private final long GAME_DURATION = 1 * 40 * 1000; // 1 minute in milliseconds
     private boolean gameOver = false; // Controls when the game ends
     private long startTime; // Variable to store the start time of the game
     private boolean isVictory = false; // Variable to control victory condition
-    private static final long ZOMBIE_SPAWN_TIME_LIMIT = 50 * 1000; // 1 minute in milliseconds
+    private static final long ZOMBIE_SPAWN_TIME_LIMIT = 30 * 1000; // 1 minute in milliseconds
     private long zombieSpawnStartTime; // Stores the time when zombie spawning starts
     private boolean canSpawnZombies = true; // Controls when zombies can be spawned
 
+    public static void main(String[] args) {
+        launch(args);  
+    }
+
     @Override
     public void start(Stage theStage) {
+        
         try {
             // Set up environment and characters
             Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/forest.png");
