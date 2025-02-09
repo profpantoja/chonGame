@@ -3,7 +3,7 @@ package chon.group;
 import java.util.ArrayList;
 
 import chon.group.game.domain.agent.Agent;
-import chon.group.game.domain.collectibles.PointsItem;
+import chon.group.game.domain.collectibles.ScoreItem;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.drawer.JavaFxMediator;
@@ -74,11 +74,11 @@ public class Engine extends Application {
             environment.setGameOverImage("/images/environment/gameoverSG.png");
             environment.setVictoryImage("/images/environment/victorySG2.png");
 
-            PointsItem cookie = new PointsItem(0, 0, 45, 80, "/images/environment/cookieSG.png", 10);
-            PointsItem cookie2 = new PointsItem(0, 0, 45, 80, "/images/environment/cookieSG2.png", 5);
-            PointsItem cookie3 = new PointsItem(0, 0, 45, 80, "/images/environment/cookieSG3.png", 2);
-            PointsItem cookie4 = new PointsItem(0, 0, 45, 80, "/images/environment/cookieSG4.png", 1);
-            environment.setPiSpawnInterval(2000);
+            ScoreItem cookie = new ScoreItem(0, 0, 45, 80, "/images/environment/cookieSG.png", 10);
+            ScoreItem cookie2 = new ScoreItem(0, 0, 45, 80, "/images/environment/cookieSG2.png", 5);
+            ScoreItem cookie3 = new ScoreItem(0, 0, 45, 80, "/images/environment/cookieSG3.png", 2);
+            ScoreItem cookie4 = new ScoreItem(0, 0, 45, 80, "/images/environment/cookieSG4.png", 1);
+            environment.setSpawnInterval(2000);
             environment.getModels().add(cookie);
             environment.getModels().add(cookie2);
             environment.getModels().add(cookie3);

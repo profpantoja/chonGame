@@ -5,7 +5,7 @@ import java.util.List;
 
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.collectibles.Collectible;
-import chon.group.game.domain.collectibles.PointsItem;
+import chon.group.game.domain.collectibles.ScoreItem;
 import javafx.scene.image.Image;
 
 /**
@@ -51,13 +51,14 @@ public class Environment {
     /** List of collectibles present in the environment. */
     private List<Collectible> collectibles = new ArrayList<Collectible>();
 
+    // List of score items models in environment
+    private List<ScoreItem> models = new ArrayList<ScoreItem>();
+
     /** Control the max of collectibles entities that can be on environment */
     private int maxCollectibles = 10;
 
-    private List<PointsItem> models = new ArrayList<PointsItem>();
-
-    // Spawn Interval for a points Item;
-    private long piSpawnInterval = 5000;
+    // Spawn Interval for a score Item;
+    private long spawnInterval = 5000;
 
     /** Last time a collectible was generated */
     private long lastCollectibleSpawnTime = 0;
@@ -271,16 +272,16 @@ public class Environment {
         this.maxCollectibles = maxCollectibles;
     }
 
-    public List<PointsItem> getModels() {
+    public List<ScoreItem> getModels() {
         return models;
     }
 
-    public void setModels(List<PointsItem> models) {
+    public void setModels(List<ScoreItem> models) {
         this.models = models;
     }
 
-    public void setPiSpawnInterval(long piSpawnInterval) {
-        this.piSpawnInterval = piSpawnInterval;
+    public void setSpawnInterval(long spawnInterval) {
+        this.spawnInterval = spawnInterval;
     }
 
     /**
@@ -350,19 +351,20 @@ public class Environment {
                 a.getPosY() + a.getHeight() > b.getPosY();
     }
 
-    // Generate Points items
-    public void generatePointsItem() {
+    // Generate Score items
+    public void generateScoreItem() {
 
-        //Pick a random model in pointsItem list and use to add to Collectibles list
-        PointsItem randomModel = models.get((int) (Math.random() * models.size()));
+        // Pick a random model in ScoreItems list and use to add to Collectibles list
+        ScoreItem randomModel = models.get((int) (Math.random() * models.size()));
 
-        //Set an random x and y position and add the random model to the collectibles list
+        // Set an random x and y position and add the random model to the collectibles
+        // list
         if (collectibles.size() < maxCollectibles && !models.isEmpty()) {
             int x = (int) (Math.random() * (this.width - randomModel.getWidth()));
             int y = (int) (Math.random() * (this.height - randomModel.getHeight()));
 
             collectibles.add(
-                    new PointsItem(x, y, randomModel.getWidth(), randomModel.getHeight(), randomModel.getPathImage(),
+                    new ScoreItem(x, y, randomModel.getWidth(), randomModel.getHeight(), randomModel.getPathImage(),
                             randomModel.getPoints()));
         }
 
@@ -371,9 +373,9 @@ public class Environment {
     // Update collectibles based on his spawn interval
     public void updateCollectible() {
         long currentTime = System.currentTimeMillis();
-        //Update Points Item 
-        if (currentTime - lastCollectibleSpawnTime >= piSpawnInterval) {
-            generatePointsItem();
+        // Update Score Items
+        if (currentTime - lastCollectibleSpawnTime >= spawnInterval) {
+            generateScoreItem();
             lastCollectibleSpawnTime = currentTime;
         }
     }
