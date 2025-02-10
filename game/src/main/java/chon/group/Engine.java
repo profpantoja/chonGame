@@ -7,8 +7,8 @@ import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.domain.item.FallingItem;
 import chon.group.game.drawer.EnvironmentDrawer;
-import chon.group.game.drawer.JavaFxDrawer;
 import chon.group.game.drawer.JavaFxMediator;
+import chon.group.game.drawer.WindowManager;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -39,12 +39,32 @@ public class Engine extends Application {
 
     /* If the game is paused or not. */
     private boolean isPaused = false;
+
+    // novos atributos
+
+    /**
+     * Flag indicating if the game is over.
+     */
     private boolean gameOver = false; // Novo atributo
 
-    // Novos atributos para os falling items
+    /**
+     * Random number generator for item spawning.
+     */
     private Random random = new Random();
+
+    /**
+     * Timestamp of the last item spawn.
+     */
     private long lastItemSpawn = 0;
-    private static final long ITEM_SPAWN_DELAY = 700;
+
+    /**
+     * Delay between item spawns in milliseconds.
+     */
+    private static final long ITEM_SPAWN_DELAY = 650;
+
+    /**
+     * Maximum number of items allowed on screen simultaneously.
+     */
     private static final int MAX_ITEMS = 40;
 
     /**
@@ -84,38 +104,11 @@ public class Engine extends Application {
             StackPane root = new StackPane();
             Scene scene = new Scene(root, environment.getWidth(), environment.getHeight());
 
-            theStage.setMinWidth(640); // metade da largura original
-            theStage.setMinHeight(390); // metade da altura original
-
-            JavaFxMediator javaFxMediator = (JavaFxMediator) mediator;
-            JavaFxDrawer drawer = javaFxMediator.getDrawer();
-
-            // Impedir que a janela seja redimensionada para uma proporção diferente de
-            // 16:10
-            theStage.widthProperty().addListener((obs, oldVal, newVal) -> {
-                double newHeight = newVal.doubleValue() * (780.0 / 1280.0);
-                theStage.setHeight(newHeight);
-            });
-
-            theStage.heightProperty().addListener((obs, oldVal, newVal) -> {
-                double newWidth = newVal.doubleValue() * (1280.0 / 780.0);
-                theStage.setWidth(newWidth);
-            });
-
-            // Tornar o conteúdo redimensionável mantendo a proporção
-            root.scaleXProperty().bind(scene.widthProperty().divide(1280));
-            root.scaleYProperty().bind(scene.heightProperty().divide(780));
+            WindowManager windowManager = new WindowManager(1000, 625, 640, 390);
+            windowManager.setupWindow(theStage, scene, root);
 
             theStage.setScene(scene);
             theStage.setTitle("Chon: The Learning Game");
-
-            // Definir tamanho inicial
-            theStage.setWidth(1000);
-            theStage.setHeight(625);
-
-            // Definir tamanho mínimo
-            theStage.setMinWidth(640);
-            theStage.setMinHeight(390);
 
             environment.setProtagonist(vi);
             environment.getAgents().add(jinx);
@@ -124,17 +117,19 @@ public class Engine extends Application {
 
             root.getChildren().add(canvas);
 
+            JavaFxMediator javaFxMediator = (JavaFxMediator) mediator;
+
             // Adiciona container de botões ao root
-            root.getChildren().add(drawer.getButtonContainer());
-            drawer.getButtonContainer().setVisible(false);
+            root.getChildren().add(javaFxMediator.getButtonContainer());
+            javaFxMediator.getButtonContainer().setVisible(false);
 
             // Configura ação do botão de voltar
-            drawer.getRestartButton().setOnAction(e -> {
+            javaFxMediator.getRestartButton().setOnAction(e -> {
                 gameOver = false;
                 environment.getProtagonist().setHealth(1000); // Reseta vida
                 environment.setScore(0); // Reseta score
                 environment.getFallingItems().clear(); // Limpa itens
-                drawer.getButtonContainer().setVisible(false);
+                javaFxMediator.getButtonContainer().setVisible(false);
                 isPaused = false;
             });
 
@@ -181,7 +176,7 @@ public class Engine extends Application {
 
                     if (gameOver) {
                         mediator.drawGameOverScreen();
-                        drawer.getButtonContainer().setVisible(true);
+                        javaFxMediator.getButtonContainer().setVisible(true);
                         return;
                     }
 
@@ -231,13 +226,12 @@ public class Engine extends Application {
                         environment.getFallingItems().forEach(FallingItem::fall);
                         environment.detectFallingItemCollision();
 
-                        // Alterado metodo de movimentação do jinx para patrol
+                        // Alterado metodo de movimentação da jinx para patrol
 
                         /* ChonBot's Automatic Movements */
                         /* Update the other agents' movements */
                         environment.getAgents().get(0).patrol(50, 1230);
                         /* Render the game environment and agents */
-                        environment.detectCollision();
                         mediator.drawBackground();
                         mediator.drawAgents();
                         mediator.drawScorePanel();

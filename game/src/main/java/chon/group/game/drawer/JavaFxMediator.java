@@ -3,6 +3,8 @@ package chon.group.game.drawer;
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.environment.Environment;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 public class JavaFxMediator implements EnvironmentDrawer {
@@ -62,7 +64,6 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 this.environment.getProtagonist().getPosY());
 
         drawer.drawFallingItems(this.environment.getFallingItems());
-        drawer.drawScore(this.environment.getScore());
     }
 
     @Override
@@ -91,9 +92,10 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 this.environment.getHeight());
     }
 
-    // Adicionar os outros metodos correspondentes que existem no JavaFxDrawer
-
-    // metodo correspondente ao que existe no JavaFxDrawer
+    // novos
+    /**
+     * Renders the game over screen with final score and control buttons.
+     */
     public void drawGameOverScreen() {
         drawer.drawGameOverScreen(
                 this.environment.getWidth(),
@@ -101,17 +103,39 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 this.environment.getScore());
     }
 
-    public JavaFxDrawer getDrawer() {
-        return drawer;
+    /**
+     * Retrieves the restart button instance.
+     * 
+     * @return Button used to restart the game
+     */
+    public Button getRestartButton() {
+        return drawer.getRestartButton();
     }
 
-    @Override
+    /**
+     * Retrieves the exit button instance.
+     * 
+     * @return Button used to exit the game
+     */
+    public Button getExitButton() {
+        return drawer.getExitButton();
+    }
+
+    /**
+     * Retrieves the container holding game control buttons.
+     * 
+     * @return VBox containing the game control buttons
+     */
+    public VBox getButtonContainer() {
+        return drawer.getButtonContainer();
+    }
+
+    /**
+     * Draws the score panel displaying the current game score.
+     */
     public void drawScorePanel() {
         drawer.drawScorePanel(
                 this.environment.getScoreImage(),
-                this.environment.getScore(),
-                0, 0, 0, 0 // Os valores serão ignorados pois estão definidos no próprio drawer
-        );
-
-    } 
+                this.environment.getScore());
+    }
 }

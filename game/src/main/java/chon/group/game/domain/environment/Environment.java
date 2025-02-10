@@ -1,12 +1,11 @@
 package chon.group.game.domain.environment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-// Adicionado biblioteca Iterator (Dizer o que é)
+import java.util.Map;
 import java.util.Iterator;
-
 import chon.group.game.domain.agent.Agent;
-// Importa Falling Item
 import chon.group.game.domain.item.FallingItem;
 import javafx.scene.image.Image;
 
@@ -44,33 +43,18 @@ public class Environment {
     /** List of agents present in the environment. */
     private List<Agent> agents = new ArrayList<Agent>();
 
+    /** List of falling items in the environment. */
     private List<FallingItem> fallingItems = new ArrayList<>();
 
+    /** Current game score. */
     private int score;
 
-    private Image scoreImage; // Imagem do painel de score
+    /** Image for the score panel display. */
+    private Image scoreImage;
 
-    private int scorePanelX ; // Posição X do painel
+    /** Image for the score panel display. */
+    private static final Map<String, Image> IMAGE_CACHE = new HashMap<>();
 
-    private int scorePanelY; // Posição Y do painel
-
-    private int scorePanelWidth; // Largura do painel
-    
-    private int scorePanelHeight; // Altura do painel
-
-    public Image getScoreImage() {
-        return scoreImage;
-    }
-
-    public void setScoreImage(String pathImage) {
-        this.scoreImage = new Image(getClass().getResource(pathImage).toExternalForm());
-    }
-
-    public int getScorePanelX() { return scorePanelX; }
-    public int getScorePanelY() { return scorePanelY; }
-    public int getScorePanelWidth() { return scorePanelWidth; }
-    public int getScorePanelHeight() { return scorePanelHeight; }
-    
     /**
      * Default constructor to create an empty environment.
      */
@@ -95,7 +79,6 @@ public class Environment {
         this.width = width;
         this.setImage(pathImage);
         this.agents = new ArrayList<Agent>();
-        this.fallingItems = new ArrayList<>(); // Inicializar a lista
     }
 
     /**
@@ -252,20 +235,59 @@ public class Environment {
         this.agents = agents;
     }
 
+    /**
+     * Gets the list of falling items in the environment.
+     *
+     * @return the list of falling items
+     */
     public List<FallingItem> getFallingItems() {
         return fallingItems;
     }
 
+    /**
+     * Sets the list of falling items in the environment.
+     *
+     * @param fallingItems the new list of falling items
+     */
     public void setFallingItems(List<FallingItem> fallingItems) {
         this.fallingItems = fallingItems;
     }
 
+    /**
+     * Gets the current game score.
+     *
+     * @return the current score
+     */
     public int getScore() {
         return score;
     }
 
+    /**
+     * Sets the game score.
+     *
+     * @param score the new score value
+     */
     public void setScore(int score) {
         this.score = score;
+    }
+
+    /**
+     * Gets the score panel image.
+     *
+     * @return the score panel image
+     */
+    public Image getScoreImage() {
+        return scoreImage;
+    }
+
+    /**
+     * Sets the score panel image, using image caching for better performance.
+     *
+     * @param pathImage the path to the score panel image
+     */
+    public void setScoreImage(String pathImage) {
+        this.scoreImage = IMAGE_CACHE.computeIfAbsent(pathImage,
+                path -> new Image(getClass().getResource(path).toExternalForm()));
     }
 
     /**
@@ -285,49 +307,17 @@ public class Environment {
     }
 
     /**
-     * Detects collisions between the protagonist and other agents in the
-     * environment.
+     * Removes falling items that have reached the ground level.
      */
-    public void detectCollision() {
-        for (Agent agent : this.agents) {
-            if (protagonist != null && intersect(this.protagonist, agent)) {
-                System.out.println("Collision detected with agent: " + agent);
-                /* The protagonist takes damage when colliding with an agent. */
-                protagonist.takeDamage(10);
-            }
-        }
+    public void cleanupItems() {
+        int groundOffset = 100;
+        fallingItems.removeIf(item -> item.getPosY() > (height - groundOffset));
     }
 
     /**
-     * Checks if two agents collide with each other based on their positions and
-     * dimensions.
-     *
-     * This method uses the coordinates and dimensions of both agents to determine
-     * if their areas overlap. The collision is calculated by comparing the edges
-     * of the image represented by each agent.
-     *
-     * @param a the first agent
-     * @param b the second agent
-     * @return true if the agents collide, otherwise false
+     * Checks for collisions between the protagonist and falling items.
+     * Updates score and protagonist health based on item type.
      */
-
-    private boolean intersect(Agent a, Agent b) {
-        // Returns true if there is a collision between two agents
-        return a.getPosX() < b.getPosX() + b.getWidth() &&
-                a.getPosX() + a.getWidth() > b.getPosX() &&
-                a.getPosY() < b.getPosY() + b.getHeight() &&
-                a.getPosY() + a.getHeight() > b.getPosY();
-    }
-
-    public void cleanupItems() {
-        int groundOffset = 50; // ajuste esse valor conforme necessário
-        fallingItems.removeIf(item -> 
-            item.getPosY() > (height - groundOffset) || 
-            (item.getPosY() + item.getHeight() > (height - groundOffset))
-        );
-    }
-
-    // Detecta a colisão entre o protagonista e os itens que caem do céu
     public void detectFallingItemCollision() {
         // Usar um iterator para remover itens de forma mais eficiente
         Iterator<FallingItem> iterator = fallingItems.iterator();
@@ -347,12 +337,18 @@ public class Environment {
         cleanupItems();
     }
 
-    // Verifica se teve interseção entre o protagonista e os itens que caem do ceu
+    /**
+     * Checks if an agent intersects with a falling item.
+     *
+     * @param agent The agent to check for collision
+     * @param item  The falling item to check for collision
+     * @return true if there is an intersection, false otherwise
+     */
     private boolean intersectWithItem(Agent agent, FallingItem item) {
         return agent.getPosX() < item.getPosX() + item.getWidth() &&
-               agent.getPosX() + agent.getWidth() > item.getPosX() &&
-               agent.getPosY() < item.getPosY() + item.getHeight() &&
-               agent.getPosY() + agent.getHeight() > item.getPosY();
+                agent.getPosX() + agent.getWidth() > item.getPosX() &&
+                agent.getPosY() < item.getPosY() + item.getHeight() &&
+                agent.getPosY() + agent.getHeight() > item.getPosY();
     }
 
 }
