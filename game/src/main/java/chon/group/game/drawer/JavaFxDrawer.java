@@ -1,3 +1,10 @@
+/**
+ * The {@code JavaFxDrawer} class is responsible for rendering various elements
+ * of the game environment using JavaFX. It provides methods to draw images,
+ * life bars, status panels, and the pause screen.
+ */
+
+
 package chon.group.game.drawer;
 
 import javafx.scene.canvas.GraphicsContext;
@@ -6,6 +13,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+/**
+ * Handles rendering elements of the game environment using JavaFX.
+ */
 public class JavaFxDrawer {
 
     /** The graphics context used to render the environment. */
@@ -13,9 +23,10 @@ public class JavaFxDrawer {
     private final EnvironmentDrawer mediator;
 
     /**
-     * Constructor to initialize the JavaFx Drawer.
+     * Constructor to initialize the JavaFxDrawer.
      *
-     * @param gc the GraphicsContext instance
+     * @param gc       The GraphicsContext instance used for rendering.
+     * @param mediator The mediator that manages the environment.
      */
     public JavaFxDrawer(GraphicsContext gc, EnvironmentDrawer mediator) {
         this.gc = gc;
@@ -24,50 +35,47 @@ public class JavaFxDrawer {
 
     /**
      * Clears the canvas area, removing previously drawn elements.
+     *
+     * @param width  The width of the area to clear.
+     * @param height The height of the area to clear.
      */
     public void clearScreen(int width, int height) {
         this.gc.clearRect(0, 0, width, height);
     }
 
     /**
-     * Renders the environment's background on the graphics context.
+     * Renders an image at the specified position and dimensions.
+     *
+     * @param image The image to be drawn.
+     * @param posX  The x-coordinate position.
+     * @param posY  The y-coordinate position.
+     * @param width The width of the image.
+     * @param height The height of the image.
      */
     public void drawImage(Image image, int posX, int posY, int width, int height) {
         this.gc.drawImage(image, posX, posY, width, height);
     }
 
     /**
-     * Renders the Protagonist's Life Bar.
+     * Renders the protagonist's life bar.
+     *
+     * @param health     The current health value.
+     * @param fullHealth The maximum health value.
+     * @param width      The width of the life bar.
+     * @param posX       The x-coordinate position.
+     * @param posY       The y-coordinate position.
+     * @param color      The color of the life bar.
      */
     public void drawLifeBar(int health, int fullHealth, int width, int posX, int posY, Color color) {
-        /* The border's thickness. */
         int borderThickness = 2;
-        /* The bar's height. */
         int barHeight = 5;
-        /* The life span proportion calculated based on actual and maximum health. */
-        int lifeSpan = Math.round(
-                (float) ((health * 100 / fullHealth)
-                        * width) / 100);
-        /* Int points before the agent's y position. The initial bar's position. */
+        int lifeSpan = Math.round((float) ((health * 100 / fullHealth) * width) / 100);
         int barY = 15;
-        /* The outside background of the health bar. */
+        
         this.gc.setFill(Color.BLACK);
-        /* The height is a little bit bigger to give a border experience. */
-        this.gc.fillRect(posX,
-                posY - barY,
-                width,
-                barHeight + (borderThickness * 2));
-        /**
-         * The inside of the health bar. It is the effective life of the agent.
-         * The border height plus the thickness multiplied by two (beggining and end at
-         * X).
-         */
+        this.gc.fillRect(posX, posY - barY, width, barHeight + (borderThickness * 2));
+        
         this.gc.setFill(color);
-        /**
-         * The initial position considering the border from both X and Y points.
-         * The life span less the border thickness multiplied by two (beggining and end
-         * at Y).
-         */
         this.gc.fillRect(posX + borderThickness,
                 posY - (barY - borderThickness),
                 (lifeSpan - (borderThickness * 2)),
@@ -77,7 +85,8 @@ public class JavaFxDrawer {
     /**
      * Displays a status panel showing the protagonist's coordinates.
      *
-     * @param agent the protagonist whose information will be displayed
+     * @param posX The x-coordinate of the protagonist.
+     * @param posY The y-coordinate of the protagonist.
      */
     public void drawStatusPanel(int posX, int posY) {
         Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
@@ -88,15 +97,19 @@ public class JavaFxDrawer {
     }
 
     /**
-     * Renders the Game Paused Screen.
+     * Renders the pause screen, centering the pause image within the environment.
+     *
+     * @param image       The image representing the pause screen.
+     * @param imageWidth  The width of the pause image.
+     * @param imageHeight The height of the pause image.
+     * @param width       The total width of the environment.
+     * @param height      The total height of the environment.
      */
     public void drawPauseScreen(Image image, int imageWidth, int imageHeight, int width, int height) {
         if (image != null && this.gc != null) {
             double centerX = (width - imageWidth) / 2;
             double centerY = (height - imageHeight) / 2;
-            /* Draw image on the center of screen */
             this.gc.drawImage(image, centerX, centerY);
         }
     }
-
 }
