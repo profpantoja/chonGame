@@ -42,10 +42,10 @@ public class Engine extends Application {
             HeroMovement spaceship = new HeroMovement(70, 410, 90, 42, "/images/agent/Spaceship/spaceship_parada ou dando ré1.gif", true, 5);
             agents.add(spaceship); 
 
-            DroneMovement drone1 = new DroneMovement(920, 110, 74, 54, "/images/agent/enemys_space/enemy_drone1.png", false, 0, spaceship);
+            DroneMovement drone1 = new DroneMovement(920, 110, 74, 54, "/images/agent/enemys_space/enemy_drone.gif", false, 0, spaceship);
             agents.add(drone1);
 
-            DroneMovement drone2 = new DroneMovement(920, 540, 74, 54, "/images/agent/enemys_space/enemy_drone1.png", false, 0, spaceship);
+            DroneMovement drone2 = new DroneMovement(920, 540, 74, 54, "/images/agent/enemys_space/enemy_drone.gif", false, 0, spaceship);
             agents.add(drone2);
 
             if (Agent.numberProtagonist == 1) {
