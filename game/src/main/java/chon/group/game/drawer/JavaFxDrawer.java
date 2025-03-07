@@ -1,8 +1,5 @@
 package chon.group.game.drawer;
 
-import java.util.List;
-
-import chon.group.game.domain.effects.DamageNumber;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -13,6 +10,8 @@ public class JavaFxDrawer {
 
     /** The graphics context used to render the environment. */
     private final GraphicsContext gc;
+    /** The mediator instance, if necessary. */
+    @SuppressWarnings("unused")
     private final EnvironmentDrawer mediator;
 
     /**
@@ -108,38 +107,39 @@ public class JavaFxDrawer {
      * 
      * @param damageNumbers list of damage numbers to render
      */
-    public void drawDamageNumbers(List<DamageNumber> damageNumbers) {
-        Font damageFont = Font.font("Verdana", FontWeight.BOLD, 20);
+    public void drawMessages(int fontSize, double opacity, Color borderColor, Color fillColor, String message,
+            double posX, double posY) {
+        Font damageFont = Font.font("Verdana", FontWeight.BOLD, fontSize);
         gc.setFont(damageFont);
 
-        for (DamageNumber number : damageNumbers) {
-            gc.setGlobalAlpha(number.getOpacity());
+        gc.setGlobalAlpha(opacity);
 
-            gc.setFill(Color.BLACK);
-            double offset = 1.5;
-            gc.fillText(
-                    String.valueOf(number.getDamage()),
-                    number.getX() - offset,
-                    number.getY());
-            gc.fillText(
-                    String.valueOf(number.getDamage()),
-                    number.getX() + offset,
-                    number.getY());
-            gc.fillText(
-                    String.valueOf(number.getDamage()),
-                    number.getX(),
-                    number.getY() - offset);
-            gc.fillText(
-                    String.valueOf(number.getDamage()),
-                    number.getX(),
-                    number.getY() + offset);
+        gc.setFill(borderColor);
+        double offset = 1.5;
+        gc.fillText(
+                String.valueOf(message),
+                posX - offset,
+                posY);
+        gc.fillText(
+                String.valueOf(message),
+                posX + offset,
+                posY);
+        gc.fillText(
+                String.valueOf(message),
+                posX,
+                posY - offset);
+        gc.fillText(
+                String.valueOf(message),
+                posX,
+                posY + offset);
 
-            gc.setFill(Color.rgb(255, 30, 30));
-            gc.fillText(
-                    String.valueOf(number.getDamage()),
-                    number.getX(),
-                    number.getY());
-        }
+        // gc.setFill(Color.rgb(255, 30, 30));
+        gc.setFill(fillColor);
+        gc.fillText(
+                String.valueOf(message),
+                posX,
+                posY);
+
         gc.setGlobalAlpha(1.0);
     }
 }

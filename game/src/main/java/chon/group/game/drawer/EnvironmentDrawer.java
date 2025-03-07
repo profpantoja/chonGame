@@ -14,6 +14,6 @@ public interface EnvironmentDrawer {
 
     void drawPauseScreen();
 
-    void drawDamageNumbers();
+    void drawMessages();
 
 }

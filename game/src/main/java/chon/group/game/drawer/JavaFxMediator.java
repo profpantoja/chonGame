@@ -1,6 +1,7 @@
 package chon.group.game.drawer;
 
 import chon.group.game.domain.agent.Agent;
+import chon.group.game.domain.effects.Message;
 import chon.group.game.domain.environment.Environment;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -62,9 +63,6 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 this.environment.getProtagonist().getPosY());
         drawer.drawStatusPanel(this.environment.getProtagonist().getPosX(),
                 this.environment.getProtagonist().getPosY());
-        /* Render floating damage numbers that appear when agents take damage */
-        drawer.drawDamageNumbers(this.environment.getDamageNumbers());
-
     }
 
     @Override
@@ -94,8 +92,17 @@ public class JavaFxMediator implements EnvironmentDrawer {
     }
 
     @Override
-    public void drawDamageNumbers() {
-        drawer.drawDamageNumbers(this.environment.getDamageNumbers());
+    public void drawMessages() {
+        for (Message message : this.environment.getMessages()) {
+            drawer.drawMessages(message.getSize(),
+                    message.getOpacity(),
+                    Color.BLACK,
+                    Color.WHITESMOKE,
+                    String.valueOf(message.getMessage()),
+                    message.getPosX(),
+                    message.getPosY());
+        }
+        this.environment.getMessages().removeIf(message -> !message.update());
     }
 
 }

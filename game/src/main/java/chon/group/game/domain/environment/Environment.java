@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import chon.group.game.domain.agent.Agent;
-import chon.group.game.domain.effects.DamageNumber;
+import chon.group.game.domain.effects.Message;
 import javafx.scene.image.Image;
 
 /**
@@ -41,8 +41,8 @@ public class Environment {
     /** List of agents present in the environment. */
     private List<Agent> agents = new ArrayList<Agent>();
 
-    /** List of damage number effects to display */
-    private List<DamageNumber> damageNumbers = new ArrayList<>();
+    /** List of messages to display */
+    private List<Message> messages = new ArrayList<>();
 
     /**
      * Default constructor to create an empty environment.
@@ -225,21 +225,21 @@ public class Environment {
     }
 
     /**
-     * Gets the list of active damage number effects.
+     * Gets the list of active messages.
      * 
-     * @return List of DamageNumber objects currently being displayed
+     * @return List of messages objects currently being displayed
      */
-    public List<DamageNumber> getDamageNumbers() {
-        return damageNumbers;
+    public List<Message> getMessages() {
+        return messages;
     }
 
     /**
-     * Sets the list of damage number effects.
+     * Sets the list of messages.
      * 
-     * @param damageNumbers The new list of damage numbers to display
+     * @param messages The new list of messages to display
      */
-    public void setDamageNumbers(List<DamageNumber> damageNumbers) {
-        this.damageNumbers = damageNumbers;
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
     }
 
     /**
@@ -261,9 +261,8 @@ public class Environment {
     /**
      * Detects collisions between the protagonist and other agents in the
      * environment.
-     * When a collision occurs and the protagonist takes damage, a damage number
-     * effect
-     * is created to display the damage amount.
+     * When a collision occurs and the protagonist takes damage, a message is
+     * created to display the damage amount.
      */
     public void detectCollision() {
         for (Agent agent : this.agents) {
@@ -273,16 +272,15 @@ public class Environment {
                 int healthBefore = protagonist.getHealth();
                 /* The protagonist takes damage when colliding with an agent. */
                 protagonist.takeDamage(damage);
-
                 if (protagonist.getHealth() < healthBefore) {
-                    damageNumbers.add(new DamageNumber(
-                            damage,
-                            protagonist.getPosX() + protagonist.getWidth() / 2,
-                            protagonist.getPosY()));
+                    messages.add(new Message(
+                            String.valueOf(damage),
+                            protagonist.getPosX(),
+                            protagonist.getPosY(),
+                            25));
                 }
             }
         }
-        damageNumbers.removeIf(number -> !number.update());
     }
 
     /**
