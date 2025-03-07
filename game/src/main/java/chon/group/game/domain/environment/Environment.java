@@ -244,7 +244,7 @@ public class Environment {
             if (protagonist != null && intersect(this.protagonist, agent)) {
                 System.out.println("Collision detected with agent: " + agent);
                 /* The protagonist takes damage when colliding with an agent. */
-                protagonist.takeDamage(10);
+                protagonist.takeDamage(50);
             }
         }
     }
