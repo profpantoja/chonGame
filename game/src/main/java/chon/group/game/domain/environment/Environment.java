@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import chon.group.game.domain.agent.Agent;
+import chon.group.game.domain.effects.Message;
 import javafx.scene.image.Image;
 
 /**
@@ -39,6 +40,9 @@ public class Environment {
 
     /** List of agents present in the environment. */
     private List<Agent> agents = new ArrayList<Agent>();
+
+    /** List of messages to display */
+    private List<Message> messages = new ArrayList<>();
 
     /**
      * Default constructor to create an empty environment.
@@ -217,6 +221,25 @@ public class Environment {
      */
     public void setAgents(ArrayList<Agent> agents) {
         this.agents = agents;
+
+    }
+
+    /**
+     * Gets the list of active messages.
+     * 
+     * @return List of messages objects currently being displayed
+     */
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    /**
+     * Sets the list of messages.
+     * 
+     * @param messages The new list of messages to display
+     */
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
     }
 
     /**
@@ -238,13 +261,24 @@ public class Environment {
     /**
      * Detects collisions between the protagonist and other agents in the
      * environment.
+     * When a collision occurs and the protagonist takes damage, a message is
+     * created to display the damage amount.
      */
     public void detectCollision() {
         for (Agent agent : this.agents) {
             if (protagonist != null && intersect(this.protagonist, agent)) {
                 System.out.println("Collision detected with agent: " + agent);
+                int damage = 10;
+                int healthBefore = protagonist.getHealth();
                 /* The protagonist takes damage when colliding with an agent. */
-                protagonist.takeDamage(50);
+                protagonist.takeDamage(damage);
+                if (protagonist.getHealth() < healthBefore) {
+                    messages.add(new Message(
+                            String.valueOf(damage),
+                            protagonist.getPosX(),
+                            protagonist.getPosY(),
+                            25));
+                }
             }
         }
     }

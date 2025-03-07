@@ -10,6 +10,8 @@ public class JavaFxDrawer {
 
     /** The graphics context used to render the environment. */
     private final GraphicsContext gc;
+    /** The mediator instance, if necessary. */
+    @SuppressWarnings("unused")
     private final EnvironmentDrawer mediator;
 
     /**
@@ -99,4 +101,45 @@ public class JavaFxDrawer {
         }
     }
 
+    /**
+     * Draws damage numbers that appear when agents take damage.
+     * The numbers float upward and fade out over time.
+     * 
+     * @param damageNumbers list of damage numbers to render
+     */
+    public void drawMessages(int fontSize, double opacity, Color borderColor, Color fillColor, String message,
+            double posX, double posY) {
+        Font damageFont = Font.font("Verdana", FontWeight.BOLD, fontSize);
+        gc.setFont(damageFont);
+
+        gc.setGlobalAlpha(opacity);
+
+        gc.setFill(borderColor);
+        double offset = 1.5;
+        gc.fillText(
+                String.valueOf(message),
+                posX - offset,
+                posY);
+        gc.fillText(
+                String.valueOf(message),
+                posX + offset,
+                posY);
+        gc.fillText(
+                String.valueOf(message),
+                posX,
+                posY - offset);
+        gc.fillText(
+                String.valueOf(message),
+                posX,
+                posY + offset);
+
+        // gc.setFill(Color.rgb(255, 30, 30));
+        gc.setFill(fillColor);
+        gc.fillText(
+                String.valueOf(message),
+                posX,
+                posY);
+
+        gc.setGlobalAlpha(1.0);
+    }
 }

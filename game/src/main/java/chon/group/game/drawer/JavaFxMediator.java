@@ -1,6 +1,7 @@
 package chon.group.game.drawer;
 
 import chon.group.game.domain.agent.Agent;
+import chon.group.game.domain.effects.Message;
 import chon.group.game.domain.environment.Environment;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -60,6 +61,8 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 Color.GREEN);
         drawer.drawStatusPanel(this.environment.getProtagonist().getPosX(),
                 this.environment.getProtagonist().getPosY());
+        drawer.drawStatusPanel(this.environment.getProtagonist().getPosX(),
+                this.environment.getProtagonist().getPosY());
     }
 
     @Override
@@ -86,6 +89,20 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 (int) this.environment.getPauseImage().getHeight(),
                 this.environment.getWidth(),
                 this.environment.getHeight());
+    }
+
+    @Override
+    public void drawMessages() {
+        for (Message message : this.environment.getMessages()) {
+            drawer.drawMessages(message.getSize(),
+                    message.getOpacity(),
+                    Color.BLACK,
+                    Color.WHITESMOKE,
+                    String.valueOf(message.getMessage()),
+                    message.getPosX(),
+                    message.getPosY());
+        }
+        this.environment.getMessages().removeIf(message -> !message.update());
     }
 
 }
