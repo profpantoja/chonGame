@@ -1,4 +1,4 @@
-package chon.group.game.domain.effects;
+package chon.group.game.domain.messaging;
 
 /**
  * Represents a floating message that appears in the screen.

@@ -3,7 +3,7 @@ package chon.group.game.domain.agent;
 import java.util.ArrayList;
 import java.util.List;
 
-import chon.group.game.domain.effects.Message;
+import chon.group.game.domain.messaging.Message;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
