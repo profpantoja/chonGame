@@ -37,4 +37,10 @@ public interface EnvironmentDrawer {
      * Draws the pause screen when the game is paused.
      */
     void drawPauseScreen();
+
+    /**
+     * Draws all the messages on the screen.
+     */ 
+    void drawMessages();
+
 }

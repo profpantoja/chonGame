@@ -3,6 +3,7 @@ package chon.group.game.domain.agent;
 import java.util.ArrayList;
 import java.util.List;
 
+import chon.group.game.messaging.Message;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -363,11 +364,16 @@ public class Agent {
      *
      * @param damage the amount of damage to be applied
      */
-    public void takeDamage(int damage) {
+    public void takeDamage(int damage, List<Message> messages) {
         this.invulnerable = this.updateInvulnerability();
         if (!this.invulnerable && this.health > 0) {
             /* Decrease health. */
             this.health = health - damage;
+            messages.add(new Message(
+                    String.valueOf(damage),
+                    this.getPosX(),
+                    this.getPosY(),
+                    25));
             /* After taking the damage, the health must not be negative. */
             if (this.health < 0)
                 this.health = 0;

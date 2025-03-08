@@ -145,6 +145,7 @@ public class Engine extends Application {
                         environment.detectCollision();
                         mediator.drawBackground();
                         mediator.drawAgents();
+                        mediator.drawMessages();
                     }
                 }
 
