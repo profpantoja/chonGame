@@ -60,20 +60,21 @@ public class Engine extends Application {
     @Override
     public void start(Stage theStage) {
         try {
-            /* Initialize the game environment and agents */ 
+            /* Initialize the game environment and agents */
             Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
             Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
             Agent chonBot = new Agent(920, 440, 90, 65, 1, 3, "/images/agents/chonBot.png", true);
             environment.setProtagonist(chonBota);
             environment.getAgents().add(chonBot);
             environment.setPauseImage("/images/environment/pause.png");
+            environment.setGameOverImage("/images/environment/gameover.png");
 
-            /* Set up the graphical canvas */ 
+            /* Set up the graphical canvas */
             Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
             GraphicsContext gc = canvas.getGraphicsContext2D();
             EnvironmentDrawer mediator = new JavaFxMediator(environment, gc);
 
-            /* Set up the scene and stage */ 
+            /* Set up the scene and stage */
             StackPane root = new StackPane();
             Scene scene = new Scene(root, environment.getWidth(), environment.getHeight());
             theStage.setTitle("Chon: The Learning Game");
@@ -110,7 +111,7 @@ public class Engine extends Application {
                 }
             });
 
-            /* Start the game loop */ 
+            /* Start the game loop */
             new AnimationTimer() {
 
                 /**
@@ -122,38 +123,48 @@ public class Engine extends Application {
                 public void handle(long arg0) {
                     mediator.clearEnvironment();
                     /* Branching the Game Loop */
-                    if (isPaused) {
-                        mediator.drawBackground();
-                        mediator.drawAgents();
-                        /* Rendering the Pause Screen */
-                        mediator.drawPauseScreen();
-                    } else {
-                        /* ChonBota Only Moves if the Player Press Something */
-                        /* Update the protagonist's movements if input exists */
-                        if (!input.isEmpty()) {
-                            /* ChonBota's Movements */
-                            environment.getProtagonist().move(input);
-                            environment.checkBorders();
-                        }
-
-                        /* ChonBot's Automatic Movements */
-                        /* Update the other agents' movements */ 
-                        environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
-                                environment.getProtagonist().getPosY());
-
-                        /* Render the game environment and agents */ 
-                        environment.detectCollision();
+                    /* If the agent died in the last loop */
+                    if (environment.getProtagonist().isDead()) {
+                        /* Still prints ongoing messages (e.g., last hit taken) */
                         environment.updateMessages();
                         mediator.drawBackground();
                         mediator.drawAgents();
                         mediator.drawMessages();
+                        /* Rendering the Game Over Screen */
+                        mediator.drawGameOver();
+                    } else {
+                        if (isPaused) {
+                            mediator.drawBackground();
+                            mediator.drawAgents();
+                            /* Rendering the Pause Screen */
+                            mediator.drawPauseScreen();
+                        } else {
+                            /* ChonBota Only Moves if the Player Press Something */
+                            /* Update the protagonist's movements if input exists */
+                            if (!input.isEmpty()) {
+                                /* ChonBota's Movements */
+                                environment.getProtagonist().move(input);
+                                environment.checkBorders();
+                            }
+                            /* ChonBot's Automatic Movements */
+                            /* Update the other agents' movements */
+                            environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
+                                    environment.getProtagonist().getPosY());
+                            /* Render the game environment and agents */
+                            environment.detectCollision();
+                            environment.updateMessages();
+                            mediator.drawBackground();
+                            mediator.drawAgents();
+                            mediator.drawMessages();
+                        }
                     }
                 }
-
             }.start();
             theStage.show();
 
-        } catch (Exception e) {
+        } catch (
+
+        Exception e) {
             e.printStackTrace();
         }
     }

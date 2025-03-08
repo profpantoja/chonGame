@@ -306,6 +306,15 @@ public class Agent {
     }
 
     /**
+     * Gets if the agent is dead.
+     *
+     * @return if the agent is dead
+     */
+    public boolean isDead() {
+        return (this.health <= 0);
+    }
+
+    /**
      * Flips the Image horizontally.
      */
     private void flipImage() {

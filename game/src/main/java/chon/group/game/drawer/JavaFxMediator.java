@@ -118,7 +118,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
      */
     @Override
     public void drawPauseScreen() {
-        drawer.drawPauseScreen(this.environment.getPauseImage(),
+        drawer.drawScreen(this.environment.getPauseImage(),
                 (int) this.environment.getPauseImage().getWidth(),
                 (int) this.environment.getPauseImage().getHeight(),
                 this.environment.getWidth(),
@@ -126,8 +126,21 @@ public class JavaFxMediator implements EnvironmentDrawer {
     }
 
     /**
-     * Draws damage numbers that appear when agents take damage.
-     * The numbers float upward and fade out over time.
+     * Draws the pause screen overlay, displaying a pause image centered within the
+     * environment.
+     */
+    @Override
+    public void drawGameOver() {
+        drawer.drawScreen(this.environment.getGameOverImage(),
+                (int) this.environment.getPauseImage().getWidth(),
+                (int) this.environment.getPauseImage().getHeight(),
+                this.environment.getWidth(),
+                this.environment.getHeight());
+    }
+
+    /**
+     * Draws damage messaages that appear when agents take damage.
+     * The message float upward and fade out over time.
      */
     @Override
     public void drawMessages() {

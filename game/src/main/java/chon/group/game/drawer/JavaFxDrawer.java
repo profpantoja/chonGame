@@ -43,10 +43,10 @@ public class JavaFxDrawer {
     /**
      * Renders an image at the specified position and dimensions.
      *
-     * @param image The image to be drawn.
-     * @param posX  The x-coordinate position.
-     * @param posY  The y-coordinate position.
-     * @param width The width of the image.
+     * @param image  The image to be drawn.
+     * @param posX   The x-coordinate position.
+     * @param posY   The y-coordinate position.
+     * @param width  The width of the image.
      * @param height The height of the image.
      */
     public void drawImage(Image image, int posX, int posY, int width, int height) {
@@ -68,10 +68,10 @@ public class JavaFxDrawer {
         int barHeight = 5;
         int lifeSpan = Math.round((float) ((health * 100 / fullHealth) * width) / 100);
         int barY = 15;
-        
+
         this.gc.setFill(Color.BLACK);
         this.gc.fillRect(posX, posY - barY, width, barHeight + (borderThickness * 2));
-        
+
         this.gc.setFill(color);
         this.gc.fillRect(posX + borderThickness,
                 posY - (barY - borderThickness),
@@ -102,7 +102,7 @@ public class JavaFxDrawer {
      * @param width       The total width of the environment.
      * @param height      The total height of the environment.
      */
-    public void drawPauseScreen(Image image, int imageWidth, int imageHeight, int width, int height) {
+    public void drawScreen(Image image, int imageWidth, int imageHeight, int width, int height) {
         if (image != null && this.gc != null) {
             double centerX = (width - imageWidth) / 2;
             double centerY = (height - imageHeight) / 2;
@@ -114,13 +114,13 @@ public class JavaFxDrawer {
      * Draws damage numbers that appear when agents take damage.
      * The numbers float upward and fade out over time.
      * 
-     * @param fontSize The font size to be printed.
-     * @param opacity The opacity value from 0 to 1. 
-     * @param borderColor The border color. 
-     * @param fillColor The inside color. 
-     * @param message The message to be printed. 
-     * @param posX The x-coordinate of the protagonist.
-     * @param posY The y-coordinate of the protagonist.
+     * @param fontSize    The font size to be printed.
+     * @param opacity     The opacity value from 0 to 1.
+     * @param borderColor The border color.
+     * @param fillColor   The inside color.
+     * @param message     The message to be printed.
+     * @param posX        The x-coordinate of the protagonist.
+     * @param posY        The y-coordinate of the protagonist.
      */
     public void drawMessages(int fontSize, double opacity, Color borderColor, Color fillColor, String message,
             double posX, double posY) {
