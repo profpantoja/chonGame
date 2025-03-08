@@ -64,12 +64,13 @@ public class Engine extends Application {
             /* Initialize the game environment and agents */
             Environment environment = new Environment(0, 0, 1366, 780, "/images/environment/environmentSG2.png");
             Agent saeByeok = new Agent(670, 390, 150, 80, 10, 30, "/images/agents/saeByeok.png", false);
-            Agent triangleGuard = new Agent(1350, 390, 130, 70, 4, 3, "/images/agents/triangleGuard.png", true);
-            Agent circleGuard = new Agent(0, 390, 130, 60, 3, 2, "/images/agents/circleGuard.png", true);
+            Agent triangleGuard = new Agent(1350, 390, 130, 70, 1, 3, "/images/agents/triangleGuard.png", true);
+            Agent circleGuard = new Agent(0, 390, 130, 60, 1, 2, "/images/agents/circleGuard.png", true);
 
             environment.setProtagonist(saeByeok);
             environment.getAgents().add(triangleGuard);
             environment.getAgents().add(circleGuard);
+            environment.setImage("/images/environment/environmentSG2.png");
             environment.setPauseImage("/images/environment/sgpause.png");
             environment.setGameOverImage("/images/environment/gameoverSG.png");
             environment.setVictoryImage("/images/environment/victorySG2.png");
