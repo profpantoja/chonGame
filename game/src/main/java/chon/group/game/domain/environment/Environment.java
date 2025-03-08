@@ -39,10 +39,10 @@ public class Environment {
     private Agent protagonist;
 
     /** List of agents present in the environment. */
-    private List<Agent> agents = new ArrayList<Agent>();
+    private List<Agent> agents;
 
-    /** List of messages to display */
-    private List<Message> messages = new ArrayList<>();
+    /** List of messages to display. */
+    private List<Message> messages;
 
     /**
      * Default constructor to create an empty environment.
@@ -67,6 +67,7 @@ public class Environment {
         this.width = width;
         this.setImage(pathImage);
         this.agents = new ArrayList<Agent>();
+        this.messages = new ArrayList<Message>();
     }
 
     /**
@@ -269,16 +270,8 @@ public class Environment {
             if (protagonist != null && intersect(this.protagonist, agent)) {
                 System.out.println("Collision detected with agent: " + agent);
                 int damage = 10;
-                int healthBefore = protagonist.getHealth();
                 /* The protagonist takes damage when colliding with an agent. */
-                protagonist.takeDamage(damage);
-                if (protagonist.getHealth() < healthBefore) {
-                    messages.add(new Message(
-                            String.valueOf(damage),
-                            protagonist.getPosX(),
-                            protagonist.getPosY(),
-                            25));
-                }
+                protagonist.takeDamage(damage, this.messages);
             }
         }
     }

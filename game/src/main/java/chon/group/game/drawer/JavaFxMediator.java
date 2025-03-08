@@ -1,5 +1,7 @@
 package chon.group.game.drawer;
 
+import java.util.Iterator;
+
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.effects.Message;
 import chon.group.game.domain.environment.Environment;
@@ -93,16 +95,21 @@ public class JavaFxMediator implements EnvironmentDrawer {
 
     @Override
     public void drawMessages() {
-        for (Message message : this.environment.getMessages()) {
-            drawer.drawMessages(message.getSize(),
-                    message.getOpacity(),
-                    Color.BLACK,
-                    Color.WHITESMOKE,
-                    String.valueOf(message.getMessage()),
-                    message.getPosX(),
-                    message.getPosY());
+        Iterator<Message> iterator = this.environment.getMessages().iterator();
+        while (iterator.hasNext()) {
+            Message message = iterator.next();
+            if (!message.update()) {
+                iterator.remove();
+            } else {
+                drawer.drawMessages(message.getSize(),
+                        message.getOpacity(),
+                        Color.BLACK,
+                        Color.WHEAT,
+                        String.valueOf(message.getMessage()),
+                        message.getPosX(),
+                        message.getPosY());
+            }
         }
-        this.environment.getMessages().removeIf(message -> !message.update());
     }
 
 }
