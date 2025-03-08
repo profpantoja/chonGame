@@ -50,7 +50,7 @@ public class Engine extends Application {
         try {
             // Set up environment and characters
             Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/forest.png");
-            Agent jon = new Agent(400, 390, 165, 68, 5, 200, "/images/agents/jon.png", true);
+            Agent jon = new Agent(400, 390, 165, 68, 5, 200, "/images/agents/Jon.png", true);
             environment.setProtagonist(jon);
             environment.setPauseImage("/images/environment/pause.png");
             environment.setImagevictory("/images/environment/victory.png");
