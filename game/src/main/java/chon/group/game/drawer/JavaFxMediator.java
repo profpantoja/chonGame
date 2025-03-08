@@ -1,11 +1,3 @@
-/**
- * The {@code JavaFxMediator} class serves as an intermediary for rendering the game environment
- * and its elements using JavaFX. It coordinates the interaction between the {@link Environment}
- * and the {@link JavaFxDrawer} to manage graphical rendering.
- */
-
-
-
 package chon.group.game.drawer;
 
 import chon.group.game.domain.agent.Agent;
@@ -13,7 +5,11 @@ import chon.group.game.domain.environment.Environment;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-
+/**
+ * The {@code JavaFxMediator} class serves as an intermediary for rendering the game environment
+ * and its elements using JavaFX. It coordinates the interaction between the {@link Environment}
+ * and the {@link JavaFxDrawer} to manage graphical rendering.
+ */
 public class JavaFxMediator implements EnvironmentDrawer {
 
     private final Environment environment;

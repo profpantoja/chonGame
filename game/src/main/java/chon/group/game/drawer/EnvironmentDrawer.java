@@ -1,11 +1,11 @@
+package chon.group.game.drawer;
+
 /**
  * The {@code EnvironmentDrawer} interface defines methods for rendering
  * various elements in the game environment. It provides essential drawing
  * functionalities such as clearing the environment, rendering agents, and
  * displaying UI elements like life bars and status panels.
  */
-package chon.group.game.drawer;
-
 public interface EnvironmentDrawer {
     
     /**

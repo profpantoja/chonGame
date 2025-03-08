@@ -1,10 +1,3 @@
-/**
- * The {@code JavaFxDrawer} class is responsible for rendering various elements
- * of the game environment using JavaFX. It provides methods to draw images,
- * life bars, status panels, and the pause screen.
- */
-
-
 package chon.group.game.drawer;
 
 import javafx.scene.canvas.GraphicsContext;
@@ -14,7 +7,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 /**
- * Handles rendering elements of the game environment using JavaFX.
+ * The {@code JavaFxDrawer} class is responsible for rendering various elements
+ * of the game environment using JavaFX. It provides methods to draw images,
+ * life bars, status panels, and the pause screen.
  */
 public class JavaFxDrawer {
 
