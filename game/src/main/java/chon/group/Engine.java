@@ -43,7 +43,7 @@ public class Engine extends Application {
             environment.setProtagonist(jerry);
             environment.getAgents().add(tom);
             environment.setPauseImage("/images/environment/pause.png");
-            environment.setGameOverImage("/images/environment/gameOver.png");
+            environment.setGameOverImage("/images/environment/GameOver.png");
             environment.setVictoryImage("/images/environment/victory.png");
 
             // Set up the graphical canvas
