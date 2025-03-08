@@ -1,6 +1,7 @@
 package chon.group.game.domain.environment;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import chon.group.game.domain.agent.Agent;
@@ -88,6 +89,7 @@ public class Environment {
         this.width = width;
         this.setImage(pathImage);
         this.setAgents(agents);
+        this.messages = new ArrayList<Message>();
     }
 
     /**
@@ -295,6 +297,16 @@ public class Environment {
                 a.getPosX() + a.getWidth() > b.getPosX() &&
                 a.getPosY() < b.getPosY() + b.getHeight() &&
                 a.getPosY() + a.getHeight() > b.getPosY();
+    }
+
+    public void updateMessages() {
+        Iterator<Message> iterator = this.messages.iterator();
+        while (iterator.hasNext()) {
+            Message message = iterator.next();
+            if (!message.update()) {
+                iterator.remove();
+            }
+        }
     }
 
 }

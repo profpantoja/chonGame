@@ -143,6 +143,7 @@ public class Engine extends Application {
 
                         /* Render the game environment and agents */ 
                         environment.detectCollision();
+                        environment.updateMessages();
                         mediator.drawBackground();
                         mediator.drawAgents();
                         mediator.drawMessages();

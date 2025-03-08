@@ -9,8 +9,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 /**
- * The {@code JavaFxMediator} class serves as an intermediary for rendering the game environment
- * and its elements using JavaFX. It coordinates the interaction between the {@link Environment}
+ * The {@code JavaFxMediator} class serves as an intermediary for rendering the
+ * game environment
+ * and its elements using JavaFX. It coordinates the interaction between the
+ * {@link Environment}
  * and the {@link JavaFxDrawer} to manage graphical rendering.
  */
 public class JavaFxMediator implements EnvironmentDrawer {
@@ -19,10 +21,12 @@ public class JavaFxMediator implements EnvironmentDrawer {
     private final JavaFxDrawer drawer;
 
     /**
-     * Constructs a JavaFxMediator with the specified environment and graphics context.
+     * Constructs a JavaFxMediator with the specified environment and graphics
+     * context.
      *
-     * @param environment The game environment containing agents and the protagonist.
-     * @param gc The {@link GraphicsContext} used for rendering.
+     * @param environment The game environment containing agents and the
+     *                    protagonist.
+     * @param gc          The {@link GraphicsContext} used for rendering.
      */
     public JavaFxMediator(Environment environment, GraphicsContext gc) {
         this.environment = environment;
@@ -109,7 +113,8 @@ public class JavaFxMediator implements EnvironmentDrawer {
     }
 
     /**
-     * Draws the pause screen overlay, displaying a pause image centered within the environment.
+     * Draws the pause screen overlay, displaying a pause image centered within the
+     * environment.
      */
     @Override
     public void drawPauseScreen() {
@@ -129,17 +134,13 @@ public class JavaFxMediator implements EnvironmentDrawer {
         Iterator<Message> iterator = this.environment.getMessages().iterator();
         while (iterator.hasNext()) {
             Message message = iterator.next();
-            if (!message.update()) {
-                iterator.remove();
-            } else {
-                drawer.drawMessages(message.getSize(),
-                        message.getOpacity(),
-                        Color.BLACK,
-                        Color.WHEAT,
-                        String.valueOf(message.getMessage()),
-                        message.getPosX(),
-                        message.getPosY());
-            }
+            drawer.drawMessages(message.getSize(),
+                    message.getOpacity(),
+                    Color.BLACK,
+                    Color.WHEAT,
+                    String.valueOf(message.getMessage()),
+                    message.getPosX(),
+                    message.getPosY());
         }
     }
 
