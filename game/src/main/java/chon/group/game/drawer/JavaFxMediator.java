@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.environment.Environment;
-import chon.group.game.domain.messaging.Message;
+import chon.group.game.messaging.Message;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 

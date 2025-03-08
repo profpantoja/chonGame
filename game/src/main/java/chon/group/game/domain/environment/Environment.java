@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import chon.group.game.domain.agent.Agent;
-import chon.group.game.domain.messaging.Message;
+import chon.group.game.messaging.Message;
 import javafx.scene.image.Image;
 
 /**
