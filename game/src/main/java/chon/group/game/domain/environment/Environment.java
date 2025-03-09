@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import chon.group.game.core.Entity;
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Shot;
 import chon.group.game.messaging.Message;
@@ -76,6 +77,7 @@ public class Environment {
         this.setImage(pathImage);
         this.agents = new ArrayList<Agent>();
         this.messages = new ArrayList<Message>();
+        this.shots = new ArrayList<Shot>();
     }
 
     /**
@@ -95,8 +97,9 @@ public class Environment {
         this.height = height;
         this.width = width;
         this.setImage(pathImage);
-        this.setAgents(agents);
+        this.agents = agents;
         this.messages = new ArrayList<Message>();
+        this.shots = new ArrayList<Shot>();
     }
 
     /**
@@ -323,7 +326,8 @@ public class Environment {
     public void detectCollision() {
         for (Agent agent : this.agents) {
             if (protagonist != null && intersect(this.protagonist, agent)) {
-                System.out.println("Collision detected with agent: " + agent);
+                /* Removing the console output for collision. */
+                // System.out.println("Collision detected with agent: " + agent);
                 int damage = 100;
                 /* The protagonist takes damage when colliding with an agent. */
                 protagonist.takeDamage(damage, this.messages);
@@ -344,7 +348,7 @@ public class Environment {
      * @return true if the agents collide, otherwise false
      */
 
-    private boolean intersect(Agent a, Agent b) {
+    private boolean intersect(Entity a, Entity b) {
         // Returns true if there is a collision between two agents
         return a.getPosX() < b.getPosX() + b.getWidth() &&
                 a.getPosX() + a.getWidth() > b.getPosX() &&
@@ -358,6 +362,33 @@ public class Environment {
             Message message = iterator.next();
             if (!message.update()) {
                 iterator.remove();
+            }
+        }
+    }
+
+    public void updateShots() {
+        Iterator<Shot> itShot = this.shots.iterator();
+        while (itShot.hasNext()) {
+            Shot shot = itShot.next();
+            if ((shot.getPosX() > this.width) || ((shot.getPosX() + shot.getWidth()) < 0)) {
+                itShot.remove();
+            } else {
+                if (this.intersect(protagonist, shot)) {
+                    protagonist.takeDamage(shot.getDamage(), this.messages);
+                    itShot.remove();
+                } else {
+                    Iterator<Agent> itAgent = this.agents.iterator();
+                    while (itAgent.hasNext()) {
+                        Agent agent = itAgent.next();
+                        if (this.intersect(agent, shot)) {
+                            agent.takeDamage(shot.getDamage(), this.messages);
+                            if (agent.isDead())
+                                itAgent.remove();
+                            itShot.remove();
+                        }
+                    }
+                }
+                shot.move(new ArrayList<>(List.of(shot.getDirection())));
             }
         }
     }

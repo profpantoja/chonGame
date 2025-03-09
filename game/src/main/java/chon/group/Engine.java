@@ -3,6 +3,8 @@ package chon.group;
 import java.util.ArrayList;
 
 import chon.group.game.domain.agent.Agent;
+import chon.group.game.domain.agent.Cannon;
+import chon.group.game.domain.agent.Weapon;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.drawer.JavaFxMediator;
@@ -63,7 +65,10 @@ public class Engine extends Application {
             /* Initialize the game environment and agents */
             Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
             Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
-            Agent chonBot = new Agent(920, 440, 90, 65, 1, 3, "/images/agents/chonBot.png", true);
+            Weapon cannon = new Cannon(400, 390, 90, 65, 3, 0, "", false);
+            chonBota.setWeapon(cannon);
+
+            Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
             environment.setProtagonist(chonBota);
             environment.getAgents().add(chonBot);
             environment.setPauseImage("/images/environment/pause.png");
@@ -127,8 +132,10 @@ public class Engine extends Application {
                     if (environment.getProtagonist().isDead()) {
                         /* Still prints ongoing messages (e.g., last hit taken) */
                         environment.updateMessages();
+                        environment.updateShots();
                         mediator.drawBackground();
                         mediator.drawAgents();
+                        mediator.drawShots();
                         mediator.drawMessages();
                         /* Rendering the Game Over Screen */
                         mediator.drawGameOver();
@@ -142,19 +149,39 @@ public class Engine extends Application {
                             /* ChonBota Only Moves if the Player Press Something */
                             /* Update the protagonist's movements if input exists */
                             if (!input.isEmpty()) {
+                                /* ChonBota Shoots Somebody Who Outdrew You */
+                                if (input.contains("SPACE")) {
+                                    input.remove("SPACE");
+                                    int shotPosX;
+                                    String direction;
+                                    if (chonBota.isFlipped()) {
+                                        shotPosX = chonBota.getPosX() - 70;
+                                        direction = "LEFT";
+                                    } else {
+                                        shotPosX = chonBota.getPosX() + 66;
+                                        direction = "RIGHT";
+                                    }
+                                    environment.getShots().add(chonBota.getWeapon().fire(shotPosX,
+                                            chonBota.getPosY(),
+                                            direction));
+                                }
                                 /* ChonBota's Movements */
                                 environment.getProtagonist().move(input);
                                 environment.checkBorders();
                             }
                             /* ChonBot's Automatic Movements */
                             /* Update the other agents' movements */
-                            environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
-                                    environment.getProtagonist().getPosY());
+                            for (Agent agent : environment.getAgents()) {
+                                agent.chase(environment.getProtagonist().getPosX(),
+                                        environment.getProtagonist().getPosY());
+                            }
                             /* Render the game environment and agents */
                             environment.detectCollision();
+                            environment.updateShots();
                             environment.updateMessages();
                             mediator.drawBackground();
                             mediator.drawAgents();
+                            mediator.drawShots();
                             mediator.drawMessages();
                         }
                     }

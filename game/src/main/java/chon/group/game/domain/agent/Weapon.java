@@ -1,15 +1,17 @@
 package chon.group.game.domain.agent;
 
-public class Weapon {
+import chon.group.game.core.Entity;
 
-    Shot shot;
+public abstract class Weapon extends Entity {
 
-    public void attack() {
-
+    public Weapon(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped) {
+        super(posX, posY, height, width, speed, health, pathImage, flipped);
     }
 
-    public Shot fire() {
-        return this.shot;
+    protected abstract Shot createShot(int posX, int posY, String direction);
+
+    public Shot fire(int posX, int posY, String direction) {
+        return this.createShot(posX, posY, direction);
     }
 
 }

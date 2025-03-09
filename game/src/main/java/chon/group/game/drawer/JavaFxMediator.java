@@ -3,6 +3,7 @@ package chon.group.game.drawer;
 import java.util.Iterator;
 
 import chon.group.game.domain.agent.Agent;
+import chon.group.game.domain.agent.Shot;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.messaging.Message;
 import javafx.scene.canvas.GraphicsContext;
@@ -154,6 +155,19 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     String.valueOf(message.getMessage()),
                     message.getPosX(),
                     message.getPosY());
+        }
+    }
+
+    @Override
+    public void drawShots() {
+        Iterator<Shot> iterator = this.environment.getShots().iterator();
+        while (iterator.hasNext()) {
+            Shot shot = iterator.next();          
+            drawer.drawImage(shot.getImage(),
+                    shot.getPosX(),
+                    shot.getPosY(),
+                    shot.getWidth(),
+                    shot.getHeight());
         }
     }
 
