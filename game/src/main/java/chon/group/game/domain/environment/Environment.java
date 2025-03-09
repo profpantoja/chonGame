@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import chon.group.game.domain.agent.Agent;
+import chon.group.game.domain.agent.Shot;
 import chon.group.game.messaging.Message;
 import javafx.scene.image.Image;
 
@@ -47,6 +48,9 @@ public class Environment {
 
     /** List of messages to display. */
     private List<Message> messages;
+
+    /** List of shots present in the environment. */
+    private List<Shot> shots;
 
     /**
      * Default constructor to create an empty environment.
@@ -274,6 +278,24 @@ public class Environment {
      */
     public void setMessages(List<Message> messages) {
         this.messages = messages;
+    }
+
+    /**
+     * Gets the list of shots present in the environment.
+     *
+     * @return the list of shots
+     */
+    public List<Shot> getShots() {
+        return shots;
+    }
+
+    /**
+     * Sets the list of shots present in the environment.
+     *
+     * @param agents the new list of shots
+     */
+    public void setShots(List<Shot> shots) {
+        this.shots = shots;
     }
 
     /**
