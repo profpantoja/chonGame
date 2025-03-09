@@ -7,8 +7,8 @@ public class Projectile {
     private double x, y;
     private double width = 80, height = 80;
     private boolean movingRight;
-    private static final double SPEED = 10;
-    private static final Image BOMB_IMAGE = new Image(Projectile.class.getResource("/images/agents/bomb.png").toExternalForm());
+    private static final double SPEED = 2.5;
+    private static final Image BOMB_IMAGE = new Image(Projectile.class.getResource("/images/bullets/bulletTwo/bulletTwo001.png").toExternalForm());
 
     public Projectile(double x, double y, boolean movingRight) {
         this.x = x;
