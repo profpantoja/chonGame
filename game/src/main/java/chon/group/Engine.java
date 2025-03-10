@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Cannon;
+import chon.group.game.domain.agent.Fireball;
 import chon.group.game.domain.agent.Weapon;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.drawer.EnvironmentDrawer;
@@ -65,8 +66,9 @@ public class Engine extends Application {
             /* Initialize the game environment and agents */
             Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
             Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
-            Weapon cannon = new Cannon(400, 390, 90, 65, 3, 0, "", false);
-            chonBota.setWeapon(cannon);
+            Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
+            Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false);
+            chonBota.setWeapon(fireball);
 
             Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
             environment.setProtagonist(chonBota);
@@ -143,6 +145,8 @@ public class Engine extends Application {
                         if (isPaused) {
                             mediator.drawBackground();
                             mediator.drawAgents();
+                            mediator.drawMessages();
+                            mediator.drawShots();
                             /* Rendering the Pause Screen */
                             mediator.drawPauseScreen();
                         } else {
@@ -152,16 +156,12 @@ public class Engine extends Application {
                                 /* ChonBota Shoots Somebody Who Outdrew You */
                                 if (input.contains("SPACE")) {
                                     input.remove("SPACE");
-                                    int shotPosX;
                                     String direction;
-                                    if (chonBota.isFlipped()) {
-                                        shotPosX = chonBota.getPosX() - 70;
+                                    if (chonBota.isFlipped())
                                         direction = "LEFT";
-                                    } else {
-                                        shotPosX = chonBota.getPosX() + 66;
+                                    else
                                         direction = "RIGHT";
-                                    }
-                                    environment.getShots().add(chonBota.getWeapon().fire(shotPosX,
+                                    environment.getShots().add(chonBota.getWeapon().fire(chonBota.getPosX(),
                                             chonBota.getPosY(),
                                             direction));
                                 }
