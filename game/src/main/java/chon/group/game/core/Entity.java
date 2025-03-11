@@ -304,6 +304,19 @@ public abstract class Entity {
      *
      * @param damage the amount of damage to be applied
      */
-    public abstract void takeDamage(int damage, List<Message> messages);
+    public void takeDamage(int damage, List<Message> messages) {
+        if (this.getHealth() > 0) {
+            /* Decrease health. */
+            this.setHealth(this.getHealth() - damage);
+            messages.add(new Message(
+                    String.valueOf(damage),
+                    this.getPosX(),
+                    this.getPosY(),
+                    25));
+            /* After taking the damage, the health must not be negative. */
+            if (this.getHealth() < 0)
+                this.setHealth(0);
+        }
+    }
 
 }

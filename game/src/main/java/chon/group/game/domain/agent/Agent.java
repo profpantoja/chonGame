@@ -1,6 +1,5 @@
 package chon.group.game.domain.agent;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import chon.group.game.core.Entity;
@@ -20,7 +19,7 @@ public class Agent extends Entity {
     private boolean invulnerable = false;
 
     /* Invulnerability (in milliseconds) */
-    private final long INVULNERABILITY_COOLDOWN = 500;
+    private final long INVULNERABILITY_COOLDOWN = 3000;
 
     /* The Agent's Weapon */
     private Weapon weapon;
@@ -127,47 +126,6 @@ public class Agent extends Entity {
     }
 
     /**
-     * Moves the agent based on the movement commands provided.
-     *
-     * @param movements a list of movement directions ("RIGHT", "LEFT", "UP",
-     *                  "DOWN")
-     */
-    public void move(List<String> movements) {
-        if (movements.contains("RIGHT")) {
-            if (this.isFlipped())
-                this.flipImage();
-            setPosX(this.getPosX() + this.getSpeed());
-        } else if (movements.contains("LEFT")) {
-            if (!this.isFlipped())
-                this.flipImage();
-            setPosX(this.getPosX() - this.getSpeed());
-        } else if (movements.contains("UP")) {
-            setPosY(this.getPosY() - this.getSpeed());
-        } else if (movements.contains("DOWN")) {
-            setPosY(this.getPosY() + this.getSpeed());
-        }
-    }
-
-    /**
-     * Makes the agent chase a target based on its coordinates.
-     *
-     * @param targetX the target's X (horizontal) position
-     * @param targetY the target's Y (vertical) position
-     */
-    public void chase(int targetX, int targetY) {
-        if (targetX > this.getPosX()) {
-            this.move(new ArrayList<String>(List.of("RIGHT")));
-        } else if (targetX < this.getPosX()) {
-            this.move(new ArrayList<String>(List.of("LEFT")));
-        }
-        if (targetY > this.getPosY()) {
-            this.move(new ArrayList<String>(List.of("DOWN")));
-        } else if (targetY < this.getPosY()) {
-            this.move(new ArrayList<String>(List.of("UP")));
-        }
-    }
-
-    /**
      * Makes the agent take damage.
      * If health reaches 0, the game must end.
      *
@@ -176,19 +134,9 @@ public class Agent extends Entity {
     @Override
     public void takeDamage(int damage, List<Message> messages) {
         this.invulnerable = this.updateInvulnerability();
-        if (!this.invulnerable && this.getHealth() > 0) {
-            /* Decrease health. */
-            this.setHealth(this.getHealth() - damage);
-            messages.add(new Message(
-                    String.valueOf(damage),
-                    this.getPosX(),
-                    this.getPosY(),
-                    25));
-            /* After taking the damage, the health must not be negative. */
-            if (this.getHealth() < 0)
-                this.setHealth(0);
-            else
-                this.lastHitTime = System.currentTimeMillis();
+        if (!this.invulnerable) {
+            super.takeDamage(damage, messages); 
+            this.lastHitTime = System.currentTimeMillis();
         }
     }
 
