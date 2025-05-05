@@ -290,4 +290,45 @@ public class Environment {
         }
     }
 
+    public boolean detectCollision(){
+        for (Agent agent : this.agents) {
+            if (intersect(this.protagonist, agent)){
+                /*
+                int dX = distanceX(this.protagonist, agent);
+                int dY = distanceY(this.protagonist, agent);
+                if (dX < 0)
+                {
+                    this.protagonist.setPosX(this.protagonist.getPosX() - 2);
+                }
+                else if (dX > 0)
+                {
+                    this.protagonist.setPosX(this.protagonist.getPosX() + 2);
+                }
+                    */
+                    checkCollision(agent);
+                System.out.println("Collision detected with agent: " + agent);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void checkCollision(Agent a) {
+        if (this.protagonist.getPosX() < a.getPosX()) {
+            this.protagonist.setPosX(a.getPosX() - this.protagonist.getWidth());
+        } else if ((this.protagonist.getPosX() + this.protagonist.getWidth()) > (a.getPosX() + a.getWidth())) {
+            this.protagonist.setPosX(a.getPosX() + a.getWidth());
+        } else if (this.protagonist.getPosY() < a.getPosY()) {
+            this.protagonist.setPosY(a.getPosY() - this.protagonist.getHeight());
+        } else if ((this.protagonist.getPosY() + this.protagonist.getHeight()) > (a.getPosY() + a.getHeight())) {
+            this.protagonist.setPosY(a.getPosY() + a.getHeight());
+        }
+    }
+
+    private boolean intersect(Agent a, Agent b){
+        return a.getPosX() < b.getPosX() + b.getWidth() && 
+        a.getPosX() + a.getWidth() > b.getPosX() && 
+        a.getPosY() < b.getPosY() + b.getHeight() && 
+        a.getPosY() + a.getHeight() > b.getPosY();
+    }
 }
