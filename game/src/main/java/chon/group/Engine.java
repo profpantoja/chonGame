@@ -142,6 +142,7 @@ public class Engine extends Application {
                         environment.detectCollision();
                         environment.drawBackground();
                         environment.drawAgents();
+                        environment.ElasticCollision(chonBota, chonBot);
                     }
                 }
 

@@ -16,10 +16,10 @@ import javafx.scene.paint.Color;
 public class Agent {
 
     /** X position (horizontal) of the agent. */
-    private int posX;
+    private double posX;
 
     /** Y (vertical) position of the agent. */
-    private int posY;
+    private double posY;
 
     /** Height of the agent. */
     private int height;
@@ -93,7 +93,7 @@ public class Agent {
      *
      * @return the X (horizontal) position of the agent
      */
-    public int getPosX() {
+    public double getPosX() {
         return posX;
     }
 
@@ -102,7 +102,7 @@ public class Agent {
      *
      * @param posX the new X (horizontal) position
      */
-    public void setPosX(int posX) {
+    public void setPosX(double posX) {
         this.posX = posX;
     }
 
@@ -111,7 +111,7 @@ public class Agent {
      *
      * @return the Y (vertical) position of the agent
      */
-    public int getPosY() {
+    public double getPosY() {
         return posY;
     }
 
@@ -120,7 +120,7 @@ public class Agent {
      *
      * @param posY the new Y (vertical) position
      */
-    public void setPosY(int posY) {
+    public void setPosY(double posY) {
         this.posY = posY;
     }
 
@@ -285,7 +285,7 @@ public class Agent {
      * @param targetX the target's X (horizontal) position
      * @param targetY the target's Y (vertical) position
      */
-    public void chase(int targetX, int targetY) {
+    public void chase(double targetX, double targetY) {
         if (targetX > this.posX) {
             this.move(new ArrayList<String>(List.of("RIGHT")));
         } else if (targetX < this.posX) {

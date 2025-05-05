@@ -1,3 +1,5 @@
+
+
 package chon.group.game.domain.environment;
 
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+
 
 /**
  * Represents the game environment, including properties such as dimensions,
@@ -40,6 +43,7 @@ public class Environment {
 
     /** The protagonist instance. */
     private Agent protagonist;
+    
 
     /** List of agents present in the environment. */
     private List<Agent> agents = new ArrayList<Agent>();
@@ -378,6 +382,9 @@ public class Environment {
      * Detects collisions between the protagonist and other agents in the
      * environment.
      */
+    
+    
+
     public void detectCollision() {
         for (Agent agent : this.agents) {
             if (intersect(this.protagonist, agent)) {
@@ -387,6 +394,76 @@ public class Environment {
             }
         }
     }
+
+    public void ElasticCollision(Agent a, Agent b) {
+        double k = 100;
+    
+        if (a.getPosX() < b.getPosX() + b.getWidth() &&
+            a.getPosX() + a.getWidth() > b.getPosX() &&
+            a.getPosY() < b.getPosY() + b.getHeight() &&
+            a.getPosY() + a.getHeight() > b.getPosY()) {
+    
+            
+            double centerAX = a.getPosX() + a.getWidth() / 2.0;
+            double centerBX = b.getPosX() + b.getWidth() / 2.0;
+            
+            double centerAY = a.getPosY() + a.getWidth() / 2.0;
+            double centerBY = b.getPosY() + b.getWidth() / 2.0;
+
+            double directionX = 0;
+
+            double directionY = 0;
+
+            if(centerAX>centerBX && centerAY<centerBY){
+                // chon bota empurado para nordeste
+                directionY = -1;
+                directionX = 1;
+
+            }
+            else if(centerAX<centerBX && centerAY<centerBY){
+                // chon bota empurado para noroeste
+                directionY = -1;
+                directionX = -1;
+            }
+            else if(centerAX>centerBX && centerAY>centerBY){
+                // chon bota empurado para sudeste
+                directionY = 1;
+                directionX = 1;
+            }
+            else if(centerAX<centerBX && centerAY>centerBY){
+                // chon bota empurado para sudoeste
+                directionY = 1;
+                directionX = -1;
+            }
+
+            else if(centerAY<centerBY){
+                // chon bota empurado para cima
+                directionY = -1;
+            }
+             else if(centerAX<centerBX){
+                // chon bota empurado para esquerda
+                directionX = -1;
+            }
+            else if(centerAX>centerBX){
+                // chon bota empurado para direita
+                directionX = 1;
+            }
+            else if(centerAY>centerBY){
+                // chon bota empurado para baixo
+                directionY = 1;
+            }
+            else{
+                System.out.println("erro");
+            }
+            
+
+            a.setPosX(a.getPosX() + directionX * k);
+            b.setPosX(b.getPosX() - directionX * k);
+            a.setPosY(a.getPosY() + directionY * k);
+            b.setPosY(b.getPosY() - directionY * k);
+        }
+    }
+    
 
     /**
      * Checks if two agents collide with each other based on their positions and
@@ -400,11 +477,11 @@ public class Environment {
      * @param b the second agent
      * @return true if the agents collide, otherwise false
      */
-    private boolean intersect(Agent a, Agent b) {
+    
+     private boolean intersect(Agent a, Agent b) {
         return a.getPosX() < b.getPosX() + b.getWidth() &&
                 a.getPosX() + a.getWidth() > b.getPosX() &&
                 a.getPosY() < b.getPosY() + b.getHeight() &&
                 a.getPosY() + a.getHeight() > b.getPosY();
     }
-
 }
