@@ -1,28 +1,46 @@
 package chon.group.game.domain.agent;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import chon.group.game.core.Entity;
-import chon.group.game.messaging.Message;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 
 /**
  * Represents an agent in the game, with properties such as position, size,
  * speed, and image.
  * The agent can move in specific directions and chase a target.
  */
-public class Agent extends Entity {
+public class Agent {
 
-    /* The time of the last hit taken. */
-    private long lastHitTime = 0;
+    /** X position (horizontal) of the agent. */
+    private int posX;
 
-    /* Flag to control the invulnerability status of the agent. */
-    private boolean invulnerable = false;
+    /** Y (vertical) position of the agent. */
+    private int posY;
 
-    /* Invulnerability (in milliseconds) */
-    private final long INVULNERABILITY_COOLDOWN = 3000;
+    /** Height of the agent. */
+    private int height;
 
-    /* The Agent's Weapon */
-    private Weapon weapon;
+    /** Width of the agent. */
+    private int width;
+
+    /** Agent speed. */
+    private int speed;
+
+    /** Image representing the agent. */
+    private Image image;
+
+    /** Indicates if the agent is facing left. */
+    private boolean flipped = false;
+
+    /** The initial agent's health. */
+    private int health;
+
+    /** The maximum agent's health. */
+    private int fullHealth;
 
     /**
      * Constructor to initialize the agent properties.
@@ -36,7 +54,14 @@ public class Agent extends Entity {
      * @param pathImage the path to the agent's image
      */
     public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage) {
-        super(posX, posY, height, width, speed, health, pathImage);
+        this.posX = posX;
+        this.posY = posY;
+        this.height = height;
+        this.width = width;
+        this.speed = speed;
+        this.health = health;
+        this.fullHealth = health;
+        this.image = new Image(getClass().getResource(pathImage).toExternalForm());
     }
 
     /**
@@ -52,104 +77,225 @@ public class Agent extends Entity {
      * @param flipped   the agent's direction (RIGHT=0 or LEFT=1)
      */
     public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped) {
-        super(posX, posY, height, width, speed, health, pathImage, flipped);
+        this.posX = posX;
+        this.posY = posY;
+        this.height = height;
+        this.width = width;
+        this.speed = speed;
+        this.health = health;
+        this.fullHealth = health;
+        this.image = new Image(getClass().getResource(pathImage).toExternalForm());
+        this.flipped = flipped;
     }
 
     /**
-     * Gets the last hit taken.
-     */
-    public long getlastHitTime() {
-        return lastHitTime;
-    }
-
-    /**
-     * Sets the last hit taken.
+     * Gets the X (horizontal) position of the agent.
      *
-     * @param lastHitTime the new image
+     * @return the X (horizontal) position of the agent
      */
-    public void setlastHitTime(long lastHitTime) {
-        this.lastHitTime = lastHitTime;
+    public int getPosX() {
+        return posX;
     }
 
     /**
-     * Gets invulnerable cooldown time.
+     * Sets the agent's X (horizontal) position.
      *
-     * @return the time is milliseconds
+     * @param posX the new X (horizontal) position
      */
-    public long getInvulnerabilityCooldown() {
-        return INVULNERABILITY_COOLDOWN;
+    public void setPosX(int posX) {
+        this.posX = posX;
     }
 
     /**
-     * Gets if the agent is invulnerable.
+     * Gets the Y (vertical) position of the agent.
      *
-     * @return if the agent is invulnerable
+     * @return the Y (vertical) position of the agent
      */
-    public boolean isInvulnerable() {
-        return invulnerable;
+    public int getPosY() {
+        return posY;
     }
 
     /**
-     * Sets the agent invulnerable status.
+     * Sets the Y (vertical) position of the agent.
      *
-     * @param invulnerable the new invulnerable status
+     * @param posY the new Y (vertical) position
      */
-    public void setInvulnerable(boolean invulnerable) {
-        this.invulnerable = invulnerable;
+    public void setPosY(int posY) {
+        this.posY = posY;
     }
 
     /**
-     * Gets the agent's weapon.
+     * Gets the height of the agent.
      *
-     * @return its weapon.
+     * @return the height of the agent
      */
-    public Weapon getWeapon() {
-        return weapon;
+    public int getHeight() {
+        return height;
     }
 
     /**
-     * Sets the agent new weapon.
+     * Sets the height of the agent.
      *
-     * @param weapon the new weapon
+     * @param height the new height
      */
-    public void setWeapon(Weapon weapon) {
-        this.weapon = weapon;
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     /**
-     * Gets if the agent is dead.
+     * Gets the width of the agent.
      *
-     * @return if the agent is dead
+     * @return the width of the agent
      */
-    public boolean isDead() {
-        return (this.getHealth() <= 0);
+    public int getWidth() {
+        return width;
     }
 
     /**
-     * Makes the agent take damage.
-     * If health reaches 0, the game must end.
+     * Sets the width of the agent.
      *
-     * @param damage the amount of damage to be applied
+     * @param width the new width
      */
-    @Override
-    public void takeDamage(int damage, List<Message> messages) {
-        this.invulnerable = this.updateInvulnerability();
-        if (!this.invulnerable) {
-            super.takeDamage(damage, messages); 
-            this.lastHitTime = System.currentTimeMillis();
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    /**
+     * Gets the agent's speed.
+     *
+     * @return the agent's speed
+     */
+    public int getSpeed() {
+        return speed;
+    }
+
+    /**
+     * Sets the speed of the agent.
+     *
+     * @param speed the new speed
+     */
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    /**
+     * Gets the agent's health.
+     *
+     * @return the agent's health
+     */
+    public int getHealth() {
+        return health;
+    }
+
+    /**
+     * Sets the health of the agent.
+     *
+     * @param health the new health
+     */
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    /**
+     * Gets the agent's maximum health.
+     *
+     * @return the agent's maximum health
+     */
+    public int getFullHealth() {
+        return fullHealth;
+    }
+
+    /**
+     * Sets the maximum health of the agent.
+     *
+     * @param fullHealth the new maximum health
+     */
+    public void setFullHealth(int fullHealth) {
+        this.fullHealth = fullHealth;
+    }
+
+    /**
+     * Gets the agent image.
+     *
+     * @return the agent image
+     */
+    public Image getImage() {
+        return image;
+    }
+
+    /**
+     * Gets the agent flipped status.
+     *
+     * @param image the new image
+     */
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    public boolean isFlipped() {
+        return flipped;
+    }
+
+    /**
+     * Sets the agent flipped status.
+     *
+     * @param image the new image
+     */
+    public void setFlipped(boolean flipped) {
+        this.flipped = flipped;
+    }
+
+    /**
+     * Flips the Image horizontally.
+     */
+    private void flipImage() {
+        ImageView flippedImage = new ImageView(image);
+        flippedImage.setScaleX(-1);
+        SnapshotParameters params = new SnapshotParameters();
+        params.setFill(Color.TRANSPARENT);
+        this.flipped = !this.flipped;
+        this.image = flippedImage.snapshot(params, null);
+    }
+
+    /**
+     * Moves the agent based on the movement commands provided.
+     *
+     * @param movements a list of movement directions ("RIGHT", "LEFT", "UP",
+     *                  "DOWN")
+     */
+    public void move(List<String> movements) {
+        if (movements.contains("RIGHT")) {
+            if (flipped)
+                this.flipImage();
+            setPosX(posX += speed);
+        } else if (movements.contains("LEFT")) {
+            if (!flipped)
+                this.flipImage();
+            setPosX(posX -= speed);
+        } else if (movements.contains("UP")) {
+            setPosY(posY -= speed);
+        } else if (movements.contains("DOWN")) {
+            setPosY(posY += speed);
         }
     }
 
     /**
-     * Method to update the invulnerable status.
+     * Makes the agent chase a target based on its coordinates.
      *
-     * @return if the agent is still invulnerable
+     * @param targetX the target's X (horizontal) position
+     * @param targetY the target's Y (vertical) position
      */
-    private boolean updateInvulnerability() {
-        if (System.currentTimeMillis() - lastHitTime >= INVULNERABILITY_COOLDOWN) {
-            return false;
+    public void chase(int targetX, int targetY) {
+        if (targetX > this.posX) {
+            this.move(new ArrayList<String>(List.of("RIGHT")));
+        } else if (targetX < this.posX) {
+            this.move(new ArrayList<String>(List.of("LEFT")));
         }
-        return true;
+        if (targetY > this.posY) {
+            this.move(new ArrayList<String>(List.of("DOWN")));
+        } else if (targetY < this.posY) {
+            this.move(new ArrayList<String>(List.of("UP")));
+        }
     }
 
 }
