@@ -22,44 +22,17 @@ import javafx.scene.layout.StackPane;
 /**
  * The {@code Engine} class represents the main entry point of the application
  * and serves as the game engine for "Chon: The Learning Game."
- * <p>
- * This class extends {@link javafx.application.Application} and manages the
- * game initialization, rendering, and main game loop using
- * {@link javafx.animation.AnimationTimer}.
- * </p>
- * 
- * <h2>Responsibilities</h2>
- * <ul>
- * <li>Set up the game environment, agents, and graphical components.</li>
- * <li>Handle keyboard input for controlling the protagonist agent.</li>
- * <li>Execute the game loop for updating and rendering the game state.</li>
- * </ul>
  */
 public class Engine extends Application {
 
-    /* If the game is paused or not. */
     private boolean isPaused = false;
-
-    /**
-     * Main entry point of the application.
-     *
-     * @param args command-line arguments passed to the application.
-     */
+    private long lastEnergyUpdate = 0;
+    private static final long ENERGY_UPDATE_INTERVAL = 16_000_000; // 16ms (≈60fps)
 
     public static void main(String[] args) {
         launch(args);
     }
 
-    /**
-     * Starts the JavaFX application and initializes the game environment, agents,
-     * and graphical components.
-     * <p>
-     * This method sets up the game scene, handles input events, and starts the
-     * game loop using {@link AnimationTimer}.
-     * </p>
-     *
-     * @param theStage the primary stage for the application.
-     */
     @Override
     public void start(Stage theStage) {
         try {
@@ -97,49 +70,46 @@ public class Engine extends Application {
                     String code = e.getCode().toString();
                     input.clear();
 
-                    System.out.println("Pressed: " + code);
-
                     if (code.equals("P")) {
                         isPaused = !isPaused;
+                    }
+                    else if (code.equals("E") && !environment.getProtagonist().isEnergyDepleted()) {
+                        // Habilidade especial que consome energia
+                        environment.getProtagonist().consumeEnergy(0.3);
                     }
 
                     if (!isPaused && !input.contains(code)) {
                         input.add(code);
                     }
-
                 }
             });
 
             scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
                     String code = e.getCode().toString();
-                    System.out.println("Released: " + code);
                     input.remove(code);
                 }
             });
 
             /* Start the game loop */
             new AnimationTimer() {
-
-                /**
-                 * The game loop, called on each frame.
-                 *
-                 * @param now the timestamp of the current frame in nanoseconds.
-                 */
                 @Override
-                public void handle(long arg0) {
+                public void handle(long now) {
                     mediator.clearEnvironment();
-                    /* Branching the Game Loop */
-                    /* If the agent died in the last loop */
+                    
+                    /* Energy system update */
+                    if (now - lastEnergyUpdate >= ENERGY_UPDATE_INTERVAL) {
+                        updateEnergySystem(environment, input);
+                        lastEnergyUpdate = now;
+                    }
+
                     if (environment.getProtagonist().isDead()) {
-                        /* Still prints ongoing messages (e.g., last hit taken) */
                         environment.updateMessages();
                         environment.updateShots();
                         mediator.drawBackground();
                         mediator.drawAgents();
                         mediator.drawShots();
                         mediator.drawMessages();
-                        /* Rendering the Game Over Screen */
                         mediator.drawGameOver();
                     } else {
                         if (isPaused) {
@@ -147,38 +117,9 @@ public class Engine extends Application {
                             mediator.drawAgents();
                             mediator.drawMessages();
                             mediator.drawShots();
-                            /* Rendering the Pause Screen */
                             mediator.drawPauseScreen();
                         } else {
-                            /* ChonBota Only Moves if the Player Press Something */
-                            /* Update the protagonist's movements if input exists */
-                            if (!input.isEmpty()) {
-                                /* ChonBota Shoots Somebody Who Outdrew You */
-                                if (input.contains("SPACE")) {
-                                    input.remove("SPACE");
-                                    String direction;
-                                    if (chonBota.isFlipped())
-                                        direction = "LEFT";
-                                    else
-                                        direction = "RIGHT";
-                                    environment.getShots().add(chonBota.getWeapon().fire(chonBota.getPosX(),
-                                            chonBota.getPosY(),
-                                            direction));
-                                }
-                                /* ChonBota's Movements */
-                                environment.getProtagonist().move(input);
-                                environment.checkBorders();
-                            }
-                            /* ChonBot's Automatic Movements */
-                            /* Update the other agents' movements */
-                            for (Agent agent : environment.getAgents()) {
-                                agent.chase(environment.getProtagonist().getPosX(),
-                                        environment.getProtagonist().getPosY());
-                            }
-                            /* Render the game environment and agents */
-                            environment.detectCollision();
-                            environment.updateShots();
-                            environment.updateMessages();
+                            handleGameplay(environment, input, chonBota);
                             mediator.drawBackground();
                             mediator.drawAgents();
                             mediator.drawShots();
@@ -187,12 +128,52 @@ public class Engine extends Application {
                     }
                 }
             }.start();
-            theStage.show();
 
-        } catch (
-
-        Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void updateEnergySystem(Environment environment, ArrayList<String> input) {
+        Agent protagonist = environment.getProtagonist();
+        
+        // Consome energia ao se mover
+        if (!input.isEmpty()) {
+            protagonist.consumeEnergy(0.005);
+        } 
+        // Recupera energia quando parado
+        else {
+            protagonist.recoverEnergy(0.003);
+        }
+        
+        // Penalidade quando energia acaba
+        if (protagonist.isEnergyDepleted()) {
+            protagonist.takeDamage(1, environment.getMessages());
+        }
+    }
+
+    private void handleGameplay(Environment environment, ArrayList<String> input, Agent protagonist) {
+        /* Update the protagonist's movements if input exists */
+        if (!input.isEmpty()) {
+            if (input.contains("SPACE")) {
+                input.remove("SPACE");
+                String direction = protagonist.isFlipped() ? "LEFT" : "RIGHT";
+                environment.getShots().add(protagonist.getWeapon().fire(
+                    protagonist.getPosX(),
+                    protagonist.getPosY(),
+                    direction));
+            }
+            protagonist.move(input);
+            environment.checkBorders();
+        }
+        
+        /* Update other agents' movements */
+        for (Agent agent : environment.getAgents()) {
+            agent.chase(protagonist.getPosX(), protagonist.getPosY());
+        }
+        
+        environment.detectCollision();
+        environment.updateShots();
+        environment.updateMessages();
     }
 }
