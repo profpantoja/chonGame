@@ -298,4 +298,19 @@ public class Agent {
         }
     }
 
+    public int getSize() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getSize'");
+    }
+
+    public double getOpacity() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getOpacity'");
+    }
+
+    public char[] getMessage() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getMessage'");
+    }
+
 }

@@ -145,9 +145,9 @@ public class JavaFxMediator implements EnvironmentDrawer {
      */
     @Override
     public void drawMessages() {
-        Iterator<Message> iterator = this.environment.getMessages().iterator();
+        Iterator<Agent> iterator = this.environment.getMessages().iterator();
         while (iterator.hasNext()) {
-            Message message = iterator.next();
+            Agent message = iterator.next();
             drawer.drawMessages(message.getSize(),
                     message.getOpacity(),
                     Color.BLACK,
@@ -160,9 +160,9 @@ public class JavaFxMediator implements EnvironmentDrawer {
 
     @Override
     public void drawShots() {
-        Iterator<Shot> iterator = this.environment.getShots().iterator();
+        Iterator<Agent> iterator = this.environment.getShots().iterator();
         while (iterator.hasNext()) {
-            Shot shot = iterator.next();          
+            Agent shot = iterator.next();          
             drawer.drawImage(shot.getImage(),
                     shot.getPosX(),
                     shot.getPosY(),

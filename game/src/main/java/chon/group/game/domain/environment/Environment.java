@@ -444,4 +444,19 @@ public class Environment {
                 a.getPosY() + a.getHeight() > b.getPosY();
     }
 
+    public List<Agent> getMessages() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getMessages'");
+    }
+
+    public List<Agent> getShots() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getShots'");
+    }
+
+    public Image getGameOverImage() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getGameOverImage'");
+    }
+
 }
