@@ -52,6 +52,10 @@ public class Environment {
 
     /** List of shots present in the environment. */
     private List<Shot> shots;
+     
+    /** The X position of the camera in the environment. */
+    private double cameraX = 0;
+    
 
     /**
      * Default constructor to create an empty environment.
@@ -299,6 +303,24 @@ public class Environment {
      */
     public void setShots(List<Shot> shots) {
         this.shots = shots;
+    }
+
+    /**
+     * Gets the X position of the camera in the environment.
+     *
+     * @return the X position of the camera
+     */
+    public double getCameraX() {
+        return cameraX;
+    }
+
+    /**
+     * Sets the X position of the camera in the environment.
+     *
+     * @param cameraX the new X position of the camera
+     */
+    public void setCameraX(double cameraX) {
+        this.cameraX = cameraX;
     }
 
     /**

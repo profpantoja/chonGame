@@ -53,4 +53,40 @@ public interface EnvironmentDrawer {
      */
     void drawGameOver();
 
+    /**
+     * Draws the background for side-scrolling environments.
+     */
+
+     //method implemets for side-scrolling games
+    void drawBackgroundSideScrolling();
+
+    /**
+     * Draws the agents in a side-scrolling environment.
+     */
+
+     //method implemets for side-scrolling games
+    void drawAgentsSideScrolling();
+
+    /**
+     * Draws the shots for agents in a side-scrolling environment.
+    */
+
+    //method implemets for side-scrolling games
+    void drawShotsSideScrolling();
+
+    /**
+     * Draws the status panel displaying relevant game information.
+     */
+
+    //method implemets for side-scrolling games
+    void drawStatusPanelSideScrolling();
+
+    /**
+     * Draws the messages in a side-scrolling environment.
+     */
+    
+    //method implemets for side-scrolling games
+    void drawMessagesSideScrolling();
+    
+    
 }

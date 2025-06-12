@@ -94,6 +94,22 @@ public class JavaFxDrawer {
     }
 
     /**
+     * Displays a status panel showing the protagonist's coordinates.
+     *
+     * @param worldX The x-coordinate in the world.
+     * @param worldY The y-coordinate in the world.
+     * @param posX The x-coordinate of the protagonist.
+     * @param posY The y-coordinate of the protagonist.
+     */
+    public void drawStatusPanelSideScrolling(int worldX, int worldY, int posX, int posY) {
+        Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
+        this.gc.setFont(theFont);
+        this.gc.setFill(Color.BLACK);
+        this.gc.fillText("X: " + worldX, posX + 10, posY - 40);
+        this.gc.fillText("Y: " + worldY, posX + 10, posY - 25);
+    }
+
+    /**
      * Renders the pause screen, centering the pause image within the environment.
      *
      * @param image       The image representing the pause screen.

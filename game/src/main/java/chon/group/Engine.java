@@ -63,10 +63,14 @@ public class Engine extends Application {
     @Override
     public void start(Stage theStage) {
         try {
+
+            double windowWidth = 1280;
+            double windowHeight = 768;
+            
             /* Initialize the game environment and agents */
-            Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
-            Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
-            Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
+            Environment environment = new Environment(0, 0,4096,768, "/images/environment/castle.png");
+            Agent chonBota = new Agent(100, 390, 90, 65, 5, 1000, "/images/agents/chonBota.png", false);
+            Weapon cannon = new Cannon(400, 390, 0, 0, 5, 0, "", false);
             Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false);
             chonBota.setWeapon(fireball);
 
@@ -77,13 +81,13 @@ public class Engine extends Application {
             environment.setGameOverImage("/images/environment/gameover.png");
 
             /* Set up the graphical canvas */
-            Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
+            Canvas canvas = new Canvas(windowWidth, windowHeight);
             GraphicsContext gc = canvas.getGraphicsContext2D();
             EnvironmentDrawer mediator = new JavaFxMediator(environment, gc);
 
             /* Set up the scene and stage */
             StackPane root = new StackPane();
-            Scene scene = new Scene(root, environment.getWidth(), environment.getHeight());
+            Scene scene = new Scene(root, windowWidth, windowHeight);
             theStage.setTitle("Chon: The Learning Game");
             theStage.setScene(scene);
 
@@ -135,24 +139,51 @@ public class Engine extends Application {
                         /* Still prints ongoing messages (e.g., last hit taken) */
                         environment.updateMessages();
                         environment.updateShots();
-                        mediator.drawBackground();
-                        mediator.drawAgents();
-                        mediator.drawShots();
-                        mediator.drawMessages();
+                        mediator.drawBackgroundSideScrolling();
+                        mediator.drawAgentsSideScrolling();
+                        mediator.drawShotsSideScrolling();
+                        mediator.drawMessagesSideScrolling();
                         /* Rendering the Game Over Screen */
                         mediator.drawGameOver();
                     } else {
                         if (isPaused) {
-                            mediator.drawBackground();
-                            mediator.drawAgents();
-                            mediator.drawMessages();
-                            mediator.drawShots();
+                            mediator.drawBackgroundSideScrolling();
+                            mediator.drawAgentsSideScrolling();
+                            mediator.drawMessagesSideScrolling();
+                            mediator.drawShotsSideScrolling();
                             /* Rendering the Pause Screen */
                             mediator.drawPauseScreen();
                         } else {
                             /* ChonBota Only Moves if the Player Press Something */
                             /* Update the protagonist's movements if input exists */
                             if (!input.isEmpty()) {
+                                
+                                /* ChonBota's Movements */
+                                environment.getProtagonist().move(input);
+                                
+                                /* Update the camera position based on the protagonist's position */ 
+                                double cameraTargetX = environment.getProtagonist().getPosX() - (windowWidth / 2);
+
+                                if (cameraTargetX < 0) 
+                                    cameraTargetX = 0;
+                                
+                                double maxCameraX = environment.getWidth() - windowWidth;
+                                if (cameraTargetX > maxCameraX) 
+                                    cameraTargetX = maxCameraX;
+                                
+                                environment.setCameraX(cameraTargetX);
+
+                                /* ChonBota's Camera Movements */
+                                /* If the player presses the right or left arrow keys, move the camera */
+                                int speed = environment.getProtagonist().getSpeed();
+                                if (input.contains("D") || input.contains("RIGHT")) 
+                                    environment.setCameraX(environment.getCameraX() + speed);
+                                
+                                if (input.contains("A") || input.contains("LEFT")) {    
+                                    if(environment.getCameraX() > 0) 
+                                        environment.setCameraX(environment.getCameraX() - speed);
+                                }
+
                                 /* ChonBota Shoots Somebody Who Outdrew You */
                                 if (input.contains("SPACE")) {
                                     input.remove("SPACE");
@@ -165,8 +196,6 @@ public class Engine extends Application {
                                             chonBota.getPosY(),
                                             direction));
                                 }
-                                /* ChonBota's Movements */
-                                environment.getProtagonist().move(input);
                                 environment.checkBorders();
                             }
                             /* ChonBot's Automatic Movements */
@@ -179,15 +208,14 @@ public class Engine extends Application {
                             environment.detectCollision();
                             environment.updateShots();
                             environment.updateMessages();
-                            mediator.drawBackground();
-                            mediator.drawAgents();
-                            mediator.drawShots();
-                            mediator.drawMessages();
+                            mediator.drawBackgroundSideScrolling();
+                            mediator.drawAgentsSideScrolling();
+                            mediator.drawShotsSideScrolling();
+                            mediator.drawMessagesSideScrolling();
                         }
                     }
                 }
             }.start();
-            theStage.show();
 
         } catch (
 
