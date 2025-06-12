@@ -41,6 +41,9 @@ public class Environment {
     /** The background image of the game over. */
     private Image gameOverImage;
 
+    /** The background image of the win screen. */
+    private Image winImage;
+
     /** The protagonist instance. */
     private Agent protagonist;
 
@@ -230,6 +233,24 @@ public class Environment {
      */
     public void setGameOverImage(String pathImage) {
         this.gameOverImage = new Image(getClass().getResource(pathImage).toExternalForm());
+    }
+    
+    /**
+     * Gets the background image for the game over.
+     *
+     * @return the game over image
+     */
+    public Image getWinImage() {
+        return winImage;
+    }
+
+    /**
+     * Sets the background image for the game over.
+     *
+     * @param pathImage the path to the new game over image
+     */
+    public void setWinImage(String pathImage) {
+        this.winImage = new Image(getClass().getResource(pathImage).toExternalForm());
     }
 
     /**

@@ -39,6 +39,7 @@ public class Engine extends Application {
 
     /* If the game is paused or not. */
     private boolean isPaused = false;
+    private boolean win = false;
 
     /**
      * Main entry point of the application.
@@ -64,6 +65,7 @@ public class Engine extends Application {
     public void start(Stage theStage) {
         try {
 
+            
             double windowWidth = 1280;
             double windowHeight = 768;
             
@@ -73,47 +75,55 @@ public class Engine extends Application {
             Weapon cannon = new Cannon(400, 390, 0, 0, 5, 0, "", false);
             Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false);
             chonBota.setWeapon(fireball);
-
+            
             Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
             environment.setProtagonist(chonBota);
             environment.getAgents().add(chonBot);
-            environment.setPauseImage("/images/environment/pause.png");
-            environment.setGameOverImage("/images/environment/gameover.png");
+            
+            // necessita de uma UI de background menu para usar a função abaixo
+            // environment.setPauseImage("/images/environment/pause.png");
 
+             // necessita de um background usar a função abaixo
+            // environment.setMainMenuImage("/images/environment/pause.png");
+            
+            environment.setGameOverImage("/images/environment/gameover.png");
+            environment.setWinImage("/images/environment/gameover.png");
+            
             /* Set up the graphical canvas */
             Canvas canvas = new Canvas(windowWidth, windowHeight);
             GraphicsContext gc = canvas.getGraphicsContext2D();
             EnvironmentDrawer mediator = new JavaFxMediator(environment, gc);
-
+            
             /* Set up the scene and stage */
             StackPane root = new StackPane();
             Scene scene = new Scene(root, windowWidth, windowHeight);
             theStage.setTitle("Chon: The Learning Game");
             theStage.setScene(scene);
-
+            mediator.drawMainMenu();
+            
             root.getChildren().add(canvas);
             theStage.show();
-
+            
             /* Handle keyboard input */
             ArrayList<String> input = new ArrayList<String>();
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
                     String code = e.getCode().toString();
                     input.clear();
-
+                    
                     System.out.println("Pressed: " + code);
-
+                    
                     if (code.equals("P")) {
                         isPaused = !isPaused;
                     }
-
+                    
                     if (!isPaused && !input.contains(code)) {
                         input.add(code);
                     }
-
+                    
                 }
             });
-
+            
             scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
                     String code = e.getCode().toString();
@@ -121,10 +131,10 @@ public class Engine extends Application {
                     input.remove(code);
                 }
             });
-
+            
             /* Start the game loop */
             new AnimationTimer() {
-
+                
                 /**
                  * The game loop, called on each frame.
                  *
@@ -132,7 +142,11 @@ public class Engine extends Application {
                  */
                 @Override
                 public void handle(long arg0) {
-                    mediator.clearEnvironment();
+                    mediator.clearEnvironmentSideScrolling();
+                    
+                    /* Check if the protagonist win */
+                    if (environment.getAgents().isEmpty()) win = true;
+
                     /* Branching the Game Loop */
                     /* If the agent died in the last loop */
                     if (environment.getProtagonist().isDead()) {
@@ -153,7 +167,15 @@ public class Engine extends Application {
                             mediator.drawShotsSideScrolling();
                             /* Rendering the Pause Screen */
                             mediator.drawPauseScreen();
-                        } else {
+                        } else if(win){
+                            /* If the player won the game */
+                            mediator.drawBackgroundSideScrolling();
+                            mediator.drawAgentsSideScrolling();
+                            mediator.drawMessagesSideScrolling();
+                            mediator.drawShotsSideScrolling();
+                            /* Rendering the Win Screen */
+                            mediator.drawWinScreen();
+                        }else{
                             /* ChonBota Only Moves if the Player Press Something */
                             /* Update the protagonist's movements if input exists */
                             if (!input.isEmpty()) {
@@ -211,7 +233,7 @@ public class Engine extends Application {
                             mediator.drawBackgroundSideScrolling();
                             mediator.drawAgentsSideScrolling();
                             mediator.drawShotsSideScrolling();
-                            mediator.drawMessagesSideScrolling();
+                            mediator.drawMessagesSideScrolling();                              
                         }
                     }
                 }

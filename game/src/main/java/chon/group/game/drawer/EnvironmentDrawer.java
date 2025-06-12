@@ -88,5 +88,21 @@ public interface EnvironmentDrawer {
     //method implemets for side-scrolling games
     void drawMessagesSideScrolling();
     
+    /**
+     * Clears the environment for side-scrolling games.
+     */
+
+    //method implemets for side-scrolling games
+    void clearEnvironmentSideScrolling();
+
+    /**
+     * Draws the win screen when the player wins the game.
+     */
+    void drawWinScreen();
+
+    /**
+     * Draws the main menu of the game.
+     */
+    void drawMainMenu();
     
 }

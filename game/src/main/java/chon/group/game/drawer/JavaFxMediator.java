@@ -7,6 +7,7 @@ import chon.group.game.domain.agent.Shot;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.messaging.Message;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 
@@ -41,6 +42,14 @@ public class JavaFxMediator implements EnvironmentDrawer {
     @Override
     public void clearEnvironment() {
         drawer.clearScreen(this.environment.getWidth(), this.environment.getHeight());
+    }
+
+    /**
+     * Clears the environment by erasing all drawn elements on the screen.
+     */
+    @Override
+    public void clearEnvironmentSideScrolling() {
+        drawer.clearScreen((int)drawer.getCanvasWidth(), (int)drawer.getCanvasHeight());
     }
 
     /**
@@ -119,25 +128,35 @@ public class JavaFxMediator implements EnvironmentDrawer {
          * environment.
          */
         @Override
-        public void drawPauseScreen() {
-            drawer.drawScreen(this.environment.getPauseImage(),
-            (int) this.environment.getPauseImage().getWidth(),
-            (int) this.environment.getPauseImage().getHeight(),
-            this.environment.getWidth(),
-            this.environment.getHeight());
+        public void drawPauseScreen() { 
+            drawer.drawMenuPause("Pause",0,this.environment.getPauseImage(),"Resume","Exit","Volume");
         }
         
-        /**
-         * Draws the pause screen overlay, displaying a pause image centered within the
-         * environment.
-         */
+        // Now this method use canvas width and height, with this we can use
+        // the same method for side-scrolling and top-down environments.
         @Override
         public void drawGameOver() {
             drawer.drawScreen(this.environment.getGameOverImage(),
-            (int) this.environment.getPauseImage().getWidth(),
-            (int) this.environment.getPauseImage().getHeight(),
-            this.environment.getWidth(),
-            this.environment.getHeight());
+                (int) this.environment.getGameOverImage().getWidth(),
+                (int) this.environment.getGameOverImage().getHeight(),
+                (int) drawer.getCanvasWidth(),   
+                (int) drawer.getCanvasHeight());
+        }
+
+        // Now this method use canvas width and height, with this we can use
+        // the same method for side-scrolling and top-down environments.
+        @Override
+        public void drawWinScreen(){
+            drawer.drawScreen(this.environment.getWinImage(),
+                (int) this.environment.getWinImage().getWidth(),
+                (int) this.environment.getWinImage().getHeight(),
+                (int) drawer.getCanvasWidth(),   
+                (int) drawer.getCanvasHeight());
+        }
+
+        @Override
+        public void drawMainMenu(){
+            drawer.drawMainMenu(this.environment.getPauseImage(), "Main Menu",0,"Start","Exit");
         }
         
         /**
