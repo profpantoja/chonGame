@@ -64,15 +64,15 @@ public class Engine extends Application {
     public void start(Stage theStage) {
         try {
             /* Initialize the game environment and agents */
-            Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
-            Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
+            Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/deathStar.png");
+            Agent luke = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/luke.png", false);
             Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
             Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false);
-            chonBota.setWeapon(fireball);
+            luke.setWeapon(fireball);
 
-            Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
-            environment.setProtagonist(chonBota);
-            environment.getAgents().add(chonBot);
+            Agent darthVader = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/darthVader.png", true);
+            environment.setProtagonist(luke);
+            environment.getAgents().add(darthVader);
             environment.setPauseImage("/images/environment/pause.png");
             environment.setGameOverImage("/images/environment/gameover.png");
 
@@ -150,22 +150,22 @@ public class Engine extends Application {
                             /* Rendering the Pause Screen */
                             mediator.drawPauseScreen();
                         } else {
-                            /* ChonBota Only Moves if the Player Press Something */
+                            /* luke Only Moves if the Player Press Something */
                             /* Update the protagonist's movements if input exists */
                             if (!input.isEmpty()) {
-                                /* ChonBota Shoots Somebody Who Outdrew You */
+                                /* luke Shoots Somebody Who Outdrew You */
                                 if (input.contains("SPACE")) {
                                     input.remove("SPACE");
                                     String direction;
-                                    if (chonBota.isFlipped())
+                                    if (luke.isFlipped())
                                         direction = "LEFT";
                                     else
                                         direction = "RIGHT";
-                                    environment.getShots().add(chonBota.getWeapon().fire(chonBota.getPosX(),
-                                            chonBota.getPosY(),
+                                    environment.getShots().add(luke.getWeapon().fire(luke.getPosX(),
+                                            luke.getPosY(),
                                             direction));
                                 }
-                                /* ChonBota's Movements */
+                                /* luke's Movements */
                                 environment.getProtagonist().move(input);
                                 environment.checkBorders();
                             }
