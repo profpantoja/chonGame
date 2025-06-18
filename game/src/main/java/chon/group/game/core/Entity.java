@@ -1,6 +1,5 @@
 package chon.group.game.core;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -264,8 +263,8 @@ public abstract class Entity {
     /**
      * Moves the entity based on the movement commands provided.
      *
-     * @param movements a list of movement directions ("RIGHT", "LEFT", "UP",
-     *                  "DOWN")
+     * @param movements a list of movement directions ("RIGHT", "LEFT", "UP","DOWN")
+     *                  
      */
  public void move(Set<KeyboardKey> activeKeys) {
     if (activeKeys.contains(KeyboardKey.D) || activeKeys.contains(KeyboardKey.RIGHT)) {

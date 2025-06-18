@@ -63,27 +63,22 @@ public class Setup {
 
     private void setupInputHandlers() {
         scene.setOnKeyPressed(e -> {
-            try {
                 KeyboardKey key = KeyboardKey.valueOf(e.getCode().toString());
                 activeKeys.add(key); 
 
                 if (key == KeyboardKey.P) {
                     togglePause();
                 }
-
-            } catch (IllegalArgumentException ex) {
-                System.out.println("Tecla não mapeada: " + e.getCode());
-            }
+            
+                System.out.println("Tecla mapeada: " + e.getCode());
+            
         });
 
         scene.setOnKeyReleased(e -> {
-            try {
                 KeyboardKey key = KeyboardKey.valueOf(e.getCode().toString());
-                activeKeys.remove(key); 
-            } catch (IllegalArgumentException ex) {
-                ex.getStackTrace();
+                activeKeys.remove(key);             
             }
-        });
+        );
     }
 
     private void startGameLoop() {
@@ -157,10 +152,9 @@ public class Setup {
     }
 
     private void fireWeapon() {
-     KeyboardKey direction = chonBota.isFlipped() ? KeyboardKey.LEFT : KeyboardKey.RIGHT;
+        KeyboardKey direction = chonBota.isFlipped() ? KeyboardKey.LEFT : KeyboardKey.RIGHT;
     
-    // A chamada para fire() agora passa o enum.
-    environment.getShots().add(
+        environment.getShots().add(
         chonBota.getWeapon().fire(chonBota.getPosX(), chonBota.getPosY(), direction)
     );
     }
