@@ -3,6 +3,7 @@ package chon.group.game.domain.agent;
 import java.util.List;
 
 import chon.group.game.core.Entity;
+import chon.group.game.domain.environment.StatusProtagonist;
 import chon.group.game.messaging.Message;
 
 /**
@@ -15,11 +16,11 @@ public class Agent extends Entity {
     /* The time of the last hit taken. */
     private long lastHitTime = 0;
 
-    /* Flag to control the invulnerability status of the agent. */
-    private boolean invulnerable = false;
-
     /* Invulnerability (in milliseconds) */
     private final long INVULNERABILITY_COOLDOWN = 3000;
+
+    /* The agent's status */
+    private StatusProtagonist status = StatusProtagonist.ALIVE;
 
     /* The Agent's Weapon */
     private Weapon weapon;
@@ -81,24 +82,6 @@ public class Agent extends Entity {
     }
 
     /**
-     * Gets if the agent is invulnerable.
-     *
-     * @return if the agent is invulnerable
-     */
-    public boolean isInvulnerable() {
-        return invulnerable;
-    }
-
-    /**
-     * Sets the agent invulnerable status.
-     *
-     * @param invulnerable the new invulnerable status
-     */
-    public void setInvulnerable(boolean invulnerable) {
-        this.invulnerable = invulnerable;
-    }
-
-    /**
      * Gets the agent's weapon.
      *
      * @return its weapon.
@@ -126,6 +109,15 @@ public class Agent extends Entity {
     }
 
     /**
+     * Sets the agent's status.
+     *
+     * @param status the new status
+     */
+    public StatusProtagonist getStatus() {
+        return status;
+    }
+    
+    /**
      * Makes the agent take damage.
      * If health reaches 0, the game must end.
      *
@@ -133,23 +125,25 @@ public class Agent extends Entity {
      */
     @Override
     public void takeDamage(int damage, List<Message> messages) {
-        this.invulnerable = this.updateInvulnerability();
-        if (!this.invulnerable) {
-            super.takeDamage(damage, messages); 
-            this.lastHitTime = System.currentTimeMillis();
+        if (status == StatusProtagonist.INVULNERABLE || status == StatusProtagonist.DEAD) {
+            return;
+        }
+        super.takeDamage(damage, messages);
+        if (this.getHealth() <= 0) {
+            status = StatusProtagonist.DEAD;
+        } else {
+            status = StatusProtagonist.INVULNERABLE;
+            lastHitTime = System.currentTimeMillis();
         }
     }
-
-    /**
-     * Method to update the invulnerable status.
-     *
-     * @return if the agent is still invulnerable
-     */
-    private boolean updateInvulnerability() {
-        if (System.currentTimeMillis() - lastHitTime >= INVULNERABILITY_COOLDOWN) {
-            return false;
+    
+    public void update() {
+        if (status == StatusProtagonist.INVULNERABLE) {
+            long elapsedTime = System.currentTimeMillis() - lastHitTime;
+            if (elapsedTime > INVULNERABILITY_COOLDOWN) {
+                status = StatusProtagonist.ALIVE; 
+            }
         }
-        return true;
     }
-
+    
 }

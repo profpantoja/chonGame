@@ -1,8 +1,11 @@
 package chon.group.game.core;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
+import chon.group.game.domain.environment.KeyboardKey;
 import chon.group.game.messaging.Message;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
@@ -264,21 +267,24 @@ public abstract class Entity {
      * @param movements a list of movement directions ("RIGHT", "LEFT", "UP",
      *                  "DOWN")
      */
-    public void move(List<String> movements) {
-        if (movements.contains("RIGHT")) {
-            if (flipped)
-                this.flipImage();
-            setPosX(posX += speed);
-        } else if (movements.contains("LEFT")) {
-            if (!flipped)
-                this.flipImage();
-            setPosX(posX -= speed);
-        } else if (movements.contains("UP")) {
-            setPosY(posY -= speed);
-        } else if (movements.contains("DOWN")) {
-            setPosY(posY += speed);
+ public void move(Set<KeyboardKey> activeKeys) {
+    if (activeKeys.contains(KeyboardKey.D) || activeKeys.contains(KeyboardKey.RIGHT)) {
+        if (flipped) {
+            this.flipImage();
         }
+        posX += speed;
+    } else if (activeKeys.contains(KeyboardKey.A) || activeKeys.contains(KeyboardKey.LEFT)) {
+        if (!flipped) {
+            this.flipImage();
+        }
+        posX -= speed;
     }
+    if (activeKeys.contains(KeyboardKey.W) || activeKeys.contains(KeyboardKey.UP)) {
+        posY -= speed;
+    } else if (activeKeys.contains(KeyboardKey.S) || activeKeys.contains(KeyboardKey.DOWN)) {
+        posY += speed;
+    }
+}
 
     /**
      * Makes the entity chase a target based on its coordinates.
@@ -287,17 +293,21 @@ public abstract class Entity {
      * @param targetY the target's Y (vertical) position
      */
     public void chase(int targetX, int targetY) {
+        Set<KeyboardKey> chaseDirections = EnumSet.noneOf(KeyboardKey.class);
         if (targetX > this.posX) {
-            this.move(new ArrayList<String>(List.of("RIGHT")));
+            chaseDirections.add(KeyboardKey.RIGHT);
         } else if (targetX < this.posX) {
-            this.move(new ArrayList<String>(List.of("LEFT")));
+            chaseDirections.add(KeyboardKey.LEFT);
         }
         if (targetY > this.posY) {
-            this.move(new ArrayList<String>(List.of("DOWN")));
+            chaseDirections.add(KeyboardKey.DOWN);
         } else if (targetY < this.posY) {
-            this.move(new ArrayList<String>(List.of("UP")));
+            chaseDirections.add(KeyboardKey.UP);
         }
-    }
+        if (!chaseDirections.isEmpty()) {
+            this.move(chaseDirections);
+        }
+}
 
     /**
      * Makes the Entity take damage.

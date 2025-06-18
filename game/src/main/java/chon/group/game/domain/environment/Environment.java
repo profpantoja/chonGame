@@ -410,7 +410,6 @@ public class Environment {
                         }
                     }
                 }
-                shot.move(new ArrayList<>(List.of(shot.getDirection())));
             }
         }
     }

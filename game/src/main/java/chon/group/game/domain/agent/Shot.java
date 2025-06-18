@@ -3,16 +3,17 @@ package chon.group.game.domain.agent;
 import java.util.List;
 
 import chon.group.game.core.Entity;
+import chon.group.game.domain.environment.KeyboardKey;
 import chon.group.game.messaging.Message;
 
 public class Shot extends Entity {
 
     private boolean destructible = false;
-    private String direction;
+    private KeyboardKey direction;
     private int damage;
 
     public Shot(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped,
-            int damage, String direction) {
+            int damage, KeyboardKey direction) {
         super(posX, posY, height, width, speed, health, pathImage, flipped);
         this.damage = damage;
         this.direction = direction;
@@ -26,11 +27,11 @@ public class Shot extends Entity {
         this.destructible = destructible;
     }
 
-    public String getDirection() {
+    public KeyboardKey getDirection() {
         return direction;
     }
 
-    public void setDirection(String direction) {
+    public void setDirection(KeyboardKey direction) {
         this.direction = direction;
     }
 

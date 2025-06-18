@@ -1,6 +1,7 @@
 package chon.group.game.domain.agent;
 
 import chon.group.game.core.Entity;
+import chon.group.game.domain.environment.KeyboardKey;
 
 public abstract class Weapon extends Entity {
 
@@ -8,9 +9,9 @@ public abstract class Weapon extends Entity {
         super(posX, posY, height, width, speed, health, pathImage, flipped);
     }
 
-    protected abstract Shot createShot(int posX, int posY, String direction);
+    protected abstract Shot createShot(int posX, int posY, KeyboardKey direction);
 
-    public Shot fire(int posX, int posY, String direction) {
+    public Shot fire(int posX, int posY, KeyboardKey direction) {
         return this.createShot(posX, posY, direction);
     }
 

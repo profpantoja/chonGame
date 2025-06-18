@@ -2,6 +2,7 @@ package chon.group.game.domain.agent;
 
 import java.util.List;
 
+import chon.group.game.domain.environment.KeyboardKey;
 import chon.group.game.messaging.Message;
 
 public class Fireball extends Weapon {
@@ -12,8 +13,8 @@ public class Fireball extends Weapon {
     }
 
     @Override
-    protected Shot createShot(int posX, int posY, String direction) {
-        if (direction.equals("RIGHT"))
+    protected Shot createShot(int posX, int posY, KeyboardKey direction) {
+        if (direction == KeyboardKey.RIGHT)
             posX += 75 + 1;
         else
             posX -= 75 + 1;

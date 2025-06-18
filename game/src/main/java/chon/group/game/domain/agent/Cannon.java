@@ -2,6 +2,7 @@ package chon.group.game.domain.agent;
 
 import java.util.List;
 
+import chon.group.game.domain.environment.KeyboardKey;
 import chon.group.game.messaging.Message;
 
 public class Cannon extends Weapon {
@@ -11,8 +12,8 @@ public class Cannon extends Weapon {
     }
 
     @Override
-    protected Shot createShot(int posX, int posY, String direction) {
-        if (direction.equals("RIGHT"))
+    protected Shot createShot(int posX, int posY, KeyboardKey direction) {
+        if (direction == KeyboardKey.RIGHT)
             posX += 64 + 1;
         else
             posX -= 64 + 1;
