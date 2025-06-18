@@ -157,31 +157,34 @@ public class Engine extends Application {
                             /* ChonBota Only Moves if the Player Press Something */
                             /* Update the protagonist's movements if input exists */
                             if (!input.isEmpty()) {
-                                
                                 /* ChonBota's Movements */
                                 environment.getProtagonist().move(input);
-                                
-                                /* Update the camera position based on the protagonist's position */ 
-                                double cameraTargetX = environment.getProtagonist().getPosX() - (windowWidth / 1.4); // in this part of code, we can choice when the camera moves with the protagonist
 
-                                if (cameraTargetX < 0) 
-                                    cameraTargetX = 0;
-                                
-                                double maxCameraX = environment.getWidth() - windowWidth;
-                                if (cameraTargetX > maxCameraX) 
-                                    cameraTargetX = maxCameraX;
-                                
-                                environment.setCameraX(cameraTargetX);
+                                // Calculating the camera boundaries based on the window width 
+                                double rightBoundary = environment.getCameraX() + windowWidth * 0.80; // 85% right of the window width
+                                double leftBoundary = environment.getCameraX() + windowWidth * 0.15; // 15% left of the window width
 
-                                /* ChonBota's Camera Movements */
-                                /* If the player presses the right or left arrow keys, move the camera */
-                                int speed = environment.getProtagonist().getSpeed();
-                                if (input.contains("D") || input.contains("RIGHT")) 
-                                    environment.setCameraX(environment.getCameraX() + speed);
-                                
-                                if (input.contains("A") || input.contains("LEFT")) {    
-                                    if(environment.getCameraX() > 0) 
-                                        environment.setCameraX(environment.getCameraX() - speed);
+                                double protagonistSpeed = environment.getProtagonist().getSpeed();
+
+                                // if protagonist is moving to the 85% right, the camera moves right 
+                                if (environment.getProtagonist().getPosX() > rightBoundary) {
+                                    double newCameraX = environment.getCameraX() + protagonistSpeed;
+                                    double maxCameraX = environment.getWidth() - windowWidth;
+                                    
+                                    if (newCameraX > maxCameraX) {
+                                        environment.setCameraX(maxCameraX);
+                                    } else {
+                                        environment.setCameraX(newCameraX);
+                                    }
+                                } 
+                                else if (environment.getProtagonist().getPosX() < leftBoundary) {
+                                    double newCameraX = environment.getCameraX() - protagonistSpeed;
+
+                                    if (newCameraX < 0) {
+                                        environment.setCameraX(0);
+                                    } else {
+                                        environment.setCameraX(newCameraX);
+                                    }
                                 }
 
                                 /* ChonBota Shoots Somebody Who Outdrew You */
