@@ -80,10 +80,12 @@ public class Engine extends Application {
             environment.setProtagonist(chonBota);
             environment.getAgents().add(chonBot);
             
-            // necessita de uma UI de background menu para usar a função abaixo
+            // necessita de uma UI de background menu para usar a método abaixo
+            // enquanto não houver setMainMenuImage, o background será o padrão
             // environment.setPauseImage("/images/environment/pause.png");
 
-             // necessita de um background usar a função abaixo
+             // necessita de um background usar a método abaixo
+             // enquanto não houver setMainMenuImage, o background será o padrão
             // environment.setMainMenuImage("/images/environment/pause.png");
             
             environment.setGameOverImage("/images/environment/gameover.png");
@@ -184,7 +186,7 @@ public class Engine extends Application {
                                 environment.getProtagonist().move(input);
                                 
                                 /* Update the camera position based on the protagonist's position */ 
-                                double cameraTargetX = environment.getProtagonist().getPosX() - (windowWidth / 2);
+                                double cameraTargetX = environment.getProtagonist().getPosX() - (windowWidth / 1.4); // in this part of code, we can choice when the camera moves with the protagonist
 
                                 if (cameraTargetX < 0) 
                                     cameraTargetX = 0;

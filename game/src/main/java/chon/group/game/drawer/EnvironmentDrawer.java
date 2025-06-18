@@ -99,10 +99,5 @@ public interface EnvironmentDrawer {
      * Draws the win screen when the player wins the game.
      */
     void drawWinScreen();
-
-    /**
-     * Draws the main menu of the game.
-     */
-    void drawMainMenu();
     
 }

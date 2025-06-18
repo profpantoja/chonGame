@@ -153,11 +153,6 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 (int) drawer.getCanvasWidth(),   
                 (int) drawer.getCanvasHeight());
         }
-
-        @Override
-        public void drawMainMenu(){
-            drawer.drawMainMenu(this.environment.getPauseImage(), "Main Menu",0,"Start","Exit");
-        }
         
         /**
          * Draws damage messaages that appear when agents take damage.
