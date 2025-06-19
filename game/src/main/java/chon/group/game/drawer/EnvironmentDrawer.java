@@ -7,7 +7,6 @@ package chon.group.game.drawer;
  * displaying UI elements like life bars and status panels.
  */
 public interface EnvironmentDrawer {
-
     /**
      * Clears the environment, removing all elements.
      */

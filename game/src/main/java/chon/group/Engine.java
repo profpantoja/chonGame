@@ -8,7 +8,9 @@ import chon.group.game.domain.agent.Fireball;
 import chon.group.game.domain.agent.Weapon;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.drawer.EnvironmentDrawer;
+import chon.group.game.drawer.JavaFxDrawer;
 import chon.group.game.drawer.JavaFxMediator;
+import chon.group.game.drawer.MainMenu;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -16,6 +18,7 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 
@@ -95,13 +98,16 @@ public class Engine extends Application {
             Canvas canvas = new Canvas(windowWidth, windowHeight);
             GraphicsContext gc = canvas.getGraphicsContext2D();
             EnvironmentDrawer mediator = new JavaFxMediator(environment, gc);
+
+            JavaFxDrawer drawer = new JavaFxDrawer(gc,null);
+            Image menuBackground = new Image(getClass().getResourceAsStream("/images/environment/menu_background.png")); 
+            MainMenu mainMenu = new MainMenu(drawer, menuBackground);
             
             /* Set up the scene and stage */
             StackPane root = new StackPane();
             Scene scene = new Scene(root, windowWidth, windowHeight);
             theStage.setTitle("Chon: The Learning Game");
             theStage.setScene(scene);
-            mediator.drawMainMenu();
             
             root.getChildren().add(canvas);
             theStage.show();
@@ -167,8 +173,9 @@ public class Engine extends Application {
                             mediator.drawAgentsSideScrolling();
                             mediator.drawMessagesSideScrolling();
                             mediator.drawShotsSideScrolling();
-                            /* Rendering the Pause Screen */
-                            mediator.drawPauseScreen();
+                            /* Rendering the Pause Screen (needs to be done)*/
+                            mainMenu.draw();
+                            mainMenu.attachToScene(scene);
                         } else if(win){
                             /* If the player won the game */
                             mediator.drawBackgroundSideScrolling();
