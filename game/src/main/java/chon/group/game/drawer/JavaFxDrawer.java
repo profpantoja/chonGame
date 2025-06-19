@@ -240,15 +240,15 @@ public class JavaFxDrawer {
     /**
      * Desenha o menu principal do jogo, com um fundo que preenche a tela inteira.
      *
-     * @param fullScreenBackground A imagem para preencher toda a tela. Se for nula, usa um fundo preto.
+     * @param backgroundImage A imagem para preencher toda a tela. Se for nula, usa um fundo preto.
      * @param title O título do menu central.
      * @param selectedIndex O índice da opção atualmente selecionada.
      * @param options As opções de texto para o menu central.
      */
-    public void drawMainMenu(Image fullScreenBackground, String title, int selectedIndex, String... options) {
+    public void drawMainMenu(Image backgroundImage, String title, int selectedIndex, String... options) {
         // 1. Desenha a imagem de fundo para preencher toda a tela
-        if (fullScreenBackground != null && !fullScreenBackground.isError()) {
-            gc.drawImage(fullScreenBackground, 0, 0, getCanvasWidth(), getCanvasHeight());
+        if (backgroundImage != null && !backgroundImage.isError()) {
+            gc.drawImage(backgroundImage, 0, 0, getCanvasWidth(), getCanvasHeight());
         } else {
             // Se não houver imagem, desenha um fundo preto sólido
             gc.setFill(Color.BLACK);
