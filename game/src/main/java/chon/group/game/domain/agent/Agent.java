@@ -24,6 +24,10 @@ public class Agent extends Entity {
     /* The Agent's Weapon */
     private Weapon weapon;
 
+    /* Energy system */
+    private double energy;
+    private final double fullEnergy;
+
     /**
      * Constructor to initialize the agent properties.
      *
@@ -37,6 +41,8 @@ public class Agent extends Entity {
      */
     public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage) {
         super(posX, posY, height, width, speed, health, pathImage);
+        this.energy = 1.0;
+        this.fullEnergy = 1.0;
     }
 
     /**
@@ -53,6 +59,8 @@ public class Agent extends Entity {
      */
     public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped) {
         super(posX, posY, height, width, speed, health, pathImage, flipped);
+        this.energy = 1.0;
+        this.fullEnergy = 1.0;
     }
 
     /**
@@ -117,6 +125,51 @@ public class Agent extends Entity {
     }
 
     /**
+     * Gets the current energy level (0.0 to 1.0).
+     *
+     * @return current energy level
+     */
+    public double getEnergy() {
+        return energy;
+    }
+
+    /**
+     * Gets the maximum energy capacity.
+     *
+     * @return maximum energy
+     */
+    public double getFullEnergy() {
+        return fullEnergy;
+    }
+
+    /**
+     * Consumes a specified amount of energy.
+     *
+     * @param amount the amount of energy to consume
+     */
+    public void consumeEnergy(double amount) {
+        this.energy = Math.max(0, this.energy - amount);
+    }
+
+    /**
+     * Recovers a specified amount of energy.
+     *
+     * @param amount the amount of energy to recover
+     */
+    public void recoverEnergy(double amount) {
+        this.energy = Math.min(this.fullEnergy, this.energy + amount);
+    }
+
+    /**
+     * Checks if energy is depleted.
+     *
+     * @return true if energy is 0 or less
+     */
+    public boolean isEnergyDepleted() {
+        return this.energy <= 0;
+    }
+
+    /**
      * Gets if the agent is dead.
      *
      * @return if the agent is dead
@@ -151,5 +204,4 @@ public class Agent extends Entity {
         }
         return true;
     }
-
 }

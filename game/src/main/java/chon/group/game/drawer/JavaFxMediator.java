@@ -1,7 +1,5 @@
 package chon.group.game.drawer;
 
-import java.util.Iterator;
-
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Shot;
 import chon.group.game.domain.environment.Environment;
@@ -11,40 +9,23 @@ import javafx.scene.paint.Color;
 
 /**
  * The {@code JavaFxMediator} class serves as an intermediary for rendering the
- * game environment
- * and its elements using JavaFX. It coordinates the interaction between the
- * {@link Environment}
- * and the {@link JavaFxDrawer} to manage graphical rendering.
+ * game environment and its elements using JavaFX.
  */
 public class JavaFxMediator implements EnvironmentDrawer {
 
     private final Environment environment;
     private final JavaFxDrawer drawer;
 
-    /**
-     * Constructs a JavaFxMediator with the specified environment and graphics
-     * context.
-     *
-     * @param environment The game environment containing agents and the
-     *                    protagonist.
-     * @param gc          The {@link GraphicsContext} used for rendering.
-     */
     public JavaFxMediator(Environment environment, GraphicsContext gc) {
         this.environment = environment;
         this.drawer = new JavaFxDrawer(gc, this);
     }
 
-    /**
-     * Clears the environment by erasing all drawn elements on the screen.
-     */
     @Override
     public void clearEnvironment() {
         drawer.clearScreen(this.environment.getWidth(), this.environment.getHeight());
     }
 
-    /**
-     * Draws the background image of the environment.
-     */
     @Override
     public void drawBackground() {
         drawer.drawImage(this.environment.getImage(),
@@ -54,69 +35,86 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 this.environment.getHeight());
     }
 
-    /**
-     * Renders all agents and the protagonist within the environment,
-     * including their health bars and status panels.
-     */
     @Override
     public void drawAgents() {
+        // Desenha todos os agentes
         for (Agent agent : this.environment.getAgents()) {
             drawer.drawImage(agent.getImage(),
                     agent.getPosX(),
                     agent.getPosY(),
                     agent.getWidth(),
                     agent.getHeight());
+            
+            // Barra de energia (amarela)
+            drawer.drawEnergyBar(agent.getEnergy(),
+                    agent.getFullEnergy(),
+                    agent.getWidth(),
+                    agent.getPosX(),
+                    agent.getPosY(),
+                    Color.YELLOW);
+            
+            // Barra de vida (verde)
             drawer.drawLifeBar(agent.getHealth(),
                     agent.getFullHealth(),
                     agent.getWidth(),
                     agent.getPosX(),
                     agent.getPosY(),
-                    Color.DARKRED);
+                    Color.GREEN);
         }
-        drawer.drawImage(this.environment.getProtagonist().getImage(),
-                this.environment.getProtagonist().getPosX(),
-                this.environment.getProtagonist().getPosY(),
-                this.environment.getProtagonist().getWidth(),
-                this.environment.getProtagonist().getHeight());
-        drawer.drawLifeBar(this.environment.getProtagonist().getHealth(),
-                this.environment.getProtagonist().getFullHealth(),
-                this.environment.getProtagonist().getWidth(),
-                this.environment.getProtagonist().getPosX(),
-                this.environment.getProtagonist().getPosY(),
-                Color.GREEN);
-        drawer.drawStatusPanel(this.environment.getProtagonist().getPosX(),
-                this.environment.getProtagonist().getPosY());
-        drawer.drawStatusPanel(this.environment.getProtagonist().getPosX(),
-                this.environment.getProtagonist().getPosY());
+
+        // Desenha o protagonista
+        Agent protagonist = this.environment.getProtagonist();
+        if (protagonist != null) {
+            drawer.drawImage(protagonist.getImage(),
+                    protagonist.getPosX(),
+                    protagonist.getPosY(),
+                    protagonist.getWidth(),
+                    protagonist.getHeight());
+            
+            // Barra de energia do protagonista (amarela)
+            drawer.drawEnergyBar(protagonist.getEnergy(),
+                    protagonist.getFullEnergy(),
+                    protagonist.getWidth(),
+                    protagonist.getPosX(),
+                    protagonist.getPosY(),
+                    Color.YELLOW);
+            
+            // Barra de vida do protagonista (verde)
+            drawer.drawLifeBar(protagonist.getHealth(),
+                    protagonist.getFullHealth(),
+                    protagonist.getWidth(),
+                    protagonist.getPosX(),
+                    protagonist.getPosY(),
+                    Color.GREEN);
+            
+            drawer.drawStatusPanel(protagonist.getPosX(),
+                    protagonist.getPosY());
+        }
     }
 
-    /**
-     * Draws the protagonist's life bar on the screen.
-     */
     @Override
     public void drawLifeBar() {
-        drawer.drawLifeBar(
-                this.environment.getProtagonist().getHealth(),
-                this.environment.getProtagonist().getFullHealth(),
-                this.environment.getProtagonist().getWidth(),
-                this.environment.getProtagonist().getPosX(),
-                this.environment.getProtagonist().getPosY(),
-                Color.GREEN);
+        Agent protagonist = this.environment.getProtagonist();
+        if (protagonist != null) {
+            drawer.drawLifeBar(
+                    protagonist.getHealth(),
+                    protagonist.getFullHealth(),
+                    protagonist.getWidth(),
+                    protagonist.getPosX(),
+                    protagonist.getPosY(),
+                    Color.GREEN);
+        }
     }
 
-    /**
-     * Draws the protagonist's status panel on the screen.
-     */
     @Override
     public void drawStatusPanel() {
-        drawer.drawStatusPanel(this.environment.getProtagonist().getPosX(),
-                this.environment.getProtagonist().getPosY());
+        Agent protagonist = this.environment.getProtagonist();
+        if (protagonist != null) {
+            drawer.drawStatusPanel(protagonist.getPosX(),
+                    protagonist.getPosY());
+        }
     }
 
-    /**
-     * Draws the pause screen overlay, displaying a pause image centered within the
-     * environment.
-     */
     @Override
     public void drawPauseScreen() {
         drawer.drawScreen(this.environment.getPauseImage(),
@@ -126,28 +124,18 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 this.environment.getHeight());
     }
 
-    /**
-     * Draws the pause screen overlay, displaying a pause image centered within the
-     * environment.
-     */
     @Override
     public void drawGameOver() {
         drawer.drawScreen(this.environment.getGameOverImage(),
-                (int) this.environment.getPauseImage().getWidth(),
-                (int) this.environment.getPauseImage().getHeight(),
+                (int) this.environment.getGameOverImage().getWidth(),
+                (int) this.environment.getGameOverImage().getHeight(),
                 this.environment.getWidth(),
                 this.environment.getHeight());
     }
 
-    /**
-     * Draws damage messaages that appear when agents take damage.
-     * The message float upward and fade out over time.
-     */
     @Override
     public void drawMessages() {
-        Iterator<Message> iterator = this.environment.getMessages().iterator();
-        while (iterator.hasNext()) {
-            Message message = iterator.next();
+        for (Message message : this.environment.getMessages()) {
             drawer.drawMessages(message.getSize(),
                     message.getOpacity(),
                     Color.BLACK,
@@ -160,9 +148,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
 
     @Override
     public void drawShots() {
-        Iterator<Shot> iterator = this.environment.getShots().iterator();
-        while (iterator.hasNext()) {
-            Shot shot = iterator.next();          
+        for (Shot shot : this.environment.getShots()) {
             drawer.drawImage(shot.getImage(),
                     shot.getPosX(),
                     shot.getPosY(),
@@ -170,5 +156,4 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     shot.getHeight());
         }
     }
-
 }
