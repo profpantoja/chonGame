@@ -101,7 +101,6 @@ public class Engine extends Application {
             Scene scene = new Scene(root, windowWidth, windowHeight);
             theStage.setTitle("Chon: The Learning Game");
             theStage.setScene(scene);
-            mediator.drawMainMenu();
             
             root.getChildren().add(canvas);
             theStage.show();
