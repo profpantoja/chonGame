@@ -40,6 +40,8 @@ public class Engine extends Application {
     /* If the game is paused or not. */
     private boolean isPaused = false;
     private boolean win = false;
+    private int currentRoom = 1;
+    
 
     /**
      * Main entry point of the application.
@@ -71,6 +73,7 @@ public class Engine extends Application {
             
             /* Initialize the game environment and agents */
             Environment environment = new Environment(0, 0,4096,768, "/images/environment/castle.png");
+
             Agent chonBota = new Agent(100, 390, 90, 65, 5, 1000, "/images/agents/chonBota.png", false);
             Weapon cannon = new Cannon(400, 390, 0, 0, 5, 0, "", false);
             Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false);
@@ -101,7 +104,8 @@ public class Engine extends Application {
             Scene scene = new Scene(root, windowWidth, windowHeight);
             theStage.setTitle("Chon: The Learning Game");
             theStage.setScene(scene);
-            mediator.drawMainMenu();
+            
+            //mediator.drawMainMenu();
             
             root.getChildren().add(canvas);
             theStage.show();
@@ -146,8 +150,18 @@ public class Engine extends Application {
                 public void handle(long arg0) {
                     mediator.clearEnvironmentSideScrolling();
                     
-                    /* Check if the protagonist win */
-                    if (environment.getAgents().isEmpty()) win = true;
+                    /* Check if all enemies are dead */
+                    if (environment.getAgents().isEmpty()) {
+                        if (currentRoom == 1) {
+                            // Change to the second room
+                            Agent newChonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
+                            environment.roomChanger("/images/environment/mountain.png", newChonBot);
+                            currentRoom = 2;
+                        } else if (currentRoom == 2) {
+                            // Now the player has won the game
+                            win = true;
+                        }
+                    }
 
                     /* Branching the Game Loop */
                     /* If the agent died in the last loop */
