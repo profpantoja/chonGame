@@ -211,6 +211,7 @@ public class JavaFxDrawer {
         gc.setFill(Color.rgb(0, 0, 0, 0.7));
         gc.fillRect(0, 0, getCanvasWidth(), getCanvasHeight());
         
+        // draw the background image if available, otherwise use a solid color
         if (backgroundImage != null && !backgroundImage.isError()) {
             gc.drawImage(backgroundImage, menuX, menuY, menuWidth, menuHeight);
         } else {

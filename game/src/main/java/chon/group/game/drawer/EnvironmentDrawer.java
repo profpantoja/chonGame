@@ -33,9 +33,6 @@ public interface EnvironmentDrawer {
      */
     void drawStatusPanel();
 
-    /**
-     * Draws the pause screen when the game is paused.
-     */
     void drawPauseScreen();
 
     /**
