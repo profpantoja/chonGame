@@ -15,23 +15,23 @@ public class Setup {
      * @return um objeto Environment totalmente configurado.
      */
     public static Environment createEnvironment() {
-        // Dimensões do mundo e da janela
+        
         int worldWidth = 4096;
         int worldHeight = 768;
 
         Environment environment = new Environment(0, 0, worldWidth, worldHeight, "/images/environment/castle.png");
         
-        // Criando o protagonista
+        // adding protagonist agent
         Agent chonBota = new Agent(100, 390, 90, 65, 5, 1000, "/images/agents/chonBota.png", false);
         Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false); 
         chonBota.setWeapon(fireball);
         environment.setProtagonist(chonBota);
 
-        // Criando inimigos
+        // adding enemy agents
         Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
         environment.getAgents().add(chonBot);
         
-        // Configurando imagens de estado do jogo
+        // configure ambient images
         environment.setPauseImage("");             
         environment.setGameOverImage("/images/environment/gameover.png");
         environment.setWinImage("/images/environment/gameover.png");
@@ -51,5 +51,6 @@ public class Setup {
             System.err.println("Falha ao carregar imagem: " + path);
             return null; // Retorna nulo se a imagem não for encontrada
         }
-    }
+        
+    }    
 }
