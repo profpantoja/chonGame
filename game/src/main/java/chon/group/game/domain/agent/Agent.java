@@ -14,12 +14,12 @@ public class Agent extends Entity {
 
     /* The time of the last hit taken. */
     private long lastHitTime = 0;
-
+    
     /* Flag to control the invulnerability status of the agent. */
     private boolean invulnerable = false;
 
     /* Invulnerability (in milliseconds) */
-    private final long INVULNERABILITY_COOLDOWN = 3000;
+    private final long INVULNERABILITY_COOLDOWN = 1500;
 
     /* The Agent's Weapon */
     private Weapon weapon;
@@ -139,6 +139,49 @@ public class Agent extends Entity {
             this.lastHitTime = System.currentTimeMillis();
         }
     }
+
+    public void checkCollision(Collision collision) {
+        if (getPosX() < collision.getX() + collision.getWidth() &&
+            getPosX() + getWidth() > collision.getX() &&
+            getPosY() < collision.getY() + collision.getHeight() &&
+            getPosY() + getHeight() > collision.getY()) {
+
+            float dx = (getPosX() + getWidth() / 2.0f) - (collision.getX() + collision.getWidth() / 2.0f);
+            float dy = (getPosY() + getHeight() / 2.0f) - (collision.getY() + collision.getHeight() / 2.0f);
+
+            float halfWidths = (getWidth() / 2.0f) + (collision.getWidth() / 2.0f);
+            float halfHeights = (getHeight() / 2.0f) + (collision.getHeight() / 2.0f);
+
+            float overlapX = halfWidths - Math.abs(dx);
+            float overlapY = halfHeights - Math.abs(dy);
+
+            if (overlapX < overlapY) {
+                int fix = (int)Math.ceil(overlapX);
+                if (dx > 0) {
+                    setPosX(getPosX() + fix); // empurra pra direita
+                    System.out.println("Colisão pela esquerda");
+                } else {
+                    setPosX(getPosX() - fix); // empurra pra esquerda
+                    System.out.println("Colisão pela direita");
+                }
+            } else {
+                int fix = (int)Math.ceil(overlapY);
+                if (dy > 0) {
+                    setPosY(getPosY() + fix); // empurra pra baixo
+                    System.out.println("Colisão por cima");
+                } else {
+                    setPosY(getPosY() - fix); // empurra pra cima
+                    System.out.println("Colisão por baixo");
+                }
+            }
+
+        } else {
+            System.out.println("Sem colisão.");
+        }
+    }
+
+
+
 
     /**
      * Method to update the invulnerable status.
