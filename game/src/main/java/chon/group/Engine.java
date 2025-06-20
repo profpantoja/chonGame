@@ -2,8 +2,11 @@ package chon.group;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
 
 import chon.group.game.domain.agent.Agent;
+import chon.group.game.domain.agent.Shot;
+import chon.group.game.domain.environment.Collision;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.domain.environment.GameStatus;
 import chon.group.game.domain.environment.MainMenu;
@@ -75,7 +78,7 @@ public class Engine extends Application {
         // Initialize Menus
         Image menuBackground = Setup.loadImage("/images/environment/menu_background.png");
         this.mainMenu = new MainMenu(drawer, menuBackground);
-        this.menuPause = new MenuPause(drawer, environment.getPauseImage());
+        this.menuPause = new MenuPause(drawer, environment.getPauseImage());        
 
         // Setup Menu Actions
         mainMenu.setOnStartGame(() -> {
@@ -175,34 +178,7 @@ public class Engine extends Application {
                     // Verify if the game is over or if the player has won
                     if (environment.getProtagonist().isDead()) {
                         gameStatus = GameStatus.GAME_OVER;
-                        } else if (environment.getAgents().isEmpty()) {
-                            if (currentRoom == 1) {
-                            // Change to the second room
-                            Agent Boss = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
-                            environment.roomChanger("/images/environment/mountain.png", Boss);
-                            currentRoom = 2;
-                            
-                        } else if (currentRoom == 2) {
-                            // Now the player has won the game
-                            gameStatus = GameStatus.VICTORY;
-                        }
                     }
-
-                   /*  
-
-                        if (currentRoom == 2 && environment.getAgents().isEmpty()) {
-                            win = true;
-                        
-                        } else if (currentRoom == 1) {
-                            // O jogador precisa estar no final da sala E todos os inimigos devem ter sido derrotados.
-                            if (environment.getAgents().isEmpty() && environment.getProtagonist().getPosX() >= (0.9 * environment.getWidth())) {
-                                System.out.println("All enemies are dead. Proceeding to the next room.");
-                                Agent newChonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
-                                environment.loadNextRoom("/images/environment/mountain.png", newChonBot);
-                                currentRoom = 2;
-                            }
-                        } */
-
 
                     break;
                 case PAUSED:
@@ -222,11 +198,8 @@ public class Engine extends Application {
     }
     
     private void updateGameLogic() {
-        
-        /* Check if all enemies are dead */
-       if (environment.getAgents().isEmpty()) {
-           
-       }
+
+        verifyGameStatus();
         
         // Protagonist movement and actions
         if (!gameInput.isEmpty()) {
@@ -245,7 +218,8 @@ public class Engine extends Application {
         environment.getAgents().forEach(agent -> 
             agent.chase(environment.getProtagonist().getPosX(), environment.getProtagonist().getPosY()));
 
-        // update all agents and their shots
+        // update all agents and their shots, and check if have collisions 
+        checkCollisions();
         environment.detectCollision();
         environment.updateShots();
         environment.updateMessages();
@@ -259,6 +233,7 @@ public class Engine extends Application {
         mediator.drawAgentsSideScrolling();
         mediator.drawShotsSideScrolling();
         mediator.drawMessagesSideScrolling();
+        mediator.drawCollisions();
     }
 
     /**
@@ -280,5 +255,50 @@ public class Engine extends Application {
             double newCameraX = cameraX - protagonistSpeed;
             environment.setCameraX(Math.max(newCameraX, 0));
         }
+    }
+
+    private void verifyGameStatus() {
+        if (environment.getProtagonist().isDead()) gameStatus = GameStatus.GAME_OVER;
+        else if (currentRoom == 2 && environment.getAgents().isEmpty()) gameStatus = GameStatus.VICTORY;
+
+        else if (currentRoom == 1 && environment.getAgents().isEmpty() && environment.getProtagonist().getPosX() >= (0.9 * environment.getWidth())) {
+            System.out.println("Avançando para a sala do chefe...");
+            Agent boss = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
+            environment.loadNextRoom("/images/environment/mountain.png", boss);
+            currentRoom = 2;
+        }
+    }
+
+    public void checkCollisions(){
+         Iterator<Collision> it = environment.getCollisions().iterator();
+            while (it.hasNext()) {
+                Collision collision = it.next();
+
+                Iterator<Shot> itShot = environment.getShots().iterator();
+                while (itShot.hasNext()) {
+                    Shot tempShot = itShot.next();
+                    tempShot.checkCollision(collision);
+                    if (collision.isDestroy()) {
+                        itShot.remove();
+                        break;
+                    }    
+                }
+                if (collision.isDestroy()) {
+                    it.remove(); 
+                }
+                
+                for (Agent agent : environment.getAgents()) {
+                    agent.checkCollision(collision, environment);
+                    if (collision.isDestroy()) break;
+                }
+                if (collision.isDestroy()) {
+                    it.remove(); 
+                }
+
+                environment.getProtagonist().checkCollision(collision, environment);
+                if (collision.isDestroy()) {
+                    it.remove(); 
+                }
+            }
     }
 }

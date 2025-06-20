@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Shot;
+import chon.group.game.domain.environment.Collision;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.messaging.Message;
 import javafx.scene.canvas.GraphicsContext;
@@ -101,6 +102,20 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 this.environment.getProtagonist().getPosY());
     }
     
+    /**
+     * Renders all collisions within the environment,
+     */
+    @Override
+    public void drawCollisions() {
+        for (Collision collision : this.environment.getCollisions()) {
+            drawer.drawImage(collision.getImage(),
+                    collision.getX(),
+                    collision.getY(),
+                    collision.getWidth(),
+                    collision.getHeight());
+        }
+    }
+
     /**
      * Draws the protagonist's life bar on the screen.
      */
