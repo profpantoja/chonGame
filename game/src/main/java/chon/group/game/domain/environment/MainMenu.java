@@ -7,32 +7,32 @@ import javafx.scene.input.KeyCode;
 public class MainMenu {
     
     private int selectedOption = 0;
-    private final String[] options = { "Iniciar Jogo", "Opções", "Sair" };
-    private JavaFxDrawer drawer; // Corrigido
-    private Image backgroundImage; // Corrigido
+    private final String[] options = { "Start Game", "Exit" };
+    private JavaFxDrawer drawer; 
+    private Image backgroundImage; 
 
     // Actions for each menu option
     private Runnable onStartGame;
-    private Runnable onOptions;
     private Runnable onExit;
 
     public MainMenu(JavaFxDrawer drawer, Image backgroundImage) {
-        this.drawer = drawer; // Corrigido: armazena a instância do drawer
+        this.drawer = drawer;
         this.backgroundImage = backgroundImage;
     }
 
+    // Draws the main menu on the screen 
     public void draw() {
-        drawer.drawMainMenu(backgroundImage, "Chon: The Learning Game", selectedOption, options);
+        drawer.drawMainMenu(backgroundImage, "Chon Game", selectedOption, options);
     }
 
-    // A Engine vai chamar este método quando o input for relevante para este menu
+    // Handles input for navigating the menu
     public void handleInput(KeyCode code) {
         switch (code) {
             case UP:
                 selectedOption = (selectedOption - 1 + options.length) % options.length;
                 break;
             case DOWN:
-                selectedOption = (selectedOption + 1) % options.length;
+                selectedOption = (selectedOption + 1) % options.length; 
                 break;
             case ENTER:
                 executeSelectedOption();
@@ -42,16 +42,30 @@ public class MainMenu {
         }
     }
 
+    // Executes the action associated with the selected menu option
     public void executeSelectedOption() {
         switch (selectedOption) {
-            case 0: if (onStartGame != null) onStartGame.run(); break;
-            case 1: if (onOptions != null) onOptions.run(); break;
-            case 2: if (onExit != null) onExit.run(); break;
+            case 0: 
+                if (onStartGame != null) 
+                    onStartGame.run(); 
+                break;
+            case 1: 
+                if (onExit != null)
+                    onExit.run();  
+                break;
         }
     }
     
-    public void setOnStartGame(Runnable onStartGame) { this.onStartGame = onStartGame; }
-    public void setOnOptions(Runnable onOptions) { this.onOptions = onOptions; }
-    public void setOnExit(Runnable onExit) { this.onExit = onExit; }
-    public void reset() { this.selectedOption = 0; }
+
+    // Setters for the actions to be executed when an option is selected
+    
+    public void setOnStartGame(Runnable onStartGame) { 
+        this.onStartGame = onStartGame; 
+    }
+    public void setOnExit(Runnable onExit){ 
+        this.onExit = onExit;    
+    }
+    public void reset(){    
+        this.selectedOption = 0; 
+    }
 }

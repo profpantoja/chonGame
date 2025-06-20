@@ -255,17 +255,8 @@ public class JavaFxDrawer {
             gc.fillRect(0, 0, getCanvasWidth(), getCanvasHeight());
         }
 
-        // 2. Desenha o menu central por cima do fundo
-        double menuWidth = 350;
         double menuHeight = 150 + (options.length * 50);
-        double menuX = (getCanvasWidth() - menuWidth) / 2;
         double menuY = (getCanvasHeight() - menuHeight) / 2;
-
-        gc.setFill(Color.rgb(40, 40, 60, 0.9));
-        gc.fillRect(menuX, menuY, menuWidth, menuHeight);
-        gc.setStroke(Color.rgb(150, 150, 180));
-        gc.setLineWidth(2);
-        gc.strokeRect(menuX, menuY, menuWidth, menuHeight);
         
         // 3. Desenha o texto do menu (título e opções)
         // Título

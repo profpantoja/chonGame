@@ -7,7 +7,7 @@ import javafx.scene.input.KeyCode;
 public class MenuPause {
 
     private int selectedOptionIndex = 0;
-    private final String[] options = {"Continuar", "Opções", "Sair para o Menu"};
+    private final String[] options = {"Resume", "Go back to Menu"};
     private final JavaFxDrawer drawer;
     private final Image backgroundImage;
 
@@ -19,11 +19,12 @@ public class MenuPause {
         this.backgroundImage = backgroundImage;
     }
 
+    // Draws the pause menu on the screen
     public void draw() {
-        // Usa o método genérico de desenhar menu do JavaFxDrawer
-        drawer.drawMenuPause("Pausado", selectedOptionIndex, backgroundImage, options);
+        drawer.drawMenuPause("Paused", selectedOptionIndex, backgroundImage, options);
     }
 
+    // Handles input for navigating the pause menu
     public void handleInput(KeyCode code) {
         switch (code) {
             case UP:
@@ -38,15 +39,22 @@ public class MenuPause {
         }
     }
 
+    // Executes the action associated with the selected menu option
     private void executeSelectedOption() {
         switch (selectedOptionIndex) {
             case 0: if (onResume != null) onResume.run(); break;
-            case 1: /* Lógica para Opções */ break;
-            case 2: if (onExitToMenu != null) onExitToMenu.run(); break;
+            case 1: if (onExitToMenu != null) onExitToMenu.run(); break;
         }
     }
     
-    public void setOnResume(Runnable onResume) { this.onResume = onResume; }
-    public void setOnExitToMenu(Runnable onExitToMenu) { this.onExitToMenu = onExitToMenu; }
-    public void reset() { this.selectedOptionIndex = 0; }
+    // Setters for the actions to be executed when an option is selected
+    public void setOnResume(Runnable onResume) {
+        this.onResume = onResume; 
+    }
+    public void setOnExitToMenu(Runnable onExitToMenu) {
+        this.onExitToMenu = onExitToMenu; 
+    }
+    public void reset() {
+        this.selectedOptionIndex = 0; 
+    }
 }

@@ -5,11 +5,9 @@ import chon.group.game.domain.agent.Fireball;
 import chon.group.game.domain.agent.Weapon;
 import javafx.scene.image.Image;
 
-// Tornando a classe final e com construtor privado para caracterizá-la como utilitária.
-public final class Setup {
+public class Setup {
 
     private Setup() {
-        // Construtor privado para impedir a instanciação.
     }
 
     /**
@@ -25,7 +23,7 @@ public final class Setup {
         
         // Criando o protagonista
         Agent chonBota = new Agent(100, 390, 90, 65, 5, 1000, "/images/agents/chonBota.png", false);
-        Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false); // Posição da arma é relativa ao agente, não precisa ser fixo aqui.
+        Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false); 
         chonBota.setWeapon(fireball);
         environment.setProtagonist(chonBota);
 
@@ -34,7 +32,7 @@ public final class Setup {
         environment.getAgents().add(chonBot);
         
         // Configurando imagens de estado do jogo
-        environment.setPauseImage("/images/environment/pause.png");             
+        environment.setPauseImage("");             
         environment.setGameOverImage("/images/environment/gameover.png");
         environment.setWinImage("/images/environment/gameover.png");
 

@@ -124,15 +124,6 @@ public class JavaFxMediator implements EnvironmentDrawer {
             this.environment.getProtagonist().getPosY());
         }
         
-        /**
-         * Draws the pause screen overlay, displaying a pause image centered within the
-         * environment.
-         */
-        @Override
-        public void drawPauseScreen() { 
-            drawer.drawMenuPause("Pause",0,this.environment.getPauseImage(),"Resume","Exit","Volume");
-        }
-        
         // Now this method use canvas width and height, with this we can use
         // the same method for side-scrolling and top-down environments.
         @Override
@@ -291,18 +282,5 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 message.getPosY());
             }
         }
-
-
-
-        public Environment getEnvironment() {
-            return environment;
-        }
-
-
-
-        public JavaFxDrawer getDrawer() {
-            return drawer;
-        }
-
     }
     
