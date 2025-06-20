@@ -1,11 +1,13 @@
 package chon.group;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Cannon;
 import chon.group.game.domain.agent.Collision;
 import chon.group.game.domain.agent.Fireball;
+import chon.group.game.domain.agent.Shot;
 import chon.group.game.domain.agent.Weapon;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.drawer.EnvironmentDrawer;
@@ -77,7 +79,7 @@ public class Engine extends Application {
             environment.setPauseImage("/images/environment/pause.png");
             environment.setGameOverImage("/images/environment/gameover.png");
 
-            Collision collision = new Collision(0, 0, 65, 90, "");
+            Collision collision = new Collision(256, 200, 64, 64, "/images/agents/brick.png", false, true, 0, false);
             environment.getCollisions().add(collision);
 
             /* Set up the graphical canvas */
@@ -174,8 +176,30 @@ public class Engine extends Application {
                                 /* ChonBota's Movements */
                                 environment.getProtagonist().move(input);
                                 environment.checkBorders();
-                                for (Collision collision : environment.getCollisions()) {
+                                Iterator<Collision> it = environment.getCollisions().iterator();
+                                while (it.hasNext()) {
+                                    Collision collision = it.next();
+
+                                    for (Shot shot : environment.getShots()) {
+                                        shot.checkCollision(collision);
+                                        if (collision.isDestroy()) break;
+                                    }
+                                    if (collision.isDestroy()) {
+                                        it.remove(); // remove com segurança da lista
+                                    }
+                                    
+                                    for (Agent agent : environment.getAgents()) {
+                                        agent.checkCollision(collision);
+                                        if (collision.isDestroy()) break;
+                                    }
+                                    if (collision.isDestroy()) {
+                                        it.remove(); // remove com segurança da lista
+                                    }
+                                    
                                     environment.getProtagonist().checkCollision(collision);
+                                    if (collision.isDestroy()) {
+                                        it.remove(); // remove com segurança da lista
+                                    }
                                 }
                             }
                             /* ChonBot's Automatic Movements */

@@ -1,8 +1,11 @@
 package chon.group.game.domain.agent;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 import chon.group.game.core.Entity;
+import chon.group.game.domain.environment.Environment;
 import chon.group.game.messaging.Message;
 
 /**
@@ -146,6 +149,7 @@ public class Agent extends Entity {
             getPosY() < collision.getY() + collision.getHeight() &&
             getPosY() + getHeight() > collision.getY()) {
 
+            // Detecção de colisão
             float dx = (getPosX() + getWidth() / 2.0f) - (collision.getX() + collision.getWidth() / 2.0f);
             float dy = (getPosY() + getHeight() / 2.0f) - (collision.getY() + collision.getHeight() / 2.0f);
 
@@ -155,33 +159,35 @@ public class Agent extends Entity {
             float overlapX = halfWidths - Math.abs(dx);
             float overlapY = halfHeights - Math.abs(dy);
 
-            if (overlapX < overlapY) {
-                int fix = (int)Math.ceil(overlapX);
-                if (dx > 0) {
-                    setPosX(getPosX() + fix); // empurra pra direita
-                    System.out.println("Colisão pela esquerda");
+            // 1. Impedir passagem se não for passável
+            if (!collision.isPassable()) {
+                int fix = (int)Math.ceil(Math.min(overlapX, overlapY));
+                if (overlapX < overlapY) {
+                    if (dx > 0) {
+                        setPosX(getPosX() + fix);
+                    } else {
+                        setPosX(getPosX() - fix);
+                    }
                 } else {
-                    setPosX(getPosX() - fix); // empurra pra esquerda
-                    System.out.println("Colisão pela direita");
-                }
-            } else {
-                int fix = (int)Math.ceil(overlapY);
-                if (dy > 0) {
-                    setPosY(getPosY() + fix); // empurra pra baixo
-                    System.out.println("Colisão por cima");
-                } else {
-                    setPosY(getPosY() - fix); // empurra pra cima
-                    System.out.println("Colisão por baixo");
+                    if (dy > 0) {
+                        setPosY(getPosY() + fix);
+                    } else {
+                        setPosY(getPosY() - fix);
+                    }
                 }
             }
 
-        } else {
-            System.out.println("Sem colisão.");
+            // 2. Aplicar dano
+            if (collision.getDamage() > 0) {
+                takeDamage(collision.getDamage(), new ArrayList<Message>());
+            }
+
+            // 3. Destruir ao contato
+            if (collision.isContactDestroy()) {
+                collision.setDestroy(true);
+            }
         }
     }
-
-
-
 
     /**
      * Method to update the invulnerable status.
