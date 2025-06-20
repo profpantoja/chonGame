@@ -1,19 +1,18 @@
 package chon.group;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import chon.group.game.domain.agent.Agent;
-import chon.group.game.domain.agent.Cannon;
-import chon.group.game.domain.agent.Fireball;
-import chon.group.game.domain.agent.Weapon;
 import chon.group.game.domain.environment.Environment;
-import chon.group.game.drawer.EnvironmentDrawer;
+import chon.group.game.domain.environment.GameStatus;
+import chon.group.game.domain.environment.MainMenu;
+import chon.group.game.domain.environment.MenuPause;
+import chon.group.game.domain.environment.Setup;
 import chon.group.game.drawer.JavaFxDrawer;
 import chon.group.game.drawer.JavaFxMediator;
-import chon.group.game.drawer.MainMenu;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.event.EventHandler;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -22,240 +21,211 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 
-/**
- * The {@code Engine} class represents the main entry point of the application
- * and serves as the game engine for "Chon: The Learning Game."
- * <p>
- * This class extends {@link javafx.application.Application} and manages the
- * game initialization, rendering, and main game loop using
- * {@link javafx.animation.AnimationTimer}.
- * </p>
- * 
- * <h2>Responsibilities</h2>
- * <ul>
- * <li>Set up the game environment, agents, and graphical components.</li>
- * <li>Handle keyboard input for controlling the protagonist agent.</li>
- * <li>Execute the game loop for updating and rendering the game state.</li>
- * </ul>
- */
 public class Engine extends Application {
 
-    /* If the game is paused or not. */
-    private boolean isPaused = false;
-    private boolean win = false;
+    // --- State and Core Components ---
+    private GameStatus gameStatus = GameStatus.MAIN_MENU; // O jogo começa no menu principal
+    private Environment environment;
+    private JavaFxMediator mediator;
+    private MainMenu mainMenu;
+    private MenuPause menuPause;
+    
+    // --- Input Handling ---
+    private final List<String> gameInput = new ArrayList<>();
 
-    /**
-     * Main entry point of the application.
-     *
-     * @param args command-line arguments passed to the application.
-     */
+    // --- Window Dimensions ---
+    private static final double WINDOW_WIDTH = 1280;
+    private static final double WINDOW_HEIGHT = 768;
 
     public static void main(String[] args) {
         launch(args);
     }
 
-    /**
-     * Starts the JavaFX application and initializes the game environment, agents,
-     * and graphical components.
-     * <p>
-     * This method sets up the game scene, handles input events, and starts the
-     * game loop using {@link AnimationTimer}.
-     * </p>
-     *
-     * @param theStage the primary stage for the application.
-     */
     @Override
     public void start(Stage theStage) {
-        try {
+        theStage.setTitle("Chon: The Learning Game");
 
-            
-            double windowWidth = 1280;
-            double windowHeight = 768;
-            
-            /* Initialize the game environment and agents */
-            Environment environment = new Environment(0, 0,4096,768, "/images/environment/castle.png");
-            Agent chonBota = new Agent(100, 390, 90, 65, 5, 1000, "/images/agents/chonBota.png", false);
-            Weapon cannon = new Cannon(400, 390, 0, 0, 5, 0, "", false);
-            Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false);
-            chonBota.setWeapon(fireball);
-            //pMenu menu = new Menu("Menu");
-            
-            Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
-            environment.setProtagonist(chonBota);
-            environment.getAgents().add(chonBot);
-            
-            // necessita de uma UI de background menu para usar a método abaixo
-            // enquanto não houver setMainMenuImage, o background será o padrão
-            // environment.setPauseImage("/images/environment/pause.png");
+        // 1. Setup Canvas and Graphics
+        Canvas canvas = new Canvas(WINDOW_WIDTH, WINDOW_HEIGHT);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
 
-             // necessita de um background usar a método abaixo
-             // enquanto não houver setMainMenuImage, o background será o padrão
-            // environment.setMainMenuImage("/images/environment/pause.png");
-            
-            environment.setGameOverImage("/images/environment/gameover.png");
-            environment.setWinImage("/images/environment/gameover.png");
-            
-            /* Set up the graphical canvas */
-            Canvas canvas = new Canvas(windowWidth, windowHeight);
-            GraphicsContext gc = canvas.getGraphicsContext2D();
-            EnvironmentDrawer mediator = new JavaFxMediator(environment, gc);
+        // 2. Initialize Game Components using Setup class
+        this.environment = Setup.createEnvironment();
+        this.mediator = new JavaFxMediator(environment, gc);
+        JavaFxDrawer drawer = new JavaFxDrawer(gc, null); // Drawer para os menus
 
-            JavaFxDrawer drawer = new JavaFxDrawer(gc,null);
-            Image menuBackground = new Image(getClass().getResourceAsStream("/images/environment/menu_background.png")); 
-            MainMenu mainMenu = new MainMenu(drawer, menuBackground);
+        // 3. Initialize Menus
+        Image menuBackground = Setup.loadImage("/images/environment/menu_background.png");
+        this.mainMenu = new MainMenu(drawer, menuBackground);
+        this.menuPause = new MenuPause(drawer, environment.getPauseImage());
+
+        // 4. Configure Menu Actions (State Transitions)
+        mainMenu.setOnStartGame(() -> {
+            /* resetGame(); */ // Garante que o jogo reinicie do zero
+            gameStatus = GameStatus.RUNNING;
+        });
+        mainMenu.setOnExit(() -> Platform.exit());
+        // mainMenu.setOnOptions(...);
+
+        menuPause.setOnResume(() -> gameStatus = GameStatus.RUNNING);
+        menuPause.setOnExitToMenu(() -> gameStatus = GameStatus.MAIN_MENU);
+
+        // 5. Setup Scene and Input
+        StackPane root = new StackPane(canvas);
+        Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
+        theStage.setScene(scene);
+        
+        setupInputHandlers(scene);
+
+        // 6. Start Game Loop
+        new GameLoop().start();
+        
+        theStage.show();
+    }
+
+    /**
+     * Configura um único handler de eventos de teclado que delega a ação
+     * com base no estado atual do jogo.
+     */
+    private void setupInputHandlers(Scene scene) {
+        scene.setOnKeyPressed((KeyEvent e) -> {
+            String codeStr = e.getCode().toString();
             
-            /* Set up the scene and stage */
-            StackPane root = new StackPane();
-            Scene scene = new Scene(root, windowWidth, windowHeight);
-            theStage.setTitle("Chon: The Learning Game");
-            theStage.setScene(scene);
-            
-            root.getChildren().add(canvas);
-            theStage.show();
-            
-            /* Handle keyboard input */
-            ArrayList<String> input = new ArrayList<String>();
-            scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-                public void handle(KeyEvent e) {
-                    String code = e.getCode().toString();
-                    input.clear();
-                    
-                    System.out.println("Pressed: " + code);
-                    
-                    if (code.equals("P")) {
-                        isPaused = !isPaused;
+            switch (gameStatus) {
+                case MAIN_MENU:
+                    mainMenu.handleInput(e.getCode());
+                    break;
+                case PAUSED:
+                    menuPause.handleInput(e.getCode());
+                    break;
+                case RUNNING:
+                    if (e.getCode().toString().equals("P")) {
+                        gameStatus = GameStatus.PAUSED;
+                        menuPause.reset(); // Reseta a seleção do menu de pause
+                    } else if (!gameInput.contains(codeStr)) {
+                        gameInput.add(codeStr);
                     }
-                    
-                    if (!isPaused && !input.contains(code)) {
-                        input.add(code);
+                    break;
+                default:
+                    // Em estados como GAME_OVER ou VICTORY, pode-se esperar por ENTER para reiniciar
+                    if (e.getCode().toString().equals("ENTER")) {
+                        gameStatus = GameStatus.MAIN_MENU;
+                        mainMenu.reset();
                     }
-                    
-                }
-            });
-            
-            scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
-                public void handle(KeyEvent e) {
-                    String code = e.getCode().toString();
-                    System.out.println("Released: " + code);
-                    input.remove(code);
-                }
-            });
-            
-            /* Start the game loop */
-            new AnimationTimer() {
-                
-                /**
-                 * The game loop, called on each frame.
-                 *
-                 * @param now the timestamp of the current frame in nanoseconds.
-                 */
-                @Override
-                public void handle(long arg0) {
-                    mediator.clearEnvironmentSideScrolling();
-                    
-                    /* Check if the protagonist win */
-                    if (environment.getAgents().isEmpty()) win = true;
+                    break;
+            }
+        });
 
-                    /* Branching the Game Loop */
-                    /* If the agent died in the last loop */
+        scene.setOnKeyReleased((KeyEvent e) -> {
+            if (gameStatus == GameStatus.RUNNING) {
+                gameInput.remove(e.getCode().toString());
+            }
+        });
+    }
+
+    /**
+     * Resets the game state to its initial configuration.
+     */
+   /*  private void resetGame() {
+        this.environment = Setup.createEnvironment();
+        // Recria o mediator para apontar para o novo ambiente
+        this.mediator = new JavaFxMediator(this.environment, mediator.getDrawer().getGraphicsContext());
+        gameInput.clear();
+    } */
+
+
+    /**
+     * The main game loop wrapped in its own class for clarity.
+     */
+    private class GameLoop extends AnimationTimer {
+        @Override
+        public void handle(long currentNanoTime) {
+            // Limpa a tela no início de cada frame
+            mediator.clearEnvironmentSideScrolling();
+
+            // Máquina de estados principal do jogo
+            switch (gameStatus) {
+                case MAIN_MENU:
+                    mainMenu.draw();
+                    break;
+                case RUNNING:
+                    updateGameLogic();
+                    renderGameWorld();
+                    // Verifica condições de vitória ou derrota para mudar o estado
                     if (environment.getProtagonist().isDead()) {
-                        /* Still prints ongoing messages (e.g., last hit taken) */
-                        environment.updateMessages();
-                        environment.updateShots();
-                        mediator.drawBackgroundSideScrolling();
-                        mediator.drawAgentsSideScrolling();
-                        mediator.drawShotsSideScrolling();
-                        mediator.drawMessagesSideScrolling();
-                        /* Rendering the Game Over Screen */
-                        mediator.drawGameOver();
-                    } else {
-                        if (isPaused) {
-                            mediator.drawBackgroundSideScrolling();
-                            mediator.drawAgentsSideScrolling();
-                            mediator.drawMessagesSideScrolling();
-                            mediator.drawShotsSideScrolling();
-                            /* Rendering the Pause Screen (needs to be done)*/
-                            mainMenu.draw();
-                            mainMenu.attachToScene(scene);
-                        } else if(win){
-                            /* If the player won the game */
-                            mediator.drawBackgroundSideScrolling();
-                            mediator.drawAgentsSideScrolling();
-                            mediator.drawMessagesSideScrolling();
-                            mediator.drawShotsSideScrolling();
-                            /* Rendering the Win Screen */
-                            mediator.drawWinScreen();
-                        }else{
-                            /* ChonBota Only Moves if the Player Press Something */
-                            /* Update the protagonist's movements if input exists */
-                            if (!input.isEmpty()) {
-                                /* ChonBota's Movements */
-                                environment.getProtagonist().move(input);
-
-                                // Calculating the camera boundaries based on the window width 
-                                double rightBoundary = environment.getCameraX() + windowWidth * 0.80; // 80% right of the window width
-                                double leftBoundary = environment.getCameraX() + windowWidth * 0.15; // 15% left of the window width
-
-                                double protagonistSpeed = environment.getProtagonist().getSpeed();
-
-                                // if protagonist is moving to the 85% right, the camera moves right 
-                                if (environment.getProtagonist().getPosX() > rightBoundary) {
-                                    double newCameraX = environment.getCameraX() + protagonistSpeed;
-                                    double maxCameraX = environment.getWidth() - windowWidth;
-                                    
-                                    if (newCameraX > maxCameraX) {
-                                        environment.setCameraX(maxCameraX);
-                                    } else {
-                                        environment.setCameraX(newCameraX);
-                                    }
-                                } 
-                                else if (environment.getProtagonist().getPosX() < leftBoundary) {
-                                    double newCameraX = environment.getCameraX() - protagonistSpeed;
-
-                                    if (newCameraX < 0) {
-                                        environment.setCameraX(0);
-                                    } else {
-                                        environment.setCameraX(newCameraX);
-                                    }
-                                }
-
-                                /* ChonBota Shoots Somebody Who Outdrew You */
-                                if (input.contains("SPACE")) {
-                                    input.remove("SPACE");
-                                    String direction;
-                                    if (chonBota.isFlipped())
-                                        direction = "LEFT";
-                                    else
-                                        direction = "RIGHT";
-                                    environment.getShots().add(chonBota.getWeapon().fire(chonBota.getPosX(),
-                                            chonBota.getPosY(),
-                                            direction));
-                                }
-                                environment.checkBorders();
-                            }
-                            /* ChonBot's Automatic Movements */
-                            /* Update the other agents' movements */
-                            for (Agent agent : environment.getAgents()) {
-                                agent.chase(environment.getProtagonist().getPosX(),
-                                        environment.getProtagonist().getPosY());
-                            }
-                            /* Render the game environment and agents */
-                            environment.detectCollision();
-                            environment.updateShots();
-                            environment.updateMessages();
-                            mediator.drawBackgroundSideScrolling();
-                            mediator.drawAgentsSideScrolling();
-                            mediator.drawShotsSideScrolling();
-                            mediator.drawMessagesSideScrolling();                              
-                        }
+                        gameStatus = GameStatus.GAME_OVER;
+                    } else if (environment.getAgents().isEmpty()) {
+                        gameStatus = GameStatus.VICTORY;
                     }
-                }
-            }.start();
+                    break;
+                case PAUSED:
+                    renderGameWorld(); // Desenha o mundo do jogo estático no fundo
+                    menuPause.draw(); // Desenha o menu de pause por cima
+                    break;
+                case GAME_OVER:
+                    renderGameWorld(); // Desenha o último estado do jogo
+                    mediator.drawGameOver();
+                    break;
+                case VICTORY:
+                    renderGameWorld(); // Desenha o último estado do jogo
+                    mediator.drawWinScreen();
+                    break;
+            }
+        }
+    }
+    
+    /**
+     * Contém toda a lógica de atualização de estado dos elementos do jogo.
+     */
+    private void updateGameLogic() {
+        // Movimento do Protagonista
+        if (!gameInput.isEmpty()) {
+            environment.getProtagonist().move(gameInput);
+            updateCameraPosition();
+            if (gameInput.contains("SPACE")) {
+                // ... lógica de atirar ...
+            }
+            environment.checkBorders();
+        }
+        
+        // IA dos Inimigos
+        environment.getAgents().forEach(agent -> 
+            agent.chase(environment.getProtagonist().getPosX(), environment.getProtagonist().getPosY()));
 
-        } catch (
+        // Atualizações do Ambiente
+        environment.detectCollision();
+        environment.updateShots();
+        environment.updateMessages();
+    }
 
-        Exception e) {
-            e.printStackTrace();
+    /**
+     * Desenha todos os elementos visuais do jogo.
+     */
+    private void renderGameWorld() {
+        mediator.drawBackgroundSideScrolling();
+        mediator.drawAgentsSideScrolling();
+        mediator.drawShotsSideScrolling();
+        mediator.drawMessagesSideScrolling();
+    }
+
+    /**
+     * Atualiza a posição da câmera para seguir o protagonista.
+     */
+    private void updateCameraPosition() {
+        double protagonistX = environment.getProtagonist().getPosX();
+        double cameraX = environment.getCameraX();
+        double protagonistSpeed = environment.getProtagonist().getSpeed();
+
+        double rightBoundary = cameraX + WINDOW_WIDTH * 0.80;
+        double leftBoundary = cameraX + WINDOW_WIDTH * 0.15;
+
+        if (protagonistX > rightBoundary) {
+            double newCameraX = cameraX + protagonistSpeed;
+            double maxCameraX = environment.getWidth() - WINDOW_WIDTH;
+            environment.setCameraX(Math.min(newCameraX, maxCameraX));
+        } else if (protagonistX < leftBoundary) {
+            double newCameraX = cameraX - protagonistSpeed;
+            environment.setCameraX(Math.max(newCameraX, 0));
         }
     }
 }

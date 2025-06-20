@@ -35,6 +35,8 @@ public class JavaFxMediator implements EnvironmentDrawer {
         this.drawer = new JavaFxDrawer(gc, this);
     }
 
+    
+
     /**
      * Clears the environment by erasing all drawn elements on the screen.
      */
@@ -288,6 +290,18 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 screenX,
                 message.getPosY());
             }
+        }
+
+
+
+        public Environment getEnvironment() {
+            return environment;
+        }
+
+
+
+        public JavaFxDrawer getDrawer() {
+            return drawer;
         }
 
     }
