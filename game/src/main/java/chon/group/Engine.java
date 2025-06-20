@@ -172,38 +172,6 @@ public class Engine extends Application {
                 case RUNNING:
                     updateGameLogic();
                     renderGameWorld();
-                    // Verify if the game is over or if the player has won
-                    if (environment.getProtagonist().isDead()) {
-                        gameStatus = GameStatus.GAME_OVER;
-                        } else if (environment.getAgents().isEmpty()) {
-                            if (currentRoom == 1) {
-                            // Change to the second room
-                            Agent Boss = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
-                            environment.roomChanger("/images/environment/mountain.png", Boss);
-                            currentRoom = 2;
-                            
-                        } else if (currentRoom == 2) {
-                            // Now the player has won the game
-                            gameStatus = GameStatus.VICTORY;
-                        }
-                    }
-
-                   /*  
-
-                        if (currentRoom == 2 && environment.getAgents().isEmpty()) {
-                            win = true;
-                        
-                        } else if (currentRoom == 1) {
-                            // O jogador precisa estar no final da sala E todos os inimigos devem ter sido derrotados.
-                            if (environment.getAgents().isEmpty() && environment.getProtagonist().getPosX() >= (0.9 * environment.getWidth())) {
-                                System.out.println("All enemies are dead. Proceeding to the next room.");
-                                Agent newChonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
-                                environment.loadNextRoom("/images/environment/mountain.png", newChonBot);
-                                currentRoom = 2;
-                            }
-                        } */
-
-
                     break;
                 case PAUSED:
                     renderGameWorld(); // draw the game world static in background
@@ -223,11 +191,8 @@ public class Engine extends Application {
     
     private void updateGameLogic() {
         
-        /* Check if all enemies are dead */
-       if (environment.getAgents().isEmpty()) {
-           
-       }
-        
+        verifyGameStatus();
+
         // Protagonist movement and actions
         if (!gameInput.isEmpty()) {
             environment.getProtagonist().move(gameInput);
@@ -250,6 +215,20 @@ public class Engine extends Application {
         environment.updateShots();
         environment.updateMessages();
     }
+
+    private void verifyGameStatus() {
+    
+    if (environment.getProtagonist().isDead()) gameStatus = GameStatus.GAME_OVER;
+        
+    else if (currentRoom == 2 && environment.getAgents().isEmpty()) gameStatus = GameStatus.VICTORY;
+        
+    else if (currentRoom == 1 && environment.getAgents().isEmpty() && environment.getProtagonist().getPosX() >= (0.9 * environment.getWidth())) {
+        System.out.println("Avançando para a sala do chefe...");
+        Agent boss = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
+        environment.loadNextRoom("/images/environment/mountain.png", boss);
+        currentRoom = 2;
+    }
+}
 
     /**
      * Draw the game world elements on the screen.
