@@ -22,6 +22,21 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 
+/**
+ * The {@code Engine} class represents the main entry point of the application
+ * and serves as the game engine for "Chon: The Learning Game."
+ * <p>
+ * This class extends {@link javafx.application.Application} and manages the
+ * game initialization, rendering, and main game loop using
+ * {@link javafx.animation.AnimationTimer}.
+ * </p>
+ * * <h2>Responsibilities</h2>
+ * <ul>
+ * <li>Set up the game environment, agents, and graphical components.</li>
+ * <li>Handle keyboard input for controlling the protagonist agent.</li>
+ * <li>Execute the game loop for updating and rendering the game state.</li>
+ * </ul>
+ */
 public class Engine extends Application {
 
     private GameStatus gameStatus = GameStatus.MAIN_MENU;
@@ -166,11 +181,29 @@ public class Engine extends Application {
                             Agent Boss = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
                             environment.roomChanger("/images/environment/mountain.png", Boss);
                             currentRoom = 2;
+                            
                         } else if (currentRoom == 2) {
                             // Now the player has won the game
                             gameStatus = GameStatus.VICTORY;
                         }
                     }
+
+                   /*  
+
+                        if (currentRoom == 2 && environment.getAgents().isEmpty()) {
+                            win = true;
+                        
+                        } else if (currentRoom == 1) {
+                            // O jogador precisa estar no final da sala E todos os inimigos devem ter sido derrotados.
+                            if (environment.getAgents().isEmpty() && environment.getProtagonist().getPosX() >= (0.9 * environment.getWidth())) {
+                                System.out.println("All enemies are dead. Proceeding to the next room.");
+                                Agent newChonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
+                                environment.loadNextRoom("/images/environment/mountain.png", newChonBot);
+                                currentRoom = 2;
+                            }
+                        } */
+
+
                     break;
                 case PAUSED:
                     renderGameWorld(); // draw the game world static in background
