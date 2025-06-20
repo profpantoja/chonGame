@@ -27,8 +27,7 @@ import javafx.scene.layout.StackPane;
  * game initialization, rendering, and main game loop using
  * {@link javafx.animation.AnimationTimer}.
  * </p>
- * 
- * <h2>Responsibilities</h2>
+ * * <h2>Responsibilities</h2>
  * <ul>
  * <li>Set up the game environment, agents, and graphical components.</li>
  * <li>Handle keyboard input for controlling the protagonist agent.</li>
@@ -115,7 +114,9 @@ public class Engine extends Application {
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
                     String code = e.getCode().toString();
-                    input.clear();
+                    
+                    // Não limpa mais o input aqui para permitir múltiplas teclas
+                    // input.clear(); 
                     
                     System.out.println("Pressed: " + code);
                     
@@ -126,7 +127,6 @@ public class Engine extends Application {
                     if (!isPaused && !input.contains(code)) {
                         input.add(code);
                     }
-                    
                 }
             });
             
@@ -150,114 +150,94 @@ public class Engine extends Application {
                 public void handle(long arg0) {
                     mediator.clearEnvironmentSideScrolling();
                     
-                    /* Check if all enemies are dead */
-                    if (environment.getAgents().isEmpty()) {
-                        if (currentRoom == 1) {
-                            // Change to the second room
-                            Agent newChonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
-                            environment.roomChanger("/images/environment/mountain.png", newChonBot);
-                            currentRoom = 2;
-                        } else if (currentRoom == 2) {
-                            // Now the player has won the game
-                            win = true;
-                        }
-                    }
+                    /* --- Branching the Game Loop --- */
 
-                    /* Branching the Game Loop */
-                    /* If the agent died in the last loop */
                     if (environment.getProtagonist().isDead()) {
-                        /* Still prints ongoing messages (e.g., last hit taken) */
+                        /* Game Over Screen */
                         environment.updateMessages();
                         environment.updateShots();
                         mediator.drawBackgroundSideScrolling();
                         mediator.drawAgentsSideScrolling();
                         mediator.drawShotsSideScrolling();
                         mediator.drawMessagesSideScrolling();
-                        /* Rendering the Game Over Screen */
                         mediator.drawGameOver();
+
+                    } else if (win) {
+                        /* Win Screen */
+                        mediator.drawBackgroundSideScrolling();
+                        mediator.drawAgentsSideScrolling();
+                        mediator.drawMessagesSideScrolling();
+                        mediator.drawShotsSideScrolling();
+                        mediator.drawWinScreen();
+
+                    } else if (isPaused) {
+                        /* Pause Screen */
+                        mediator.drawBackgroundSideScrolling();
+                        mediator.drawAgentsSideScrolling();
+                        mediator.drawMessagesSideScrolling();
+                        mediator.drawShotsSideScrolling();
+                        mediator.drawPauseScreen();
+
                     } else {
-                        if (isPaused) {
-                            mediator.drawBackgroundSideScrolling();
-                            mediator.drawAgentsSideScrolling();
-                            mediator.drawMessagesSideScrolling();
-                            mediator.drawShotsSideScrolling();
-                            /* Rendering the Pause Screen */
-                            mediator.drawPauseScreen();
-                        } else if(win){
-                            /* If the player won the game */
-                            mediator.drawBackgroundSideScrolling();
-                            mediator.drawAgentsSideScrolling();
-                            mediator.drawMessagesSideScrolling();
-                            mediator.drawShotsSideScrolling();
-                            /* Rendering the Win Screen */
-                            mediator.drawWinScreen();
-                        }else{
-                            /* ChonBota Only Moves if the Player Press Something */
-                            /* Update the protagonist's movements if input exists */
-                            if (!input.isEmpty()) {
-                                
-                                /* ChonBota's Movements */
-                                environment.getProtagonist().move(input);
-                                
-                                /* Update the camera position based on the protagonist's position */ 
-                                double cameraTargetX = environment.getProtagonist().getPosX() - (windowWidth / 1.4); // in this part of code, we can choice when the camera moves with the protagonist
+                        /* --- Active Gameplay Loop --- */
 
-                                if (cameraTargetX < 0) 
-                                    cameraTargetX = 0;
-                                
-                                double maxCameraX = environment.getWidth() - windowWidth;
-                                if (cameraTargetX > maxCameraX) 
-                                    cameraTargetX = maxCameraX;
-                                
-                                environment.setCameraX(cameraTargetX);
+                        /* Handle Player Movement and Actions */
+                        if (!input.isEmpty()) {
+                            environment.getProtagonist().move(input);
+                            
+                            /* Update the camera position based on the protagonist's position */ 
+                            double cameraTargetX = environment.getProtagonist().getPosX() - (windowWidth / 1.4);
+                            if (cameraTargetX < 0) 
+                                cameraTargetX = 0;
+                            double maxCameraX = environment.getWidth() - windowWidth;
+                            if (cameraTargetX > maxCameraX) 
+                                cameraTargetX = maxCameraX;
+                            environment.setCameraX(cameraTargetX);
 
-                                /* ChonBota's Camera Movements */
-                                /* If the player presses the right or left arrow keys, move the camera */
-                                int speed = environment.getProtagonist().getSpeed();
-                                if (input.contains("D") || input.contains("RIGHT")) 
-                                    environment.setCameraX(environment.getCameraX() + speed);
-                                
-                                if (input.contains("A") || input.contains("LEFT")) {    
-                                    if(environment.getCameraX() > 0) 
-                                        environment.setCameraX(environment.getCameraX() - speed);
-                                }
-
-                                /* ChonBota Shoots Somebody Who Outdrew You */
-                                if (input.contains("SPACE")) {
-                                    input.remove("SPACE");
-                                    String direction;
-                                    if (chonBota.isFlipped())
-                                        direction = "LEFT";
-                                    else
-                                        direction = "RIGHT";
-                                    environment.getShots().add(chonBota.getWeapon().fire(chonBota.getPosX(),
-                                            chonBota.getPosY(),
-                                            direction));
-                                }
-                                environment.checkBorders();
+                            /* Handle Shooting */
+                            if (input.contains("SPACE")) {
+                                input.remove("SPACE"); // Evita tiros contínuos
+                                String direction = chonBota.isFlipped() ? "LEFT" : "RIGHT";
+                                environment.getShots().add(chonBota.getWeapon().fire(chonBota.getPosX(), chonBota.getPosY(), direction));
                             }
-                            /* ChonBot's Automatic Movements */
-                            /* Update the other agents' movements */
-                            for (Agent agent : environment.getAgents()) {
-                                agent.chase(environment.getProtagonist().getPosX(),
-                                        environment.getProtagonist().getPosY());
-                            }
-                            /* Render the game environment and agents */
-                            environment.detectCollision();
-                            environment.updateShots();
-                            environment.updateMessages();
-                            mediator.drawBackgroundSideScrolling();
-                            mediator.drawAgentsSideScrolling();
-                            mediator.drawShotsSideScrolling();
-                            mediator.drawMessagesSideScrolling();                              
+                            environment.checkBorders();
                         }
+                        
+                        /* Handle AI Movement */
+                        for (Agent agent : environment.getAgents()) {
+                            agent.chase(environment.getProtagonist().getPosX(), environment.getProtagonist().getPosY());
+                        }
+
+                        /* Update Game State */
+                        environment.detectCollision();
+                        environment.updateShots();
+                        environment.updateMessages();
+
+                        /* --- Check for Game State Transitions (Win or Room Change) --- */
+
+                        if (currentRoom == 2 && environment.getAgents().isEmpty()) {
+                            win = true;
+                        
+                        } else if (currentRoom == 1) {
+                            // O jogador precisa estar no final da sala E todos os inimigos devem ter sido derrotados.
+                            if (environment.getAgents().isEmpty() && environment.getProtagonist().getPosX() >= (0.9 * environment.getWidth())) {
+                                System.out.println("All enemies are dead. Proceeding to the next room.");
+                                Agent newChonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
+                                environment.loadNextRoom("/images/environment/mountain.png", newChonBot);
+                                currentRoom = 2;
+                            }
+                        }
+
+                        /* Render all elements */
+                        mediator.drawBackgroundSideScrolling();
+                        mediator.drawAgentsSideScrolling();
+                        mediator.drawShotsSideScrolling();
+                        mediator.drawMessagesSideScrolling();                              
                     }
                 }
             }.start();
 
-        } catch (
-
-        Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

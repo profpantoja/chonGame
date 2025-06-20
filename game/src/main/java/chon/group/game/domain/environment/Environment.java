@@ -380,22 +380,19 @@ public class Environment {
 
     public void loadNextRoom(String image, Agent newAgent) {
         System.out.println("Carregando próxima sala...");
-
         this.setImage(image);
-
         this.agents.clear();
-
+        this.shots.clear();
         this.agents.add(newAgent);
-
         this.protagonist.setPosX(100);
         this.protagonist.setPosY(390);
-
         this.setCameraX(0);
     }
 
 
     public void roomChanger(String image, Agent newAgent) {
-        if (!protagonist.isDead()) {
+        if (!protagonist.isDead() && protagonist.getPosX() >= (0.9*this.width)) {
+            System.out.println("Protagonist reached the end of the room. Checking for enemies...");
             boolean allEnemiesDead = true;
 
             for (Agent agent : this.agents) {
@@ -408,7 +405,6 @@ public class Environment {
             if (allEnemiesDead){
                 System.out.println("All enemies are dead. Proceeding to the next room.");
                 loadNextRoom(image, newAgent);
-
             }
         }
     }
@@ -445,16 +441,18 @@ public class Environment {
         }
     }
 
-    public void updateShots() {
+   public void updateShots() {
         Iterator<Shot> itShot = this.shots.iterator();
         while (itShot.hasNext()) {
             Shot shot = itShot.next();
             if ((shot.getPosX() > this.width) || ((shot.getPosX() + shot.getWidth()) < 0)) {
                 itShot.remove();
             } else {
+                boolean shotRemoved = false;
                 if (this.intersect(protagonist, shot)) {
                     protagonist.takeDamage(shot.getDamage(), this.messages);
                     itShot.remove();
+                    shotRemoved = true;
                 } else {
                     Iterator<Agent> itAgent = this.agents.iterator();
                     while (itAgent.hasNext()) {
@@ -464,12 +462,15 @@ public class Environment {
                             if (agent.isDead())
                                 itAgent.remove();
                             itShot.remove();
+                            shotRemoved = true;
+                            break; 
                         }
                     }
                 }
-                shot.move(new ArrayList<>(List.of(shot.getDirection())));
+                if (!shotRemoved) {
+                    shot.move(new ArrayList<>(List.of(shot.getDirection())));
+                }
             }
         }
     }
-
 }
