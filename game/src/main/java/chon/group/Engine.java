@@ -35,6 +35,14 @@ public class Engine extends Application {
     // --- Window Dimensions ---
     private static final double WINDOW_WIDTH = 1280;
     private static final double WINDOW_HEIGHT = 768;
+    private int currentRoom = 1;
+    
+
+    /**
+     * Main entry point of the application.
+     *
+     * @param args command-line arguments passed to the application.
+     */
 
     public static void main(String[] args) {
         launch(args);
@@ -152,8 +160,16 @@ public class Engine extends Application {
                     // Verify if the game is over or if the player has won
                     if (environment.getProtagonist().isDead()) {
                         gameStatus = GameStatus.GAME_OVER;
-                    } else if (environment.getAgents().isEmpty()) {
-                        gameStatus = GameStatus.VICTORY;
+                        } else if (environment.getAgents().isEmpty()) {
+                            if (currentRoom == 1) {
+                            // Change to the second room
+                            Agent Boss = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
+                            environment.roomChanger("/images/environment/mountain.png", Boss);
+                            currentRoom = 2;
+                        } else if (currentRoom == 2) {
+                            // Now the player has won the game
+                            gameStatus = GameStatus.VICTORY;
+                        }
                     }
                     break;
                 case PAUSED:
@@ -171,8 +187,13 @@ public class Engine extends Application {
             }
         }
     }
-
+    
     private void updateGameLogic() {
+        
+        /* Check if all enemies are dead */
+       if (environment.getAgents().isEmpty()) {
+           
+       }
         
         // Protagonist movement and actions
         if (!gameInput.isEmpty()) {
