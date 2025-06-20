@@ -79,7 +79,8 @@ public class Engine extends Application {
             environment.setPauseImage("/images/environment/pause.png");
             environment.setGameOverImage("/images/environment/gameover.png");
 
-            Collision collision = new Collision(256, 200, 64, 64, "/images/agents/brick.png", false, true, 0, false);
+            Collision collision = new Collision(256, 200, 64, 64, "/images/agents/brick.png", false, true, 200, false, false, false);
+            environment.createGround(64, "/images/agents/brick.png");
             environment.getCollisions().add(collision);
 
             /* Set up the graphical canvas */
@@ -176,30 +177,35 @@ public class Engine extends Application {
                                 /* ChonBota's Movements */
                                 environment.getProtagonist().move(input);
                                 environment.checkBorders();
-                                Iterator<Collision> it = environment.getCollisions().iterator();
-                                while (it.hasNext()) {
-                                    Collision collision = it.next();
+                            }
+                            Iterator<Collision> it = environment.getCollisions().iterator();
+                            while (it.hasNext()) {
+                                Collision collision = it.next();
 
-                                    for (Shot shot : environment.getShots()) {
-                                        shot.checkCollision(collision);
-                                        if (collision.isDestroy()) break;
-                                    }
+                                Iterator<Shot> itShot = environment.getShots().iterator();
+                                while (itShot.hasNext()) {
+                                    Shot tempShot = itShot.next();
+                                    tempShot.checkCollision(collision);
                                     if (collision.isDestroy()) {
-                                        it.remove(); // remove com segurança da lista
-                                    }
-                                    
-                                    for (Agent agent : environment.getAgents()) {
-                                        agent.checkCollision(collision);
-                                        if (collision.isDestroy()) break;
-                                    }
-                                    if (collision.isDestroy()) {
-                                        it.remove(); // remove com segurança da lista
-                                    }
-                                    
-                                    environment.getProtagonist().checkCollision(collision);
-                                    if (collision.isDestroy()) {
-                                        it.remove(); // remove com segurança da lista
-                                    }
+                                        itShot.remove();
+                                        break;
+                                    }    
+                                }
+                                if (collision.isDestroy()) {
+                                    it.remove(); // remove com segurança da lista
+                                }
+                                
+                                for (Agent agent : environment.getAgents()) {
+                                    agent.checkCollision(collision, environment);
+                                    if (collision.isDestroy()) break;
+                                }
+                                if (collision.isDestroy()) {
+                                    it.remove(); // remove com segurança da lista
+                                }
+
+                                environment.getProtagonist().checkCollision(collision, environment);
+                                if (collision.isDestroy()) {
+                                    it.remove(); // remove com segurança da lista
                                 }
                             }
                             /* ChonBot's Automatic Movements */

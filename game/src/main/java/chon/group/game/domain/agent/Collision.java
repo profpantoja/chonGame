@@ -12,8 +12,10 @@ public class Collision {
     private boolean destroy;
     private int damage;
     private boolean passable;
+    private boolean agentDamage;
+    private boolean agentContact;
 
-    public Collision(int x, int y, int width, int height, String image, boolean contactDestroy, boolean projectileDestroy, int damage, boolean passable) {
+    public Collision(int x, int y, int width, int height, String image, boolean contactDestroy, boolean projectileDestroy, int damage, boolean passable, boolean agentDamage, boolean agentContact) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -23,6 +25,8 @@ public class Collision {
         this.projectileDestroy = projectileDestroy;
         this.damage = damage;
         this.passable = passable;
+        this.agentDamage = agentDamage;
+        this.agentContact = agentContact;
     }
 
     public int getX() {
@@ -103,5 +107,21 @@ public class Collision {
 
     public void setProjectileDestroy(boolean projectileDestroy) {
         this.projectileDestroy = projectileDestroy;
+    }
+
+    public boolean isAgentDamage() {
+        return agentDamage;
+    }
+
+    public void setAgentDamage(boolean agentDamage) {
+        this.agentDamage = agentDamage;
+    }
+
+    public boolean isAgentContact() {
+        return agentContact;
+    }
+
+    public void setAgentContact(boolean agentContact) {
+        this.agentContact = agentContact;
     }
 }

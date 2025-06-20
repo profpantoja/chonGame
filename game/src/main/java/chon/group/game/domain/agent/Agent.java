@@ -143,7 +143,7 @@ public class Agent extends Entity {
         }
     }
 
-    public void checkCollision(Collision collision) {
+    public void checkCollision(Collision collision, Environment environment) {
         if (getPosX() < collision.getX() + collision.getWidth() &&
             getPosX() + getWidth() > collision.getX() &&
             getPosY() < collision.getY() + collision.getHeight() &&
@@ -178,12 +178,19 @@ public class Agent extends Entity {
             }
 
             // 2. Aplicar dano
-            if (collision.getDamage() > 0) {
-                takeDamage(collision.getDamage(), new ArrayList<Message>());
+            if (collision.getDamage() > 0 && this == environment.getProtagonist()) {
+                takeDamage(collision.getDamage(), environment.getMessages());
+            }
+            else if (collision.getDamage() > 0 && collision.isAgentDamage()) {
+                takeDamage(collision.getDamage(), environment.getMessages());
             }
 
             // 3. Destruir ao contato
-            if (collision.isContactDestroy()) {
+            if (collision.isContactDestroy() && this == environment.getProtagonist())
+            {
+                collision.setDestroy(true);
+            }
+            else if (collision.isContactDestroy() && collision.isAgentContact()) {
                 collision.setDestroy(true);
             }
         }
