@@ -1,8 +1,8 @@
 package chon.group;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Shot;
@@ -17,13 +17,13 @@ import chon.group.game.drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 /**
  * The {@code Engine} class represents the main entry point of the application
@@ -76,7 +76,7 @@ public class Engine extends Application {
         JavaFxDrawer drawer = new JavaFxDrawer(this.graphicsContext, null); 
 
         // Initialize Menus
-        Image menuBackground = Setup.loadImage("/images/environment/menu_background.png");
+        Image menuBackground = Setup.loadImage("/images/environment/menu_background_new.png");
         this.mainMenu = new MainMenu(drawer, menuBackground);
         this.menuPause = new MenuPause(drawer, environment.getPauseImage());        
 
@@ -233,7 +233,7 @@ public class Engine extends Application {
         mediator.drawAgentsSideScrolling();
         mediator.drawShotsSideScrolling();
         mediator.drawMessagesSideScrolling();
-        mediator.drawCollisions();
+        //mediator.drawCollisions();
     }
 
     /**

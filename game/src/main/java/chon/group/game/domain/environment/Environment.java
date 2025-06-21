@@ -407,6 +407,7 @@ public class Environment {
         this.setImage(image);
         this.agents.clear();
         this.shots.clear();
+        this.collisions.clear();
         this.agents.add(newAgent);
         this.protagonist.setPosX(100);
         this.protagonist.setPosY(390);
