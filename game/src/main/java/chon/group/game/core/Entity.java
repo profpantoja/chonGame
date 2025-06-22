@@ -7,6 +7,7 @@ import chon.group.game.messaging.Message;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
 public abstract class Entity {
@@ -37,6 +38,24 @@ public abstract class Entity {
 
     /** The maximum entity's health. */
     private int fullHealth;
+
+    // --- Animation fields ---
+    /** Spritesheet image for animation (optional). */
+    private Image spritesheet;
+    /** Number of frames in the spritesheet. */
+    private int frameCount = 1;
+    /** Current frame index. */
+    private int currentFrame = 0;
+    /** Width of a single frame. */
+    private int frameWidth = 0;
+    /** Height of a single frame. */
+    private int frameHeight = 0;
+    /** Last time the frame was updated. */
+    private long lastFrameTime = 0;
+    /** Duration per frame in ms. */
+    private long frameDuration = 100;
+    /** Current spritesheet string */
+    private String currentSpritesheet = null;
 
     /**
      * Constructor to initialize the entity properties.
@@ -82,6 +101,52 @@ public abstract class Entity {
         this.fullHealth = health;
         this.image = new Image(getClass().getResource(pathImage).toExternalForm());
         this.flipped = flipped;
+    }
+
+    // --- Animation setup and update ---
+
+    /**
+     * Sets up animation for the entity.
+     * @param spritesheetPath Path to the spritesheet image
+     * @param frameCount Number of frames in the spritesheet
+     * @param frameDuration Duration of each frame in milliseconds
+     */
+    public void setAnimation(String spritesheetPath, int frameCount, long frameDuration) {
+        this.spritesheet = new Image(getClass().getResource(spritesheetPath).toExternalForm());
+        this.frameCount = frameCount;
+        this.frameDuration = frameDuration;
+        this.frameWidth = (int) (spritesheet.getWidth() / frameCount);
+        this.frameHeight = (int) spritesheet.getHeight();
+        this.currentFrame = 0;
+        this.lastFrameTime = System.currentTimeMillis();
+    }
+
+    /**
+     * Updates the animation frame based on time.
+     */
+    public void updateAnimation() {
+        if (frameCount <= 1 || spritesheet == null) return; // No animation
+        long now = System.currentTimeMillis();
+        if (now - lastFrameTime >= frameDuration) {
+            currentFrame = (currentFrame + 1) % frameCount;
+            lastFrameTime = now;
+        }
+    }
+
+    /**
+     * Returns the current animation frame as an Image.
+     */
+    public Image getCurrentFrameImage() {
+        if (spritesheet == null || frameCount <= 1) {
+            return image;
+        }
+        return new WritableImage(
+            spritesheet.getPixelReader(),
+            currentFrame * frameWidth,
+            0,
+            frameWidth,
+            frameHeight
+        );
     }
 
     /**
@@ -184,7 +249,7 @@ public abstract class Entity {
     }
 
     /**
-     * Gets the entity flipped status.
+     * Sets the entity image.
      *
      * @param image the new image
      */
@@ -319,4 +384,72 @@ public abstract class Entity {
         }
     }
 
+    public Image getSpritesheet() {
+        return spritesheet;
+    }
+
+    public void setSpritesheet(Image spritesheet) {
+        this.spritesheet = spritesheet;
+    }
+
+    public int getFrameCount() {
+        return frameCount;
+    }
+
+    public void setFrameCount(int frameCount) {
+        this.frameCount = frameCount;
+    }
+
+    public int getCurrentFrame() {
+        return currentFrame;
+    }
+
+    public void setCurrentFrame(int currentFrame) {
+        this.currentFrame = currentFrame;
+    }
+
+    public int getFrameWidth() {
+        return frameWidth;
+    }
+
+    public void setFrameWidth(int frameWidth) {
+        this.frameWidth = frameWidth;
+    }
+
+    public int getFrameHeight() {
+        return frameHeight;
+    }
+
+    public void setFrameHeight(int frameHeight) {
+        this.frameHeight = frameHeight;
+    }
+
+    public long getLastFrameTime() {
+        return lastFrameTime;
+    }
+
+    public void setLastFrameTime(long lastFrameTime) {
+        this.lastFrameTime = lastFrameTime;
+    }
+
+    public long getFrameDuration() {
+        return frameDuration;
+    }
+
+    public void setFrameDuration(long frameDuration) {
+        this.frameDuration = frameDuration;
+    }
+
+    public String getCurrentSpritesheet() {
+        return currentSpritesheet;
+    }
+
+    public void setCurrentSpritesheet(String currentSpritesheet) {
+        this.currentSpritesheet = currentSpritesheet;
+    }
+
+    public void setAnimationSprite(String path, int frames, int duration) {
+        this.setAnimation(path, frames, duration);
+        this.currentSpritesheet = path;
+    }   
 }
