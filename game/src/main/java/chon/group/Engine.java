@@ -50,7 +50,7 @@ public class Engine extends Application {
         JavaFxDrawer drawer = new JavaFxDrawer(this.graphicsContext, null); 
 
         // Initialize Menus
-        Image menuBackground = Setup.loadImage("/images/environment/menu_background.png");
+        Image menuBackground = Setup.loadImage("/images/environment/menu_background_new.png");
         this.mainMenu = new MainMenu(drawer, menuBackground);
         this.menuPause = new MenuPause(drawer, environment.getPauseImage());
 
