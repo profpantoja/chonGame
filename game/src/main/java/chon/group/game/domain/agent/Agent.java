@@ -146,8 +146,8 @@ public class Agent extends AnimatedEntity {
             this.setlastHitTime(System.currentTimeMillis()); 
 
             if(this.pathImageHit != null && !this.pathImageHit.isEmpty())
-            this.setWidth(32); 
-            this.setAnimation(this.pathImageHit, 2, 3000); 
+            this.setWidth(64); 
+            this.setAnimation(this.pathImageHit, 10, 150); 
             System.out.println("Chon bota took damage!");
         }
     }
