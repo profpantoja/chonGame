@@ -7,6 +7,7 @@ import java.util.List;
 import chon.group.game.core.Entity;
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Shot;
+import chon.group.game.domain.agent.Slash;
 import chon.group.game.messaging.Message;
 import javafx.scene.image.Image;
 
@@ -22,6 +23,9 @@ public class Environment {
 
     /** The X (horizontal) position of the environment. */
     private int posX;
+
+    /** List of slashes present in the environment. */
+    private List<Slash> slashes;
 
     /** The Y (vertical) position of the environment. */
     private int posY;
@@ -299,6 +303,19 @@ public class Environment {
      */
     public void setShots(List<Shot> shots) {
         this.shots = shots;
+    }
+
+        public List<Slash> getSlashes(List<Slash> slash) {
+        return slash;
+    }
+
+    /**
+     * Sets the list of slashes present in the environment.
+     *
+     * @param agents the new list of slashes
+     */
+    public void setSlashes(List<Slash> slashes) {
+        this.slashes = slashes;
     }
 
     /**
