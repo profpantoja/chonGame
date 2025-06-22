@@ -24,6 +24,12 @@ public class Agent extends AnimatedEntity {
     /* The Agent's Weapon */
     private Weapon weapon;
 
+    private String pathImageHit;
+
+    public void setPathImageHit(String pathImageHit) {
+        this.pathImageHit = pathImageHit;
+    }
+
     /**
      * Constructor to initialize the agent properties.
      *
@@ -137,6 +143,12 @@ public class Agent extends AnimatedEntity {
         if (!this.invulnerable) {
             super.takeDamage(damage, messages); 
             this.lastHitTime = System.currentTimeMillis();
+            this.setlastHitTime(System.currentTimeMillis()); 
+
+            if(this.pathImageHit != null && !this.pathImageHit.isEmpty())
+            this.setWidth(32); 
+            this.setAnimation(this.pathImageHit, 2, 3000); 
+            System.out.println("Chon bota took damage!");
         }
     }
 
