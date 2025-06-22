@@ -2,15 +2,15 @@ package chon.group.game.domain.agent;
 
 import java.util.List;
 
-import chon.group.game.core.Entity;
 import chon.group.game.messaging.Message;
+import javafx.scene.image.Image;
 
 /**
  * Represents an agent in the game, with properties such as position, size,
  * speed, and image.
  * The agent can move in specific directions and chase a target.
  */
-public class Agent extends Entity {
+public class Agent extends AnimatedEntity {
 
     /* The time of the last hit taken. */
     private long lastHitTime = 0;
@@ -36,7 +36,7 @@ public class Agent extends Entity {
      * @param pathImage the path to the agent's image
      */
     public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage) {
-        super(posX, posY, height, width, speed, health, pathImage);
+        super(new Image(Agent.class.getResource(pathImage).toExternalForm()), posX, posY, height, width, speed, health, pathImage);
     }
 
     /**
@@ -52,7 +52,7 @@ public class Agent extends Entity {
      * @param flipped   the agent's direction (RIGHT=0 or LEFT=1)
      */
     public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped) {
-        super(posX, posY, height, width, speed, health, pathImage, flipped);
+        super(new Image(Agent.class.getResource(pathImage).toExternalForm()), posX, posY, height, width, speed, health, pathImage, flipped);
     }
 
     /**

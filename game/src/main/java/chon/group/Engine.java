@@ -156,7 +156,7 @@ public class Engine extends Application {
                                 /* ChonBota Shoots Somebody Who Outdrew You */
                                 if (environment.getProtagonist().getCurrentSpritesheet() != "/images/agents/Link_Running.png") {
                                     environment.getProtagonist().setWidth(96);
-                                    environment.getProtagonist().setAnimationSprite("/images/agents/Link_Running.png", 6, 75);
+                                    environment.getProtagonist().setAnimation("/images/agents/Link_Running.png", 6, 75);
                                     System.out.println("ChonBota is running.");
                                 }
                                 if (input.contains("SPACE")) {
@@ -177,7 +177,7 @@ public class Engine extends Application {
                             else {
                                 if (environment.getProtagonist().getCurrentSpritesheet() != "/images/agents/Link_Standing.png") {
                                     environment.getProtagonist().setWidth(64);
-                                    environment.getProtagonist().setAnimationSprite("/images/agents/Link_Standing.png", 4, 150);
+                                    environment.getProtagonist().setAnimation("/images/agents/Link_Standing.png", 4, 150);
                                     System.out.println("ChonBota is standing still.");
                                 }
                             }
