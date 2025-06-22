@@ -167,7 +167,7 @@ public class Engine extends Application {
                                 if (input.contains("SPACE")) {
                                     shotNow = System.currentTimeMillis();
                                     environment.getProtagonist().setWidth(180);
-                                    environment.getProtagonist().setAnimation("/images/agents/Link_Attack.png", 3, 120);
+                                    environment.getProtagonist().setAnimation("/images/agents/Link_Attack.png", 4, 75);
                                     System.out.println("ChonBota is attacking.");
                                     input.remove("SPACE");
                                     String direction;
