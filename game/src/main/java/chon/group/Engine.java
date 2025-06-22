@@ -65,11 +65,12 @@ public class Engine extends Application {
         try {
             /* Initialize the game environment and agents */
             Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
-            Agent chonBota = new Agent(400, 390, 96, 96, 3, 1000, "/images/agents/chonBota.png", false);
+            Agent chonBota = new Agent(400, 390, 96, 96, 3, 101, "/images/agents/chonBota.png", false);
             Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false,64);
             Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false,75);
             chonBota.setWeapon(fireball);
             chonBota.setPathImageHit("/images/agents/Link_Damage.png");
+            chonBota.setPathImageDeath("/images/agents/Link_Death.png");
 
             Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
             environment.setProtagonist(chonBota);

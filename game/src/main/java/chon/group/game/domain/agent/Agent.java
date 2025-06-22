@@ -26,6 +26,12 @@ public class Agent extends AnimatedEntity {
 
     private String pathImageHit;
 
+    private String pathImageDeath;
+
+    public void setPathImageDeath(String pathImageDeath) {
+        this.pathImageDeath = pathImageDeath;
+    }
+
     public void setPathImageHit(String pathImageHit) {
         this.pathImageHit = pathImageHit;
     }
@@ -145,10 +151,17 @@ public class Agent extends AnimatedEntity {
             this.lastHitTime = System.currentTimeMillis();
             this.setlastHitTime(System.currentTimeMillis()); 
 
-            if(this.pathImageHit != null && !this.pathImageHit.isEmpty())
-            this.setWidth(64); 
-            this.setAnimation(this.pathImageHit, 10, 150); 
-            System.out.println("Chon bota took damage!");
+            if(this.isDead()){
+                this.setWidth(64);
+                this.setHeight(64);
+                this.setAnimation(this.pathImageDeath, 2, 150);
+                System.out.println("Chon bota die!");
+            }
+            else if(this.pathImageHit != null && !this.pathImageHit.isEmpty()){
+                this.setWidth(64); 
+                this.setAnimation(this.pathImageHit, 10, 300); 
+                System.out.println("Chon bota took damage!");
+            }
         }
     }
 
