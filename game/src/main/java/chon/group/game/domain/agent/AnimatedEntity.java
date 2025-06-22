@@ -127,19 +127,49 @@ public class AnimatedEntity extends Entity {
         }
     }
 
+    public Image getFlippedCurrentFrameImage() {
+        Image frame = getCurrentFrameImage();
+        ImageView flippedView = new ImageView(frame);
+        flippedView.setScaleX(-1);
+        SnapshotParameters params = new SnapshotParameters();
+        params.setFill(Color.TRANSPARENT);
+        return flippedView.snapshot(params, null);
+    }
+    
     /**
      * Returns the current animation frame as an Image.
+     * If flipped, returns the flipped frame.
      */
     public Image getCurrentFrameImage() {
         if (spritesheet == null || frameCount <= 1) {
-            return this.getImage();
+            return this.isFlipped() ? getFlippedImage() : this.getImage();
         }
-        return new WritableImage(
+        WritableImage frame = new WritableImage(
             spritesheet.getPixelReader(),
             currentFrame * frameWidth,
             0,
             frameWidth,
             frameHeight
         );
+        if (this.isFlipped()) {
+            ImageView flippedView = new ImageView(frame);
+            flippedView.setScaleX(-1);
+            SnapshotParameters params = new SnapshotParameters();
+            params.setFill(Color.TRANSPARENT);
+            return flippedView.snapshot(params, null);
+        } else {
+            return frame;
+        }
+    }
+
+    /**
+     * Returns the base image flipped horizontally (for non-animated entities).
+     */
+    private Image getFlippedImage() {
+        ImageView flippedView = new ImageView(this.getImage());
+        flippedView.setScaleX(-1);
+        SnapshotParameters params = new SnapshotParameters();
+        params.setFill(Color.TRANSPARENT);
+        return flippedView.snapshot(params, null);
     }
 }
