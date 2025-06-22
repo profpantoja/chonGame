@@ -39,7 +39,7 @@ public class Engine extends Application {
 
     /* If the game is paused or not. */
     private boolean isPaused = false;
-
+    long shotNow;
     /**
      * Main entry point of the application.
      *
@@ -66,13 +66,13 @@ public class Engine extends Application {
             /* Initialize the game environment and agents */
             Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
             Agent chonBota = new Agent(400, 390, 96, 96, 3, 1000, "/images/agents/chonBota.png", false);
-            Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
-            Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false);
+            Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false,64);
+            Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false,75);
             chonBota.setWeapon(fireball);
 
-            Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
+            //Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
             environment.setProtagonist(chonBota);
-            environment.getAgents().add(chonBot);
+            //environment.getAgents().add(chonBot);
             environment.setPauseImage("/images/environment/pause.png");
             environment.setGameOverImage("/images/environment/gameover.png");
 
@@ -154,19 +154,31 @@ public class Engine extends Application {
                             /* Update the protagonist's movements if input exists */
                             if (!input.isEmpty()) {
                                 /* ChonBota Shoots Somebody Who Outdrew You */
-                                if (environment.getProtagonist().getCurrentSpritesheet() != "/images/agents/Link_Running.png") {
+                                if((input.contains("RIGHT") ||
+                                input.contains("LEFT") ||
+                                input.contains("DOWN") ||
+                                input.contains("UP")) && 
+                                environment.getProtagonist().getCurrentSpritesheet() != "/images/agents/Link_Running.png"){
                                     environment.getProtagonist().setWidth(96);
                                     environment.getProtagonist().setAnimation("/images/agents/Link_Running.png", 6, 75);
                                     System.out.println("ChonBota is running.");
                                 }
+                                
                                 if (input.contains("SPACE")) {
+                                    shotNow = System.currentTimeMillis();
+                                    environment.getProtagonist().setWidth(180);
+                                    environment.getProtagonist().setAnimation("/images/agents/Link_Attack.png", 3, 120);
+                                    System.out.println("ChonBota is attacking.");
                                     input.remove("SPACE");
                                     String direction;
+                                    int widthAnimation = environment.getProtagonist().getPosX();
                                     if (chonBota.isFlipped())
                                         direction = "LEFT";
-                                    else
-                                        direction = "RIGHT";
-                                    environment.getShots().add(chonBota.getWeapon().fire(chonBota.getPosX(),
+                                    else{
+                                        widthAnimation += environment.getProtagonist().getWidth() - environment.getProtagonist().getWeapon().getShotWidth();;
+                                        direction = "RIGHT";                  
+                                    }
+                                    environment.getShots().add(chonBota.getWeapon().fire(widthAnimation,
                                             chonBota.getPosY(),
                                             direction));
                                 }
@@ -175,7 +187,7 @@ public class Engine extends Application {
                                 environment.checkBorders();
                             }
                             else {
-                                if (environment.getProtagonist().getCurrentSpritesheet() != "/images/agents/Link_Standing.png") {
+                                if (environment.getProtagonist().getCurrentSpritesheet() != "/images/agents/Link_Standing.png" && (System.currentTimeMillis() - shotNow) >= 360) {
                                     environment.getProtagonist().setWidth(64);
                                     environment.getProtagonist().setAnimation("/images/agents/Link_Standing.png", 4, 150);
                                     System.out.println("ChonBota is standing still.");
