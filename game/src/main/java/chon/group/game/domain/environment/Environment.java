@@ -24,9 +24,6 @@ public class Environment {
     /** The X (horizontal) position of the environment. */
     private int posX;
 
-    /** List of slashes present in the environment. */
-    private List<Slash> slashes;
-
     /** The Y (vertical) position of the environment. */
     private int posY;
 
@@ -57,6 +54,9 @@ public class Environment {
     /** List of shots present in the environment. */
     private List<Shot> shots;
 
+    /** List of slashes present in the environment. */
+    private List<Slash> slashes;
+
     /**
      * Default constructor to create an empty environment.
      */
@@ -82,6 +82,8 @@ public class Environment {
         this.agents = new ArrayList<Agent>();
         this.messages = new ArrayList<Message>();
         this.shots = new ArrayList<Shot>();
+        this.slashes = new ArrayList<Slash>();
+
     }
 
     /**
@@ -104,6 +106,7 @@ public class Environment {
         this.agents = agents;
         this.messages = new ArrayList<Message>();
         this.shots = new ArrayList<Shot>();
+        this.slashes = new ArrayList<Slash>();
     }
 
     /**
@@ -305,8 +308,8 @@ public class Environment {
         this.shots = shots;
     }
 
-        public List<Slash> getSlashes(List<Slash> slash) {
-        return slash;
+        public List<Slash> getSlashes() {
+        return slashes;
     }
 
     /**
@@ -409,5 +412,26 @@ public class Environment {
             }
         }
     }
+
+    public void updateSlashes() {
+    Iterator<Slash> itSlash = this.slashes.iterator();
+    while (itSlash.hasNext()) {
+        Slash slash = itSlash.next();
+        
+        Iterator<Agent> itAgent = this.agents.iterator();
+        while (itAgent.hasNext()) {
+            Agent agent = itAgent.next();
+            if (this.intersect(agent, slash)) {
+                agent.takeDamage(slash.getDamage(), this.messages);
+                if (agent.isDead())
+                    itAgent.remove(); 
+                
+                itSlash.remove(); 
+                break;
+            }
+        }
+    }
+}
+
 
 }

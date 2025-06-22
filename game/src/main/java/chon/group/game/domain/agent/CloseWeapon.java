@@ -9,9 +9,8 @@ public abstract class CloseWeapon extends Entity {
     }
     protected abstract Slash createSlash(int posX, int posY, String direction);
     
-    //ability to attack
-    public Slash attack(int posX, int posY, String direction) {
-        return this.createSlash(posX, posY, direction);
+    public Slash slash(int posX, int posY, String direction) {
+        return createSlash(posX, posY, direction);
     }
 
 }

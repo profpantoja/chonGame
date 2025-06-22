@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Shot;
+import chon.group.game.domain.agent.Slash;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.messaging.Message;
 import javafx.scene.canvas.GraphicsContext;
@@ -168,6 +169,17 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     shot.getPosY(),
                     shot.getWidth(),
                     shot.getHeight());
+        }
+    }
+
+    @Override
+    public void drawSlashes() {
+        for (Slash slash : environment.getSlashes()) {
+            drawer.drawImage(slash.getImage(),
+                     slash.getPosX(),
+                     slash.getPosY(),
+                     slash.getWidth(), 
+                     slash.getHeight());
         }
     }
 

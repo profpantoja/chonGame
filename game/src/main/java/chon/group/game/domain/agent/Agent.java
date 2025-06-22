@@ -24,6 +24,10 @@ public class Agent extends Entity {
     /* The Agent's Weapon */
     private Weapon weapon;
 
+    
+    /* The Agent's Close Weapon */
+    private CloseWeapon closeWeapon;
+
     /**
      * Constructor to initialize the agent properties.
      *
@@ -114,6 +118,24 @@ public class Agent extends Entity {
      */
     public void setWeapon(Weapon weapon) {
         this.weapon = weapon;
+    }
+
+    /**
+     * Gets the agent's close combat weapon.
+     *
+     * @return its close combat weapon.
+     */
+    public CloseWeapon getCloseWeapon() {
+        return closeWeapon;
+    }
+
+    /**
+     * Sets the agent new weapon.
+     *
+     * @param weapon the new weapon
+     */
+    public void setCloseWeapon(CloseWeapon closeWeapon) {
+        this.closeWeapon = closeWeapon;
     }
 
     /**

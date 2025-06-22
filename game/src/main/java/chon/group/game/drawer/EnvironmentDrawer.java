@@ -53,4 +53,10 @@ public interface EnvironmentDrawer {
      */
     void drawGameOver();
 
+    /**
+     * Draws all the slashes on the screen.
+     */
+    void drawSlashes();
+
+
 }

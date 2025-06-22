@@ -23,7 +23,7 @@ public class Sword extends CloseWeapon {
                 75,
                 3,
                 0,
-                "/images/weapons/fireball/fireball001.png",
+                "/images/weapons/slash/SlashTeste.png",
                 false,
                 100,
                 direction);

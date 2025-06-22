@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Cannon;
+import chon.group.game.domain.agent.CloseWeapon;
 import chon.group.game.domain.agent.Fireball;
 import chon.group.game.domain.agent.Weapon;
 import chon.group.game.domain.environment.Environment;
@@ -12,12 +13,12 @@ import chon.group.game.drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
-import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 /**
  * The {@code Engine} class represents the main entry point of the application
@@ -49,7 +50,7 @@ public class Engine extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
+    
     /**
      * Starts the JavaFX application and initializes the game environment, agents,
      * and graphical components.
@@ -68,7 +69,9 @@ public class Engine extends Application {
             Agent luke = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/luke.png", false);
             Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
             Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false);
+            CloseWeapon sword = new chon.group.game.domain.agent.Sword(400, 390, 0, 0, 3, 0, "", false);
             luke.setWeapon(fireball);
+            luke.setCloseWeapon(sword);
 
             Agent darthVader = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/darthVader.png", true);
             environment.setProtagonist(luke);
@@ -120,7 +123,7 @@ public class Engine extends Application {
 
             /* Start the game loop */
             new AnimationTimer() {
-
+                
                 /**
                  * The game loop, called on each frame.
                  *
@@ -135,10 +138,14 @@ public class Engine extends Application {
                         /* Still prints ongoing messages (e.g., last hit taken) */
                         environment.updateMessages();
                         environment.updateShots();
+                        environment.updateSlashes();
                         mediator.drawBackground();
                         mediator.drawAgents();
                         mediator.drawShots();
+                        mediator.drawSlashes();
+                        
                         mediator.drawMessages();
+                        
                         /* Rendering the Game Over Screen */
                         mediator.drawGameOver();
                     } else {
@@ -147,6 +154,8 @@ public class Engine extends Application {
                             mediator.drawAgents();
                             mediator.drawMessages();
                             mediator.drawShots();
+                            mediator.drawSlashes();
+                            
                             /* Rendering the Pause Screen */
                             mediator.drawPauseScreen();
                         } else {
@@ -161,7 +170,7 @@ public class Engine extends Application {
                                         direction = "LEFT";
                                     else
                                         direction = "RIGHT";
-                                    environment.getShots().add(luke.getWeapon().fire(luke.getPosX(),
+                                    environment.getSlashes().add(luke.getCloseWeapon().slash(luke.getPosX(),
                                             luke.getPosY(),
                                             direction));
                                 }
@@ -179,10 +188,12 @@ public class Engine extends Application {
                             environment.detectCollision();
                             environment.updateShots();
                             environment.updateMessages();
+                            environment.updateSlashes();
                             mediator.drawBackground();
                             mediator.drawAgents();
                             mediator.drawShots();
                             mediator.drawMessages();
+                            mediator.drawSlashes();
                         }
                     }
                 }
