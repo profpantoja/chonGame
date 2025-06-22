@@ -414,23 +414,28 @@ public class Environment {
     }
 
     public void updateSlashes() {
-    Iterator<Slash> itSlash = this.slashes.iterator();
-    while (itSlash.hasNext()) {
-        Slash slash = itSlash.next();
-        
-        Iterator<Agent> itAgent = this.agents.iterator();
-        while (itAgent.hasNext()) {
-            Agent agent = itAgent.next();
-            if (this.intersect(agent, slash)) {
-                agent.takeDamage(slash.getDamage(), this.messages);
-                if (agent.isDead())
-                    itAgent.remove(); 
-                
-                itSlash.remove(); 
-                break;
+        Iterator<Slash> itSlash = this.slashes.iterator();
+        while (itSlash.hasNext()) {
+            Slash slash = itSlash.next();
+
+            boolean hit = false;
+            Iterator<Agent> itAgent = this.agents.iterator();
+            while (itAgent.hasNext()) {
+                Agent agent = itAgent.next();
+                if (this.intersect(agent, slash)) {
+                    agent.takeDamage(slash.getDamage(), this.messages);
+                    if (agent.isDead())
+                        itAgent.remove(); 
+                    hit = true;
+                    break;
+                }
+            }
+
+            // Check if the slash intersects with the protagonist
+            if (hit || slash.shouldRemove()) {
+                itSlash.remove();
             }
         }
-    }
 }
 
 

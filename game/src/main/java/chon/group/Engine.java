@@ -40,6 +40,8 @@ public class Engine extends Application {
 
     /* If the game is paused or not. */
     private boolean isPaused = false;
+    private boolean canSlash = true;
+
 
     /**
      * Main entry point of the application.
@@ -118,6 +120,10 @@ public class Engine extends Application {
                     String code = e.getCode().toString();
                     System.out.println("Released: " + code);
                     input.remove(code);
+
+                    if (code.equals("SPACE")) {
+                        canSlash = true;  // permite novo slash após soltar
+                    }
                 }
             });
 
@@ -143,7 +149,7 @@ public class Engine extends Application {
                         mediator.drawAgents();
                         mediator.drawShots();
                         mediator.drawSlashes();
-                        
+
                         mediator.drawMessages();
                         
                         /* Rendering the Game Over Screen */
@@ -162,19 +168,16 @@ public class Engine extends Application {
                             /* luke Only Moves if the Player Press Something */
                             /* Update the protagonist's movements if input exists */
                             if (!input.isEmpty()) {
-                                /* luke Shoots Somebody Who Outdrew You */
-                                if (input.contains("SPACE")) {
+                                if (input.contains("SPACE") && canSlash) {
                                     input.remove("SPACE");
-                                    String direction;
-                                    if (luke.isFlipped())
-                                        direction = "LEFT";
-                                    else
-                                        direction = "RIGHT";
-                                    environment.getSlashes().add(luke.getCloseWeapon().slash(luke.getPosX(),
-                                            luke.getPosY(),
-                                            direction));
+                                    canSlash = false;
+
+                                    String direction = luke.isFlipped() ? "LEFT" : "RIGHT";
+                                    environment.getSlashes().add(
+                                        luke.getCloseWeapon().slash(luke.getPosX(), luke.getPosY(), direction)
+                                    );
                                 }
-                                /* luke's Movements */
+
                                 environment.getProtagonist().move(input);
                                 environment.checkBorders();
                             }
