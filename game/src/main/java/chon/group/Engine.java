@@ -2,18 +2,11 @@ package chon.group;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Iterator;
 import java.util.List;
-
-import chon.group.game.domain.agent.Agent;
-import chon.group.game.domain.agent.Cannon;
-import chon.group.game.domain.agent.Collision;
-import chon.group.game.domain.agent.Fireball;
 
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Shot;
 import chon.group.game.domain.environment.Collision;
-import chon.group.game.domain.agent.Weapon;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.domain.environment.GameStatus;
 import chon.group.game.domain.environment.MainMenu;
@@ -25,14 +18,12 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 
 /**
  * The {@code Engine} class represents the main entry point of the application
@@ -228,20 +219,6 @@ public class Engine extends Application {
         environment.updateShots();
         environment.updateMessages();
     }
-
-    private void verifyGameStatus() {
-    
-    if (environment.getProtagonist().isDead()) gameStatus = GameStatus.GAME_OVER;
-        
-    else if (currentRoom == 2 && environment.getAgents().isEmpty()) gameStatus = GameStatus.VICTORY;
-        
-    else if (currentRoom == 1 && environment.getAgents().isEmpty() && environment.getProtagonist().getPosX() >= (0.9 * environment.getWidth())) {
-        System.out.println("Avançando para a sala do chefe...");
-        Agent boss = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
-        environment.loadNextRoom("/images/environment/mountain.png", boss);
-        currentRoom = 2;
-    }
-}
 
     /**
      * Draw the game world elements on the screen.
