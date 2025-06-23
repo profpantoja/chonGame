@@ -1,8 +1,10 @@
 package chon.group.game.domain.environment;
 
 import chon.group.game.domain.collectibles.Coin;
+import chon.group.game.messaging.Message;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import chon.group.game.domain.agent.Agent;
@@ -40,6 +42,9 @@ public class Environment {
     /** The background image of the pause. */
     private Image pauseImage;
 
+        /** The background image of the game over. */
+    private Image gameOverImage;
+
     /** The protagonist instance. */
     private Agent protagonist;
 
@@ -47,6 +52,11 @@ public class Environment {
     private List<Agent> agents = new ArrayList<Agent>();
 
     private List<Coin> coins = new ArrayList<>();
+
+        /** List of messages to display. */
+    private List<Message> messages;
+
+    /**
 
     /** The graphics context used to render the environment. */
     private GraphicsContext gc;
@@ -74,6 +84,8 @@ public class Environment {
         this.width = width;
         this.setImage(pathImage);
         this.agents = new ArrayList<Agent>();
+        this.messages = new ArrayList<Message>();
+
     }
 
     /**
@@ -94,6 +106,7 @@ public class Environment {
         this.width = width;
         this.setImage(pathImage);
         this.setAgents(agents);
+        this.messages = new ArrayList<Message>();
     }
 
     /**
@@ -195,6 +208,24 @@ public class Environment {
     }
 
     /**
+     * Gets the background image for the game over.
+     *
+     * @return the game over image
+     */
+    public Image getGameOverImage() {
+        return gameOverImage;
+    }
+
+    /**
+     * Sets the background image for the game over.
+     *
+     * @param pathImage the path to the new game over image
+     */
+    public void setGameOverImage(String pathImage) {
+        this.gameOverImage = new Image(getClass().getResource(pathImage).toExternalForm());
+    }
+
+    /**
      * Gets the protagonist of the environment.
      *
      * @return the protagonist of the environment
@@ -230,9 +261,21 @@ public class Environment {
         this.agents = agents;
     }
 
+    /**
+     * Gets the list of coins present in the environment.
+     *
+     * @return the list of coins
+     */
     public List<Coin> getCoins() { return coins; }
-    public void setCoins(List<Coin> coins) { this.coins = coins; }
 
+    /**
+     * Sets the list of coins present in the environment.
+     *
+     * @param coins the new list of coins
+     */
+    public void setCoins(List<Coin> coins) { 
+        this.coins = coins;
+     }
 
     /**
      * Gets the graphics context used to render the environment.
@@ -371,6 +414,19 @@ public class Environment {
      * Checks if the protagonist is within the environment's boundaries and adjusts
      * its position if necessary.
      */
+/**
+     * Sets the list of messages.
+     * 
+     * @param messages The new list of messages to display
+     */
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+ 
     public void checkBorders() {
         if (this.protagonist.getPosX() < 0) {
             this.protagonist.setPosX(0);
@@ -388,20 +444,10 @@ public class Environment {
      * environment.
      */
 
-        public void drawCoins() {
-    for (Coin coin : coins) {
-        if (!coin.isCollected()) {
-            gc.drawImage(coin.getImage(), coin.getPosX(), coin.getPosY(), 50, 50);
-        }
-    }
-}
-
-
     /**
      * Detects collisions between the protagonist and other agents in the
      * environment.
      */
-
 
     public void detectCollision() {
         for (Agent agent : this.agents) {
@@ -409,21 +455,12 @@ public class Environment {
                 System.out.println("Collision detected with agent: " + agent);
                 //if (!(this.protagonist.getHealth() <= 0))
                 //    this.protagonist.setHealth(this.protagonist.getHealth() - 1);
+                /* The protagonist takes damage when colliding with an agent. */
+                protagonist.takeDamage(50,this.messages);
             }
         }
     }
-    public void detectCoinCollection() {
-    for (Coin coin : coins) {
-        if (!coin.isCollected()) {
-            double dx = Math.abs(protagonist.getPosX() - coin.getPosX());
-            double dy = Math.abs(protagonist.getPosY() - coin.getPosY());
-            if (dx < 50 && dy < 50) {
-                coin.setCollected(true);
-                System.out.println("Moeda coletada!");
-            }
-        }
-    }
-}
+
 
     /**
      * Checks if two agents collide with each other based on their positions and
@@ -444,19 +481,19 @@ public class Environment {
                 a.getPosY() + a.getHeight() > b.getPosY();
     }
 
-    public List<Agent> getMessages() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMessages'");
-    }
 
     public List<Agent> getShots() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getShots'");
     }
 
-    public Image getGameOverImage() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getGameOverImage'");
+        public void updateMessages() {
+        Iterator<Message> iterator = this.messages.iterator();
+        while (iterator.hasNext()) {
+            Message message = iterator.next();
+            if (!message.update()) {
+                iterator.remove();
+            }
+        }
     }
-
 }

@@ -3,6 +3,7 @@ package chon.group.game.domain.agent;
 import java.util.ArrayList;
 import java.util.List;
 
+import chon.group.game.messaging.Message;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -41,6 +42,12 @@ public class Agent {
 
     /** The maximum agent's health. */
     private int fullHealth;
+
+    private long lastHitTime = 0;
+
+    private boolean invulnerable;
+    
+    private final long INVULNERABILITY_COOLDOWN = 500;
 
     /**
      * Constructor to initialize the agent properties.
@@ -214,6 +221,35 @@ public class Agent {
         this.fullHealth = fullHealth;
     }
 
+    public long getLastHitTime() {
+        return lastHitTime;
+    }
+
+    public void setLastHitTime(long lastHitTime) {
+        this.lastHitTime = lastHitTime;
+    }
+
+    public boolean isInvulnerable() {
+        return invulnerable;
+    }
+
+    public void setInvulnerable(boolean invulnerable) {
+        this.invulnerable = invulnerable;
+    }
+
+    public long getINVULNERABILITY_COOLDOWN() {
+        return INVULNERABILITY_COOLDOWN;
+    }
+
+    /**
+     * Gets if the agent is dead.
+     *
+     * @return if the agent is dead
+     */
+    public boolean isDead() {
+        return (this.health <= 0);
+    }
+
     /**
      * Gets the agent image.
      *
@@ -311,6 +347,39 @@ public class Agent {
     public char[] getMessage() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getMessage'");
+    
     }
+
+ /**
+     * Makes the agent take damage.
+     * If health reaches 0, the game must end.
+     *
+     * @param damage the amount of damage to be applied
+     */
+    public void takeDamage(int damage, List<Message> messages) {
+        this.invulnerable = this.updateInvulnerability();
+        if (!this.invulnerable && this.health > 0) {
+            /* Decrease health. */
+            this.health = health - damage;
+            messages.add(new Message(
+                    String.valueOf(damage),
+                    this.getPosX(),
+                    this.getPosY(),
+                    25));
+            /* After taking the damage, the health must not be negative. */
+            if (this.health < 0)
+                this.health = 0;
+            else
+                this.lastHitTime = System.currentTimeMillis();
+        }
+    }
+ 
+    private boolean updateInvulnerability() {
+        if (System.currentTimeMillis() - lastHitTime >= INVULNERABILITY_COOLDOWN) {
+            return false;
+        }
+        return true;
+    }
+ 
 
 }

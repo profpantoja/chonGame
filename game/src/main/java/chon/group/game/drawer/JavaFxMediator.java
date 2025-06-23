@@ -3,7 +3,7 @@ package chon.group.game.drawer;
 import java.util.Iterator;
 
 import chon.group.game.domain.agent.Agent;
-import chon.group.game.domain.agent.Shot;
+import chon.group.game.domain.collectibles.Coin;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.messaging.Message;
 import javafx.scene.canvas.GraphicsContext;
@@ -130,14 +130,15 @@ public class JavaFxMediator implements EnvironmentDrawer {
      * Draws the pause screen overlay, displaying a pause image centered within the
      * environment.
      */
-    @Override
-    public void drawGameOver() {
-        drawer.drawScreen(this.environment.getGameOverImage(),
-                (int) this.environment.getPauseImage().getWidth(),
-                (int) this.environment.getPauseImage().getHeight(),
-                this.environment.getWidth(),
-                this.environment.getHeight());
-    }
+@Override
+public void drawGameOver() {
+    drawer.drawScreen(this.environment.getGameOverImage(),
+            (int) this.environment.getGameOverImage().getWidth(),
+            (int) this.environment.getGameOverImage().getHeight(),
+            this.environment.getWidth(),
+            this.environment.getHeight());
+}
+
 
     /**
      * Draws damage messaages that appear when agents take damage.
@@ -145,9 +146,9 @@ public class JavaFxMediator implements EnvironmentDrawer {
      */
     @Override
     public void drawMessages() {
-        Iterator<Agent> iterator = this.environment.getMessages().iterator();
+        Iterator<Message> iterator = this.environment.getMessages().iterator();
         while (iterator.hasNext()) {
-            Agent message = iterator.next();
+            Message message = iterator.next();
             drawer.drawMessages(message.getSize(),
                     message.getOpacity(),
                     Color.BLACK,
@@ -170,5 +171,30 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     shot.getHeight());
         }
     }
+
+    /**
+     * Draw coins that will be collected by the protagonist when they are near the agents
+     */
+@Override
+public void drawCoins() {
+    for (Coin coin : environment.getCoins()) {
+        // Coin follows if it is near the protagonist
+        coin.followAgentIfClose(environment.getProtagonist(), 150);
+
+        // If the distance is too small, it is considered as collected
+        double dx = coin.getPosX() - environment.getProtagonist().getPosX();
+        double dy = coin.getPosY() - environment.getProtagonist().getPosY();
+        double distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < 20) {
+            coin.setCollected(true);
+            System.out.println("Moeda coletada!");
+        }
+    }
+    drawer.drawCoins(environment.getCoins(), 32, 32);
+}
+
+
+    
 
 }

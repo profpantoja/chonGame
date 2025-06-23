@@ -63,5 +63,17 @@ public void followAgentIfClose(Agent agent, double radius) {
         System.out.println("Moeda seguindo o Harry Potter!");
     }
 }
+
+
+public int getWidth() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'getWidth'");
+}
+
+
+public int getHeight() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'getHeight'");
+}
  
 }

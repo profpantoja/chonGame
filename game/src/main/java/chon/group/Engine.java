@@ -6,6 +6,8 @@ import java.util.List;
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.collectibles.Coin;
 import chon.group.game.domain.environment.Environment;
+import chon.group.game.drawer.EnvironmentDrawer;
+import chon.group.game.drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -66,6 +68,8 @@ public class Engine extends Application {
             environment.setProtagonist(HarryPotter);
             environment.getAgents().add(Voldemort);
             environment.setPauseImage("/images/environment/pause.png");
+            environment.setGameOverImage("/images/environment/gameover.png");
+            
 
             List<Coin> moedas = new ArrayList<>();
 moedas.add(new Coin(200, 200, "/images/agents/coin.png"));
@@ -81,8 +85,7 @@ environment.setCoins(moedas);
             /* Set up the graphical canvas */ 
             Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
             GraphicsContext gc = canvas.getGraphicsContext2D();
-            environment.setGc(gc);
-
+            EnvironmentDrawer mediator = new JavaFxMediator(environment, gc);
             /* Set up the scene and stage */ 
             StackPane root = new StackPane();
             Scene scene = new Scene(root, environment.getWidth(), environment.getHeight());
@@ -130,42 +133,54 @@ environment.setCoins(moedas);
                  */
                 @Override
                 public void handle(long arg0) {
-                    environment.clearEnvironment();
+                    mediator.clearEnvironment();
+                    environment.detectCollision();
+                    
                     /* Branching the Game Loop */
-                    if (isPaused) {
-                        environment.drawBackground();
-                        environment.drawAgents();
-                        /* Rendering the Pause Screen */
-                        environment.drawPauseScreen();
+                    /* If the agent died in the last loop */
+                    if (environment.getProtagonist().isDead()) {
+                        /* Still prints ongoing messages (e.g., last hit taken) */
+                        environment.updateMessages();
+                        mediator.drawBackground();
+                        
+
+                        mediator.drawAgents();
+                        
+                        mediator.drawMessages();
+                        mediator.drawCoins();
+                        /* Rendering the Game Over Screen */
+                        mediator.drawGameOver();
                     } else {
-                        /* HarryPotter Only Moves if the Player Press Something */
-                        /* Update the protagonist's movements if input exists */
-                        if (!input.isEmpty()) {
-                            /* HarryPotter's Movements */
-                            environment.getProtagonist().move(input);
-                            environment.checkBorders();
+                        if (isPaused) {
+                            mediator.drawBackground();
+                            environment.detectCollision();
+
+                            mediator.drawAgents();
+                            /* Rendering the Pause Screen */
+                            mediator.drawPauseScreen();
+                        } else {
+                            /* ChonBota Only Moves if the Player Press Something */
+                            /* Update the protagonist's movements if input exists */
+                            if (!input.isEmpty()) {
+                                /* ChonBota's Movements */
+                                environment.getProtagonist().move(input);
+                                environment.checkBorders();
+                            }
+                            /* ChonBot's Automatic Movements */
+                            /* Update the other agents' movements */
+                            environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
+                                    environment.getProtagonist().getPosY());
+                                    
+                            /* Render the game environment and agents */
+
+                            environment.updateMessages();
+                            mediator.drawBackground();
+                            mediator.drawAgents();
+                            mediator.drawMessages();
+                            mediator.drawCoins();
                         }
-
-                        /* Voldemort's Automatic Movements */
-                        /* Update the other agents' movements */ 
-                        environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
-                                environment.getProtagonist().getPosY());
-
-                           for (Coin coin : environment.getCoins()) {
-                            coin.followAgentIfClose(environment.getProtagonist(), 200); 
-                        }
-
-                        /* Render the game environment and agents */
-                        environment.clearEnvironment();
-                        environment.drawBackground();
-                        environment.drawCoins(); // Moedas primeiro
-                        environment.drawAgents(); // Depois os personagens
-                        environment.detectCollision();
-                        environment.detectCoinCollection();
-
                     }
                 }
-
             }.start();
             theStage.show();
 
