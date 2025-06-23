@@ -6,12 +6,12 @@ import chon.group.game.messaging.Message;
 
 public class Cannon extends Weapon {
 
-    public Cannon(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped) {
+    public Cannon(double posX, double posY, int height, int width, int speed, int health, String pathImage, boolean flipped) {
         super(posX, posY, height, width, speed, health, pathImage, flipped);
     }
 
     @Override
-    protected Shot createShot(int posX, int posY, String direction) {
+    protected Shot createShot(double posX, double posY, String direction) {
         if (direction.equals("RIGHT"))
             posX += 64 + 1;
         else
@@ -20,7 +20,7 @@ public class Cannon extends Weapon {
                 posY,
                 42,
                 64,
-                3,
+                300,
                 0,
                 "/images/weapons/missile/missile001.png",
                 false,

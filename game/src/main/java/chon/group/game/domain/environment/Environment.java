@@ -366,7 +366,7 @@ public class Environment {
         }
     }
 
-    public void updateShots() {
+    public void updateShots(double deltaTime) {
         Iterator<Shot> itShot = this.shots.iterator();
         while (itShot.hasNext()) {
             Shot shot = itShot.next();
@@ -388,7 +388,7 @@ public class Environment {
                         }
                     }
                 }
-                shot.move(new ArrayList<>(List.of(shot.getDirection())));
+                shot.move(new ArrayList<>(List.of(shot.getDirection())), deltaTime);
             }
         }
     }

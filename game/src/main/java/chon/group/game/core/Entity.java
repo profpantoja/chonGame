@@ -12,10 +12,10 @@ import javafx.scene.paint.Color;
 public abstract class Entity {
 
     /** X position (horizontal) of the entity. */
-    private int posX;
+    private double posX;
 
     /** Y (vertical) position of the entity. */
-    private int posY;
+    private double posY;
 
     /** Height of the entity. */
     private int height;
@@ -49,7 +49,7 @@ public abstract class Entity {
      * @param health    the entity's health
      * @param pathImage the path to the entity's image
      */
-    public Entity(int posX, int posY, int height, int width, int speed, int health, String pathImage) {
+    public Entity(double posX, double posY, int height, int width, int speed, int health, String pathImage) {
         this.posX = posX;
         this.posY = posY;
         this.height = height;
@@ -72,7 +72,7 @@ public abstract class Entity {
      * @param pathImage the path to the entity's image
      * @param flipped   the entity's direction (RIGHT=0 or LEFT=1)
      */
-    public Entity(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped) {
+    public Entity(double posX, double posY, int height, int width, int speed, int health, String pathImage, boolean flipped) {
         this.posX = posX;
         this.posY = posY;
         this.height = height;
@@ -89,7 +89,7 @@ public abstract class Entity {
      *
      * @return the X (horizontal) position of the entity
      */
-    public int getPosX() {
+    public double getPosX() {
         return posX;
     }
 
@@ -98,7 +98,7 @@ public abstract class Entity {
      *
      * @param posX the new X (horizontal) position
      */
-    public void setPosX(int posX) {
+    public void setPosX(double posX) {
         this.posX = posX;
     }
 
@@ -107,7 +107,7 @@ public abstract class Entity {
      *
      * @return the Y (vertical) position of the entity
      */
-    public int getPosY() {
+    public double getPosY() {
         return posY;
     }
 
@@ -116,7 +116,7 @@ public abstract class Entity {
      *
      * @param posY the new Y (vertical) position
      */
-    public void setPosY(int posY) {
+    public void setPosY(double posY) {
         this.posY = posY;
     }
 
@@ -264,19 +264,24 @@ public abstract class Entity {
      * @param movements a list of movement directions ("RIGHT", "LEFT", "UP",
      *                  "DOWN")
      */
-    public void move(List<String> movements) {
+    public void move(List<String> movements, double deltaTime){
+        double adjustedSpeed = speed * deltaTime;    
+    
         if (movements.contains("RIGHT")) {
             if (flipped)
                 this.flipImage();
-            setPosX(posX += speed);
-        } else if (movements.contains("LEFT")) {
+            setPosX(posX += adjustedSpeed);
+        } 
+        else if (movements.contains("LEFT")) {
             if (!flipped)
                 this.flipImage();
-            setPosX(posX -= speed);
-        } else if (movements.contains("UP")) {
-            setPosY(posY -= speed);
-        } else if (movements.contains("DOWN")) {
-            setPosY(posY += speed);
+            setPosX(posX -= adjustedSpeed);
+        } 
+        else if (movements.contains("UP")) {
+            setPosY(posY -= adjustedSpeed);
+        } 
+        else if (movements.contains("DOWN")) {
+            setPosY(posY += adjustedSpeed);
         }
     }
 
@@ -286,18 +291,22 @@ public abstract class Entity {
      * @param targetX the target's X (horizontal) position
      * @param targetY the target's Y (vertical) position
      */
-    public void chase(int targetX, int targetY) {
+    public void chase(double targetX, double targetY, double deltaTime) {
         if (targetX > this.posX) {
-            this.move(new ArrayList<String>(List.of("RIGHT")));
-        } else if (targetX < this.posX) {
-            this.move(new ArrayList<String>(List.of("LEFT")));
+            this.move(new ArrayList<>(List.of("RIGHT")), deltaTime);
+        } 
+        else if (targetX < this.posX) {
+            this.move(new ArrayList<>(List.of("LEFT")), deltaTime);
         }
+
         if (targetY > this.posY) {
-            this.move(new ArrayList<String>(List.of("DOWN")));
-        } else if (targetY < this.posY) {
-            this.move(new ArrayList<String>(List.of("UP")));
+            this.move(new ArrayList<>(List.of("DOWN")), deltaTime);
+        } 
+        else if (targetY < this.posY) {
+            this.move(new ArrayList<>(List.of("UP")), deltaTime);
         }
-    }
+    }   
+
 
     /**
      * Makes the Entity take damage.

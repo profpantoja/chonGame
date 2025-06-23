@@ -49,7 +49,7 @@ public class JavaFxDrawer {
      * @param width  The width of the image.
      * @param height The height of the image.
      */
-    public void drawImage(Image image, int posX, int posY, int width, int height) {
+    public void drawImage(Image image, double posX, double posY, int width, int height) {
         this.gc.drawImage(image, posX, posY, width, height);
     }
 
@@ -63,7 +63,7 @@ public class JavaFxDrawer {
      * @param posY       The y-coordinate position.
      * @param color      The color of the life bar.
      */
-    public void drawLifeBar(int health, int fullHealth, int width, int posX, int posY, Color color) {
+    public void drawLifeBar(int health, int fullHealth, int width, double posX, double posY, Color color) {
         int borderThickness = 2;
         int barHeight = 5;
         int lifeSpan = Math.round((float) ((health * 100 / fullHealth) * width) / 100);
@@ -85,13 +85,16 @@ public class JavaFxDrawer {
      * @param posX The x-coordinate of the protagonist.
      * @param posY The y-coordinate of the protagonist.
      */
-    public void drawStatusPanel(int posX, int posY) {
+    public void drawStatusPanel(double posX, double posY) {
         Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
         this.gc.setFont(theFont);
         this.gc.setFill(Color.BLACK);
-        this.gc.fillText("X: " + posX, posX + 10, posY - 40);
-        this.gc.fillText("Y: " + posY, posX + 10, posY - 25);
+
+        // Convert the coordinates to integers for display
+        this.gc.fillText("X: " + (int) posX, posX + 10, posY - 40);
+        this.gc.fillText("Y: " + (int) posY, posX + 10, posY - 25);
     }
+
 
     /**
      * Renders the pause screen, centering the pause image within the environment.
