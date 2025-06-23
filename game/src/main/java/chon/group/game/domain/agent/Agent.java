@@ -2,18 +2,17 @@ package chon.group.game.domain.agent;
 
 import java.util.List;
 
-import chon.group.game.core.Entity;
-import chon.group.game.domain.environment.SoundManager;
 import chon.group.game.domain.environment.Collision;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.messaging.Message;
+import javafx.scene.image.Image;
 
 /**
  * Represents an agent in the game, with properties such as position, size,
  * speed, and image.
  * The agent can move in specific directions and chase a target.
  */
-public class Agent extends Entity {
+public class Agent extends AnimatedEntity {
 
     /* The time of the last hit taken. */
     private long lastHitTime = 0;
@@ -31,6 +30,19 @@ public class Agent extends Entity {
     private boolean checkMenu = false;
     
    
+    
+    private String pathImageHit;
+    
+    private String pathImageDeath;
+    
+    public void setPathImageDeath(String pathImageDeath) {
+        this.pathImageDeath = pathImageDeath;
+    }
+    
+    public void setPathImageHit(String pathImageHit) {
+        this.pathImageHit = pathImageHit;
+    }
+    
     public void setCheckMenu(boolean checkMenu){
         this.checkMenu = checkMenu;
     }
@@ -38,7 +50,7 @@ public class Agent extends Entity {
     public boolean getCheckMenu(){
         return checkMenu;
     }
-    
+
     /**
      * Constructor to initialize the agent properties.
      *
@@ -51,7 +63,7 @@ public class Agent extends Entity {
      * @param pathImage the path to the agent's image
      */
     public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage) {
-        super(posX, posY, height, width, speed, health, pathImage);
+        super(new Image(Agent.class.getResource(pathImage).toExternalForm()), posX, posY, height, width, speed, health, pathImage);
     }
     
     /**
@@ -67,7 +79,7 @@ public class Agent extends Entity {
      * @param flipped   the agent's direction (RIGHT=0 or LEFT=1)
      */
     public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped) {
-        super(posX, posY, height, width, speed, health, pathImage, flipped);
+        super(new Image(Agent.class.getResource(pathImage).toExternalForm()), posX, posY, height, width, speed, health, pathImage, flipped);
     }
 
     /**
@@ -152,7 +164,21 @@ public class Agent extends Entity {
         if (!this.invulnerable) {
             super.takeDamage(damage, messages); 
             this.lastHitTime = System.currentTimeMillis();
-            //SoundManager.playSound("sounds/takedamage.mp3");
+            this.setlastHitTime(System.currentTimeMillis()); 
+
+            if(this.isDead()){
+                this.setWidth(64);
+                this.setHeight(64);
+                this.setAnimation(this.pathImageDeath, 2, 150);
+                System.out.println("Chon bota die!");
+                //SoundManager.playSound("sounds/gameOver.wav");
+            }
+            else if(this.pathImageHit != null && !this.pathImageHit.isEmpty()){
+                this.setWidth(64); 
+                this.setAnimation(this.pathImageHit, 10, 300); 
+                System.out.println("Chon bota took damage!");
+                //SoundManager.playSound("sounds/takedamage.wav");
+            }
         }
     }
 

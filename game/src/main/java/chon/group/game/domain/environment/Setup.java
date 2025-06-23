@@ -1,6 +1,7 @@
 package chon.group.game.domain.environment;
 
 import chon.group.game.domain.agent.Agent;
+import chon.group.game.domain.agent.Cannon;
 import chon.group.game.domain.agent.Fireball;
 import chon.group.game.domain.agent.Weapon;
 import javafx.scene.image.Image;
@@ -23,7 +24,8 @@ public class Setup {
         
         // adding protagonist agent
         Agent chonBota = new Agent(100, 390, 90, 65, 5, 1000, "/images/agents/chonBota.png", false);
-        Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false); 
+        Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false,75); 
+        Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false,64);
         chonBota.setWeapon(fireball);
         environment.setProtagonist(chonBota);
 
@@ -60,6 +62,9 @@ public class Setup {
         //SoundManager.playSound("/sounds/Win.wav"); Win music
         //SoundManager.playSound("/sounds/GameOver.wav"); Game over music
         //SoundManager.playSound("/sounds/BreakWall.wav"); When Break Wall
+
+        environment.getProtagonist().setPathImageHit("/images/agents/Link_Damage.png");
+        environment.getProtagonist().setPathImageDeath("/images/agents/Link_Death.png");
 
         return environment;
     }

@@ -55,7 +55,7 @@ public class Engine extends Application {
     private static final double WINDOW_WIDTH = 1280;
     private static final double WINDOW_HEIGHT = 768;
     private int currentRoom = 1;
-    
+    long shotNow;
 
     /**
      * Main entry point of the application.
@@ -116,6 +116,9 @@ public class Engine extends Application {
     theStage.setScene(scene);
     
     setupInputHandlers(scene);
+
+    environment.getProtagonist().setPathImageHit("/images/agents/Link_Damage.png");
+    environment.getProtagonist().setPathImageDeath("/images/agents/Link_Death.png");
 
     //Start Game Loop
     new GameLoop().start();
@@ -221,17 +224,51 @@ public class Engine extends Application {
 
         // Protagonist movement and actions
         if (!gameInput.isEmpty()) {
+            if((gameInput.contains("RIGHT") ||
+            gameInput.contains("LEFT") ||
+            gameInput.contains("DOWN") ||
+            gameInput.contains("UP")) && 
+            environment.getProtagonist().getCurrentSpritesheet() != "/images/agents/Link_Running.png" &&
+            (System.currentTimeMillis() - environment.getProtagonist().getlastHitTime()) >=
+             environment.getProtagonist().getInvulnerabilityCooldown()){
+                environment.getProtagonist().setWidth(96);
+                environment.getProtagonist().setAnimation("/images/agents/Link_Running.png", 6, 75);
+                System.out.println("ChonBota is running.");
+            }
             environment.getProtagonist().move(gameInput);
             updateCameraPosition();
             if (gameInput.contains("SPACE")) {
-                //SoundManager.playMusic("/sounds/damage.wav"); descomentar quando existir
-                String direction = environment.getProtagonist().isFlipped() ? "LEFT" : "RIGHT";
-                Agent protagonist = environment.getProtagonist();
-                environment.getShots().add(protagonist.getWeapon().fire(protagonist.getPosX(), protagonist.getPosY(), direction));
-                gameInput.remove("SPACE"); // Evita múltiplos tiros com uma pressionada
+                //SoundManager.playMusic("/sounds/damage.wav"); 
+                shotNow = System.currentTimeMillis();
+                environment.getProtagonist().setWidth(180);
+                environment.getProtagonist().setAnimation("/images/agents/Link_Attack.png", 4, 75);
+                System.out.println("ChonBota is attacking.");
+                gameInput.remove("SPACE");
+                String direction;
+                int widthAnimation = environment.getProtagonist().getPosX();
+                if (environment.getProtagonist().isFlipped())
+                    direction = "LEFT";
+                else{
+                    widthAnimation += environment.getProtagonist().getWidth() - environment.getProtagonist().getWeapon().getShotWidth();
+                    direction = "RIGHT";                  
+                }
+                environment.getShots().add(environment.getProtagonist().getWeapon().fire(widthAnimation,
+                        environment.getProtagonist().getPosY(),
+                        direction));
             }
             environment.checkBorders();
         }
+        else {
+            if (environment.getProtagonist().getCurrentSpritesheet() != "/images/agents/Link_Standing.png" && 
+                (System.currentTimeMillis() - shotNow) >= 360 &&
+                (System.currentTimeMillis() - environment.getProtagonist().getlastHitTime()) >= 
+                environment.getProtagonist().getInvulnerabilityCooldown()){
+                environment.getProtagonist().setWidth(64);
+                environment.getProtagonist().setAnimation("/images/agents/Link_Standing.png", 4, 150);
+                System.out.println("ChonBota is standing still.");
+            }
+        }
+        environment.getProtagonist().updateAnimation();
         
         // method chase for each agent
         environment.getAgents().forEach(agent -> 

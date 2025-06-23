@@ -7,20 +7,20 @@ import chon.group.game.messaging.Message;
 public class Fireball extends Weapon {
 
     public Fireball(int posX, int posY, int height, int width, int speed, int health, String pathImage,
-            boolean flipped) {
-        super(posX, posY, height, width, speed, health, pathImage, flipped);
+            boolean flipped, int shotWidth) {
+        super(posX, posY, height, width, speed, health, pathImage, flipped, shotWidth);
     }
 
     @Override
     protected Shot createShot(int posX, int posY, String direction) {
         if (direction.equals("RIGHT"))
-            posX += 75 + 1;
+            posX += getShotWidth() + 1;
         else
-            posX -= 75 + 1;
+            posX -= getShotWidth() + 1;
         return new Shot(posX,
                 posY,
                 47,
-                75,
+                getShotWidth(),
                 3,
                 0,
                 "/images/weapons/fireball/fireball001.png",

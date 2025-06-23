@@ -71,7 +71,8 @@ public class JavaFxMediator implements EnvironmentDrawer {
     @Override
     public void drawAgents() {
         for (Agent agent : this.environment.getAgents()) {
-            drawer.drawImage(agent.getImage(),
+            // Use animated frame if available
+            drawer.drawImage(agent.getCurrentFrameImage(),
                     agent.getPosX(),
                     agent.getPosY(),
                     agent.getWidth(),
@@ -83,7 +84,8 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     agent.getPosY(),
                     Color.DARKRED);
         }
-        drawer.drawImage(this.environment.getProtagonist().getImage(),
+        // Use animated frame for protagonist
+        drawer.drawImage(this.environment.getProtagonist().getCurrentFrameImage(),
                 this.environment.getProtagonist().getPosX(),
                 this.environment.getProtagonist().getPosY(),
                 this.environment.getProtagonist().getWidth(),
@@ -229,7 +231,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
     
             for (Agent agent : this.environment.getAgents()) {
                 int screenX = (int) (agent.getPosX() - cameraX);
-                drawer.drawImage(agent.getImage(),
+                drawer.drawImage(agent.getCurrentFrameImage(),
                         screenX,
                         agent.getPosY(),
                         agent.getWidth(),
@@ -254,7 +256,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
             Agent protagonist = this.environment.getProtagonist();
             int protagonistScreenX = (int) (protagonist.getPosX() - cameraX);
     
-            drawer.drawImage(protagonist.getImage(),
+            drawer.drawImage(protagonist.getCurrentFrameImage(),
                     protagonistScreenX,
                     protagonist.getPosY(),
                     protagonist.getWidth(),
