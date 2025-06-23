@@ -12,11 +12,13 @@ public class Sword extends CloseWeapon {
     }
 
     @Override
+    
+
     protected Slash createSlash(int posX, int posY, String direction) {
         if (direction.equals("RIGHT"))
-            posX += 75 + 1;
+            posX += 75 + 20;
         else
-            posX -= 75 + 1;
+            posX -= 75 + 20;
         return new Slash(posX,
                 posY,
                 47,
