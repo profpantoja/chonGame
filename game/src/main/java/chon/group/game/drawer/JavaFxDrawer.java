@@ -256,7 +256,7 @@ public class JavaFxDrawer {
         }
 
         double menuHeight = 150 + (options.length * 50);
-        double menuY = (getCanvasHeight() - menuHeight) / 2;
+        double menuY = ((getCanvasHeight() - menuHeight) / 2) + 300;
         
         // 3. Desenha o texto do menu (título e opções)
         // Título

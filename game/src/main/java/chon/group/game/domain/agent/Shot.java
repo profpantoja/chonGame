@@ -3,6 +3,7 @@ package chon.group.game.domain.agent;
 import java.util.List;
 
 import chon.group.game.core.Entity;
+import chon.group.game.domain.environment.Collision;
 import chon.group.game.messaging.Message;
 
 public class Shot extends Entity {

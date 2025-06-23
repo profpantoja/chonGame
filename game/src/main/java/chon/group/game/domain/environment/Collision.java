@@ -1,4 +1,4 @@
-package chon.group.game.domain.agent;
+package chon.group.game.domain.environment;
 import javafx.scene.image.Image;
 
 public class Collision {

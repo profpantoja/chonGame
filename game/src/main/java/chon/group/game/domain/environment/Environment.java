@@ -6,7 +6,7 @@ import java.util.List;
 
 import chon.group.game.core.Entity;
 import chon.group.game.domain.agent.Agent;
-import chon.group.game.domain.agent.Collision;
+import chon.group.game.domain.environment.Collision;
 import chon.group.game.domain.agent.Shot;
 import chon.group.game.messaging.Message;
 import javafx.scene.image.Image;
@@ -407,6 +407,7 @@ public class Environment {
         this.setImage(image);
         this.agents.clear();
         this.shots.clear();
+        this.collisions.clear();
         this.agents.add(newAgent);
         this.protagonist.setPosX(100);
         this.protagonist.setPosY(390);
@@ -498,8 +499,8 @@ public class Environment {
         }
     }
 
-    public void createGround(int height, String image) {
-        Collision ground = new Collision(0, this.height - height, this.width, 64, image, false, false, 0, false, false, false);
+    public void createGround(int width, int height, String image) {
+        Collision ground = new Collision(width, this.height - height, this.width, 64, image, false, false, 0, false, false, false);
         getCollisions().add(ground);
     }
 

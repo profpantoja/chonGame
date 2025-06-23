@@ -2,13 +2,17 @@ package chon.group;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Iterator;
 import java.util.List;
 
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Cannon;
 import chon.group.game.domain.agent.Collision;
 import chon.group.game.domain.agent.Fireball;
+
+import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Shot;
+import chon.group.game.domain.environment.Collision;
 import chon.group.game.domain.agent.Weapon;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.domain.environment.GameStatus;
@@ -81,9 +85,9 @@ public class Engine extends Application {
         JavaFxDrawer drawer = new JavaFxDrawer(this.graphicsContext, null); 
 
         // Initialize Menus
-        Image menuBackground = Setup.loadImage("/images/environment/menu_background.png");
+        Image menuBackground = Setup.loadImage("/images/environment/menu_background_new.png");
         this.mainMenu = new MainMenu(drawer, menuBackground);
-        this.menuPause = new MenuPause(drawer, environment.getPauseImage());
+        this.menuPause = new MenuPause(drawer, environment.getPauseImage());        
 
         // Setup Menu Actions
         mainMenu.setOnStartGame(() -> {
@@ -218,7 +222,8 @@ public class Engine extends Application {
         environment.getAgents().forEach(agent -> 
             agent.chase(environment.getProtagonist().getPosX(), environment.getProtagonist().getPosY()));
 
-        // update all agents and their shots
+        // update all agents and their shots, and check if have collisions 
+        checkCollisions();
         environment.detectCollision();
         environment.updateShots();
         environment.updateMessages();
@@ -246,6 +251,7 @@ public class Engine extends Application {
         mediator.drawAgentsSideScrolling();
         mediator.drawShotsSideScrolling();
         mediator.drawMessagesSideScrolling();
+        //mediator.drawCollisions();
     }
 
     /**
@@ -267,5 +273,50 @@ public class Engine extends Application {
             double newCameraX = cameraX - protagonistSpeed;
             environment.setCameraX(Math.max(newCameraX, 0));
         }
+    }
+
+    private void verifyGameStatus() {
+        if (environment.getProtagonist().isDead()) gameStatus = GameStatus.GAME_OVER;
+        else if (currentRoom == 2 && environment.getAgents().isEmpty()) gameStatus = GameStatus.VICTORY;
+
+        else if (currentRoom == 1 && environment.getAgents().isEmpty() && environment.getProtagonist().getPosX() >= (0.9 * environment.getWidth())) {
+            System.out.println("Avançando para a sala do chefe...");
+            Agent boss = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
+            environment.loadNextRoom("/images/environment/mountain.png", boss);
+            currentRoom = 2;
+        }
+    }
+
+    public void checkCollisions(){
+         Iterator<Collision> it = environment.getCollisions().iterator();
+            while (it.hasNext()) {
+                Collision collision = it.next();
+
+                Iterator<Shot> itShot = environment.getShots().iterator();
+                while (itShot.hasNext()) {
+                    Shot tempShot = itShot.next();
+                    tempShot.checkCollision(collision);
+                    if (collision.isDestroy()) {
+                        itShot.remove();
+                        break;
+                    }    
+                }
+                if (collision.isDestroy()) {
+                    it.remove(); 
+                }
+                
+                for (Agent agent : environment.getAgents()) {
+                    agent.checkCollision(collision, environment);
+                    if (collision.isDestroy()) break;
+                }
+                if (collision.isDestroy()) {
+                    it.remove(); 
+                }
+
+                environment.getProtagonist().checkCollision(collision, environment);
+                if (collision.isDestroy()) {
+                    it.remove(); 
+                }
+            }
     }
 }

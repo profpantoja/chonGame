@@ -3,14 +3,12 @@ package chon.group.game.drawer;
 import java.util.Iterator;
 
 import chon.group.game.domain.agent.Agent;
-import chon.group.game.domain.agent.Collision;
 import chon.group.game.domain.agent.Shot;
+import chon.group.game.domain.environment.Collision;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.messaging.Message;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.stage.Screen;
 
 /**
  * The {@code JavaFxMediator} class serves as an intermediary for rendering the
@@ -242,6 +240,15 @@ public class JavaFxMediator implements EnvironmentDrawer {
                         screenX,
                         agent.getPosY(),
                         Color.DARKRED);
+            }
+
+            for (Collision collision : this.environment.getCollisions()) {
+                int screenX = (int) (collision.getX() - cameraX);
+                drawer.drawImage(collision.getImage(),
+                        screenX,
+                        collision.getY(),
+                        collision.getWidth(),
+                        collision.getHeight());
             }
     
             Agent protagonist = this.environment.getProtagonist();

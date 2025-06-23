@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import chon.group.game.core.Entity;
+import chon.group.game.domain.environment.Collision;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.messaging.Message;
 
