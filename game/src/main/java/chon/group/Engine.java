@@ -64,13 +64,15 @@ public class Engine extends Application {
     public void start(Stage theStage) {
         try {
             /* Initialize the game environment and agents */
-            Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
-            Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
+            Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/background-gravity.png");
+            Agent chonBota = new Agent(400, 513, 90, 65, 3, 1000, "/images/agents/chonBota.png", false, true);
+
             Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
             Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false);
             chonBota.setWeapon(fireball);
 
-            Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
+Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true, false);
+
             environment.setProtagonist(chonBota);
             environment.getAgents().add(chonBot);
             environment.setPauseImage("/images/environment/pause.png");
@@ -93,22 +95,23 @@ public class Engine extends Application {
             /* Handle keyboard input */
             ArrayList<String> input = new ArrayList<String>();
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-                public void handle(KeyEvent e) {
-                    String code = e.getCode().toString();
-                    input.clear();
+    public void handle(KeyEvent e) {
+        String code = e.getCode().toString();
 
-                    System.out.println("Pressed: " + code);
+//Sem o input.clear, para que não limpe quando a tecla seja apertada e dois inputs funcionem ao mesmo tempo
 
-                    if (code.equals("P")) {
-                        isPaused = !isPaused;
-                    }
+        System.out.println("Pressed: " + code);
 
-                    if (!isPaused && !input.contains(code)) {
-                        input.add(code);
-                    }
+        if (code.equals("P")) {
+            isPaused = !isPaused;
+        }
 
-                }
-            });
+        if (!isPaused && !input.contains(code)) {
+            input.add(code);
+        }
+    }
+});
+
 
             scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
@@ -165,10 +168,11 @@ public class Engine extends Application {
                                             chonBota.getPosY(),
                                             direction));
                                 }
-                                /* ChonBota's Movements */
-                                environment.getProtagonist().move(input);
-                                environment.checkBorders();
                             }
+                            // Sempre atualiza o movimento vertical (pulo e queda)
+                            environment.getProtagonist().move(input);
+                            environment.checkBorders();
+
                             /* ChonBot's Automatic Movements */
                             /* Update the other agents' movements */
                             for (Agent agent : environment.getAgents()) {

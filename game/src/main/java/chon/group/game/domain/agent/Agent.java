@@ -24,6 +24,22 @@ public class Agent extends Entity {
     /* The Agent's Weapon */
     private Weapon weapon;
 
+
+    /*Flag to control if the protaginist its jumping */
+    private boolean isJumping = false;
+
+    /* Velocidade inicial do pulo (negativo = sobe) */
+    private int jumpVelocity = -12;
+
+    private int currentVelocityY = 0;
+
+    private final int gravity = 2;
+
+    private final int groundY = 513;
+
+    private boolean isProtagonist;
+
+
     /**
      * Constructor to initialize the agent properties.
      *
@@ -51,9 +67,12 @@ public class Agent extends Entity {
      * @param pathImage the path to the agent's image
      * @param flipped   the agent's direction (RIGHT=0 or LEFT=1)
      */
-    public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped) {
-        super(posX, posY, height, width, speed, health, pathImage, flipped);
-    }
+
+    public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped, boolean isProtagonist) {
+    super(posX, posY, height, width, speed, health, pathImage, flipped);
+    this.isProtagonist = isProtagonist;
+}
+
 
     /**
      * Gets the last hit taken.
@@ -151,5 +170,54 @@ public class Agent extends Entity {
         }
         return true;
     }
+
+    /**
+     * Método move sobreescrito da classe Entity
+     */
+@Override
+public void move(List<String> movements) {
+    int speed = this.getSpeed();
+
+    // Movimento lateral
+    if (movements.contains("LEFT")) {
+        if (!this.isFlipped()) this.flipImage();
+        this.setPosX(this.getPosX() - speed);
+    }
+
+    if (movements.contains("RIGHT")) {
+        if (this.isFlipped()) this.flipImage();
+        this.setPosX(this.getPosX() + speed);
+    }
+
+    /* PULO: apenas se for protagonista */
+    if (isProtagonist) {
+        if (movements.contains("UP") && !isJumping) {
+            isJumping = true;
+            currentVelocityY = jumpVelocity;
+        }
+
+        if (isJumping) {
+            this.setPosY(this.getPosY() + currentVelocityY);
+            currentVelocityY += gravity;
+
+            /* Se está tocando no chão */
+            if (this.getPosY() >= groundY) {
+                this.setPosY(groundY);
+                isJumping = false;
+                currentVelocityY = 0;
+            }
+        } else {
+            // Fixa a Chonbota no chão, caso não esteja pulando
+            this.setPosY(groundY);
+        }
+    } else {
+        // Chonbot não pula, está sempre no chão
+    }
+}
+
+
+
+
+
 
 }
