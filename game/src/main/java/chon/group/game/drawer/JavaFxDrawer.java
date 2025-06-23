@@ -179,4 +179,19 @@ public class JavaFxDrawer {
     }
 }
 
+public void drawCoinCounter(int collected, int total, double canvasWidth) {
+    String text = "Moedas: " + collected + " / " + total;
+
+    gc.setFill(Color.GOLD);
+    gc.setStroke(Color.BLACK);
+    gc.setLineWidth(2);
+    gc.setFont(javafx.scene.text.Font.font("Arial", 24));
+
+    double textX = canvasWidth - 180; // posição à direita
+    double textY = 40;
+
+    gc.strokeText(text, textX, textY); // contorno
+    gc.fillText(text, textX, textY);   // preenchimento
+}
+
 }
