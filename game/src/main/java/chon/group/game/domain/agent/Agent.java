@@ -35,7 +35,7 @@ public class Agent extends Entity {
      * @param health    the agent's health
      * @param pathImage the path to the agent's image
      */
-    public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage) {
+    public Agent(double posX, double posY, int height, int width, int speed, int health, String pathImage) {
         super(posX, posY, height, width, speed, health, pathImage);
     }
 
@@ -51,7 +51,7 @@ public class Agent extends Entity {
      * @param pathImage the path to the agent's image
      * @param flipped   the agent's direction (RIGHT=0 or LEFT=1)
      */
-    public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped) {
+    public Agent(double posX, double posY, int height, int width, int speed, int health, String pathImage, boolean flipped) {
         super(posX, posY, height, width, speed, health, pathImage, flipped);
     }
 
