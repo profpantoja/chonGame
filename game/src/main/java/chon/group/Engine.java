@@ -68,86 +68,108 @@ public class Engine extends Application {
     }
 
     public void start(Stage theStage) {
-        // Setup Canvas and Graphics
-        theStage.setTitle("Chon: The Learning Game");
-        Canvas canvas = new Canvas(WINDOW_WIDTH, WINDOW_HEIGHT);
-        this.graphicsContext = canvas.getGraphicsContext2D(); 
-        this.environment = Setup.createEnvironment();
-        this.mediator = new JavaFxMediator(environment, this.graphicsContext); 
-        JavaFxDrawer drawer = new JavaFxDrawer(this.graphicsContext, null); 
+    // Setup Canvas and Graphics
+    theStage.setTitle("Chon: The Learning Game");
+    Canvas canvas = new Canvas(WINDOW_WIDTH, WINDOW_HEIGHT);
+    this.graphicsContext = canvas.getGraphicsContext2D(); 
+    this.environment = Setup.createEnvironment();
+    this.mediator = new JavaFxMediator(environment, this.graphicsContext); 
+    JavaFxDrawer drawer = new JavaFxDrawer(this.graphicsContext, null); 
 
-        // Initialize Menus
-        Image menuBackground = Setup.loadImage("/images/environment/menu_background_new.png");
-        this.mainMenu = new MainMenu(drawer, menuBackground);
-        this.menuPause = new MenuPause(drawer, environment.getPauseImage());        
+    // Initialize Menus
+    Image menuBackground = Setup.loadImage("/images/environment/menu_background_new.png");
+    this.mainMenu = new MainMenu(drawer, menuBackground);
+    this.menuPause = new MenuPause(drawer, environment.getPauseImage());
 
-        // Setup Menu Actions
-        mainMenu.setOnStartGame(() -> {
-            resetGame(); // Garante que o jogo reinicie do zero
-            gameStatus = GameStatus.RUNNING;
-        });
-        mainMenu.setOnExit(() -> 
+    // Setup Menu Actions
+    mainMenu.setOnStartGame(() -> {
+        resetGame(); // Garante que o jogo reinicie do zero
+        gameStatus = GameStatus.RUNNING;
+    });
+    mainMenu.setOnExit(() -> 
         Platform.exit());
 
-        menuPause.setOnResume(() -> 
-        gameStatus = GameStatus.RUNNING);
-        
-        menuPause.setOnExitToMenu(() -> {
-            mainMenu.reset();
-            gameStatus = GameStatus.MAIN_MENU;
-        });
+    menuPause.setOnResume(() -> {
+    gameStatus = GameStatus.RUNNING;
+    environment.getProtagonist().setCheckMenu(false);
+    environment.getProtagonist().setlastHitTime(System.currentTimeMillis());
+    environment.getAgents().forEach(agent -> {
+        agent.setCheckMenu(false);
+        agent.setlastHitTime(System.currentTimeMillis());
+    });
+});
 
-        //Setup Scene and Input
-        StackPane root = new StackPane(canvas);
-        Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
-        theStage.setScene(scene);
-        
-        setupInputHandlers(scene);
+    menuPause.setOnExitToMenu(() -> {
+    mainMenu.reset();
+    gameStatus = GameStatus.MAIN_MENU;
+    environment.getProtagonist().setCheckMenu(false);
+    environment.getProtagonist().setlastHitTime(System.currentTimeMillis());
+    environment.getAgents().forEach(agent -> {
+        agent.setCheckMenu(false);
+        agent.setlastHitTime(System.currentTimeMillis());
+    });
+});
 
-        //Start Game Loop
-        new GameLoop().start();
-        
-        theStage.show();
-    }
+    //Setup Scene and Input
+    StackPane root = new StackPane(canvas);
+    Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
+    theStage.setScene(scene);
+    
+    setupInputHandlers(scene);
+
+    //Start Game Loop
+    new GameLoop().start();
+    
+    theStage.show();
+}
 
     /**
      * Defines the input handlers for the game, based on the current game status.
      */
     private void setupInputHandlers(Scene scene) {
-        scene.setOnKeyPressed((KeyEvent e) -> {
-            String key = e.getCode().toString();
-            System.out.println("Key pressed: " + key); 
-            switch (gameStatus) {
-                case MAIN_MENU:
-                    mainMenu.handleInput(e.getCode());
-                    break;
-                case PAUSED:
-                    menuPause.handleInput(e.getCode());
-                    break;
-                case RUNNING:
-                    if (e.getCode().toString().equals("P")) {
-                        gameStatus = GameStatus.PAUSED;
-                        menuPause.reset(); 
-                    } else if (!gameInput.contains(key)) {
-                        gameInput.add(key);
-                    }
-                    break;
-                default:
-                    // key Enter return to the main menu in game over or victory state
-                    if (e.getCode().toString().equals("ENTER")) {
-                        gameStatus = GameStatus.MAIN_MENU;
-                        mainMenu.reset();
-                    }
-                    break;
-            }
-        });
+    scene.setOnKeyPressed((KeyEvent e) -> {
+        String key = e.getCode().toString();
+        System.out.println("Key pressed: " + key); 
+        switch (gameStatus) {
+            case MAIN_MENU:
+                mainMenu.handleInput(e.getCode());
+                break;
+            case PAUSED:
+                menuPause.handleInput(e.getCode());
+                break;
+            case RUNNING:
+                if (e.getCode().toString().equals("P")) {
+                    gameStatus = GameStatus.PAUSED;
+                    menuPause.reset();
+                    // Congela invulnerabilidade de todos os agentes e protagonista
+                    environment.getProtagonist().setCheckMenu(true);
+                    environment.getProtagonist().setlastHitTime(System.currentTimeMillis());
+                    environment.getAgents().forEach(agent -> {
+                        agent.setCheckMenu(true);
+                        agent.setlastHitTime(System.currentTimeMillis());
+                    });
+                } else if (!gameInput.contains(key)) {
+                    gameInput.add(key);
+                }
+                break;
+            default:
+                if (e.getCode().toString().equals("ENTER")) {
+                    gameStatus = GameStatus.MAIN_MENU;
+                    mainMenu.reset();
+                    // Garante que todos voltam ao estado normal ao sair para o menu
+                    environment.getProtagonist().setCheckMenu(false);
+                    environment.getAgents().forEach(agent -> agent.setCheckMenu(false));
+                }
+                break;
+        }
+    });
 
-        scene.setOnKeyReleased((KeyEvent e) -> {
-            if (gameStatus == GameStatus.RUNNING) {
-                gameInput.remove(e.getCode().toString());
-            }
-        });
-    }
+    scene.setOnKeyReleased((KeyEvent e) -> {
+        if (gameStatus == GameStatus.RUNNING) {
+            gameInput.remove(e.getCode().toString());
+        }
+    });
+}
 
     /**
      * Resets the game state to its initial configuration.

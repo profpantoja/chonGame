@@ -22,11 +22,23 @@ public class Agent extends Entity {
     private boolean invulnerable = false;
 
     /* Invulnerability (in milliseconds) */
-    private final long INVULNERABILITY_COOLDOWN = 1500;
-
+    private final long INVULNERABILITY_COOLDOWN = 3000;
+    
     /* The Agent's Weapon */
     private Weapon weapon;
+    
+    /*Flag to stop the invulnerability status of the agent when on menu */
+    private boolean checkMenu = false;
+    
+   
+    public void setCheckMenu(boolean checkMenu){
+        this.checkMenu = checkMenu;
+    }
 
+    public boolean getCheckMenu(){
+        return checkMenu;
+    }
+    
     /**
      * Constructor to initialize the agent properties.
      *
@@ -41,7 +53,7 @@ public class Agent extends Entity {
     public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage) {
         super(posX, posY, height, width, speed, health, pathImage);
     }
-
+    
     /**
      * Constructor to initialize the agent properties including its direction.
      *
@@ -203,10 +215,15 @@ public class Agent extends Entity {
      * @return if the agent is still invulnerable
      */
     private boolean updateInvulnerability() {
-        if (System.currentTimeMillis() - lastHitTime >= INVULNERABILITY_COOLDOWN) {
-            return false;
-        }
+    if (checkMenu) {
+        // Congela o timer de invulnerabilidade enquanto está no menu
+        lastHitTime = System.currentTimeMillis();
         return true;
     }
+    if (System.currentTimeMillis() - lastHitTime >= INVULNERABILITY_COOLDOWN) {
+        return false;
+    }
+    return true;
+}
 
 }
