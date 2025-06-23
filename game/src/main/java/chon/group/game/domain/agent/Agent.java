@@ -211,8 +211,8 @@ public void move(List<String> movements) {
             this.setPosY(groundY);
         }
     } else {
-        // Chonbot não pula, está sempre no chão
-    }
+        this.setPosY(groundY);
+        }
 }
 
 
