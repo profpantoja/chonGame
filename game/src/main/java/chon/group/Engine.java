@@ -2,6 +2,7 @@ package chon.group;
 
 import java.util.ArrayList;
 
+import chon.group.game.domain.environment.SoundManager;
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Cannon;
 import chon.group.game.domain.agent.Fireball;
@@ -90,6 +91,8 @@ public class Engine extends Application {
             root.getChildren().add(canvas);
             theStage.show();
 
+             SoundManager.playMusic("/sounds/zelda.wav");
+
             /* Handle keyboard input */
             ArrayList<String> input = new ArrayList<String>();
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -132,6 +135,7 @@ public class Engine extends Application {
                     /* Branching the Game Loop */
                     /* If the agent died in the last loop */
                     if (environment.getProtagonist().isDead()) {
+                        SoundManager.playSound("/sounds/zelda.wav");
                         /* Still prints ongoing messages (e.g., last hit taken) */
                         environment.updateMessages();
                         environment.updateShots();
@@ -156,6 +160,7 @@ public class Engine extends Application {
                                 /* ChonBota Shoots Somebody Who Outdrew You */
                                 if (input.contains("SPACE")) {
                                     input.remove("SPACE");
+                                    SoundManager.playSound("/sounds/zelda.wav");
                                     String direction;
                                     if (chonBota.isFlipped())
                                         direction = "LEFT";

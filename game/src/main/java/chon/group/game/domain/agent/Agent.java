@@ -3,6 +3,7 @@ package chon.group.game.domain.agent;
 import java.util.List;
 
 import chon.group.game.core.Entity;
+import chon.group.game.domain.environment.SoundManager;
 import chon.group.game.messaging.Message;
 
 /**
@@ -137,6 +138,7 @@ public class Agent extends Entity {
         if (!this.invulnerable) {
             super.takeDamage(damage, messages); 
             this.lastHitTime = System.currentTimeMillis();
+            SoundManager.playSound("sounds/zelda.mp3");
         }
     }
 
