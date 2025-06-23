@@ -500,7 +500,7 @@ public class Environment {
     }
 
     public void createGround(int width, int height, String image) {
-        Collision ground = new Collision(width, this.height - height, this.width, 64, image, false, false, 0, false, false, false);
+        Collision ground = new Collision(0, this.height - height, this.width, 64, image, false, false, 0, false, false, false);
         getCollisions().add(ground);
     }
 

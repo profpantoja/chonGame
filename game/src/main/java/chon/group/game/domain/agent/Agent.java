@@ -1,10 +1,9 @@
 package chon.group.game.domain.agent;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 import chon.group.game.core.Entity;
+import chon.group.game.domain.environment.SoundManager;
 import chon.group.game.domain.environment.Collision;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.messaging.Message;
@@ -141,6 +140,7 @@ public class Agent extends Entity {
         if (!this.invulnerable) {
             super.takeDamage(damage, messages); 
             this.lastHitTime = System.currentTimeMillis();
+            //SoundManager.playSound("sounds/takedamage.mp3");
         }
     }
 

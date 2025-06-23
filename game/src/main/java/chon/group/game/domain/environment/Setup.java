@@ -31,7 +31,7 @@ public class Setup {
         Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
         environment.getAgents().add(chonBot);
 
-        environment.createGround(worldWidth, 238, "/images/environment/brick.png");
+        environment.createGround(worldWidth, 50, "/images/environment/brick.png");
         
         Collision platform1 = new Collision(350, 550, 192, 64, "/images/environment/brick.png", false, false, 0, false, false, false);
         environment.getCollisions().add(platform1);
@@ -51,6 +51,15 @@ public class Setup {
         environment.setPauseImage("");             
         environment.setGameOverImage("/images/environment/gameover.png");
         environment.setWinImage("/images/environment/gameover.png");
+        
+        SoundManager.playSound("/sounds/zelda.wav");
+        //SoundManager.playMusic("/sounds/SoundTrack.wav"); Game music here
+        //SoundManager.playSound("/sounds/HurtProtagonist.wav"); Hurt Protagonist sound
+        //SoundManager.playSound("/sounds/HurtVilan.wav"); Hurt Vilan sound 
+        //SoundManager.playSound("/sounds/Shoot.wav"); shoot sound
+        //SoundManager.playSound("/sounds/Win.wav"); Win music
+        //SoundManager.playSound("/sounds/GameOver.wav"); Game over music
+        //SoundManager.playSound("/sounds/BreakWall.wav"); When Break Wall
 
         return environment;
     }

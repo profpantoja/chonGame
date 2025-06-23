@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import chon.group.game.domain.environment.SoundManager;
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Shot;
 import chon.group.game.domain.environment.Collision;
@@ -201,6 +202,7 @@ public class Engine extends Application {
             environment.getProtagonist().move(gameInput);
             updateCameraPosition();
             if (gameInput.contains("SPACE")) {
+                //SoundManager.playMusic("/sounds/damage.wav"); descomentar quando existir
                 String direction = environment.getProtagonist().isFlipped() ? "LEFT" : "RIGHT";
                 Agent protagonist = environment.getProtagonist();
                 environment.getShots().add(protagonist.getWeapon().fire(protagonist.getPosX(), protagonist.getPosY(), direction));
@@ -228,7 +230,6 @@ public class Engine extends Application {
         mediator.drawAgentsSideScrolling();
         mediator.drawShotsSideScrolling();
         mediator.drawMessagesSideScrolling();
-        //mediator.drawCollisions();
     }
 
     /**
