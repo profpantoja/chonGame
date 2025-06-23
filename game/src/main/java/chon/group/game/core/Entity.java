@@ -266,7 +266,7 @@ public abstract class Entity {
      */
     public void move(List<String> movements, double deltaTime){
         double adjustedSpeed = speed * deltaTime;    
-
+    
         if (movements.contains("RIGHT")) {
             if (flipped)
                 this.flipImage();

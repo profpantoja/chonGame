@@ -125,9 +125,22 @@ public class Engine extends Application {
                  *
                  * @param now the timestamp of the current frame in nanoseconds.
                  */
+
+                private long lastTime = 0;
+
                 @Override
                 public void handle(long now) {
-                    double deltaTime = 1.0 / 60.0;
+
+                    if (lastTime == 0) {
+                        lastTime = now;
+                        return;
+                    }
+                    
+                    double deltaTime = (now - lastTime) / 1e9; // Convert nanoseconds to seconds
+                    lastTime = now;
+
+                    deltaTime = Math.min(deltaTime, 0.05); // Cap deltaTime to avoid large jumps
+
 
                     mediator.clearEnvironment();
                     if (environment.getProtagonist().isDead()) {
