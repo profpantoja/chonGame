@@ -6,6 +6,7 @@ import java.util.List;
 
 import chon.group.game.core.Entity;
 import chon.group.game.domain.agent.Agent;
+import chon.group.game.domain.agent.Collision;
 import chon.group.game.domain.agent.Shot;
 import chon.group.game.messaging.Message;
 import javafx.scene.image.Image;
@@ -50,6 +51,9 @@ public class Environment {
     /** List of agents present in the environment. */
     private List<Agent> agents;
 
+    /** List of collisions present in the environment. */
+    private List<Collision> collisions;
+
     /** List of messages to display. */
     private List<Message> messages;
 
@@ -83,6 +87,7 @@ public class Environment {
         this.width = width;
         this.setImage(pathImage);
         this.agents = new ArrayList<Agent>();
+        this.collisions = new ArrayList<Collision>();
         this.messages = new ArrayList<Message>();
         this.shots = new ArrayList<Shot>();
     }
@@ -291,6 +296,25 @@ public class Environment {
     }
 
     /**
+     * Gets the list of collisions present in the environment.
+     *
+     * @return the list of collisions
+     */
+    public List<Collision> getCollisions() {
+        return collisions;
+    }
+
+    /**
+     * Sets the list of collisions present in the environment.
+     *
+     * @param collisions the new list of collisions
+     */
+    public void setCollisions(ArrayList<Collision> collisions) {
+        this.collisions = collisions;
+
+    }
+
+    /**
      * Gets the list of active messages.
      * 
      * @return List of messages objects currently being displayed
@@ -473,4 +497,10 @@ public class Environment {
             }
         }
     }
+
+    public void createGround(int height, String image) {
+        Collision ground = new Collision(0, this.height - height, this.width, 64, image, false, false, 0, false, false, false);
+        getCollisions().add(ground);
+    }
+
 }

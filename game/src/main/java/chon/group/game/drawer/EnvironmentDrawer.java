@@ -23,6 +23,11 @@ public interface EnvironmentDrawer {
     void drawAgents();
 
     /**
+     * Draws all collisions present in the environment.
+     */
+    void drawCollisions();
+
+    /**
      * Draws the life bar for agents or players.
      */
     void drawLifeBar();

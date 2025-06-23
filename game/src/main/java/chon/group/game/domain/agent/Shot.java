@@ -57,4 +57,17 @@ public class Shot extends Entity {
                 this.setHealth(0);
         }
     }
+
+    public void checkCollision(Collision collision) {
+        if (getPosX() < collision.getX() + collision.getWidth() &&
+            getPosX() + getWidth() > collision.getX() &&
+            getPosY() < collision.getY() + collision.getHeight() &&
+            getPosY() + getHeight() > collision.getY()) {
+
+            // Se a colisão deve destruir em contato com projéteis
+            if (collision.isProjectileDestroy()) {
+                collision.setDestroy(true);
+            }
+        }
+    }
 }

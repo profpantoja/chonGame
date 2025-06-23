@@ -1,9 +1,15 @@
 package chon.group;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import chon.group.game.domain.agent.Agent;
+import chon.group.game.domain.agent.Cannon;
+import chon.group.game.domain.agent.Collision;
+import chon.group.game.domain.agent.Fireball;
+import chon.group.game.domain.agent.Shot;
+import chon.group.game.domain.agent.Weapon;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.domain.environment.GameStatus;
 import chon.group.game.domain.environment.MainMenu;
@@ -15,12 +21,14 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 /**
  * The {@code Engine} class represents the main entry point of the application
