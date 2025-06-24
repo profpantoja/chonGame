@@ -120,7 +120,6 @@ public class Engine extends Application {
 
             /* Start the game loop */
             new AnimationTimer() {
-
                 /**
                  * The game loop, called on each frame.
                  *
