@@ -6,13 +6,17 @@ import java.util.List;
 
 import chon.group.game.domain.environment.SoundManager;
 import chon.group.game.domain.agent.Agent;
+import chon.group.game.domain.agent.Cannon;
+import chon.group.game.domain.agent.Fireball;
 import chon.group.game.domain.agent.Shot;
+import chon.group.game.domain.agent.Weapon;
 import chon.group.game.domain.environment.Collision;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.domain.environment.GameStatus;
 import chon.group.game.domain.environment.MainMenu;
 import chon.group.game.domain.environment.MenuPause;
 import chon.group.game.domain.environment.Setup;
+import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.drawer.JavaFxDrawer;
 import chon.group.game.drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
@@ -256,6 +260,8 @@ public class Engine extends Application {
                         environment.getProtagonist().getPosY(),
                         direction));
             }
+            // Sempre atualiza o movimento vertical (pulo e queda)
+            environment.getProtagonist().moveGravity(gameInput); //caso queira usar o jogo sem gravidade tem que mudar aqui para .move(gameInput)
             environment.checkBorders();
         }
         else {
@@ -318,7 +324,7 @@ public class Engine extends Application {
 
         else if (currentRoom == 1 && environment.getAgents().isEmpty() && environment.getProtagonist().getPosX() >= (0.9 * environment.getWidth())) {
             System.out.println("Avançando para a sala do chefe...");
-            Agent boss = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
+            Agent boss = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true,false);
             environment.loadNextRoom("/images/environment/mountain.png", boss);
             currentRoom = 2;
         }

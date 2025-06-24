@@ -25,11 +25,23 @@ public class Agent extends AnimatedEntity {
     
     /* The Agent's Weapon */
     private Weapon weapon;
+
+    /*Flag to control if the protaginist its jumping */
+    private boolean isJumping = false;
+
+    /* Velocidade inicial do pulo (negativo = sobe) */
+    private int jumpVelocity = -12;
+
+    private int currentVelocityY = 0;
+
+    private final int gravity = 2;
+
+    private final int groundY = 700;
+
+    private boolean isProtagonist;
     
     /*Flag to stop the invulnerability status of the agent when on menu */
     private boolean checkMenu = false;
-    
-   
     
     private String pathImageHit;
     
@@ -50,21 +62,6 @@ public class Agent extends AnimatedEntity {
     public boolean getCheckMenu(){
         return checkMenu;
     }
-
-    /**
-     * Constructor to initialize the agent properties.
-     *
-     * @param posX      the agent's initial X (horizontal) position
-     * @param posY      the agent's initial Y (vertical) position
-     * @param height    the agent's height
-     * @param width     the agent's width
-     * @param speed     the agent's speed
-     * @param health    the agent's health
-     * @param pathImage the path to the agent's image
-     */
-    public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage) {
-        super(new Image(Agent.class.getResource(pathImage).toExternalForm()), posX, posY, height, width, speed, health, pathImage);
-    }
     
     /**
      * Constructor to initialize the agent properties including its direction.
@@ -77,9 +74,12 @@ public class Agent extends AnimatedEntity {
      * @param health    the agent's health
      * @param pathImage the path to the agent's image
      * @param flipped   the agent's direction (RIGHT=0 or LEFT=1)
+     * @param isProtagonist the agent's protagonist or not
      */
-    public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped) {
+
+    public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped, boolean isProtagonist) {
         super(new Image(Agent.class.getResource(pathImage).toExternalForm()), posX, posY, height, width, speed, health, pathImage, flipped);
+        this.isProtagonist = isProtagonist;
     }
 
     /**
@@ -252,4 +252,47 @@ public class Agent extends AnimatedEntity {
     return true;
 }
 
+    /**
+     * Método move sobreescrito da classe Entity
+     */
+    
+public void moveGravity(List<String> movements) {
+    int speed = this.getSpeed();
+
+    // Movimento lateral
+    if (movements.contains("LEFT")) {
+        if (!this.isFlipped()) this.flipImage();
+        this.setPosX(this.getPosX() - speed);
+    }
+
+    if (movements.contains("RIGHT")) {
+        if (this.isFlipped()) this.flipImage();
+        this.setPosX(this.getPosX() + speed);
+    }
+
+    /* PULO: apenas se for protagonista */
+    if (isProtagonist) {
+        if (movements.contains("UP") && !isJumping) {
+            isJumping = true;
+            currentVelocityY = jumpVelocity;
+        }
+
+        if (isJumping) {
+            this.setPosY(this.getPosY() + currentVelocityY);
+            currentVelocityY += gravity;
+
+            /* Se está tocando no chão */
+            if (this.getPosY() >= groundY) {
+                this.setPosY(groundY);
+                isJumping = false;
+                currentVelocityY = 0;
+            }
+        } else {
+            // Fixa a Chonbota no chão, caso não esteja pulando
+            this.setPosY(groundY);
+        }
+    } else {
+        this.setPosY(groundY);
+    }
+    }
 }

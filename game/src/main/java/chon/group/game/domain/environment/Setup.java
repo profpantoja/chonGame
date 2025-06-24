@@ -23,19 +23,19 @@ public class Setup {
         Environment environment = new Environment(0, 0, worldWidth, worldHeight, "/images/environment/castle.png");
         
         // adding protagonist agent
-        Agent chonBota = new Agent(100, 390, 90, 65, 5, 1000, "/images/agents/chonBota.png", false);
+        Agent chonBota = new Agent(100, 390, 90, 65, 5, 1000, "/images/agents/chonBota.png", false,true);
         Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false,75); 
         Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false,64);
         chonBota.setWeapon(fireball);
         environment.setProtagonist(chonBota);
 
         // adding enemy agents
-        Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
+        Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true,false);
         environment.getAgents().add(chonBot);
 
         environment.createGround(worldWidth, 50, "/images/environment/brick.png");
         
-        Collision platform1 = new Collision(350, 550, 192, 64, "/images/environment/brick.png", false, false, 0, false, false, false);
+        Collision platform1 = new Collision(350, 570, 192, 64, "/images/environment/brick.png", false, false, 0, false, false, false);
         environment.getCollisions().add(platform1);
 
         Collision platform2 = new Collision(600, 450, 192, 64, "/images/environment/brick.png", false, true, 0, false, false, true);
