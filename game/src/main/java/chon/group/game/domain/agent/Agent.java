@@ -1,8 +1,12 @@
 package chon.group.game.domain.agent;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 import chon.group.game.core.Entity;
+import chon.group.game.domain.environment.Collision;
+import chon.group.game.domain.environment.Environment;
 import chon.group.game.messaging.Message;
 
 /**
@@ -14,12 +18,12 @@ public class Agent extends Entity {
 
     /* The time of the last hit taken. */
     private long lastHitTime = 0;
-
+    
     /* Flag to control the invulnerability status of the agent. */
     private boolean invulnerable = false;
 
     /* Invulnerability (in milliseconds) */
-    private final long INVULNERABILITY_COOLDOWN = 3000;
+    private final long INVULNERABILITY_COOLDOWN = 1500;
 
     /* The Agent's Weapon */
     private Weapon weapon;
@@ -137,6 +141,59 @@ public class Agent extends Entity {
         if (!this.invulnerable) {
             super.takeDamage(damage, messages); 
             this.lastHitTime = System.currentTimeMillis();
+        }
+    }
+
+    public void checkCollision(Collision collision, Environment environment) {
+        if (getPosX() < collision.getX() + collision.getWidth() &&
+            getPosX() + getWidth() > collision.getX() &&
+            getPosY() < collision.getY() + collision.getHeight() &&
+            getPosY() + getHeight() > collision.getY()) {
+
+            // Detecção de colisão
+            float dx = (getPosX() + getWidth() / 2.0f) - (collision.getX() + collision.getWidth() / 2.0f);
+            float dy = (getPosY() + getHeight() / 2.0f) - (collision.getY() + collision.getHeight() / 2.0f);
+
+            float halfWidths = (getWidth() / 2.0f) + (collision.getWidth() / 2.0f);
+            float halfHeights = (getHeight() / 2.0f) + (collision.getHeight() / 2.0f);
+
+            float overlapX = halfWidths - Math.abs(dx);
+            float overlapY = halfHeights - Math.abs(dy);
+
+            // 1. Impedir passagem se não for passável
+            if (!collision.isPassable()) {
+                int fix = (int)Math.ceil(Math.min(overlapX, overlapY));
+                if (overlapX < overlapY) {
+                    if (dx > 0) {
+                        setPosX(getPosX() + fix);
+                    } else {
+                        setPosX(getPosX() - fix);
+                    }
+                } else {
+                    if (dy > 0) {
+                        setPosY(getPosY() + fix);
+                    } else {
+                        setPosY(getPosY() - fix);
+                    }
+                }
+            }
+
+            // 2. Aplicar dano
+            if (collision.getDamage() > 0 && this == environment.getProtagonist()) {
+                takeDamage(collision.getDamage(), environment.getMessages());
+            }
+            else if (collision.getDamage() > 0 && collision.isAgentDamage()) {
+                takeDamage(collision.getDamage(), environment.getMessages());
+            }
+
+            // 3. Destruir ao contato
+            if (collision.isContactDestroy() && this == environment.getProtagonist())
+            {
+                collision.setDestroy(true);
+            }
+            else if (collision.isContactDestroy() && collision.isAgentContact()) {
+                collision.setDestroy(true);
+            }
         }
     }
 

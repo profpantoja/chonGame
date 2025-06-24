@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Shot;
+import chon.group.game.domain.environment.Collision;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.messaging.Message;
 import javafx.scene.canvas.GraphicsContext;
@@ -20,7 +21,6 @@ public class JavaFxMediator implements EnvironmentDrawer {
 
     private final Environment environment;
     private final JavaFxDrawer drawer;
-
     /**
      * Constructs a JavaFxMediator with the specified environment and graphics
      * context.
@@ -34,12 +34,22 @@ public class JavaFxMediator implements EnvironmentDrawer {
         this.drawer = new JavaFxDrawer(gc, this);
     }
 
+    
+
     /**
      * Clears the environment by erasing all drawn elements on the screen.
      */
     @Override
     public void clearEnvironment() {
         drawer.clearScreen(this.environment.getWidth(), this.environment.getHeight());
+    }
+
+    /**
+     * Clears the environment by erasing all drawn elements on the screen.
+     */
+    @Override
+    public void clearEnvironmentSideScrolling() {
+        drawer.clearScreen((int)drawer.getCanvasWidth(), (int)drawer.getCanvasHeight());
     }
 
     /**
@@ -89,6 +99,20 @@ public class JavaFxMediator implements EnvironmentDrawer {
         drawer.drawStatusPanel(this.environment.getProtagonist().getPosX(),
                 this.environment.getProtagonist().getPosY());
     }
+    
+    /**
+     * Renders all collisions within the environment,
+     */
+    @Override
+    public void drawCollisions() {
+        for (Collision collision : this.environment.getCollisions()) {
+            drawer.drawImage(collision.getImage(),
+                    collision.getX(),
+                    collision.getY(),
+                    collision.getWidth(),
+                    collision.getHeight());
+        }
+    }
 
     /**
      * Draws the protagonist's life bar on the screen.
@@ -96,79 +120,189 @@ public class JavaFxMediator implements EnvironmentDrawer {
     @Override
     public void drawLifeBar() {
         drawer.drawLifeBar(
-                this.environment.getProtagonist().getHealth(),
-                this.environment.getProtagonist().getFullHealth(),
-                this.environment.getProtagonist().getWidth(),
-                this.environment.getProtagonist().getPosX(),
-                this.environment.getProtagonist().getPosY(),
-                Color.GREEN);
-    }
+            this.environment.getProtagonist().getHealth(),
+            this.environment.getProtagonist().getFullHealth(),
+            this.environment.getProtagonist().getWidth(),
+            this.environment.getProtagonist().getPosX(),
+            this.environment.getProtagonist().getPosY(),
+            Color.GREEN);
+        }
+        
+        /**
+         * Draws the protagonist's status panel on the screen.
+         */
+        @Override
+        public void drawStatusPanel() {
+            drawer.drawStatusPanel(this.environment.getProtagonist().getPosX(),
+            this.environment.getProtagonist().getPosY());
+        }
+        
+        // Now this method use canvas width and height, with this we can use
+        // the same method for side-scrolling and top-down environments.
+        @Override
+        public void drawGameOver() {
+            drawer.drawScreen(this.environment.getGameOverImage(),
+                (int) this.environment.getGameOverImage().getWidth(),
+                (int) this.environment.getGameOverImage().getHeight(),
+                (int) drawer.getCanvasWidth(),   
+                (int) drawer.getCanvasHeight());
+        }
 
-    /**
-     * Draws the protagonist's status panel on the screen.
-     */
-    @Override
-    public void drawStatusPanel() {
-        drawer.drawStatusPanel(this.environment.getProtagonist().getPosX(),
-                this.environment.getProtagonist().getPosY());
-    }
+        // Now this method use canvas width and height, with this we can use
+        // the same method for side-scrolling and top-down environments.
+        @Override
+        public void drawWinScreen(){
+            drawer.drawScreen(this.environment.getWinImage(),
+                (int) this.environment.getWinImage().getWidth(),
+                (int) this.environment.getWinImage().getHeight(),
+                (int) drawer.getCanvasWidth(),   
+                (int) drawer.getCanvasHeight());
+        }
+        
+        /**
+         * Draws damage messaages that appear when agents take damage.
+         * The message float upward and fade out over time.
+         */
+        @Override
+        public void drawMessages() {
+            Iterator<Message> iterator = this.environment.getMessages().iterator();
+            while (iterator.hasNext()) {
+                Message message = iterator.next();
+                drawer.drawMessages(message.getSize(),
+                message.getOpacity(),
+                Color.BLACK,
+                Color.WHEAT,
+                String.valueOf(message.getMessage()),
+                message.getPosX(),
+                message.getPosY());
+            }
+        }
+        
+        @Override
+        public void drawShots() {
+            Iterator<Shot> iterator = this.environment.getShots().iterator();
+            while (iterator.hasNext()) {
+                Shot shot = iterator.next();          
+                drawer.drawImage(shot.getImage(),
+                shot.getPosX(),
+                shot.getPosY(),
+                shot.getWidth(),
+                shot.getHeight());
+            }
+        }
 
-    /**
-     * Draws the pause screen overlay, displaying a pause image centered within the
-     * environment.
-     */
-    @Override
-    public void drawPauseScreen() {
-        drawer.drawScreen(this.environment.getPauseImage(),
-                (int) this.environment.getPauseImage().getWidth(),
-                (int) this.environment.getPauseImage().getHeight(),
-                this.environment.getWidth(),
-                this.environment.getHeight());
-    }
+        /**
+         * Draws the protagonist's status panel on the screen.
+         */
+        @Override
+        public void drawStatusPanelSideScrolling() {
+            Agent protagonist = this.environment.getProtagonist();
+            double cameraX = this.environment.getCameraX();
 
-    /**
-     * Draws the pause screen overlay, displaying a pause image centered within the
-     * environment.
-     */
-    @Override
-    public void drawGameOver() {
-        drawer.drawScreen(this.environment.getGameOverImage(),
-                (int) this.environment.getPauseImage().getWidth(),
-                (int) this.environment.getPauseImage().getHeight(),
-                this.environment.getWidth(),
-                this.environment.getHeight());
-    }
+            int screenX = (int) (protagonist.getPosX() - cameraX);
+            int screenY = protagonist.getPosY();
 
-    /**
-     * Draws damage messaages that appear when agents take damage.
-     * The message float upward and fade out over time.
-     */
-    @Override
-    public void drawMessages() {
-        Iterator<Message> iterator = this.environment.getMessages().iterator();
-        while (iterator.hasNext()) {
-            Message message = iterator.next();
-            drawer.drawMessages(message.getSize(),
-                    message.getOpacity(),
-                    Color.BLACK,
-                    Color.WHEAT,
-                    String.valueOf(message.getMessage()),
-                    message.getPosX(),
-                    message.getPosY());
+            drawer.drawStatusPanelSideScrolling((int) protagonist.getPosX(),protagonist.getPosY(),screenX,screenY);
+        }
+        
+
+        /**
+         * Draws the background for side-scrolling environments, adjusting the
+         * position based on the camera's X coordinate.
+         */
+        @Override
+        public void drawBackgroundSideScrolling() {
+            drawer.drawImage(this.environment.getImage(),
+                    (int) (this.environment.getPosX() - this.environment.getCameraX()), // Posição X ajustada
+                    this.environment.getPosY(),
+                    this.environment.getWidth(),
+                    this.environment.getHeight());
+        }
+    
+        /**
+         * Draws agents and the protagonist in a side-scrolling environment,
+         * including their health bars and status panels.
+         */
+        @Override
+        public void drawAgentsSideScrolling() {
+            double cameraX = this.environment.getCameraX();
+    
+            for (Agent agent : this.environment.getAgents()) {
+                int screenX = (int) (agent.getPosX() - cameraX);
+                drawer.drawImage(agent.getImage(),
+                        screenX,
+                        agent.getPosY(),
+                        agent.getWidth(),
+                        agent.getHeight());
+                drawer.drawLifeBar(agent.getHealth(),
+                        agent.getFullHealth(),
+                        agent.getWidth(),
+                        screenX,
+                        agent.getPosY(),
+                        Color.DARKRED);
+            }
+
+            for (Collision collision : this.environment.getCollisions()) {
+                int screenX = (int) (collision.getX() - cameraX);
+                drawer.drawImage(collision.getImage(),
+                        screenX,
+                        collision.getY(),
+                        collision.getWidth(),
+                        collision.getHeight());
+            }
+    
+            Agent protagonist = this.environment.getProtagonist();
+            int protagonistScreenX = (int) (protagonist.getPosX() - cameraX);
+    
+            drawer.drawImage(protagonist.getImage(),
+                    protagonistScreenX,
+                    protagonist.getPosY(),
+                    protagonist.getWidth(),
+                    protagonist.getHeight());
+            drawer.drawLifeBar(protagonist.getHealth(),
+                    protagonist.getFullHealth(),
+                    protagonist.getWidth(),
+                    protagonistScreenX,
+                    protagonist.getPosY(),
+                    Color.GREEN);
+            
+            drawer.drawStatusPanelSideScrolling( (int) protagonist.getPosX(),protagonist.getPosY(),protagonistScreenX,protagonist.getPosY());
+        }
+    
+        /**
+         * Draws shots in a side-scrolling environment, adjusting their positions
+         * based on the camera's X coordinate.
+         */
+        @Override
+        public void drawShotsSideScrolling() {
+            double cameraX = this.environment.getCameraX();
+            Iterator<Shot> iterator = this.environment.getShots().iterator();
+            while (iterator.hasNext()) {
+                Shot shot = iterator.next();
+                int screenX = (int) (shot.getPosX() - cameraX);          
+                drawer.drawImage(shot.getImage(),screenX,shot.getPosY(),shot.getWidth(),shot.getHeight());
+            }
+        }
+
+        /**
+         * Draws damage messaages that appear when agents take damage.
+         * The message float upward and fade out over time.
+         */
+        @Override
+        public void drawMessagesSideScrolling() {
+            Iterator<Message> iterator = this.environment.getMessages().iterator();
+            while (iterator.hasNext()) {
+                Message message = iterator.next();
+
+                double screenX = message.getPosX() - this.environment.getCameraX();
+                drawer.drawMessages(message.getSize(),
+                message.getOpacity(),
+                Color.BLACK,
+                Color.WHEAT,
+                String.valueOf(message.getMessage()),
+                screenX,
+                message.getPosY());
+            }
         }
     }
-
-    @Override
-    public void drawShots() {
-        Iterator<Shot> iterator = this.environment.getShots().iterator();
-        while (iterator.hasNext()) {
-            Shot shot = iterator.next();          
-            drawer.drawImage(shot.getImage(),
-                    shot.getPosX(),
-                    shot.getPosY(),
-                    shot.getWidth(),
-                    shot.getHeight());
-        }
-    }
-
-}
+    

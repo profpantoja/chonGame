@@ -3,6 +3,7 @@ package chon.group.game.domain.agent;
 import java.util.List;
 
 import chon.group.game.core.Entity;
+import chon.group.game.domain.environment.Collision;
 import chon.group.game.messaging.Message;
 
 public class Shot extends Entity {
@@ -55,6 +56,19 @@ public class Shot extends Entity {
             /* After taking the damage, the health must not be negative. */
             if (this.getHealth() < 0)
                 this.setHealth(0);
+        }
+    }
+
+    public void checkCollision(Collision collision) {
+        if (getPosX() < collision.getX() + collision.getWidth() &&
+            getPosX() + getWidth() > collision.getX() &&
+            getPosY() < collision.getY() + collision.getHeight() &&
+            getPosY() + getHeight() > collision.getY()) {
+
+            // Se a colisão deve destruir em contato com projéteis
+            if (collision.isProjectileDestroy()) {
+                collision.setDestroy(true);
+            }
         }
     }
 }
