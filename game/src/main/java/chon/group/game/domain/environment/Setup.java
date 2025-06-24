@@ -2,7 +2,9 @@ package chon.group.game.domain.environment;
 
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Cannon;
+import chon.group.game.domain.agent.CloseWeapon;
 import chon.group.game.domain.agent.Fireball;
+import chon.group.game.domain.agent.Sword;
 import chon.group.game.domain.agent.Weapon;
 import javafx.scene.image.Image;
 
@@ -26,7 +28,9 @@ public class Setup {
         Agent chonBota = new Agent(100, 390, 90, 65, 5, 1000, "/images/agents/chonBota.png", false,true);
         Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false,75); 
         Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false,64);
+        CloseWeapon sword = new Sword(400, 390, 0, 0, 3, 0, "", false);
         chonBota.setWeapon(fireball);
+        chonBota.setCloseWeapon(sword);
         environment.setProtagonist(chonBota);
 
         // adding enemy agents

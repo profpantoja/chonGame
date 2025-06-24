@@ -7,6 +7,7 @@ import java.util.List;
 import chon.group.game.domain.environment.SoundManager;
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Cannon;
+import chon.group.game.domain.agent.CloseWeapon;
 import chon.group.game.domain.agent.Fireball;
 import chon.group.game.domain.agent.Shot;
 import chon.group.game.domain.agent.Weapon;
@@ -22,13 +23,13 @@ import chon.group.game.drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 /**
  * The {@code Engine} class represents the main entry point of the application
@@ -60,6 +61,8 @@ public class Engine extends Application {
     private static final double WINDOW_HEIGHT = 768;
     private int currentRoom = 1;
     long shotNow;
+    private boolean canSlash = true;
+
 
     /**
      * Main entry point of the application.
@@ -155,9 +158,11 @@ public class Engine extends Application {
                         agent.setCheckMenu(true);
                         agent.setlastHitTime(System.currentTimeMillis());
                     });
-                } else if (!gameInput.contains(key)) {
-                    gameInput.add(key);
                 }
+                else if (!gameInput.contains(key)) gameInput.add(key);
+                
+                else if(e.getCode().toString().equals("SPACE"))  canSlash = true;  // permite novo slash após soltar
+
                 break;
             default:
                 if (e.getCode().toString().equals("ENTER")) {
@@ -248,6 +253,9 @@ public class Engine extends Application {
                 environment.getProtagonist().setAnimation("/images/agents/Link_Attack.png", 4, 75);
                 System.out.println("ChonBota is attacking.");
                 gameInput.remove("SPACE");
+                /* Stop the weapon to attack */
+                canSlash = false;
+                
                 String direction;
                 int widthAnimation = environment.getProtagonist().getPosX();
                 if (environment.getProtagonist().isFlipped())
@@ -256,9 +264,15 @@ public class Engine extends Application {
                     widthAnimation += environment.getProtagonist().getWidth() - environment.getProtagonist().getWeapon().getShotWidth();
                     direction = "RIGHT";                  
                 }
+
+                environment.getSlashes().add(
+                    environment.getProtagonist().getCloseWeapon().slash(environment.getProtagonist().getPosX(),
+                    environment.getProtagonist().getPosY(),
+                    direction));
+
                 environment.getShots().add(environment.getProtagonist().getWeapon().fire(widthAnimation,
-                        environment.getProtagonist().getPosY(),
-                        direction));
+                environment.getProtagonist().getPosY(),
+                direction));
             }
             // Sempre atualiza o movimento vertical (pulo e queda)
             environment.getProtagonist().moveGravity(gameInput); //caso queira usar o jogo sem gravidade tem que mudar aqui para .move(gameInput)
@@ -283,6 +297,7 @@ public class Engine extends Application {
         // update all agents and their shots, and check if have collisions 
         checkCollisions();
         environment.detectCollision();
+        environment.updateSlashes();
         environment.updateShots();
         environment.updateMessages();
     }
@@ -295,6 +310,7 @@ public class Engine extends Application {
         mediator.drawAgentsSideScrolling();
         mediator.drawShotsSideScrolling();
         mediator.drawMessagesSideScrolling();
+        mediator.drawSlashes();
     }
 
     /**

@@ -99,4 +99,10 @@ public interface EnvironmentDrawer {
      */
     void drawWinScreen();
     
+    /**
+     * Draws all the slashes on the screen.
+     */
+    void drawSlashes();
+
+
 }
