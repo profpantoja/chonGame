@@ -11,7 +11,7 @@ import chon.group.game.domain.environment.Environment;
 import chon.group.game.domain.environment.GameStatus;
 import chon.group.game.domain.environment.MainMenu;
 import chon.group.game.domain.environment.MenuPause;
-import chon.group.game.domain.environment.Setup;
+import chon.group.game.domain.environment.Game;
 import chon.group.game.drawer.JavaFxDrawer;
 import chon.group.game.drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
@@ -71,12 +71,12 @@ public class Engine extends Application {
         theStage.setTitle("Chon: The Learning Game");
         Canvas canvas = new Canvas(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.graphicsContext = canvas.getGraphicsContext2D(); 
-        this.environment = Setup.createEnvironment();
+        this.environment = Game.createEnvironment();
         this.mediator = new JavaFxMediator(environment, this.graphicsContext); 
         JavaFxDrawer drawer = new JavaFxDrawer(this.graphicsContext, null); 
 
         // Initialize Menus
-        Image menuBackground = Setup.loadImage("/images/environment/menu_background_new.png");
+        Image menuBackground = Game.loadImage("/images/environment/menu_background_new.png");
         this.mainMenu = new MainMenu(drawer, menuBackground);
         this.menuPause = new MenuPause(drawer, environment.getPauseImage());        
 
@@ -152,7 +152,7 @@ public class Engine extends Application {
      * Resets the game state to its initial configuration.
      */
     private void resetGame() {
-        this.environment = Setup.createEnvironment();
+        this.environment = Game.createEnvironment();
         // Recria o mediator para apontar para o novo ambiente, usando o gc guardado na classe.
         this.mediator = new JavaFxMediator(this.environment, this.graphicsContext);
         gameInput.clear();

@@ -5,9 +5,9 @@ import chon.group.game.domain.agent.Fireball;
 import chon.group.game.domain.agent.Weapon;
 import javafx.scene.image.Image;
 
-public class Setup {
+public class Game {
 
-    private Setup() {
+    private Game() {
     }
 
     /**
@@ -59,7 +59,7 @@ public class Setup {
      */
     public static Image loadImage(String path) {
         try {
-            return new Image(Setup.class.getResource(path).toExternalForm());
+            return new Image(Game.class.getResource(path).toExternalForm());
         } catch (Exception e) {
             System.err.println("Falha ao carregar imagem: " + path);
             return null; // Retorna nulo se a imagem não for encontrada
