@@ -67,17 +67,17 @@ public class Engine extends Application {
     public void start(Stage theStage) {
         try {
             /* Initialize the game environment and agents */
-            Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/deathStar.png");
-            Agent luke = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/luke.png", false);
+            Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
+            Agent chonbota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
             Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
             Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false);
             CloseWeapon sword = new chon.group.game.domain.agent.Sword(400, 390, 0, 0, 3, 0, "", false);
-            luke.setWeapon(fireball);
-            luke.setCloseWeapon(sword);
+            chonbota.setWeapon(fireball);
+            chonbota.setCloseWeapon(sword);
 
-            Agent darthVader = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/darthVader.png", true);
-            environment.setProtagonist(luke);
-            environment.getAgents().add(darthVader);
+            Agent chonbot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
+            environment.setProtagonist(chonbota);
+            environment.getAgents().add(chonbot);
             environment.setPauseImage("/images/environment/pause.png");
             environment.setGameOverImage("/images/environment/gameover.png");
 
@@ -165,16 +165,17 @@ public class Engine extends Application {
                             /* Rendering the Pause Screen */
                             mediator.drawPauseScreen();
                         } else {
-                            /* luke Only Moves if the Player Press Something */
+                            /* chonbota Only Moves if the Player Press Something */
                             /* Update the protagonist's movements if input exists */
                             if (!input.isEmpty()) {
                                 if (input.contains("SPACE") && canSlash) {
                                     input.remove("SPACE");
+                                    /* Stop the weapon to attack */
                                     canSlash = false;
 
-                                    String direction = luke.isFlipped() ? "LEFT" : "RIGHT";
+                                    String direction = chonbota.isFlipped() ? "LEFT" : "RIGHT";
                                     environment.getSlashes().add(
-                                        luke.getCloseWeapon().slash(luke.getPosX(), luke.getPosY(), direction)
+                                        chonbota.getCloseWeapon().slash(chonbota.getPosX(), chonbota.getPosY(), direction)
                                     );
                                 }
 
