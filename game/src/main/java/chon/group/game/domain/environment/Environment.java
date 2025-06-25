@@ -378,36 +378,29 @@ public class Environment {
         }
     }
 
-    public void loadNextRoom(String image, Agent newAgent) {
-        System.out.println("Carregando próxima sala...");
-        this.setImage(image);
-        this.agents.clear();
-        this.shots.clear();
-        this.agents.add(newAgent);
-        this.protagonist.setPosX(100);
-        this.protagonist.setPosY(390);
-        this.setCameraX(0);
-    }
+    public boolean levelChanger() {
+    if (!protagonist.isDead()
+        && protagonist.getPosX() >= (0.9 * this.width)) {
 
+        System.out.println("Protagonist reached the end of the room. Checking for enemies...");
 
-    public void roomChanger(String image, Agent newAgent) {
-        if (!protagonist.isDead() && protagonist.getPosX() >= (0.9*this.width)) {
-            System.out.println("Protagonist reached the end of the room. Checking for enemies...");
-            boolean allEnemiesDead = true;
+        boolean allEnemiesDead = true;
 
-            for (Agent agent : this.agents) {
-                if (agent != protagonist && !agent.isDead()) {
-                    allEnemiesDead = false;
-                    break;
-                }
-            }
-
-            if (allEnemiesDead){
-                System.out.println("All enemies are dead. Proceeding to the next room.");
-                loadNextRoom(image, newAgent);
+        for (Agent agent : this.agents) {
+            if (agent != protagonist && !agent.isDead()) {
+                allEnemiesDead = false;
+                break;
             }
         }
+
+        if (allEnemiesDead) {
+            System.out.println("All enemies are dead. Proceeding to the next room.");
+            return true;
+        }
     }
+
+    return false;
+}
 
 
     /**

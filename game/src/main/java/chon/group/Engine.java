@@ -40,7 +40,11 @@ public class Engine extends Application {
     private boolean isPaused = false;
     private boolean win = false;
     private int currentRoom = 1;
-    
+    private ArrayList<Environment> environments = new ArrayList<>();
+    private int currentLevelIndex = 0;
+    private Environment currentEnvironment;
+    private EnvironmentDrawer mediator;
+        
 
     /**
      * Main entry point of the application.
@@ -64,23 +68,45 @@ public class Engine extends Application {
      */
     @Override
     public void start(Stage theStage) {
-        try {
-
-            
+        try {            
             double windowWidth = 1280;
             double windowHeight = 768;
             
+            /* Initialize the game levels and agents */
+            
+            //Level 1
+            Environment level1 = new Environment(0, 0, 4096, 768, "/images/environment/castle.png");
+            Agent chonBota = new Agent(100, 390, 90, 65, 5, 1, "/images/agents/chonBota.png", false);
+            Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false);
+            chonBota.setWeapon(fireball);
+
+            Agent chonBot = new Agent(920, 440, 90, 65, 1, 1, "/images/agents/chonBot.png", true);
+            level1.setProtagonist(chonBota);
+            level1.getAgents().add(chonBot);
+            level1.setGameOverImage("/images/environment/gameover.png");
+            level1.setWinImage("/images/environment/gameover.png");
+
+            //Level 2
+            Environment level2 = new Environment(0, 0, 4096, 768, "/images/environment/mountain.png");
+            level2.setProtagonist(chonBota); // mesmo personagem
+            level2.setGameOverImage("/images/environment/gameover.png");
+            level2.setWinImage("/images/environment/gameover.png");
+            Agent chonBoss = new Agent(920, 440,    100, 75, 1, 1, "/images/agents/chonBot.png", true);
+
+            level2.getAgents().add(chonBoss);
+
+            environments.add(level1);
+            environments.add(level2);
+
+            currentEnvironment = environments.get(currentLevelIndex);
+
+
             /* Initialize the game environment and agents */
             Environment environment = new Environment(0, 0,4096,768, "/images/environment/castle.png");
 
-            Agent chonBota = new Agent(100, 390, 90, 65, 5, 1000, "/images/agents/chonBota.png", false);
             Weapon cannon = new Cannon(400, 390, 0, 0, 5, 0, "", false);
-            Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false);
-            chonBota.setWeapon(fireball);
             
-            Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
-            environment.setProtagonist(chonBota);
-            environment.getAgents().add(chonBot);
+
             
             // necessita de uma UI de background menu para usar a método abaixo
             // enquanto não houver setMainMenuImage, o background será o padrão
@@ -96,8 +122,8 @@ public class Engine extends Application {
             /* Set up the graphical canvas */
             Canvas canvas = new Canvas(windowWidth, windowHeight);
             GraphicsContext gc = canvas.getGraphicsContext2D();
-            EnvironmentDrawer mediator = new JavaFxMediator(environment, gc);
-            
+            mediator = new JavaFxMediator(currentEnvironment, gc);
+
             /* Set up the scene and stage */
             StackPane root = new StackPane();
             Scene scene = new Scene(root, windowWidth, windowHeight);
@@ -152,10 +178,10 @@ public class Engine extends Application {
                     
                     /* --- Branching the Game Loop --- */
 
-                    if (environment.getProtagonist().isDead()) {
+                    if (currentEnvironment.getProtagonist().isDead()) {
                         /* Game Over Screen */
-                        environment.updateMessages();
-                        environment.updateShots();
+                        currentEnvironment.updateMessages();
+                        currentEnvironment.updateShots();
                         mediator.drawBackgroundSideScrolling();
                         mediator.drawAgentsSideScrolling();
                         mediator.drawShotsSideScrolling();
@@ -183,48 +209,49 @@ public class Engine extends Application {
 
                         /* Handle Player Movement and Actions */
                         if (!input.isEmpty()) {
-                            environment.getProtagonist().move(input);
+                            currentEnvironment.getProtagonist().move(input);
                             
                             /* Update the camera position based on the protagonist's position */ 
-                            double cameraTargetX = environment.getProtagonist().getPosX() - (windowWidth / 1.4);
+                            double cameraTargetX = currentEnvironment.getProtagonist().getPosX() - (windowWidth / 1.4);
                             if (cameraTargetX < 0) 
                                 cameraTargetX = 0;
-                            double maxCameraX = environment.getWidth() - windowWidth;
+                            double maxCameraX = currentEnvironment.getWidth() - windowWidth;
                             if (cameraTargetX > maxCameraX) 
                                 cameraTargetX = maxCameraX;
-                            environment.setCameraX(cameraTargetX);
+                            currentEnvironment.setCameraX(cameraTargetX);
 
                             /* Handle Shooting */
                             if (input.contains("SPACE")) {
                                 input.remove("SPACE"); // Evita tiros contínuos
                                 String direction = chonBota.isFlipped() ? "LEFT" : "RIGHT";
-                                environment.getShots().add(chonBota.getWeapon().fire(chonBota.getPosX(), chonBota.getPosY(), direction));
+                                currentEnvironment.getShots().add(chonBota.getWeapon().fire(chonBota.getPosX(), chonBota.getPosY(), direction));
                             }
-                            environment.checkBorders();
+                            currentEnvironment.checkBorders();
                         }
                         
                         /* Handle AI Movement */
-                        for (Agent agent : environment.getAgents()) {
-                            agent.chase(environment.getProtagonist().getPosX(), environment.getProtagonist().getPosY());
+                        for (Agent agent : currentEnvironment.getAgents()) {
+                            agent.chase(currentEnvironment.getProtagonist().getPosX(), currentEnvironment.getProtagonist().getPosY());
                         }
 
                         /* Update Game State */
-                        environment.detectCollision();
-                        environment.updateShots();
-                        environment.updateMessages();
+                        currentEnvironment.detectCollision();
+                        currentEnvironment.updateShots();
+                        currentEnvironment.updateMessages();
 
-                        /* --- Check for Game State Transitions (Win or Room Change) --- */
+                        /* --- Check for Game State Transitions (Win or Level Change) --- */
 
-                        if (currentRoom == 2 && environment.getAgents().isEmpty()) {
-                            win = true;
-                        
-                        } else if (currentRoom == 1) {
-                            // O jogador precisa estar no final da sala E todos os inimigos devem ter sido derrotados.
-                            if (environment.getAgents().isEmpty() && environment.getProtagonist().getPosX() >= (0.9 * environment.getWidth())) {
-                                System.out.println("All enemies are dead. Proceeding to the next room.");
-                                Agent newChonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
-                                environment.loadNextRoom("/images/environment/mountain.png", newChonBot);
-                                currentRoom = 2;
+                        if (currentEnvironment.levelChanger()) {
+                            currentLevelIndex++;
+
+                            if (currentLevelIndex >= environments.size()) {
+                                win = true;
+                            } else {
+                                currentEnvironment = environments.get(currentLevelIndex);
+                                currentEnvironment.getProtagonist().setPosX(100);
+                                currentEnvironment.getProtagonist().setPosY(390);
+                                currentEnvironment.setCameraX(0);
+                                mediator = new JavaFxMediator(currentEnvironment, gc); 
                             }
                         }
 
