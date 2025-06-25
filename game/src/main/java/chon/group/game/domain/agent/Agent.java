@@ -42,6 +42,11 @@ public class Agent extends Entity {
     public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage) {
         super(posX, posY, height, width, speed, health, pathImage);
     }
+    
+    // contructor for test
+    public Agent(){
+
+    }
 
     /**
      * Constructor to initialize the agent properties including its direction.
