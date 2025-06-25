@@ -3,7 +3,7 @@ package chon.group;
 import java.util.ArrayList;
 
 import chon.group.game.domain.agent.Agent;
-import chon.group.game.domain.agent.Cannon;
+//import chon.group.game.domain.agent.Cannon;
 import chon.group.game.domain.agent.Fireball;
 import chon.group.game.domain.agent.Weapon;
 import chon.group.game.domain.environment.Environment;
@@ -39,7 +39,6 @@ public class Engine extends Application {
     /* If the game is paused or not. */
     private boolean isPaused = false;
     private boolean win = false;
-    private int currentRoom = 1;
     private ArrayList<Environment> environments = new ArrayList<>();
     private int currentLevelIndex = 0;
     private Environment currentEnvironment;
@@ -104,7 +103,7 @@ public class Engine extends Application {
             /* Initialize the game environment and agents */
             Environment environment = new Environment(0, 0,4096,768, "/images/environment/castle.png");
 
-            Weapon cannon = new Cannon(400, 390, 0, 0, 5, 0, "", false);
+            //Weapon cannon = new Cannon(400, 390, 0, 0, 5, 0, "", false);
             
 
             
