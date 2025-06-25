@@ -68,16 +68,17 @@ public class Engine extends Application {
         try {
             /* Initialize the game environment and agents */
             Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
-            Agent chonbota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
+            Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
             Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
             Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false);
             CloseWeapon sword = new chon.group.game.domain.agent.Sword(400, 390, 0, 0, 3, 0, "", false);
-            chonbota.setWeapon(fireball);
-            chonbota.setCloseWeapon(sword);
+            chonBota.setWeapon(fireball);
+            chonBota.setCloseWeapon(sword);
+            boolean weaponDecision = true;
 
-            Agent chonbot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
-            environment.setProtagonist(chonbota);
-            environment.getAgents().add(chonbot);
+            Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
+            environment.setProtagonist(chonBota);
+            environment.getAgents().add(chonBot);
             environment.setPauseImage("/images/environment/pause.png");
             environment.setGameOverImage("/images/environment/gameover.png");
 
@@ -122,7 +123,7 @@ public class Engine extends Application {
                     input.remove(code);
 
                     if (code.equals("SPACE")) {
-                        canSlash = true;  // permite novo slash após soltar
+                        canSlash = true;  // allows slashing again
                     }
                 }
             });
@@ -165,22 +166,49 @@ public class Engine extends Application {
                             /* Rendering the Pause Screen */
                             mediator.drawPauseScreen();
                         } else {
+
                             /* chonbota Only Moves if the Player Press Something */
                             /* Update the protagonist's movements if input exists */
                             if (!input.isEmpty()) {
-                                if (input.contains("SPACE") && canSlash) {
+                                if(weaponDecision == false){
+                                    if (input.contains("SPACE") && canSlash) {
                                     input.remove("SPACE");
                                     /* Stop the weapon to attack */
-                                    canSlash = false;
+                                    canSlash = false;// prevents multiple slashes in a row
 
-                                    String direction = chonbota.isFlipped() ? "LEFT" : "RIGHT";
+                                    String direction = chonBota.isFlipped() ? "LEFT" : "RIGHT";
                                     environment.getSlashes().add(
-                                        chonbota.getCloseWeapon().slash(chonbota.getPosX(), chonbota.getPosY(), direction)
+                                        chonBota.getCloseWeapon().slash(chonBota.getPosX(), chonBota.getPosY(), direction)
                                     );
-                                }
-
+                                    }
                                 environment.getProtagonist().move(input);
                                 environment.checkBorders();
+                                }else{
+                                    if (!input.isEmpty()) {
+                                /* ChonBota Shoots Somebody Who Outdrew You */
+                                if (input.contains("SPACE")) {
+                                    input.remove("SPACE");
+                                        String direction;
+                                        if (chonBota.isFlipped())
+                                            direction = "LEFT";
+                                        else
+                                            direction = "RIGHT";
+                                        environment.getShots().add(
+                                            chonBota.getWeapon().fire(
+                                                chonBota.getPosX(),
+                                                chonBota.getPosY(),
+                                                direction
+                                            )
+                                        );
+                                    }
+                                    environment.getProtagonist().move(input);
+                                    environment.checkBorders();
+                                    
+
+                                }
+
+                                
+                                }
                             }
                             /* ChonBot's Automatic Movements */
                             /* Update the other agents' movements */
