@@ -6,6 +6,7 @@ import java.util.List;
 
 import chon.group.game.core.Entity;
 import chon.group.game.domain.agent.Agent;
+import chon.group.game.domain.environment.Collision;
 import chon.group.game.domain.agent.Shot;
 import chon.group.game.messaging.Message;
 import javafx.scene.image.Image;
@@ -41,11 +42,17 @@ public class Environment {
     /** The background image of the game over. */
     private Image gameOverImage;
 
+    /** The background image of the win screen. */
+    private Image winImage;
+
     /** The protagonist instance. */
     private Agent protagonist;
 
     /** List of agents present in the environment. */
     private List<Agent> agents;
+
+    /** List of collisions present in the environment. */
+    private List<Collision> collisions;
 
     /** List of messages to display. */
     private List<Message> messages;
@@ -80,6 +87,7 @@ public class Environment {
         this.width = width;
         this.setImage(pathImage);
         this.agents = new ArrayList<Agent>();
+        this.collisions = new ArrayList<Collision>();
         this.messages = new ArrayList<Message>();
         this.shots = new ArrayList<Shot>();
     }
@@ -231,6 +239,24 @@ public class Environment {
     public void setGameOverImage(String pathImage) {
         this.gameOverImage = new Image(getClass().getResource(pathImage).toExternalForm());
     }
+    
+    /**
+     * Gets the background image for the game over.
+     *
+     * @return the game over image
+     */
+    public Image getWinImage() {
+        return winImage;
+    }
+
+    /**
+     * Sets the background image for the game over.
+     *
+     * @param pathImage the path to the new game over image
+     */
+    public void setWinImage(String pathImage) {
+        this.winImage = new Image(getClass().getResource(pathImage).toExternalForm());
+    }
 
     /**
      * Gets the protagonist of the environment.
@@ -266,6 +292,25 @@ public class Environment {
      */
     public void setAgents(ArrayList<Agent> agents) {
         this.agents = agents;
+
+    }
+
+    /**
+     * Gets the list of collisions present in the environment.
+     *
+     * @return the list of collisions
+     */
+    public List<Collision> getCollisions() {
+        return collisions;
+    }
+
+    /**
+     * Sets the list of collisions present in the environment.
+     *
+     * @param collisions the new list of collisions
+     */
+    public void setCollisions(ArrayList<Collision> collisions) {
+        this.collisions = collisions;
 
     }
 
@@ -357,6 +402,39 @@ public class Environment {
         }
     }
 
+    public void loadNextRoom(String image, Agent newAgent) {
+        System.out.println("Carregando próxima sala...");
+        this.setImage(image);
+        this.agents.clear();
+        this.shots.clear();
+        this.collisions.clear();
+        this.agents.add(newAgent);
+        this.protagonist.setPosX(100);
+        this.protagonist.setPosY(390);
+        this.setCameraX(0);
+    }
+
+
+    public void roomChanger(String image, Agent newAgent) {
+        if (!protagonist.isDead() && protagonist.getPosX() >= (0.9*this.width)) {
+            System.out.println("Protagonist reached the end of the room. Checking for enemies...");
+            boolean allEnemiesDead = true;
+
+            for (Agent agent : this.agents) {
+                if (agent != protagonist && !agent.isDead()) {
+                    allEnemiesDead = false;
+                    break;
+                }
+            }
+
+            if (allEnemiesDead){
+                System.out.println("All enemies are dead. Proceeding to the next room.");
+                loadNextRoom(image, newAgent);
+            }
+        }
+    }
+
+
     /**
      * Checks if two agents collide with each other based on their positions and
      * dimensions.
@@ -388,16 +466,18 @@ public class Environment {
         }
     }
 
-    public void updateShots() {
+   public void updateShots() {
         Iterator<Shot> itShot = this.shots.iterator();
         while (itShot.hasNext()) {
             Shot shot = itShot.next();
             if ((shot.getPosX() > this.width) || ((shot.getPosX() + shot.getWidth()) < 0)) {
                 itShot.remove();
             } else {
+                boolean shotRemoved = false;
                 if (this.intersect(protagonist, shot)) {
                     protagonist.takeDamage(shot.getDamage(), this.messages);
                     itShot.remove();
+                    shotRemoved = true;
                 } else {
                     Iterator<Agent> itAgent = this.agents.iterator();
                     while (itAgent.hasNext()) {
@@ -407,12 +487,21 @@ public class Environment {
                             if (agent.isDead())
                                 itAgent.remove();
                             itShot.remove();
+                            shotRemoved = true;
+                            break; 
                         }
                     }
                 }
-                shot.move(new ArrayList<>(List.of(shot.getDirection())));
+                if (!shotRemoved) {
+                    shot.move(new ArrayList<>(List.of(shot.getDirection())));
+                }
             }
         }
+    }
+
+    public void createGround(int width, int height, String image) {
+        Collision ground = new Collision(width, this.height - height, this.width, 64, image, false, false, 0, false, false, false);
+        getCollisions().add(ground);
     }
 
 }

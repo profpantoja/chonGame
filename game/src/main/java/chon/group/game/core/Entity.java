@@ -60,6 +60,11 @@ public abstract class Entity {
         this.image = new Image(getClass().getResource(pathImage).toExternalForm());
     }
 
+    // contructor for test
+    public Entity(){
+
+    }
+
     /**
      * Constructor to initialize the entity properties including its direction.
      *
