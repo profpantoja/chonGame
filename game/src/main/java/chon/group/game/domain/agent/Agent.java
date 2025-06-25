@@ -24,6 +24,19 @@ public class Agent extends Entity {
     /* The Agent's Weapon */
     private Weapon weapon;
 
+        private boolean isJumping = false;
+
+    /* Velocidade inicial do pulo (negativo = sobe) */
+    private int jumpVelocity = -23;
+
+    private int currentVelocityY = 0;
+
+    private final int gravity = 3;
+
+    private final int groundY = 513;
+
+    private boolean isProtagonist;
+
     /**
      * Constructor to initialize the agent properties.
      *
@@ -125,6 +138,14 @@ public class Agent extends Entity {
         return (this.getHealth() <= 0);
     }
 
+    public boolean isProtagonist() {
+    return isProtagonist;
+}
+
+    public void setProtagonist(boolean isProtagonist) {
+    this.isProtagonist = isProtagonist;
+}
+
     /**
      * Makes the agent take damage.
      * If health reaches 0, the game must end.
@@ -151,5 +172,48 @@ public class Agent extends Entity {
         }
         return true;
     }
+
+    @Override
+public void move(List<String> movements) {
+    int speed = this.getSpeed();
+
+    // Movimento lateral
+    if (movements.contains("LEFT")) {
+        if (!this.isFlipped()) this.flipImage();
+        this.setPosX(this.getPosX() - speed);
+    }
+
+    if (movements.contains("RIGHT")) {
+        if (this.isFlipped()) this.flipImage();
+        this.setPosX(this.getPosX() + speed);
+    }
+
+    /* PULO: apenas se for protagonista */
+    if (isProtagonist) {
+        if ((movements.contains("W")) && !isJumping)
+ {
+            isJumping = true;
+            currentVelocityY = jumpVelocity;
+        }
+
+        if (isJumping) {
+            this.setPosY(this.getPosY() + currentVelocityY);
+            currentVelocityY += gravity;
+
+            /* Se está tocando no chão */
+            if (this.getPosY() >= groundY) {
+                this.setPosY(groundY);
+                isJumping = false;
+                currentVelocityY = 0;
+            }
+        } else {
+            // Fixa a Chonbota no chão, caso não esteja pulando
+            this.setPosY(groundY);
+        }
+    } else {
+        // Chonbot não pula, está sempre no chão
+        this.setPosY(groundY);
+    }
+}
 
 }

@@ -65,7 +65,9 @@ public class Engine extends Application {
         try {
             /* Initialize the game environment and agents */
             Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
-            Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
+            Agent chonBota = new Agent(400, 513, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
+            
+            chonBota.setProtagonist(true);
             Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
             Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false);
             chonBota.setWeapon(fireball);
@@ -95,7 +97,6 @@ public class Engine extends Application {
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
                     String code = e.getCode().toString();
-                    input.clear();
 
                     System.out.println("Pressed: " + code);
 
@@ -150,25 +151,18 @@ public class Engine extends Application {
                             /* Rendering the Pause Screen */
                             mediator.drawPauseScreen();
                         } else {
-                            /* ChonBota Only Moves if the Player Press Something */
-                            /* Update the protagonist's movements if input exists */
-                            if (!input.isEmpty()) {
-                                /* ChonBota Shoots Somebody Who Outdrew You */
-                                if (input.contains("SPACE")) {
-                                    input.remove("SPACE");
-                                    String direction;
-                                    if (chonBota.isFlipped())
-                                        direction = "LEFT";
-                                    else
-                                        direction = "RIGHT";
-                                    environment.getShots().add(chonBota.getWeapon().fire(chonBota.getPosX(),
-                                            chonBota.getPosY(),
-                                            direction));
-                                }
-                                /* ChonBota's Movements */
-                                environment.getProtagonist().move(input);
-                                environment.checkBorders();
+                            /** Se o usuário apertar em Space a ChonBota atira */
+                            if (input.contains("SPACE")) {
+                                input.remove("SPACE");
+                                String direction = chonBota.isFlipped() ? "LEFT" : "RIGHT";
+                                environment.getShots().add(
+                                        chonBota.getWeapon().fire(chonBota.getPosX(), chonBota.getPosY(), direction));
                             }
+
+                            /**Atualiza o movimento da ChonBota*/
+                            environment.getProtagonist().move(input);
+                            environment.checkBorders();
+
                             /* ChonBot's Automatic Movements */
                             /* Update the other agents' movements */
                             for (Agent agent : environment.getAgents()) {
