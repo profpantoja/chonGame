@@ -40,6 +40,7 @@ public class Engine extends Application {
 
     /* If the game is paused or not. */
     private boolean isPaused = false;
+    private boolean gameOverHandled = false;
 
     /**
      * Main entry point of the application.
@@ -66,7 +67,7 @@ public class Engine extends Application {
         try {
             /* Initialize the game environment and agents */
             Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
-            Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
+            Agent chonBota = new Agent(400, 390, 90, 65, 3, 1, "/images/agents/chonBota.png", false);
             Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
             Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false);
             chonBota.setWeapon(fireball);
@@ -91,7 +92,7 @@ public class Engine extends Application {
             root.getChildren().add(canvas);
             theStage.show();
 
-             SoundManager.playMusic("/sounds/zelda.wav");
+            SoundManager.playMusic("/sounds/zelda.wav");
 
             /* Handle keyboard input */
             ArrayList<String> input = new ArrayList<String>();
@@ -104,6 +105,13 @@ public class Engine extends Application {
 
                     if (code.equals("P")) {
                         isPaused = !isPaused;
+                        if (isPaused) {
+                            SoundManager.pauseMusic(); // pausa
+                            SoundManager.pauseAllSoundEffects(); //Pausa os efeitos sonoros
+                        } else if (!environment.getProtagonist().isDead()) {
+                            SoundManager.resumeMusic(); // retoma
+                            SoundManager.resumeAllSoundEffects(); // Retoma os efeitos sonoros
+                        }
                     }
 
                     if (!isPaused && !input.contains(code)) {
@@ -135,7 +143,11 @@ public class Engine extends Application {
                     /* Branching the Game Loop */
                     /* If the agent died in the last loop */
                     if (environment.getProtagonist().isDead()) {
-                        SoundManager.playSound("/sounds/zelda.wav");
+                        if (!gameOverHandled) {
+                                SoundManager.stopMusic(); // para a música só uma vez
+                                SoundManager.playSound("/sounds/zelda.wav"); // som de morte só uma vez
+                                gameOverHandled = true;
+                            }
                         /* Still prints ongoing messages (e.g., last hit taken) */
                         environment.updateMessages();
                         environment.updateShots();
@@ -150,7 +162,7 @@ public class Engine extends Application {
                             mediator.drawBackground();
                             mediator.drawAgents();
                             mediator.drawMessages();
-                            mediator.drawShots();
+                            mediator.drawShots();                        
                             /* Rendering the Pause Screen */
                             mediator.drawPauseScreen();
                         } else {
