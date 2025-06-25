@@ -7,7 +7,6 @@ package chon.group.game.drawer;
  * displaying UI elements like life bars and status panels.
  */
 public interface EnvironmentDrawer {
-
     /**
      * Clears the environment, removing all elements.
      */
@@ -24,6 +23,11 @@ public interface EnvironmentDrawer {
     void drawAgents();
 
     /**
+     * Draws all collisions present in the environment.
+     */
+    void drawCollisions();
+
+    /**
      * Draws the life bar for agents or players.
      */
     void drawLifeBar();
@@ -32,11 +36,6 @@ public interface EnvironmentDrawer {
      * Draws the status panel displaying relevant game information.
      */
     void drawStatusPanel();
-
-    /**
-     * Draws the pause screen when the game is paused.
-     */
-    void drawPauseScreen();
 
     /**
      * Draws all the messages on the screen.
@@ -88,5 +87,16 @@ public interface EnvironmentDrawer {
     //method implemets for side-scrolling games
     void drawMessagesSideScrolling();
     
+    /**
+     * Clears the environment for side-scrolling games.
+     */
+
+    //method implemets for side-scrolling games
+    void clearEnvironmentSideScrolling();
+
+    /**
+     * Draws the win screen when the player wins the game.
+     */
+    void drawWinScreen();
     
 }
