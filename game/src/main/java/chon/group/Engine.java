@@ -4,20 +4,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import chon.group.game.domain.environment.SoundManager;
 import chon.group.game.domain.agent.Agent;
-import chon.group.game.domain.agent.Cannon;
-import chon.group.game.domain.agent.CloseWeapon;
-import chon.group.game.domain.agent.Fireball;
 import chon.group.game.domain.agent.Shot;
-import chon.group.game.domain.agent.Weapon;
 import chon.group.game.domain.environment.Collision;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.domain.environment.GameStatus;
 import chon.group.game.domain.environment.MainMenu;
 import chon.group.game.domain.environment.MenuPause;
 import chon.group.game.domain.environment.Setup;
-import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.drawer.JavaFxDrawer;
 import chon.group.game.drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
@@ -321,15 +315,18 @@ public class Engine extends Application {
         double cameraX = environment.getCameraX();
         double protagonistSpeed = environment.getProtagonist().getSpeed();
 
-        double rightBoundary = cameraX + WINDOW_WIDTH * 0.80; // 80% right of the screen
-        double leftBoundary = cameraX + WINDOW_WIDTH * 0.15; // 15% left of the screen
+        // Make camera move faster (e.g., 1.5x protagonist speed)
+        double cameraSpeed = protagonistSpeed * 2.0;
+
+        double rightBoundary = cameraX + WINDOW_WIDTH * 0.80;
+        double leftBoundary = cameraX + WINDOW_WIDTH * 0.15;
 
         if (protagonistX > rightBoundary) {
-            double newCameraX = cameraX + protagonistSpeed;
+            double newCameraX = cameraX + cameraSpeed;
             double maxCameraX = environment.getWidth() - WINDOW_WIDTH;
             environment.setCameraX(Math.min(newCameraX, maxCameraX));
         } else if (protagonistX < leftBoundary) {
-            double newCameraX = cameraX - protagonistSpeed;
+            double newCameraX = cameraX - cameraSpeed;
             environment.setCameraX(Math.max(newCameraX, 0));
         }
     }
