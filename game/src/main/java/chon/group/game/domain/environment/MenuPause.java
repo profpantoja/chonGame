@@ -6,12 +6,8 @@ import javafx.scene.input.KeyCode;
 
 public class MenuPause {
 
-    public enum Option {
-        RESUME, GO_BACK_TO_MENU
-    }
-
     private int selectedOptionIndex = 0;
-    private final Option[] options = Option.values();
+    private final MenuOption.Pause[] options = MenuOption.Pause.values();
     private final JavaFxDrawer drawer;
     private final Image backgroundImage;
 
@@ -26,7 +22,7 @@ public class MenuPause {
     }
 
     // Retorna a opção escolhida ao pressionar ENTER, ou null caso contrário
-    public Option handleInput(KeyCode code) {
+    public MenuOption.Pause handleInput(KeyCode code) {
         switch (code) {
             case UP:
                 selectedOptionIndex = (selectedOptionIndex - 1 + options.length) % options.length;

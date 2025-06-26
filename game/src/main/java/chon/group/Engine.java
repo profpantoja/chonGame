@@ -7,6 +7,7 @@ import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.domain.environment.GameStatus;
 import chon.group.game.domain.environment.MainMenu;
+import chon.group.game.domain.environment.MenuOption;
 import chon.group.game.domain.environment.MenuPause;
 import chon.group.game.domain.environment.Setup;
 import chon.group.game.drawer.JavaFxDrawer;
@@ -82,7 +83,7 @@ private void handleKeyPressed(KeyEvent e) {
     System.out.println("Key pressed: " + key); 
     switch (gameStatus) {
         case MAIN_MENU:
-            MainMenu.Option mainOption = mainMenu.handleInput(e.getCode());
+            MenuOption.Main mainOption = mainMenu.handleInput(e.getCode());
             if (mainOption != null) {
                 switch (mainOption) {
                     case START_GAME:
@@ -96,7 +97,7 @@ private void handleKeyPressed(KeyEvent e) {
             }
             break;
         case PAUSED:
-            MenuPause.Option pauseOption = menuPause.handleInput(e.getCode());
+            MenuOption.Pause pauseOption = menuPause.handleInput(e.getCode());
             if (pauseOption != null) {
                 switch (pauseOption) {
                     case RESUME:

@@ -5,12 +5,8 @@ import javafx.scene.input.KeyCode;
 
 public class MainMenu {
 
-    public enum Option {
-        START_GAME, EXIT
-    }
-
     private int selectedOption = 0;
-    private final Option[] options = Option.values();
+    private final MenuOption.Main[] options = MenuOption.Main.values();
     private JavaFxDrawer drawer;
     private Image backgroundImage;
 
@@ -25,7 +21,7 @@ public class MainMenu {
     }
 
     // Retorna a opção escolhida ao pressionar ENTER, ou null caso contrário
-    public Option handleInput(KeyCode code) {
+    public MenuOption.Main handleInput(KeyCode code) {
         switch (code) {
             case UP:
                 selectedOption = (selectedOption - 1 + options.length) % options.length;
