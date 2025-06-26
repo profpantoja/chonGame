@@ -25,23 +25,23 @@ public class Agent extends AnimatedEntity {
     
     /* The Agent's Weapon */
     private Weapon weapon;
+
+    private boolean isJumping = false;
+
+    /* Velocidade inicial do pulo (negativo = sobe) */
+    private int jumpVelocity = -23;
+
+    private int currentVelocityY = 0;
+
+    private final int gravity = 3;
+
+    private final int groundY = 500;
+
+    private boolean isProtagonist;
     
     /* The Agent's Close Weapon */
     private CloseWeapon closeWeapon;
 
-    /*Flag to control if the protaginist its jumping */
-    private boolean isJumping = false;
-
-    /* Velocidade inicial do pulo (negativo = sobe) */
-    private int jumpVelocity = -12;
-
-    private int currentVelocityY = 0;
-
-    private final int gravity = 2;
-
-    private final int groundY = 700;
-
-    private boolean isProtagonist;
     
     /*Flag to stop the invulnerability status of the agent when on menu */
     private boolean checkMenu = false;
@@ -173,6 +173,14 @@ public class Agent extends AnimatedEntity {
         return (this.getHealth() <= 0);
     }
 
+    public boolean isProtagonist() {
+    return isProtagonist;
+}
+
+    public void setProtagonist(boolean isProtagonist) {
+    this.isProtagonist = isProtagonist;
+}
+
     /**
      * Makes the agent take damage.
      * If health reaches 0, the game must end.
@@ -293,7 +301,8 @@ public void moveGravity(List<String> movements) {
 
     /* PULO: apenas se for protagonista */
     if (isProtagonist) {
-        if (movements.contains("UP") && !isJumping) {
+        if ((movements.contains("W")) && !isJumping)
+ {
             isJumping = true;
             currentVelocityY = jumpVelocity;
         }
@@ -313,7 +322,8 @@ public void moveGravity(List<String> movements) {
             this.setPosY(groundY);
         }
     } else {
+        // Chonbot não pula, está sempre no chão
         this.setPosY(groundY);
     }
-    }
+}
 }
