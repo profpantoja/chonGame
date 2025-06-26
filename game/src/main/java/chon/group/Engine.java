@@ -161,9 +161,11 @@ public class Engine extends Application {
                                         direction = "LEFT";
                                     else
                                         direction = "RIGHT";
-                                    environment.getShots().add(chonBota.getWeapon().fire(chonBota.getPosX(),
-                                            chonBota.getPosY(),
-                                            direction));
+                                    
+                                    var shot = chonBota.getWeapon().fire(chonBota.getPosX(), chonBota.getPosY(), direction);
+                                    if (shot != null) {
+                                        environment.getShots().add(shot);
+                                    }
                                 }
                                 /* ChonBota's Movements */
                                 environment.getProtagonist().move(input);
