@@ -4,20 +4,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import chon.group.game.domain.environment.SoundManager;
 import chon.group.game.domain.agent.Agent;
-import chon.group.game.domain.agent.Cannon;
-import chon.group.game.domain.agent.CloseWeapon;
-import chon.group.game.domain.agent.Fireball;
 import chon.group.game.domain.agent.Shot;
-import chon.group.game.domain.agent.Weapon;
+import chon.group.game.domain.agent.Slash;
 import chon.group.game.domain.environment.Collision;
 import chon.group.game.domain.environment.Environment;
+import chon.group.game.domain.environment.Game;
 import chon.group.game.domain.environment.GameStatus;
 import chon.group.game.domain.environment.MainMenu;
 import chon.group.game.domain.environment.MenuPause;
-import chon.group.game.domain.environment.Setup;
-import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.drawer.JavaFxDrawer;
 import chon.group.game.drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
@@ -61,7 +56,9 @@ public class Engine extends Application {
     private static final double WINDOW_HEIGHT = 768;
     private int currentRoom = 1;
     long shotNow;
+    
     private boolean canSlash = true;
+    private boolean option = false;
 
 
     /**
@@ -79,12 +76,12 @@ public class Engine extends Application {
     theStage.setTitle("Chon: The Learning Game");
     Canvas canvas = new Canvas(WINDOW_WIDTH, WINDOW_HEIGHT);
     this.graphicsContext = canvas.getGraphicsContext2D(); 
-    this.environment = Setup.createEnvironment();
+    this.environment = Game.createEnvironment();
     this.mediator = new JavaFxMediator(environment, this.graphicsContext); 
     JavaFxDrawer drawer = new JavaFxDrawer(this.graphicsContext, null); 
 
     // Initialize Menus
-    Image menuBackground = Setup.loadImage("/images/environment/menu_background_new.png");
+    Image menuBackground = Game.loadImage("/images/environment/menu_background_new.png");
     this.mainMenu = new MainMenu(drawer, menuBackground);
     this.menuPause = new MenuPause(drawer, environment.getPauseImage());
 
@@ -161,7 +158,7 @@ public class Engine extends Application {
                 }
                 else if (!gameInput.contains(key)) gameInput.add(key);
                 
-                else if(e.getCode().toString().equals("SPACE"))  canSlash = true;  // permite novo slash após soltar
+                else if(e.getCode().toString().equals("SPACE"))    ;  // permite novo slash após soltar
 
                 break;
             default:
@@ -177,7 +174,11 @@ public class Engine extends Application {
     });
 
     scene.setOnKeyReleased((KeyEvent e) -> {
+        
         if (gameStatus == GameStatus.RUNNING) {
+            if (e.getCode().toString().equals("SPACE")) {
+                canSlash = true; // libera novo ataque corpo a corpo
+            }
             gameInput.remove(e.getCode().toString());
         }
     });
@@ -187,7 +188,7 @@ public class Engine extends Application {
      * Resets the game state to its initial configuration.
      */
     private void resetGame() {
-        this.environment = Setup.createEnvironment();
+        this.environment = Game.createEnvironment();
         // Recria o mediator para apontar para o novo ambiente, usando o gc guardado na classe.
         this.mediator = new JavaFxMediator(this.environment, this.graphicsContext);
         gameInput.clear();
@@ -233,65 +234,86 @@ public class Engine extends Application {
 
         // Protagonist movement and actions
         if (!gameInput.isEmpty()) {
-            if((gameInput.contains("RIGHT") ||
+            if ((gameInput.contains("RIGHT") ||
             gameInput.contains("LEFT") ||
             gameInput.contains("DOWN") ||
-            gameInput.contains("UP")) && 
+            gameInput.contains("UP")) &&
             environment.getProtagonist().getCurrentSpritesheet() != "/images/agents/Link_Running.png" &&
             (System.currentTimeMillis() - environment.getProtagonist().getlastHitTime()) >=
-             environment.getProtagonist().getInvulnerabilityCooldown()){
-                environment.getProtagonist().setWidth(96);
-                environment.getProtagonist().setAnimation("/images/agents/Link_Running.png", 6, 75);
-                System.out.println("ChonBota is running.");
+            environment.getProtagonist().getInvulnerabilityCooldown()) {
+            environment.getProtagonist().setWidth(96);
+            environment.getProtagonist().setAnimation("/images/agents/Link_Running.png", 6, 75);
+            System.out.println("ChonBota is running.");
             }
             environment.getProtagonist().move(gameInput);
             updateCameraPosition();
             if (gameInput.contains("SPACE")) {
-                //SoundManager.playMusic("/sounds/damage.wav"); 
-                shotNow = System.currentTimeMillis();
-                environment.getProtagonist().setWidth(180);
-                environment.getProtagonist().setAnimation("/images/agents/Link_Attack.png", 4, 75);
-                System.out.println("ChonBota is attacking.");
-                gameInput.remove("SPACE");
-                /* Stop the weapon to attack */
-                canSlash = false;
-                
-                String direction;
-                int widthAnimation = environment.getProtagonist().getPosX();
-                if (environment.getProtagonist().isFlipped())
-                    direction = "LEFT";
-                else{
-                    widthAnimation += environment.getProtagonist().getWidth() - environment.getProtagonist().getWeapon().getShotWidth();
-                    direction = "RIGHT";                  
-                }
-
-                environment.getSlashes().add(
-                    environment.getProtagonist().getCloseWeapon().slash(environment.getProtagonist().getPosX(),
-                    environment.getProtagonist().getPosY(),
-                    direction));
-
-                environment.getShots().add(environment.getProtagonist().getWeapon().fire(widthAnimation,
-                environment.getProtagonist().getPosY(),
-                direction));
+            //SoundManager.playMusic("/sounds/damage.wav"); 
+            shotNow = System.currentTimeMillis();
+            environment.getProtagonist().setWidth(180);
+            environment.getProtagonist().setAnimation("/images/agents/Link_Attack.png", 4, 75);
+            
+            String direction;
+            int  widthAnimation = environment.getProtagonist().getPosX();
+            if (environment.getProtagonist().isFlipped())
+            direction = "LEFT";
+            else {
+                widthAnimation += environment.getProtagonist().getWidth() - environment.getProtagonist().getWeapon().getShotWidth();
+                direction = "RIGHT";
             }
-            // Sempre atualiza o movimento vertical (pulo e queda)
-            environment.getProtagonist().moveGravity(gameInput); //caso queira usar o jogo sem gravidade tem que mudar aqui para .move(gameInput)
-            environment.checkBorders();
+            boolean weaponDecision = false;
+            
+            /* chonbota Only Moves if the Player Press Something */
+            /* Update the protagonist's movements if gameInput exists */
+            if (!gameInput.isEmpty()) {
+            if (!weaponDecision) {
+                if (gameInput.contains("SPACE") && canSlash) {
+                    gameInput.remove("SPACE");
+                    canSlash = false;
+                    System.out.println("ChonBota is attacking.");
+                    
+                    direction = environment.getProtagonist().isFlipped() ? "LEFT" : "RIGHT";
+                    environment.getSlashes().add(
+                        environment.getProtagonist().getCloseWeapon().slash(
+                            environment.getProtagonist().getPosX(),
+                            environment.getProtagonist().getPosY(),
+                            direction
+                        )
+                    );
+                }
+            } else {
+                if (gameInput.contains("SPACE")) {
+                    gameInput.remove("SPACE");
+
+                    direction = environment.getProtagonist().isFlipped() ? "LEFT" : "RIGHT";
+                    environment.getShots().add(
+                        environment.getProtagonist().getWeapon().fire(
+                            widthAnimation,
+                            environment.getProtagonist().getPosY(),
+                            direction
+                        )
+                    );
+                }
+            }
         }
-        else {
-            if (environment.getProtagonist().getCurrentSpritesheet() != "/images/agents/Link_Standing.png" && 
-                (System.currentTimeMillis() - shotNow) >= 360 &&
-                (System.currentTimeMillis() - environment.getProtagonist().getlastHitTime()) >= 
-                environment.getProtagonist().getInvulnerabilityCooldown()){
-                environment.getProtagonist().setWidth(64);
-                environment.getProtagonist().setAnimation("/images/agents/Link_Standing.png", 4, 150);
-                System.out.println("ChonBota is standing still.");
+            // Sempre atualiza o movimento vertical (pulo e queda)
+            //environment.getProtagonist().moveGravity(gameInput); //caso queira usar o jogo sem gravidade tem que mudar aqui para .move(gameInput)
+                environment.checkBorders();
+            }
+        } else {
+            if (environment.getProtagonist().getCurrentSpritesheet() != "/images/agents/Link_Standing.png" &&
+            (System.currentTimeMillis() - shotNow) >= 360 &&
+            (System.currentTimeMillis() - environment.getProtagonist().getlastHitTime()) >=
+            environment.getProtagonist().getInvulnerabilityCooldown()) {
+            environment.getProtagonist().setWidth(64);
+            environment.getProtagonist().setAnimation("/images/agents/Link_Standing.png", 4, 150);
+            System.out.println("ChonBota is standing still.");
             }
         }
         environment.getProtagonist().updateAnimation();
-        
+
         // method chase for each agent
-        environment.getAgents().forEach(agent -> 
+        environment.getAgents().forEach(agent ->
             agent.chase(environment.getProtagonist().getPosX(), environment.getProtagonist().getPosY()));
 
         // update all agents and their shots, and check if have collisions 
@@ -300,12 +322,12 @@ public class Engine extends Application {
         environment.updateSlashes();
         environment.updateShots();
         environment.updateMessages();
-    }
+        }
 
     /**
      * Draw the game world elements on the screen.
      */
-    private void renderGameWorld() {
+    private void renderGameWorld(){
         mediator.drawBackgroundSideScrolling();
         mediator.drawAgentsSideScrolling();
         mediator.drawShotsSideScrolling();
@@ -350,8 +372,18 @@ public class Engine extends Application {
          Iterator<Collision> it = environment.getCollisions().iterator();
             while (it.hasNext()) {
                 Collision collision = it.next();
-
+                
                 Iterator<Shot> itShot = environment.getShots().iterator();
+                Iterator<Slash> itSlash = environment.getSlashes().iterator();
+                
+                while (itSlash.hasNext()) {
+                    Slash tempSlash = itSlash.next();
+                    tempSlash.checkCollision(collision);
+                    if (collision.isDestroy()) {
+                        itSlash.remove();
+                        break;
+                    }    
+                }
                 while (itShot.hasNext()) {
                     Shot tempShot = itShot.next();
                     tempShot.checkCollision(collision);
