@@ -365,23 +365,17 @@ public class Engine extends Application {
                     Shot tempShot = itShot.next();
                     tempShot.checkCollision(collision);
                     if (collision.isDestroy()) {
-                        itShot.remove();
                         break;
                     }    
-                }
-                if (collision.isDestroy()) {
-                    it.remove(); 
                 }
                 
                 for (Agent agent : environment.getAgents()) {
                     agent.checkCollision(collision, environment);
                     if (collision.isDestroy()) break;
                 }
-                if (collision.isDestroy()) {
-                    it.remove(); 
-                }
 
                 environment.getProtagonist().checkCollision(collision, environment);
+                
                 if (collision.isDestroy()) {
                     it.remove(); 
                 }
