@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Cannon;
 import chon.group.game.domain.agent.Fireball;
+import chon.group.game.domain.agent.Hitbox;
 import chon.group.game.domain.agent.Weapon;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.drawer.EnvironmentDrawer;
@@ -12,12 +13,12 @@ import chon.group.game.drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
-import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 /**
  * The {@code Engine} class represents the main entry point of the application
@@ -39,6 +40,7 @@ public class Engine extends Application {
 
     /* If the game is paused or not. */
     private boolean isPaused = false;
+    private boolean drawHitboxes = true;
 
     /**
      * Main entry point of the application.
@@ -69,12 +71,23 @@ public class Engine extends Application {
             Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
             Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false);
             chonBota.setWeapon(fireball);
-
+            chonBota.setHitbox(new Hitbox(17, 23, 33, 45));
             Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
+            chonBot.setHitbox(new Hitbox(17, 23, 33, 45));
             environment.setProtagonist(chonBota);
             environment.getAgents().add(chonBot);
             environment.setPauseImage("/images/environment/pause.png");
             environment.setGameOverImage("/images/environment/gameover.png");
+
+            if (drawHitboxes) {
+                for(Agent agent : environment.getAgents()) {
+                    if (agent.getHitbox() == null) continue;
+                    agent.getHitbox().setDrawHitbox(true);
+                }
+                if (environment.getProtagonist().getHitbox() != null) {
+                    environment.getProtagonist().getHitbox().setDrawHitbox(true);
+                }
+            }
 
             /* Set up the graphical canvas */
             Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
@@ -149,6 +162,12 @@ public class Engine extends Application {
                             /* Rendering the Pause Screen */
                             mediator.drawPauseScreen();
                         } else {
+                            /* Updates the position of agents and protagonist's hitboxes. */
+                            for(Agent agent : environment.getAgents()) {
+                                agent.updateHitboxPosition();
+                            }
+                            environment.getProtagonist().updateHitboxPosition();
+
                             /* ChonBota Only Moves if the Player Press Something */
                             /* Update the protagonist's movements if input exists */
                             if (!input.isEmpty()) {

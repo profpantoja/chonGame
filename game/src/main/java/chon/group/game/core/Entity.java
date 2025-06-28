@@ -3,6 +3,7 @@ package chon.group.game.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import chon.group.game.domain.agent.Hitbox;
 import chon.group.game.messaging.Message;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
@@ -37,6 +38,9 @@ public abstract class Entity {
 
     /** The maximum entity's health. */
     private int fullHealth;
+
+    /** The entity's hitbox, if any. */
+    private Hitbox hitbox = null;
 
     /**
      * Constructor to initialize the entity properties.
@@ -247,6 +251,24 @@ public abstract class Entity {
     }
 
     /**
+     * Gets the entity's hitbox.
+     *
+     * @return the entity's hitbox
+     */
+    public Hitbox getHitbox() {
+        return hitbox;
+    }
+
+    /**
+     * Sets the entity's hitbox.
+     *
+     * @param hitbox the new hitbox
+     */
+    public void setHitbox(Hitbox hitbox) {
+        this.hitbox = hitbox;
+    }
+
+    /**
      * Flips the Image horizontally.
      */
     public void flipImage() {
@@ -319,4 +341,10 @@ public abstract class Entity {
         }
     }
 
+    public void updateHitboxPosition() {
+        if (this.getHitbox() != null) {
+            this.getHitbox().setPosX(this.getPosX() + this.getHitbox().getOffsetX());
+            this.getHitbox().setPosY(this.getPosY() + this.getHitbox().getOffsetY());
+        }
+    }
 }
