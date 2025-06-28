@@ -66,6 +66,15 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     agent.getPosY(),
                     agent.getWidth(),
                     agent.getHeight());
+            if (agent.getHitbox() != null) { 
+                if (agent.getHitbox().isDrawHitbox()) {
+                    drawer.drawImage(agent.getHitbox().getImage(),
+                        agent.getHitbox().getPosX(),
+                        agent.getHitbox().getPosY(),
+                        agent.getHitbox().getWidth(),
+                        agent.getHitbox().getHeight());
+                }
+            }
             drawer.drawLifeBar(agent.getHealth(),
                     agent.getFullHealth(),
                     agent.getWidth(),
@@ -78,6 +87,17 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 this.environment.getProtagonist().getPosY(),
                 this.environment.getProtagonist().getWidth(),
                 this.environment.getProtagonist().getHeight());
+        
+        if (this.environment.getProtagonist().getHitbox() != null) {
+            if (this.environment.getProtagonist().getHitbox().isDrawHitbox()) {
+                drawer.drawImage(this.environment.getProtagonist().getHitbox().getImage(),
+                    this.environment.getProtagonist().getHitbox().getPosX(),
+                    this.environment.getProtagonist().getHitbox().getPosY(),
+                    this.environment.getProtagonist().getHitbox().getWidth(),
+                    this.environment.getProtagonist().getHitbox().getHeight());
+            }
+        }
+
         drawer.drawLifeBar(this.environment.getProtagonist().getHealth(),
                 this.environment.getProtagonist().getFullHealth(),
                 this.environment.getProtagonist().getWidth(),
@@ -168,6 +188,15 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     shot.getPosY(),
                     shot.getWidth(),
                     shot.getHeight());
+            if (shot.getHitbox() != null) {
+                if (shot.getHitbox().isDrawHitbox()) {
+                    drawer.drawImage(shot.getHitbox().getImage(),
+                        shot.getHitbox().getPosX(),
+                        shot.getHitbox().getPosY(),
+                        shot.getHitbox().getWidth(),
+                        shot.getHitbox().getHeight());
+                }
+            }
         }
     }
 

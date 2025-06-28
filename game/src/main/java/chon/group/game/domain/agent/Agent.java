@@ -152,4 +152,34 @@ public class Agent extends Entity {
         return true;
     }
 
+    @Override
+    /**
+     * Moves the entity based on the movement commands provided.
+     *
+     * @param movements a list of movement directions ("RIGHT", "LEFT", "UP",
+     *                  "DOWN")
+     */
+    public void move(List<String> movements) {
+        if (movements.contains("RIGHT")) {
+            if (isFlipped()) {
+                flipImage();
+                setFlipped(false);
+            }
+            setPosX(getPosX() + getSpeed());
+            updateHitboxPosition();
+        } else if (movements.contains("LEFT")) {
+            if (!isFlipped()) {
+                flipImage();
+                setFlipped(true);
+            }
+            setPosX(getPosX() - getSpeed());
+            updateHitboxPosition();
+        } else if (movements.contains("UP")) {
+            setPosY(getPosY() - getSpeed());
+            updateHitboxPosition();
+        } else if (movements.contains("DOWN")) {
+            setPosY(getPosY() + getSpeed());
+            updateHitboxPosition();
+        }
+    }
 }
