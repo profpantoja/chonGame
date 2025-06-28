@@ -56,6 +56,7 @@ public class Engine extends Application {
     private int currentRoom = 1;
     long shotNow;
     private boolean canSlash = true;
+    private boolean drawHitboxes = true;
 
 
     /**
@@ -224,6 +225,11 @@ public class Engine extends Application {
     private void updateGameLogic() {
         
         verifyGameStatus();
+        // Updates the position of agents and protagonist's hitboxes.
+        for(Agent agent : environment.getAgents()) {
+            agent.updateHitboxPosition();
+        }
+        environment.getProtagonist().updateHitboxPosition();
 
         // Protagonist movement and actions
         if (!gameInput.isEmpty()) {
@@ -234,7 +240,7 @@ public class Engine extends Application {
             environment.getProtagonist().getCurrentSpritesheet() != "/images/agents/Link_Running.png" &&
             (System.currentTimeMillis() - environment.getProtagonist().getlastHitTime()) >=
              environment.getProtagonist().getInvulnerabilityCooldown()){
-                environment.getProtagonist().setWidth(96);
+                environment.getProtagonist().setWidth(256);
                 environment.getProtagonist().setAnimation("/images/agents/Link_Running.png", 6, 75);
                 System.out.println("ChonBota is running.");
             }
@@ -243,7 +249,7 @@ public class Engine extends Application {
             if (gameInput.contains("SPACE")) {
                 //SoundManager.playMusic("/sounds/damage.wav"); 
                 shotNow = System.currentTimeMillis();
-                environment.getProtagonist().setWidth(180);
+                environment.getProtagonist().setWidth(256);
                 environment.getProtagonist().setAnimation("/images/agents/Link_Attack.png", 4, 75);
                 System.out.println("ChonBota is attacking.");
                 gameInput.remove("SPACE");
@@ -277,7 +283,7 @@ public class Engine extends Application {
                 (System.currentTimeMillis() - shotNow) >= 360 &&
                 (System.currentTimeMillis() - environment.getProtagonist().getlastHitTime()) >= 
                 environment.getProtagonist().getInvulnerabilityCooldown()){
-                environment.getProtagonist().setWidth(64);
+                environment.getProtagonist().setWidth(256);
                 environment.getProtagonist().setAnimation("/images/agents/Link_Standing.png", 4, 150);
                 System.out.println("ChonBota is standing still.");
             }
@@ -285,8 +291,14 @@ public class Engine extends Application {
         environment.getProtagonist().updateAnimation();
         
         // method chase for each agent
-        environment.getAgents().forEach(agent -> 
-            agent.chase(environment.getProtagonist().getPosX(), environment.getProtagonist().getPosY()));
+        environment.getAgents().forEach(agent -> {
+            if (environment.getProtagonist().getHitbox() != null) {
+                agent.chase(
+                    environment.getProtagonist().getHitbox().getPosX(),
+                    environment.getProtagonist().getHitbox().getPosY()
+                );
+            }
+        });
 
         // update all agents and their shots, and check if have collisions 
         checkCollisions();

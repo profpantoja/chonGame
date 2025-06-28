@@ -196,14 +196,13 @@ public class Agent extends AnimatedEntity {
             this.setlastHitTime(System.currentTimeMillis()); 
 
             if(this.isDead()){
-                this.setWidth(64);
-                this.setHeight(64);
+                this.setWidth(256);
                 this.setAnimation(this.pathImageDeath, 2, 150);
                 System.out.println("Chon bota die!");
                 //SoundManager.playSound("sounds/gameOver.wav");
             }
             else if(this.pathImageHit != null && !this.pathImageHit.isEmpty()){
-                this.setWidth(64); 
+                this.setWidth(256); 
                 this.setAnimation(this.pathImageHit, 10, 300); 
                 System.out.println("Chon bota took damage!");
                 //SoundManager.playSound("sounds/takedamage.wav");
@@ -212,17 +211,41 @@ public class Agent extends AnimatedEntity {
     }
 
     public void checkCollision(Collision collision, Environment environment) {
-        if (getPosX() < collision.getX() + collision.getWidth() &&
-            getPosX() + getWidth() > collision.getX() &&
-            getPosY() < collision.getY() + collision.getHeight() &&
-            getPosY() + getHeight() > collision.getY()) {
+        // Use hitbox if available, otherwise use entity bounds
+        int ax, ay, aw, ah;
+        if (getHitbox() != null) {
+            ax = getPosX() + getHitbox().getOffsetX();
+            ay = getPosY() + getHitbox().getOffsetY();
+            aw = getHitbox().getWidth();
+            ah = getHitbox().getHeight();
+        } else {
+            ax = getPosX();
+            ay = getPosY();
+            aw = getWidth();
+            ah = getHeight();
+        }
 
-            // Detecção de colisão
-            float dx = (getPosX() + getWidth() / 2.0f) - (collision.getX() + collision.getWidth() / 2.0f);
-            float dy = (getPosY() + getHeight() / 2.0f) - (collision.getY() + collision.getHeight() / 2.0f);
+        int bx = collision.getX();
+        int by = collision.getY();
+        int bw = collision.getWidth();
+        int bh = collision.getHeight();
 
-            float halfWidths = (getWidth() / 2.0f) + (collision.getWidth() / 2.0f);
-            float halfHeights = (getHeight() / 2.0f) + (collision.getHeight() / 2.0f);
+        if (ax < bx + bw &&
+            ax + aw > bx &&
+            ay < by + bh &&
+            ay + ah > by) {
+
+            // Detecção de colisão (usando centro do hitbox ou entidade)
+            float centerAx = ax + aw / 2.0f;
+            float centerAy = ay + ah / 2.0f;
+            float centerBx = bx + bw / 2.0f;
+            float centerBy = by + bh / 2.0f;
+
+            float dx = centerAx - centerBx;
+            float dy = centerAy - centerBy;
+
+            float halfWidths = (aw / 2.0f) + (bw / 2.0f);
+            float halfHeights = (ah / 2.0f) + (bh / 2.0f);
 
             float overlapX = halfWidths - Math.abs(dx);
             float overlapY = halfHeights - Math.abs(dy);
@@ -243,6 +266,7 @@ public class Agent extends AnimatedEntity {
                         setPosY(getPosY() - fix);
                     }
                 }
+                updateHitboxPosition(); // Atualiza a posição do hitbox se necessário
             }
 
             // 2. Aplicar dano
@@ -254,8 +278,7 @@ public class Agent extends AnimatedEntity {
             }
 
             // 3. Destruir ao contato
-            if (collision.isContactDestroy() && this == environment.getProtagonist())
-            {
+            if (collision.isContactDestroy() && this == environment.getProtagonist()) {
                 collision.setDestroy(true);
             }
             else if (collision.isContactDestroy() && collision.isAgentContact()) {
@@ -285,45 +308,77 @@ public class Agent extends AnimatedEntity {
      * Método move sobreescrito da classe Entity
      */
     
-public void moveGravity(List<String> movements) {
-    int speed = this.getSpeed();
+    public void moveGravity(List<String> movements) {
+        int speed = this.getSpeed();
 
-    // Movimento lateral
-    if (movements.contains("LEFT")) {
-        if (!this.isFlipped()) this.flipImage();
-        this.setPosX(this.getPosX() - speed);
-    }
-
-    if (movements.contains("RIGHT")) {
-        if (this.isFlipped()) this.flipImage();
-        this.setPosX(this.getPosX() + speed);
-    }
-
-    /* PULO: apenas se for protagonista */
-    if (isProtagonist) {
-        if ((movements.contains("W")) && !isJumping)
- {
-            isJumping = true;
-            currentVelocityY = jumpVelocity;
+        // Movimento lateral
+        if (movements.contains("LEFT")) {
+            if (!this.isFlipped()) this.flipImage();
+            this.setPosX(this.getPosX() - speed);
         }
 
-        if (isJumping) {
-            this.setPosY(this.getPosY() + currentVelocityY);
-            currentVelocityY += gravity;
+        if (movements.contains("RIGHT")) {
+            if (this.isFlipped()) this.flipImage();
+            this.setPosX(this.getPosX() + speed);
+        }
 
-            /* Se está tocando no chão */
-            if (this.getPosY() >= groundY) {
+        /* PULO: apenas se for protagonista */
+        if (isProtagonist) {
+            if ((movements.contains("W")) && !isJumping)
+    {
+                isJumping = true;
+                currentVelocityY = jumpVelocity;
+            }
+
+            if (isJumping) {
+                this.setPosY(this.getPosY() + currentVelocityY);
+                currentVelocityY += gravity;
+
+                /* Se está tocando no chão */
+                if (this.getPosY() >= groundY) {
+                    this.setPosY(groundY);
+                    isJumping = false;
+                    currentVelocityY = 0;
+                }
+            } else {
+                // Fixa a Chonbota no chão, caso não esteja pulando
                 this.setPosY(groundY);
-                isJumping = false;
-                currentVelocityY = 0;
             }
         } else {
-            // Fixa a Chonbota no chão, caso não esteja pulando
+            // Chonbot não pula, está sempre no chão
             this.setPosY(groundY);
         }
-    } else {
-        // Chonbot não pula, está sempre no chão
-        this.setPosY(groundY);
     }
-}
+
+    @Override
+     /**
+     * Moves the entity based on the movement commands provided.
+     *
+     * @param movements a list of movement directions ("RIGHT", "LEFT", "UP", "DOWN")
+     *
+     */
+
+    public void move(List<String> movements) {
+        if (movements.contains("RIGHT")) {
+            if (isFlipped()) {
+                flipImage();
+                setFlipped(false);
+            }
+            setPosX(getPosX() + getSpeed());
+            updateHitboxPosition();
+        } else if (movements.contains("LEFT")) {
+            if (!isFlipped()) {
+                flipImage();
+                setFlipped(true);
+            }
+            setPosX(getPosX() - getSpeed());
+            updateHitboxPosition();
+        } else if (movements.contains("UP")) {
+            setPosY(getPosY() - getSpeed());
+            updateHitboxPosition();
+        } else if (movements.contains("DOWN")) {
+            setPosY(getPosY() + getSpeed());
+            updateHitboxPosition();
+        }
+    }
 }

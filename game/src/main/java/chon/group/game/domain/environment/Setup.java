@@ -4,6 +4,7 @@ import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Cannon;
 import chon.group.game.domain.agent.CloseWeapon;
 import chon.group.game.domain.agent.Fireball;
+import chon.group.game.domain.agent.Hitbox;
 import chon.group.game.domain.agent.Sword;
 import chon.group.game.domain.agent.Weapon;
 import javafx.scene.image.Image;
@@ -23,9 +24,11 @@ public class Setup {
         int worldHeight = 768;
 
         Environment environment = new Environment(0, 0, worldWidth, worldHeight, "/images/environment/castle.png");
-        
+        boolean drawHitboxes = true;
+
         // adding protagonist agent
         Agent chonBota = new Agent(100, 390, 90, 65, 5, 1000, "/images/agents/chonBota.png", false,true);
+        chonBota.setHitbox(new Hitbox(114, 4, 30, 90));
         Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false,75); 
         Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false,64);
         CloseWeapon sword = new Sword(400, 390, 0, 0, 3, 0, "", false);
@@ -35,6 +38,7 @@ public class Setup {
 
         // adding enemy agents
         Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true,false);
+        chonBot.setHitbox(new Hitbox(17, 23, 33, 45));
         environment.getAgents().add(chonBot);
 
         environment.createGround(worldWidth, 50, "/images/environment/brick.png");
@@ -57,8 +61,19 @@ public class Setup {
         environment.setPauseImage("");             
         environment.setGameOverImage("/images/environment/gameover.png");
         environment.setWinImage("/images/environment/gameover.png");
+
+        // Set if hitboxes should be drawn
+        if (drawHitboxes) {
+            for(Agent agent : environment.getAgents()) {
+                if (agent.getHitbox() == null) continue;
+                agent.getHitbox().setDrawHitbox(true);
+            }
+            if (environment.getProtagonist().getHitbox() != null) {
+                environment.getProtagonist().getHitbox().setDrawHitbox(true);
+            }
+        }
         
-        SoundManager.playSound("/sounds/zelda.wav");
+        //SoundManager.playSound("/sounds/zelda.wav");
         //SoundManager.playMusic("/sounds/SoundTrack.wav"); Game music here
         //SoundManager.playSound("/sounds/HurtProtagonist.wav"); Hurt Protagonist sound
         //SoundManager.playSound("/sounds/HurtVilan.wav"); Hurt Vilan sound 

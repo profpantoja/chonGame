@@ -6,6 +6,7 @@ import java.util.List;
 
 import chon.group.game.core.Entity;
 import chon.group.game.domain.agent.Agent;
+import chon.group.game.domain.agent.Hitbox;
 import chon.group.game.domain.agent.Shot;
 import chon.group.game.domain.agent.Slash;
 import chon.group.game.messaging.Message;
@@ -391,14 +392,24 @@ public class Environment {
      * its position if necessary.
      */
     public void checkBorders() {
-        if (this.protagonist.getPosX() < 0) {
-            this.protagonist.setPosX(0);
-        } else if ((this.protagonist.getPosX() + this.protagonist.getWidth()) > this.width) {
-            this.protagonist.setPosX(this.width - protagonist.getWidth());
-        } else if (this.protagonist.getPosY() < 0) {
-            this.protagonist.setPosY(0);
-        } else if ((this.protagonist.getPosY() + this.protagonist.getHeight()) > this.height) {
-            this.protagonist.setPosY(this.height - this.protagonist.getHeight());
+        Hitbox hitbox = this.protagonist.getHitbox();
+        if (hitbox == null) {
+            return;
+        }
+        int hitboxX = this.protagonist.getPosX() + hitbox.getOffsetX();
+        int hitboxY = this.protagonist.getPosY() + hitbox.getOffsetY();
+
+        if (hitboxX < 0) {
+            this.protagonist.setPosX(-hitbox.getOffsetX());
+        }
+        else if ((hitboxX + hitbox.getWidth()) > this.width) {
+            this.protagonist.setPosX(this.width - hitbox.getWidth() - hitbox.getOffsetX());
+        }
+        if (hitboxY < 0) {
+            this.protagonist.setPosY(-hitbox.getOffsetY());
+        }
+        else if ((hitboxY + hitbox.getHeight()) > this.height) {
+            this.protagonist.setPosY(this.height - hitbox.getHeight() - hitbox.getOffsetY());
         }
     }
 
@@ -467,11 +478,26 @@ public class Environment {
      */
 
     private boolean intersect(Entity a, Entity b) {
-        // Returns true if there is a collision between two agents
-        return a.getPosX() < b.getPosX() + b.getWidth() &&
-                a.getPosX() + a.getWidth() > b.getPosX() &&
-                a.getPosY() < b.getPosY() + b.getHeight() &&
-                a.getPosY() + a.getHeight() > b.getPosY();
+        if (a.getHitbox() == null || b.getHitbox() == null) return false;
+        
+        // Use hitbox if available, otherwise use entity bounds
+        int ax, ay, aw, ah;
+        int bx, by, bw, bh;
+
+        ax = a.getPosX() + a.getHitbox().getOffsetX();
+        ay = a.getPosY() + a.getHitbox().getOffsetY();
+        aw = a.getHitbox().getWidth();
+        ah = a.getHitbox().getHeight();
+
+        bx = b.getPosX() + b.getHitbox().getOffsetX();
+        by = b.getPosY() + b.getHitbox().getOffsetY();
+        bw = b.getHitbox().getWidth();
+        bh = b.getHitbox().getHeight();
+
+        return ax < bx + bw &&
+            ax + aw > bx &&
+            ay < by + bh &&
+            ay + ah > by;
     }
 
     public void updateMessages() {
@@ -512,6 +538,7 @@ public class Environment {
                 }
                 if (!shotRemoved) {
                     shot.move(new ArrayList<>(List.of(shot.getDirection())));
+                    shot.updateHitboxPosition();
                 }
             }
         }

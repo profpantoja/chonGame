@@ -78,6 +78,15 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     agent.getPosY(),
                     agent.getWidth(),
                     agent.getHeight());
+            if (agent.getHitbox() != null) { 
+                if (agent.getHitbox().isDrawHitbox()) {
+                    drawer.drawImage(agent.getHitbox().getImage(),
+                        agent.getHitbox().getPosX(),
+                        agent.getHitbox().getPosY(),
+                        agent.getHitbox().getWidth(),
+                        agent.getHitbox().getHeight());
+                }
+            }
             drawer.drawLifeBar(agent.getHealth(),
                     agent.getFullHealth(),
                     agent.getWidth(),
@@ -91,6 +100,15 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 this.environment.getProtagonist().getPosY(),
                 this.environment.getProtagonist().getWidth(),
                 this.environment.getProtagonist().getHeight());
+        if (this.environment.getProtagonist().getHitbox() != null) {
+            if (this.environment.getProtagonist().getHitbox().isDrawHitbox()) {
+                drawer.drawImage(this.environment.getProtagonist().getHitbox().getImage(),
+                    this.environment.getProtagonist().getHitbox().getPosX(),
+                    this.environment.getProtagonist().getHitbox().getPosY(),
+                    this.environment.getProtagonist().getHitbox().getWidth(),
+                    this.environment.getProtagonist().getHitbox().getHeight());
+            }
+        }
         drawer.drawLifeBar(this.environment.getProtagonist().getHealth(),
                 this.environment.getProtagonist().getFullHealth(),
                 this.environment.getProtagonist().getWidth(),
@@ -191,6 +209,15 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 shot.getPosY(),
                 shot.getWidth(),
                 shot.getHeight());
+                if (shot.getHitbox() != null) {
+                    if (shot.getHitbox().isDrawHitbox()) {
+                        drawer.drawImage(shot.getHitbox().getImage(),
+                            shot.getHitbox().getPosX(),
+                            shot.getHitbox().getPosY(),
+                            shot.getHitbox().getWidth(),
+                            shot.getHitbox().getHeight());
+                    }
+                }
             }
         }
 
@@ -229,7 +256,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
         @Override
         public void drawAgentsSideScrolling() {
             double cameraX = this.environment.getCameraX();
-    
+
             for (Agent agent : this.environment.getAgents()) {
                 int screenX = (int) (agent.getPosX() - cameraX);
                 drawer.drawImage(agent.getCurrentFrameImage(),
@@ -237,11 +264,33 @@ public class JavaFxMediator implements EnvironmentDrawer {
                         agent.getPosY(),
                         agent.getWidth(),
                         agent.getHeight());
+
+                // Only draw hitbox if it exists and should be drawn
+                if (agent.getHitbox() != null && agent.getHitbox().isDrawHitbox()) {
+                    int hitboxScreenX = (int) (agent.getHitbox().getPosX() - cameraX);
+                    drawer.drawImage(agent.getHitbox().getImage(),
+                            hitboxScreenX,
+                            agent.getHitbox().getPosY(),
+                            agent.getHitbox().getWidth(),
+                            agent.getHitbox().getHeight());
+                }
+                int lifeBarWidth;
+                int lifeBarPosY;
+                int lifeBarPosX;
+                if (agent.getHitbox() != null) {
+                    lifeBarWidth = agent.getHitbox().getWidth();
+                    lifeBarPosY = agent.getHitbox().getPosY();
+                    lifeBarPosX = (int) (agent.getHitbox().getPosX() - cameraX);
+                } else {
+                    lifeBarWidth = agent.getWidth();
+                    lifeBarPosY = agent.getPosY();
+                    lifeBarPosX = screenX;
+                }
                 drawer.drawLifeBar(agent.getHealth(),
                         agent.getFullHealth(),
-                        agent.getWidth(),
-                        screenX,
-                        agent.getPosY(),
+                        lifeBarWidth,
+                        lifeBarPosX,
+                        lifeBarPosY,
                         Color.DARKRED);
             }
 
@@ -253,23 +302,47 @@ public class JavaFxMediator implements EnvironmentDrawer {
                         collision.getWidth(),
                         collision.getHeight());
             }
-    
+
             Agent protagonist = this.environment.getProtagonist();
             int protagonistScreenX = (int) (protagonist.getPosX() - cameraX);
-    
             drawer.drawImage(protagonist.getCurrentFrameImage(),
                     protagonistScreenX,
                     protagonist.getPosY(),
                     protagonist.getWidth(),
                     protagonist.getHeight());
+
+            if (protagonist.getHitbox() != null && protagonist.getHitbox().isDrawHitbox()) {
+                int protagonistHitboxScreenX = (int) (protagonist.getHitbox().getPosX() - cameraX);
+                drawer.drawImage(protagonist.getHitbox().getImage(),
+                        protagonistHitboxScreenX,
+                        protagonist.getHitbox().getPosY(),
+                        protagonist.getHitbox().getWidth(),
+                        protagonist.getHitbox().getHeight());
+            }
+
+            int lifeBarWidth;
+            int lifeBarPosY;
+            int lifeBarPosX;
+            if (protagonist.getHitbox() != null) {
+                lifeBarWidth = protagonist.getHitbox().getWidth();
+                lifeBarPosY = protagonist.getHitbox().getPosY();
+                lifeBarPosX = (int) (protagonist.getHitbox().getPosX() - cameraX);
+            } else {
+                lifeBarWidth = protagonist.getWidth();
+                lifeBarPosY = protagonist.getPosY();
+                lifeBarPosX = protagonistScreenX;
+            }
             drawer.drawLifeBar(protagonist.getHealth(),
                     protagonist.getFullHealth(),
-                    protagonist.getWidth(),
-                    protagonistScreenX,
-                    protagonist.getPosY(),
+                    lifeBarWidth,
+                    lifeBarPosX,
+                    lifeBarPosY,
                     Color.GREEN);
-            
-            drawer.drawStatusPanelSideScrolling( (int) protagonist.getPosX(),protagonist.getPosY(),protagonistScreenX,protagonist.getPosY());
+
+            int statusPanelX = (protagonist.getHitbox() != null) ? protagonist.getHitbox().getPosX() : protagonist.getPosX();
+            int statusPanelY = (protagonist.getHitbox() != null) ? protagonist.getHitbox().getPosY() : protagonist.getPosY();
+            int statusPanelScreenX = (protagonist.getHitbox() != null) ? (int) (statusPanelX - cameraX) : protagonistScreenX;
+            drawer.drawStatusPanelSideScrolling((int) statusPanelX, statusPanelY, statusPanelScreenX, statusPanelY);
         }
     
         /**
@@ -283,7 +356,13 @@ public class JavaFxMediator implements EnvironmentDrawer {
             while (iterator.hasNext()) {
                 Shot shot = iterator.next();
                 int screenX = (int) (shot.getPosX() - cameraX);          
+                int hitboxScreenX = (int) (shot.getHitbox().getPosX() - cameraX);
                 drawer.drawImage(shot.getImage(),screenX,shot.getPosY(),shot.getWidth(),shot.getHeight());
+                drawer.drawImage(shot.getHitbox().getImage(),
+                        hitboxScreenX,
+                        shot.getHitbox().getPosY(),
+                        shot.getHitbox().getWidth(),
+                        shot.getHitbox().getHeight());
             }
         }
 
