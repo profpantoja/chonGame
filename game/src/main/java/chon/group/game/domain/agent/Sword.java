@@ -16,9 +16,9 @@ public class Sword extends CloseWeapon {
 
     protected Slash createSlash(int posX, int posY, String direction) {
         if (direction.equals("RIGHT"))
-            posX += 75 + 20;
+            posX += 95;
         else
-            posX -= 75 + 20;
+            posX -= 95;
         return new Slash(posX,
                 posY,
                 47,

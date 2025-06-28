@@ -244,7 +244,6 @@ public class Engine extends Application {
                 environment.getProtagonist().setAnimation("/images/agents/Link_Running.png", 6, 75);
                 System.out.println("ChonBota is running.");
             }
-            environment.getProtagonist().move(gameInput);
             updateCameraPosition();
             if (gameInput.contains("SPACE")) {
                 //SoundManager.playMusic("/sounds/damage.wav"); 

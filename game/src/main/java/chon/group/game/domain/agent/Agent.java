@@ -35,7 +35,7 @@ public class Agent extends AnimatedEntity {
 
     private final int gravity = 3;
 
-    private final int groundY = 500;
+    private final int groundY = 800;
 
     private boolean isProtagonist;
     
@@ -324,7 +324,7 @@ public class Agent extends AnimatedEntity {
 
         /* PULO: apenas se for protagonista */
         if (isProtagonist) {
-            if ((movements.contains("W")) && !isJumping)
+            if ((movements.contains("UP")) && !isJumping)
     {
                 isJumping = true;
                 currentVelocityY = jumpVelocity;
