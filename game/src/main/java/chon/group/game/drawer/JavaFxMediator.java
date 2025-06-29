@@ -22,7 +22,6 @@ public class JavaFxMediator implements EnvironmentDrawer {
 
     private final Environment environment;
     private final JavaFxDrawer drawer;
-
     /**
      * Constructs a JavaFxMediator with the specified environment and graphics
      * context.
@@ -35,6 +34,8 @@ public class JavaFxMediator implements EnvironmentDrawer {
         this.environment = environment;
         this.drawer = new JavaFxDrawer(gc, this);
     }
+
+    
 
     /**
      * Clears the environment by erasing all drawn elements on the screen.
@@ -121,15 +122,6 @@ public class JavaFxMediator implements EnvironmentDrawer {
         public void drawStatusPanel() {
             drawer.drawStatusPanel(this.environment.getProtagonist().getPosX(),
             this.environment.getProtagonist().getPosY());
-        }
-        
-        /**
-         * Draws the pause screen overlay, displaying a pause image centered within the
-         * environment.
-         */
-        @Override
-        public void drawPauseScreen() { 
-            drawer.drawMenuPause("Pause",0,this.environment.getPauseImage(),"Resume","Exit","Volume");
         }
         
         // Now this method use canvas width and height, with this we can use
@@ -269,7 +261,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 drawer.drawImage(shot.getImage(),screenX,shot.getPosY(),shot.getWidth(),shot.getHeight());
             }
         }
-        
+
         /**
          * Draws damage messaages that appear when agents take damage.
          * The message float upward and fade out over time.
@@ -290,6 +282,5 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 message.getPosY());
             }
         }
-
     }
     

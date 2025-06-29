@@ -7,7 +7,6 @@ package chon.group.game.drawer;
  * displaying UI elements like life bars and status panels.
  */
 public interface EnvironmentDrawer {
-
     /**
      * Clears the environment, removing all elements.
      */
@@ -32,11 +31,6 @@ public interface EnvironmentDrawer {
      * Draws the status panel displaying relevant game information.
      */
     void drawStatusPanel();
-
-    /**
-     * Draws the pause screen when the game is paused.
-     */
-    void drawPauseScreen();
 
     /**
      * Draws all the messages on the screen.
