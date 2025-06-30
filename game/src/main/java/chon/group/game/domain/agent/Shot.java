@@ -11,7 +11,7 @@ public class Shot extends Entity {
     private String direction;
     private int damage;
 
-    public Shot(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped,
+    public Shot(double posX, double posY, int height, int width, int speed, int health, String pathImage, boolean flipped,
             int damage, String direction) {
         super(posX, posY, height, width, speed, health, pathImage, flipped);
         this.damage = damage;
