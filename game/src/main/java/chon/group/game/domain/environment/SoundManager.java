@@ -8,6 +8,8 @@ import javafx.scene.media.MediaPlayer;
 
 public class SoundManager {
 
+    private static double musicVolume = 1.0;
+    private static double sfxVolume = 1.0;
     // Cache for files after saved
     private static final HashMap<String, Media> mediaCache = new HashMap<>();
     private static final ArrayList<MediaPlayer> activeSoundEffects = new ArrayList<>();
@@ -34,10 +36,10 @@ public class SoundManager {
             });
 
             if (media != null) {
-                MediaPlayer soundPlayer = new MediaPlayer(media);
-                //  Add to active sound effects list
-                // This allows multiple sound effects to play simultaneously
-                activeSoundEffects.add(soundPlayer);
+                MediaPlayer soundPlayer = new MediaPlayer(media); // Add to active sound effects list
+                soundPlayer.setVolume(sfxVolume); // 
+                activeSoundEffects.add(soundPlayer);// This allows multiple sound effects to play simultaneously
+
 
                 // When it ends, remove from  the active list
                 soundPlayer.setOnEndOfMedia(() -> activeSoundEffects.remove(soundPlayer));
@@ -49,6 +51,27 @@ public class SoundManager {
         }
     }
 
+    public static void setMusicVolume(double volume) {
+        musicVolume = Math.max(0.0, Math.min(1.0, volume));
+        if (backgroundMusicPlayer != null) {
+            backgroundMusicPlayer.setVolume(musicVolume);
+        }
+    }
+
+    public static double getMusicVolume() {
+        return musicVolume;
+    }
+
+    public static void setSfxVolume(double volume) {
+        sfxVolume = Math.max(0.0, Math.min(1.0, volume));
+        for (MediaPlayer mp : activeSoundEffects) {
+            mp.setVolume(sfxVolume);
+        }
+    }
+
+    public static double getSfxVolume() {
+        return sfxVolume;
+    }
 
     /**
      * Put Game Music in loop, and stop, whem another music appears
@@ -75,6 +98,7 @@ public class SoundManager {
             if (media != null) {
                 backgroundMusicPlayer = new MediaPlayer(media);
                 // loop music
+                backgroundMusicPlayer.setVolume(musicVolume); // Adiciona controle de volume da música
                 backgroundMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
                 backgroundMusicPlayer.play();
             }

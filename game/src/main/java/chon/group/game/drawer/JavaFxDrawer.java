@@ -238,6 +238,127 @@ public class JavaFxDrawer {
     }
 
     /**
+     * Desenha um texto centralizado na posição X e Y especificada, com tamanho de fonte e cor.
+     *
+     * @param text  O texto a ser exibido.
+     * @param centerX A coordenada X do centro.
+     * @param centerY A coordenada Y do centro.
+     * @param fontSize O tamanho da fonte.
+     * @param color A cor do texto.
+     */
+    public void drawTextCentered(String text, double centerX, double centerY, double fontSize, Color color) {
+        gc.setFont(Font.font("Verdana", FontWeight.BOLD, fontSize));
+        gc.setFill(color);
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.fillText(text, centerX, centerY);
+        gc.setTextAlign(TextAlignment.LEFT); // Reset pro padrão, se precisar
+    }
+
+
+
+
+    /**
+     * Desenha o menu de configurações de áudio, com sliders visuais de volume para música e efeitos.
+     *
+     * @param backgroundImage A imagem de fundo para o menu. Se for nula, usa um fundo padrão escuro.
+     * @param title O título exibido no topo do menu.
+     * @param musicVolume O volume atual da música (de 0.0 a 1.0).
+     * @param sfxVolume O volume atual dos efeitos sonoros (de 0.0 a 1.0).
+     */
+    public void drawMenuSettings(Image backgroundImage, String title, double musicVolume, double sfxVolume, String[] options, int selectedIndex) {
+        double menuWidth = getCanvasWidth();
+        double menuHeight = getCanvasHeight();
+
+        double menuX = (getCanvasWidth() - menuWidth) / 2;
+        double menuY = (getCanvasHeight() - menuHeight) / 2;
+
+        // Fundo escurecido
+        gc.setFill(Color.rgb(0, 0, 0, 0.7));
+        gc.fillRect(0, 0, getCanvasWidth(), getCanvasHeight());
+
+        // Fundo do menu
+        if (backgroundImage != null && !backgroundImage.isError()) {
+            gc.drawImage(backgroundImage, menuX, menuY, menuWidth, menuHeight);
+        } else {
+            gc.setFill(Color.rgb(40, 40, 60, 0.9));
+            gc.fillRect(menuX, menuY, menuWidth, menuHeight);
+        }
+
+        // Borda
+        gc.setStroke(Color.rgb(150, 150, 180));
+        gc.setLineWidth(2);
+        gc.strokeRect(menuX, menuY, menuWidth, menuHeight);
+
+        // Título
+        gc.setFont(Font.font("Verdana", FontWeight.BOLD, 32));
+        gc.setFill(Color.WHITE);
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.fillText(title, getCanvasWidth() / 2, menuY + 50);
+
+        // Desenha as opções
+        gc.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        double optionY = menuY + 100;
+        for (int i = 0; i < options.length; i++) {
+            gc.setFill(i == selectedIndex ? Color.YELLOW : Color.WHITE);
+            gc.fillText(options[i], getCanvasWidth() / 2, optionY);
+
+            // Se for Música ou Efeitos, desenha barra de volume
+            if (options[i].equals("Música") || options[i].equals("Efeitos")) {
+                double volume = options[i].equals("Música") ? musicVolume : sfxVolume;
+                drawVolumeBar(getCanvasWidth() / 2 - 150, optionY + 10, volume, options[i]);
+                optionY += 50;
+            }
+
+            optionY += 40;
+        }
+
+        gc.setTextAlign(TextAlignment.LEFT);
+    }
+
+    /**
+     * Desenha uma barra de volume estilizada.
+     *
+     * @param x Posição X inicial da barra.
+     * @param y Posição Y inicial da barra.
+     * @param volume O valor do volume (de 0.0 a 1.0).
+     * @param label O texto que acompanha a barra.
+     */
+    private void drawVolumeBar(double x, double y, double volume, String label) {
+        double barWidth = 300;
+        double barHeight = 20;
+        double filledWidth = barWidth * volume;
+
+        gc.setFill(Color.DARKGRAY);
+        gc.fillRect(x, y, barWidth, barHeight);
+
+        gc.setFill(Color.LIMEGREEN);
+        gc.fillRect(x, y, filledWidth, barHeight);
+
+        gc.setStroke(Color.WHITE);
+        gc.strokeRect(x, y, barWidth, barHeight);
+
+        // Volume %
+        gc.setFill(Color.WHITE);
+        gc.setFont(Font.font("Verdana", FontWeight.NORMAL, 14));
+        gc.fillText((int) (volume * 100) + "%", x + barWidth + 10, y + 16);
+    }
+
+    /**
+     * Desenha um highlight (retângulo ou borda) para destacar a seleção atual em menus.
+     *
+     * @param x Posição X do highlight.
+     * @param y Posição Y do highlight.
+     * @param width Largura do highlight.
+     * @param height Altura do highlight.
+     */
+    public void drawHighlight(double x, double y, double width, double height) {
+        gc.setStroke(Color.YELLOW);
+        gc.setLineWidth(3);
+        gc.strokeRect(x, y, width, height);
+    }
+
+
+    /**
      * Desenha o menu principal do jogo, com um fundo que preenche a tela inteira.
      *
      * @param backgroundImage A imagem para preencher toda a tela. Se for nula, usa um fundo preto.

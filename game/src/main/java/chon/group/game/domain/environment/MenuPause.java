@@ -17,7 +17,7 @@ public class MenuPause {
     }
 
     public void draw() {
-        String[] labels = {"Resume", "Go back to Menu"};
+        String[] labels = {"Resume", "Settings", "Go back to Menu"};
         drawer.drawMenuPause("Paused", selectedOptionIndex, backgroundImage, labels);
     }
 

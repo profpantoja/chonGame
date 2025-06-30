@@ -16,7 +16,7 @@ public class MainMenu {
     }
 
     public void draw() {
-        String[] labels = {"Start Game", "Exit"};
+        String[] labels = {"Start Game", "Settings", "Exit"};
         drawer.drawMainMenu(backgroundImage, "Chon Game", selectedOption, labels);
     }
 

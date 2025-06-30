@@ -5,5 +5,6 @@ public enum GameStatus {
     PAUSED,  
     GAME_OVER, 
     VICTORY,   
-    MAIN_MENU  
+    MAIN_MENU,
+    SETTINGS
 }

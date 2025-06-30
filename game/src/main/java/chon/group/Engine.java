@@ -15,6 +15,7 @@ import chon.group.game.domain.environment.GameStatus;
 import chon.group.game.domain.environment.MainMenu;
 import chon.group.game.domain.environment.MenuOption;
 import chon.group.game.domain.environment.MenuPause;
+import chon.group.game.domain.environment.MenuSettings;
 import chon.group.game.domain.environment.SoundManager;
 import chon.group.game.drawer.JavaFxDrawer;
 import chon.group.game.drawer.JavaFxMediator;
@@ -36,6 +37,7 @@ public class Engine extends Application {
     private JavaFxMediator mediator;
     private MainMenu mainMenu;
     private MenuPause menuPause;
+    private MenuSettings menuSettings;
     private GraphicsContext graphicsContext; 
     private final List<String> gameInput = new ArrayList<>();
 
@@ -70,8 +72,10 @@ public class Engine extends Application {
 
     // Initialize Menus
     Image menuBackground = Game.loadImage("/images/environment/menu_background_new.png");
+    Image menuSettingsBg = Game.loadImage("/images/environment/menuSettings.png");
     this.mainMenu = new MainMenu(drawer, menuBackground);
     this.menuPause = new MenuPause(drawer, environment.getPauseImage());
+    this.menuSettings = new MenuSettings(drawer, menuSettingsBg);
 
     //Setup Scene and Input
     StackPane root = new StackPane(canvas);
@@ -114,12 +118,18 @@ private class GameLoop extends AnimationTimer {
             case GAME_OVER:
             if (!gameOverMusicPlayed) {
                 SoundManager.stopAll();
-                SoundManager.playSound("/sounds/zelda.wav"); // coloque o caminho correto do som de derrota
+                SoundManager.playSound("/sounds/gameOver.wav"); // coloque o caminho correto do som de derrota
                 gameOverMusicPlayed = true;
             }
             renderGameWorld(); 
             mediator.drawGameOver();
             break;
+            case SETTINGS:
+                SoundManager.pauseMusic();
+                SoundManager.pauseAllSoundEffects();
+                menuSettings.draw();
+            break;
+
             case VICTORY:
             if (!victoryMusicPlayed) {
                 SoundManager.stopAll();
@@ -154,6 +164,7 @@ private void updateGameLogic() {
         if (gameInput.contains("SPACE")) {
             shotNow = System.currentTimeMillis();
             protagonist.setAnimation("/images/agents/Link_Attack.png", 4, 75);
+            SoundManager.playSound("/sounds/attack.wav");
             gameInput.remove("SPACE");
             
             String direction = protagonist.isFlipped() ? "LEFT" : "RIGHT";
@@ -352,6 +363,9 @@ private void handleKeyPressed(KeyEvent e) {
                 case EXIT:
                 Platform.exit();
                 break;
+                case SETTINGS:
+                gameStatus = GameStatus.SETTINGS;
+                break;
             }
         }
         break;
@@ -360,14 +374,21 @@ private void handleKeyPressed(KeyEvent e) {
         if (pauseOption != null) {
             switch (pauseOption) {
                 case RESUME:
-                gameStatus = GameStatus.RUNNING;
-                restoreAgentsState(false);
+                    gameStatus = GameStatus.RUNNING;
+                    restoreAgentsState(false);
                 break;
                 case GO_BACK_TO_MENU:
-                mainMenu.reset();
-                gameStatus = GameStatus.MAIN_MENU;
-                restoreAgentsState(false);
+                    mainMenu.reset();
+                    gameStatus = GameStatus.MAIN_MENU;
+                    restoreAgentsState(false);
                 break;
+                case SETTINGS:
+                if (e.getCode().toString().equals("ESCAPE")) {
+                   gameStatus = GameStatus.PAUSED;
+                }
+                    gameStatus = GameStatus.SETTINGS;
+                break;
+
             }
         }
         break;
@@ -388,6 +409,12 @@ private void handleKeyPressed(KeyEvent e) {
             restoreAgentsState(false);
         }
         break;
+        case SETTINGS:
+            MenuOption.Settings settingsOption = menuSettings.handleInput(e.getCode());
+            if (settingsOption != null && settingsOption == MenuOption.Settings.BACK) {
+                gameStatus = GameStatus.MAIN_MENU; // ou PAUSED se veio do pause
+            }
+            break;
     }
 }
     private void handleKeyReleased(KeyEvent e) {
@@ -397,6 +424,7 @@ private void handleKeyPressed(KeyEvent e) {
             }
             gameInput.remove(e.getCode().toString());
         }
+        
     }
     
     /**
@@ -432,6 +460,6 @@ private void handleKeyPressed(KeyEvent e) {
         this.mediator = new JavaFxMediator(this.environment, this.graphicsContext);
         setHitboxesVisibility(drawHitboxes);
         gameInput.clear();
-        SoundManager.playMusic("/sounds/zelda.wav");
+        SoundManager.playMusic("/sounds/gameMusic.wav");
     }
 }
