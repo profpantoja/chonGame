@@ -13,13 +13,13 @@ import chon.group.game.domain.agent.Weapon;
 // O import do JavaFxMediator não é mais necessário aqui
 import javafx.scene.image.Image;
 
-public class Setup {
-    
-    private Setup() {
+public class Game {
+
+    private Game() {
     }
     
     /**
-     * AJUSTE: O método agora cria e retorna uma LISTA de ambientes (níveis).
+     * O método agora cria e retorna uma LISTA de ambientes (níveis).
      * Toda a lógica de troca de nível foi removida desta classe.
      * @return um objeto List<Environment> contendo todos os níveis do jogo.
      */
@@ -78,9 +78,6 @@ public class Setup {
         level2.createGround(worldWidth, 50, "/images/environment/brick.png"); // Adiciona chão ao nível 2 também
         
         environments.add(level2);
-        
-        // A lógica de `levelChanger` e de configurar hitboxes foi removida daqui
-        // e passada para a Engine, que controla o estado do jogo.
 
         return environments;
     }
@@ -92,7 +89,7 @@ public class Setup {
      */
     public static Image loadImage(String path) {
         try {
-            return new Image(Setup.class.getResource(path).toExternalForm());
+            return new Image(Game.class.getResource(path).toExternalForm());
         } catch (Exception e) {
             System.err.println("Falha ao carregar imagem: " + path);
             return null;

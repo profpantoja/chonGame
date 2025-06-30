@@ -21,11 +21,11 @@ public class Sword extends CloseWeapon {
             posX -= 95;
         return new Slash(posX,
                 posY,
-                47,
-                75,
+                50,
+                140,
                 3,
                 0,
-                "/images/weapons/slash/SlashTeste.png",
+                "/images/weapons/slash/SlashTeste1.png",
                 false,
                 100,
                 direction);
@@ -33,7 +33,5 @@ public class Sword extends CloseWeapon {
 
     @Override
     public void takeDamage(int damage, List<Message> messages) {
-
     }
-
 }
