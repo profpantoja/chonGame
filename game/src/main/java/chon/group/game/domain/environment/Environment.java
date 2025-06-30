@@ -445,9 +445,27 @@ public class Environment {
                 System.out.println("All enemies are dead. Proceeding to the next room.");
                 return true;
             }
+        }
+        return false;
     }
-    return false;
-}
+
+    public boolean levelChanger(boolean lastLevel) {
+        if (!protagonist.isDead() && lastLevel) {
+            System.out.println("Protagonist reached the last level. Checking for enemies...");
+            boolean allEnemiesDead = true;
+            for (Agent agent : this.agents) {
+                if (agent != protagonist && !agent.isDead()) {
+                    allEnemiesDead = false;
+                    break;
+                }
+            }
+            if (allEnemiesDead) {
+                System.out.println("All enemies are dead. Proceeding to the next room.");
+                return true;
+            }
+        }
+        return false;
+    }
 
 
     /**
