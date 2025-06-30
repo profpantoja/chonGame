@@ -85,84 +85,334 @@ public class Engine extends Application {
     theStage.show();
 }
 
+/**
+ * The main game loop 
+ */
+
+private class GameLoop extends AnimationTimer {
+    public void handle(long currentNanoTime) {
+        graphicsContext.clearRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        switch (gameStatus) {
+            case MAIN_MENU: 
+            //SoundManager.playMusic("sounds/menuSound.wav");
+            mainMenu.draw(); 
+            victoryMusicPlayed = false;
+            gameOverMusicPlayed = false;
+            break;
+            case RUNNING:
+            updateGameLogic();
+            renderGameWorld();
+            SoundManager.resumeMusic();
+            SoundManager.resumeAllSoundEffects();
+            break;
+            case PAUSED:
+            SoundManager.pauseMusic();
+            SoundManager.pauseAllSoundEffects();
+            renderGameWorld();
+            menuPause.draw();
+            break;
+            case GAME_OVER:
+            if (!gameOverMusicPlayed) {
+                SoundManager.stopAll();
+                SoundManager.playSound("/sounds/zelda.wav"); // coloque o caminho correto do som de derrota
+                gameOverMusicPlayed = true;
+            }
+            renderGameWorld(); 
+            mediator.drawGameOver();
+            break;
+            case VICTORY:
+            if (!victoryMusicPlayed) {
+                SoundManager.stopAll();
+                SoundManager.playSound("/sounds/zelda.wav"); // coloque o caminho correto do som de vitória
+                victoryMusicPlayed = true;
+            }
+            renderGameWorld(); 
+            mediator.drawWinScreen();
+            break;
+        }
+    }
+}
+
+private void updateGameLogic() {
+    verifyGameStatus();
+    if(gameStatus != GameStatus.RUNNING) return;
+    
+    for(Agent agent : environment.getAgents()) agent.updateHitboxPosition();
+    if(environment.getProtagonist() != null && environment.getProtagonist().getHitbox() != null) {
+        environment.getProtagonist().updateHitboxPosition();
+    }
+    
+    Agent protagonist = environment.getProtagonist();
+    if (!gameInput.isEmpty()) {
+        boolean isMoving = gameInput.contains("RIGHT") || gameInput.contains("LEFT") || gameInput.contains("UP") || gameInput.contains("DOWN");
+        if(isMoving && !protagonist.isInvulnerable()) {
+            protagonist.setAnimation("/images/agents/Link_Running.png", 6, 75);
+        }
+        
+        updateCameraPosition();
+        
+        if (gameInput.contains("SPACE")) {
+            shotNow = System.currentTimeMillis();
+            protagonist.setAnimation("/images/agents/Link_Attack.png", 4, 75);
+            gameInput.remove("SPACE");
+            
+            String direction = protagonist.isFlipped() ? "LEFT" : "RIGHT";
+            int widthAnimation = protagonist.getPosX();
+            if (!protagonist.isFlipped()) {
+                widthAnimation += protagonist.getWidth() - protagonist.getWeapon().getShotWidth();
+            }
+            environment.getSlashes().add(protagonist.getCloseWeapon().slash(protagonist.getPosX(), protagonist.getPosY(), direction));
+            Shot shot = protagonist.getWeapon().fire(widthAnimation, protagonist.getPosY(), direction);
+            if (shot != null) {
+                environment.getShots().add(shot);
+            }
+            /* else {
+                String currentSheet = protagonist.getCurrentSpritesheet();
+                boolean isAttacking = currentSheet != null && currentSheet.equals("/images/agents/Link_Attack.png");
+                
+                if ((!isAttacking || (System.currentTimeMillis() - shotNow) >= 360) && !protagonist.isInvulnerable()) {
+                    if (currentSheet == null || !currentSheet.equals("/images/agents/Link_Standing.png")) {
+                        protagonist.setAnimation("/images/agents/Link_Standing.png", 4, 150);
+                    }
+                }
+            }
+            */
+        }
+        
+        protagonist.moveGravity(gameInput);
+        environment.checkBorders();
+    }
+    
+    chase();
+    
+    // update all agents and their shots
+    protagonist.updateAnimation();
+    checkCollisions();
+    environment.detectCollision();
+    environment.updateSlashes();
+    environment.updateShots();
+    environment.updateMessages();
+}
+
+
+
+/**
+ * Draw the game world elements on the screen.
+ */
+private void renderGameWorld(){
+    mediator.drawBackgroundSideScrolling();
+    mediator.drawAgentsSideScrolling();
+    mediator.drawShotsSideScrolling();
+    mediator.drawMessagesSideScrolling();
+    mediator.drawSlashes();
+}
+
+private void updateCameraPosition() {
+    double protagonistX = environment.getProtagonist().getPosX();
+    double cameraX = environment.getCameraX();
+    double protagonistSpeed = environment.getProtagonist().getSpeed();
+    double cameraSpeed = protagonistSpeed * 2.0;
+    double rightBoundary = cameraX + WINDOW_WIDTH * 0.80;
+    double leftBoundary = cameraX + WINDOW_WIDTH * 0.10;
+    
+    if (protagonistX > rightBoundary) {
+        double newCameraX = cameraX + cameraSpeed;
+        double maxCameraX = environment.getWidth() - WINDOW_WIDTH;
+        environment.setCameraX(Math.min(newCameraX, maxCameraX));
+    } else if (protagonistX < leftBoundary) {
+        double newCameraX = cameraX - cameraSpeed;
+        environment.setCameraX(Math.max(newCameraX, 0));
+    }
+}
+
+// method chase for each agent
+private void chase(){
+    List<Agent> agents = environment.getAgents();
+    for (int i = 0; i < agents.size(); i++) {
+        Agent agent = agents.get(i);
+        if (agent.getHitbox() != null && environment.getProtagonist().getHitbox() != null) {
+            agent.chase(environment.getProtagonist().getHitbox().getPosX(), environment.getProtagonist().getHitbox().getPosY());
+        }
+    }
+}
+
+
+private void verifyGameStatus() {
+    // Verifica se o jogador perdeu
+    if (environment.getProtagonist().isDead()) {
+        gameStatus = GameStatus.GAME_OVER;
+        return;
+    }
+    
+    // Verifica se o jogador completou as condições para trocar de nível
+    if (environment.levelChanger(currentLevelIndex == levels.size() - 1)) {
+        currentLevelIndex++;
+        if (currentLevelIndex >= levels.size()) {
+            gameStatus = GameStatus.VICTORY;
+        } else {
+            // Caso contrário, carrega o próximo nível
+            System.out.println("Trocando para o nível: " + (currentLevelIndex + 1));
+            this.environment = this.levels.get(currentLevelIndex);
+            this.mediator = new JavaFxMediator(this.environment, this.graphicsContext);
+            this.environment.getProtagonist().setPosX(100);
+            this.environment.getProtagonist().setPosY(390);
+            this.environment.setCameraX(0);
+            setHitboxesVisibility(drawHitboxes);
+        }
+    }
+    else if (environment.levelChanger()) {
+        currentLevelIndex++;
+        
+        // Se o índice do nível for maior ou igual ao número de níveis, o jogador venceu o jogo.
+        if (currentLevelIndex >= levels.size()) {
+            gameStatus = GameStatus.VICTORY;
+        } else {
+            // Caso contrário, carrega o próximo nível
+            System.out.println("Trocando para o nível: " + (currentLevelIndex + 1));
+            this.environment = this.levels.get(currentLevelIndex);
+            this.mediator = new JavaFxMediator(this.environment, this.graphicsContext);
+            this.environment.getProtagonist().setPosX(100);
+            this.environment.getProtagonist().setPosY(390);
+            this.environment.setCameraX(0);
+            setHitboxesVisibility(drawHitboxes);
+        }
+    }
+}
+
+public void checkCollisions() {
+    Iterator<Collision> itCollision = environment.getCollisions().iterator();
+    
+    while (itCollision.hasNext()) {
+        Collision collision = itCollision.next();
+        
+        // Verifica colisões com slashes
+        Iterator<Slash> itSlash = environment.getSlashes().iterator();
+        while (itSlash.hasNext()) {
+            Slash tempSlash = itSlash.next();
+            tempSlash.checkCollision(collision);
+            if (collision.isDestroy()) {
+                itSlash.remove();
+                break;
+            }
+        }
+        
+        // Verifica colisões com tiros
+        Iterator<Shot> itShot = environment.getShots().iterator();
+        while (itShot.hasNext()) {
+            Shot tempShot = itShot.next();
+            tempShot.checkCollision(collision);
+            if (collision.isDestroy()) {
+                itShot.remove();
+                break;
+            }
+        }
+        
+        // Verifica colisões com agentes
+        for (Agent agent : environment.getAgents()) {
+            agent.checkCollision(collision, environment);
+            if (collision.isDestroy()) break;
+        }
+        
+        // Verifica colisão com o protagonista
+        environment.getProtagonist().checkCollision(collision, environment);
+        
+        // Remove a colisão se necessário
+        if (collision.isDestroy()) {
+            itCollision.remove();
+        }
+    }
+}
+
+//Hitbox Visibility
+
+private void setHitboxesVisibility(boolean visible) {
+    if (environment == null) return;
+    for(Agent agent : environment.getAgents()) {
+        if (agent.getHitbox() != null) agent.getHitbox().setDrawHitbox(visible);
+    }
+    if (environment.getProtagonist() != null && environment.getProtagonist().getHitbox() != null) {
+        environment.getProtagonist().getHitbox().setDrawHitbox(visible);
+    }
+}
+
+//Menu Logic
+
+private void handleKeyPressed(KeyEvent e) {
+    String key = e.getCode().toString();
+    System.out.println("Key pressed: " + key); 
+    switch (gameStatus) {
+        case MAIN_MENU:
+        MenuOption.Main mainOption = mainMenu.handleInput(e.getCode());
+        if (mainOption != null) {
+            switch (mainOption) {
+                case START_GAME:
+                resetGame();
+                gameStatus = GameStatus.RUNNING;
+                break;
+                case EXIT:
+                Platform.exit();
+                break;
+            }
+        }
+        break;
+        case PAUSED:
+        MenuOption.Pause pauseOption = menuPause.handleInput(e.getCode());
+        if (pauseOption != null) {
+            switch (pauseOption) {
+                case RESUME:
+                gameStatus = GameStatus.RUNNING;
+                restoreAgentsState(false);
+                break;
+                case GO_BACK_TO_MENU:
+                mainMenu.reset();
+                gameStatus = GameStatus.MAIN_MENU;
+                restoreAgentsState(false);
+                break;
+            }
+        }
+        break;
+        case RUNNING:
+        if (e.getCode().toString().equals("P")) {
+            gameStatus = GameStatus.PAUSED;
+            menuPause.reset();
+            restoreAgentsState(true);
+        } else if (!gameInput.contains(key)) {
+            gameInput.add(key);
+        } 
+        else if(e.getCode().toString().equals("SPACE"));  
+        break;
+        default:
+        if (e.getCode().toString().equals("ENTER")) {
+            gameStatus = GameStatus.MAIN_MENU;
+            mainMenu.reset();
+            restoreAgentsState(false);
+        }
+        break;
+    }
+}
+    private void handleKeyReleased(KeyEvent e) {
+        if (gameStatus == GameStatus.RUNNING) {
+            if (e.getCode().toString().equals("SPACE")) {
+                canSlash = true; // libera novo ataque corpo a corpo
+            }
+            gameInput.remove(e.getCode().toString());
+        }
+    }
+    
     /**
      * Defines the input handlers for the game, based on the current game status.
      */
     private void setupInputHandlers(Scene scene) {
-    scene.setOnKeyPressed(this::handleKeyPressed);
-    scene.setOnKeyReleased(this::handleKeyReleased);
-}
-
-    private void handleKeyPressed(KeyEvent e) {
-        String key = e.getCode().toString();
-        System.out.println("Key pressed: " + key); 
-        switch (gameStatus) {
-            case MAIN_MENU:
-                MenuOption.Main mainOption = mainMenu.handleInput(e.getCode());
-                if (mainOption != null) {
-                    switch (mainOption) {
-                        case START_GAME:
-                            resetGame();
-                            gameStatus = GameStatus.RUNNING;
-                            break;
-                        case EXIT:
-                            Platform.exit();
-                            break;
-                    }
-                }
-                break;
-            case PAUSED:
-                MenuOption.Pause pauseOption = menuPause.handleInput(e.getCode());
-                if (pauseOption != null) {
-                    switch (pauseOption) {
-                        case RESUME:
-                            gameStatus = GameStatus.RUNNING;
-                            restoreAgentsState(false);
-                            break;
-                        case GO_BACK_TO_MENU:
-                            mainMenu.reset();
-                            gameStatus = GameStatus.MAIN_MENU;
-                            restoreAgentsState(false);
-                            break;
-                    }
-                }
-                break;
-            case RUNNING:
-                if (e.getCode().toString().equals("P")) {
-                    gameStatus = GameStatus.PAUSED;
-                    menuPause.reset();
-                    restoreAgentsState(true);
-                } else if (!gameInput.contains(key)) {
-                    gameInput.add(key);
-                } 
-                else if(e.getCode().toString().equals("SPACE"))    ;  // permite novo slash após soltar //else if inutil??
-                break;
-            default:
-                if (e.getCode().toString().equals("ENTER")) {
-                    gameStatus = GameStatus.MAIN_MENU;
-                    mainMenu.reset();
-                    restoreAgentsState(false);
-                }
-                break;
-        }
-    }
-    private void handleKeyReleased(KeyEvent e) {
-        if (gameStatus == GameStatus.RUNNING) {
-            if (e.getCode().toString().equals("SPACE")) {
-                    canSlash = true; // libera novo ataque corpo a corpo
-                }
-            gameInput.remove(e.getCode().toString());
-        }
+        scene.setOnKeyPressed(this::handleKeyPressed);
+        scene.setOnKeyReleased(this::handleKeyReleased);
     }
 
-    /**
-     * Resets the game state to its initial configuration.
-     */
+    // Restore State Agents when return from Menu
 
     private void restoreAgentsState(boolean pause) {
         environment.getProtagonist().setCheckMenu(pause);
         environment.getProtagonist().setlastHitTime(System.currentTimeMillis());
-
+        
         List<Agent> agents = environment.getAgents();
         for (int i = 0; i < agents.size(); i++) {
             Agent agent = agents.get(i);
@@ -170,7 +420,11 @@ public class Engine extends Application {
             agent.setlastHitTime(System.currentTimeMillis());
         }
     }
-
+    
+    /**
+     * Resets the game state to its initial configuration.
+     */
+    
     private void resetGame() {
         this.levels = Game.createLevels();
         this.currentLevelIndex = 0;
@@ -179,253 +433,5 @@ public class Engine extends Application {
         setHitboxesVisibility(drawHitboxes);
         gameInput.clear();
         SoundManager.playMusic("/sounds/zelda.wav");
-    }
-
-    /**
-     * The main game loop 
-     */
-    private class GameLoop extends AnimationTimer {
-        public void handle(long currentNanoTime) {
-            graphicsContext.clearRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-            switch (gameStatus) {
-                case MAIN_MENU: 
-                    //SoundManager.playMusic("sounds/menuSound.wav");
-                    mainMenu.draw(); 
-                    victoryMusicPlayed = false;
-                    gameOverMusicPlayed = false;
-                    break;
-                case RUNNING:
-                    updateGameLogic();
-                    renderGameWorld();
-                    SoundManager.resumeMusic();
-                    SoundManager.resumeAllSoundEffects();
-                    break;
-                case PAUSED:
-                    SoundManager.pauseMusic();
-                    SoundManager.pauseAllSoundEffects();
-                    renderGameWorld();
-                    menuPause.draw();
-                    break;
-                case GAME_OVER:
-                    if (!gameOverMusicPlayed) {
-                        SoundManager.stopAll();
-                        SoundManager.playSound("/sounds/zelda.wav"); // coloque o caminho correto do som de derrota
-                        gameOverMusicPlayed = true;
-                    }
-                    renderGameWorld(); 
-                    mediator.drawGameOver();
-                    break;
-                case VICTORY:
-                    if (!victoryMusicPlayed) {
-                        SoundManager.stopAll();
-                        SoundManager.playSound("/sounds/zelda.wav"); // coloque o caminho correto do som de vitória
-                        victoryMusicPlayed = true;
-                    }
-                    renderGameWorld(); 
-                    mediator.drawWinScreen();
-                    break;
-            }
-        }
-    }
-    
-    private void updateGameLogic() {
-        verifyGameStatus();
-        if(gameStatus != GameStatus.RUNNING) return;
-
-        for(Agent agent : environment.getAgents()) agent.updateHitboxPosition();
-        if(environment.getProtagonist() != null && environment.getProtagonist().getHitbox() != null) {
-            environment.getProtagonist().updateHitboxPosition();
-        }
-
-        Agent protagonist = environment.getProtagonist();
-        if (!gameInput.isEmpty()) {
-            boolean isMoving = gameInput.contains("RIGHT") || gameInput.contains("LEFT") || gameInput.contains("UP") || gameInput.contains("DOWN");
-            if(isMoving && !protagonist.isInvulnerable()) {
-                protagonist.setAnimation("/images/agents/Link_Running.png", 6, 75);
-            }
-            
-            updateCameraPosition();
-            
-            if (gameInput.contains("SPACE")) {
-                shotNow = System.currentTimeMillis();
-                protagonist.setAnimation("/images/agents/Link_Attack.png", 4, 75);
-                gameInput.remove("SPACE");
-                
-                String direction = protagonist.isFlipped() ? "LEFT" : "RIGHT";
-                int widthAnimation = protagonist.getPosX();
-                if (!protagonist.isFlipped()) {
-                    widthAnimation += protagonist.getWidth() - protagonist.getWeapon().getShotWidth();
-                }
-                environment.getSlashes().add(protagonist.getCloseWeapon().slash(protagonist.getPosX(), protagonist.getPosY(), direction));
-                Shot shot = protagonist.getWeapon().fire(widthAnimation, protagonist.getPosY(), direction);
-                if (shot != null) {
-                    environment.getShots().add(shot);
-                }
-                /* else {
-                    String currentSheet = protagonist.getCurrentSpritesheet();
-                    boolean isAttacking = currentSheet != null && currentSheet.equals("/images/agents/Link_Attack.png");
-                    
-                    if ((!isAttacking || (System.currentTimeMillis() - shotNow) >= 360) && !protagonist.isInvulnerable()) {
-                         if (currentSheet == null || !currentSheet.equals("/images/agents/Link_Standing.png")) {
-                            protagonist.setAnimation("/images/agents/Link_Standing.png", 4, 150);
-                        }
-                    }
-                }
-                 */
-            }
-            
-            protagonist.moveGravity(gameInput);
-            environment.checkBorders();
-        }
-        
-        // method chase for each agent
-        List<Agent> agents = environment.getAgents();
-        for (int i = 0; i < agents.size(); i++) {
-            Agent agent = agents.get(i);
-            if (agent.getHitbox() != null && environment.getProtagonist().getHitbox() != null) {
-               agent.chase(environment.getProtagonist().getHitbox().getPosX(), environment.getProtagonist().getHitbox().getPosY());
-           }
-        }
-        
-        protagonist.updateAnimation();
-
-        // update all agents and their shots
-        checkCollisions();
-        environment.detectCollision();
-        environment.updateSlashes();
-        environment.updateShots();
-        environment.updateMessages();
-        }
-
-    /**
-     * Draw the game world elements on the screen.
-     */
-    private void renderGameWorld(){
-        mediator.drawBackgroundSideScrolling();
-        mediator.drawAgentsSideScrolling();
-        mediator.drawShotsSideScrolling();
-        mediator.drawMessagesSideScrolling();
-        mediator.drawSlashes();
-    }
-
-    private void updateCameraPosition() {
-        double protagonistX = environment.getProtagonist().getPosX();
-        double cameraX = environment.getCameraX();
-        double protagonistSpeed = environment.getProtagonist().getSpeed();
-        double cameraSpeed = protagonistSpeed * 2.0;
-        double rightBoundary = cameraX + WINDOW_WIDTH * 0.80;
-        double leftBoundary = cameraX + WINDOW_WIDTH * 0.10;
-
-        if (protagonistX > rightBoundary) {
-            double newCameraX = cameraX + cameraSpeed;
-            double maxCameraX = environment.getWidth() - WINDOW_WIDTH;
-            environment.setCameraX(Math.min(newCameraX, maxCameraX));
-        } else if (protagonistX < leftBoundary) {
-            double newCameraX = cameraX - cameraSpeed;
-            environment.setCameraX(Math.max(newCameraX, 0));
-        }
-    }
-
-    /**
-     * AJUSTE: Lógica de vitória corrigida.
-     * A condição de vitória prematura foi removida.
-     */
-    private void verifyGameStatus() {
-        // 1. Verifica se o jogador perdeu (maior prioridade)
-        if (environment.getProtagonist().isDead()) {
-            gameStatus = GameStatus.GAME_OVER;
-            return;
-        }
-        
-        // A CONDIÇÃO DE VITÓRIA PREMATURA FOI REMOVIDA DAQUI.
-        // else if(environment.getAgents().isEmpty()){ ... } <-- LINHA REMOVIDA
-
-        // 2. Verifica se o jogador completou as condições para trocar de nível
-        if (environment.levelChanger(currentLevelIndex == levels.size() - 1)) {
-            currentLevelIndex++;
-            if (currentLevelIndex >= levels.size()) {
-                gameStatus = GameStatus.VICTORY;
-            } else {
-                // Caso contrário, carrega o próximo nível
-                System.out.println("Trocando para o nível: " + (currentLevelIndex + 1));
-                this.environment = this.levels.get(currentLevelIndex);
-                this.mediator = new JavaFxMediator(this.environment, this.graphicsContext);
-                this.environment.getProtagonist().setPosX(100);
-                this.environment.getProtagonist().setPosY(390);
-                this.environment.setCameraX(0);
-                setHitboxesVisibility(drawHitboxes);
-            }
-        }
-        else if (environment.levelChanger()) {
-            currentLevelIndex++;
-            
-            // 3. Se o índice do nível for maior ou igual ao número de níveis, o jogador venceu o jogo.
-            if (currentLevelIndex >= levels.size()) {
-                gameStatus = GameStatus.VICTORY;
-            } else {
-                // Caso contrário, carrega o próximo nível
-                System.out.println("Trocando para o nível: " + (currentLevelIndex + 1));
-                this.environment = this.levels.get(currentLevelIndex);
-                this.mediator = new JavaFxMediator(this.environment, this.graphicsContext);
-                this.environment.getProtagonist().setPosX(100);
-                this.environment.getProtagonist().setPosY(390);
-                this.environment.setCameraX(0);
-                setHitboxesVisibility(drawHitboxes);
-            }
-        }
-    }
-
-    public void checkCollisions() {
-        Iterator<Collision> itCollision = environment.getCollisions().iterator();
-        
-        while (itCollision.hasNext()) {
-            Collision collision = itCollision.next();
-
-            // Verifica colisões com slashes
-            Iterator<Slash> itSlash = environment.getSlashes().iterator();
-            while (itSlash.hasNext()) {
-                Slash tempSlash = itSlash.next();
-                tempSlash.checkCollision(collision);
-                if (collision.isDestroy()) {
-                    itSlash.remove();
-                    break;
-                }
-            }
-
-            // Verifica colisões com tiros
-            Iterator<Shot> itShot = environment.getShots().iterator();
-            while (itShot.hasNext()) {
-                Shot tempShot = itShot.next();
-                tempShot.checkCollision(collision);
-                if (collision.isDestroy()) {
-                    itShot.remove();
-                    break;
-                }
-            }
-
-            // Verifica colisões com agentes
-            for (Agent agent : environment.getAgents()) {
-                agent.checkCollision(collision, environment);
-                if (collision.isDestroy()) break;
-            }
-
-            // Verifica colisão com o protagonista
-            environment.getProtagonist().checkCollision(collision, environment);
-
-            // Remove a colisão se necessário
-            if (collision.isDestroy()) {
-                itCollision.remove();
-            }
-        }
-    }
-
-    private void setHitboxesVisibility(boolean visible) {
-        if (environment == null) return;
-        for(Agent agent : environment.getAgents()) {
-            if (agent.getHitbox() != null) agent.getHitbox().setDrawHitbox(visible);
-        }
-        if (environment.getProtagonist() != null && environment.getProtagonist().getHitbox() != null) {
-            environment.getProtagonist().getHitbox().setDrawHitbox(visible);
-        }
     }
 }
