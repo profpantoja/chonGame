@@ -7,6 +7,7 @@ import chon.group.game.domain.agent.Cannon;
 import chon.group.game.domain.agent.CloseWeapon;
 import chon.group.game.domain.agent.Fireball;
 import chon.group.game.domain.agent.Weapon;
+import  chon.group.game.domain.agent.Sword;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.drawer.JavaFxMediator;
@@ -40,7 +41,11 @@ public class Engine extends Application {
 
     /* If the game is paused or not. */
     private boolean isPaused = false;
+    /* If the player can slash again or not. */
     private boolean canSlash = true;
+    /* If the player has made a decision about the weapon to use. */
+    private boolean weaponDecision = false;
+
 
 
     /**
@@ -71,10 +76,10 @@ public class Engine extends Application {
             Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
             Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
             Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false);
-            CloseWeapon sword = new chon.group.game.domain.agent.Sword(400, 390, 0, 0, 3, 0, "", false);
+            CloseWeapon sword = new Sword(400, 390, 0, 0, 3, 0, "", false);
             chonBota.setWeapon(fireball);
             chonBota.setCloseWeapon(sword);
-            boolean weaponDecision = true;
+
 
             Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
             environment.setProtagonist(chonBota);
