@@ -2,15 +2,21 @@ package chon.group.game.domain.agent;
 
 import java.util.List;
 
-import chon.group.game.core.Entity;
 import chon.group.game.messaging.Message;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+import javafx.application.Platform;
+import javafx.scene.image.Image;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 /**
  * Represents an agent in the game, with properties such as position, size,
  * speed, and image.
  * The agent can move in specific directions and chase a target.
  */
-public class Agent extends Entity {
+public class Agent extends AnimatedEntity {
 
     /* The time of the last hit taken. */
     private long lastHitTime = 0;
@@ -24,6 +30,22 @@ public class Agent extends Entity {
     /* The Agent's Weapon */
     private Weapon weapon;
 
+    private String pathImageHit;
+
+    private String pathImageDeath;
+
+    private boolean blinking = false;
+
+    private Timeline blinkTimeline;
+
+    public void setPathImageDeath(String pathImageDeath) {
+        this.pathImageDeath = pathImageDeath;
+    }
+
+    public void setPathImageHit(String pathImageHit) {
+        this.pathImageHit = pathImageHit;
+    }
+
     /**
      * Constructor to initialize the agent properties.
      *
@@ -36,7 +58,7 @@ public class Agent extends Entity {
      * @param pathImage the path to the agent's image
      */
     public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage) {
-        super(posX, posY, height, width, speed, health, pathImage);
+        super(new Image(Agent.class.getResource(pathImage).toExternalForm()), posX, posY, height, width, speed, health, pathImage);
     }
 
     /**
@@ -52,7 +74,7 @@ public class Agent extends Entity {
      * @param flipped   the agent's direction (RIGHT=0 or LEFT=1)
      */
     public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped) {
-        super(posX, posY, height, width, speed, health, pathImage, flipped);
+        super(new Image(Agent.class.getResource(pathImage).toExternalForm()), posX, posY, height, width, speed, health, pathImage, flipped);
     }
 
     /**
@@ -137,9 +159,75 @@ public class Agent extends Entity {
         if (!this.invulnerable) {
             super.takeDamage(damage, messages); 
             this.lastHitTime = System.currentTimeMillis();
+            this.setlastHitTime(System.currentTimeMillis()); 
+
+            if(this.isDead()){
+                this.setWidth(64);
+                this.setHeight(64);
+                this.setAnimation(this.pathImageDeath, 2, 150);
+                System.out.println("Chon bota die!");
+            }
+            else if(this.pathImageHit != null && !this.pathImageHit.isEmpty()){
+                this.setWidth(64); 
+                this.setAnimation(this.pathImageHit, 10, 300);
+                startBlinking(); 
+                System.out.println("Chon bota took damage!");
+            }
         }
     }
 
+       private void startBlinking() {
+        if (blinkTimeline != null) {
+            blinkTimeline.stop();
+        }
+        blinking = true;
+        blinkTimeline = new Timeline(
+            new KeyFrame(Duration.millis(0), new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    setOpacity(0.3);
+                }
+            }),
+            new KeyFrame(Duration.millis(100), new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    setOpacity(1.0);
+                }
+            }),
+            new KeyFrame(Duration.millis(200), new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    setOpacity(0.3);
+                }
+            }),
+            new KeyFrame(Duration.millis(300), new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    setOpacity(1.0);
+                }
+            }),
+            new KeyFrame(Duration.millis(400), new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    setOpacity(0.3);
+                }
+            }),
+            new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    setOpacity(1.0);
+                    blinking = false;
+                }
+            })
+        );
+        blinkTimeline.setCycleCount(1);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                blinkTimeline.play();
+            }
+        });
+    }
     /**
      * Method to update the invulnerable status.
      *
@@ -153,3 +241,23 @@ public class Agent extends Entity {
     }
 
 }
+/*  private void startBlinking() {
+        if (blinkTimeline != null) {
+            blinkTimeline.stop();
+        }
+        blinking = true;
+        blinkTimeline = new Timeline(
+            new KeyFrame(Duration.millis(0), e -> setOpacity(0.3)),
+            new KeyFrame(Duration.millis(100), e -> setOpacity(1.0)),
+            new KeyFrame(Duration.millis(200), e -> setOpacity(0.3)),
+            new KeyFrame(Duration.millis(300), e -> setOpacity(1.0)),
+            new KeyFrame(Duration.millis(400), e -> setOpacity(0.3)),
+            new KeyFrame(Duration.millis(500), e -> {
+                setOpacity(1.0);
+                blinking = false;
+            })
+        );
+        blinkTimeline.setCycleCount(1);
+        Platform.runLater(() -> blinkTimeline.play());
+    }
+ */
