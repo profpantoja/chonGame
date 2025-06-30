@@ -24,6 +24,8 @@ public class AnimatedEntity extends Entity {
     /** Current spritesheet string */
     private String currentSpritesheet = null;
 
+    private double opacity = 1.0;
+
     public AnimatedEntity(Image spritesheet, int posX, int posY, int height, int width, int speed, int health, String pathImage) {
         super(posX, posY, height, width, speed, health, pathImage);
         this.spritesheet = spritesheet;
@@ -32,6 +34,14 @@ public class AnimatedEntity extends Entity {
     public AnimatedEntity(Image spritesheet, int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped) {
         super(posX, posY, height, width, speed, health, pathImage, flipped);
         this.spritesheet = spritesheet;
+    }
+
+    public void setOpacity(double opacity) {
+        this.opacity = opacity;
+    }
+
+    public double getOpacity() {
+        return this.opacity;
     }
 
     public Image getSpritesheet() {
@@ -113,7 +123,7 @@ public class AnimatedEntity extends Entity {
         this.currentFrame = 0;
         this.lastFrameTime = System.currentTimeMillis();
         this.currentSpritesheet = spritesheetPath;
-    }
+    }   
 
     /**
      * Updates the animation frame based on time.
@@ -142,7 +152,12 @@ public class AnimatedEntity extends Entity {
      */
     public Image getCurrentFrameImage() {
         if (spritesheet == null || frameCount <= 1) {
-            return this.isFlipped() ? getFlippedImage() : this.getImage();
+            Image baseImage = this.isFlipped() ? getFlippedImage() : this.getImage();
+            ImageView imageView = new ImageView(baseImage);
+            imageView.setOpacity(opacity);
+            SnapshotParameters params = new SnapshotParameters();
+            params.setFill(Color.TRANSPARENT);
+            return imageView.snapshot(params, null);
         }
         WritableImage frame = new WritableImage(
             spritesheet.getPixelReader(),
@@ -151,15 +166,14 @@ public class AnimatedEntity extends Entity {
             frameWidth,
             frameHeight
         );
+        ImageView imageView = new ImageView(frame);
+        imageView.setOpacity(opacity);
         if (this.isFlipped()) {
-            ImageView flippedView = new ImageView(frame);
-            flippedView.setScaleX(-1);
-            SnapshotParameters params = new SnapshotParameters();
-            params.setFill(Color.TRANSPARENT);
-            return flippedView.snapshot(params, null);
-        } else {
-            return frame;
+            imageView.setScaleX(-1);
         }
+        SnapshotParameters params = new SnapshotParameters();
+        params.setFill(Color.TRANSPARENT);
+        return imageView.snapshot(params, null);
     }
 
     /**
