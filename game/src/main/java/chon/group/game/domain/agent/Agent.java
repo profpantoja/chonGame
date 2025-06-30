@@ -5,7 +5,13 @@ import java.util.List;
 import chon.group.game.domain.environment.Collision;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.messaging.Message;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+import javafx.application.Platform;
 import javafx.scene.image.Image;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 /**
  * Represents an agent in the game, with properties such as position, size,
@@ -49,6 +55,10 @@ public class Agent extends AnimatedEntity {
     private String pathImageHit;
     
     private String pathImageDeath;
+
+    private boolean blinking = false;
+
+    private Timeline blinkTimeline;
     
     public void setPathImageDeath(String pathImageDeath) {
         this.pathImageDeath = pathImageDeath;
@@ -208,7 +218,8 @@ public class Agent extends AnimatedEntity {
             }
             else if(this.pathImageHit != null && !this.pathImageHit.isEmpty()){
                 this.setWidth(256); 
-                this.setAnimation(this.pathImageHit, 10, 300); 
+                this.setAnimation(this.pathImageHit, 10, 300);
+                startBlinking(); 
                 System.out.println("Chon bota took damage!");
                 //SoundManager.playSound("sounds/takedamage.wav");
             }
@@ -292,6 +303,58 @@ public class Agent extends AnimatedEntity {
         }
     }
 
+       private void startBlinking() {
+        if (blinkTimeline != null) {
+            blinkTimeline.stop();
+        }
+        blinking = true;
+        blinkTimeline = new Timeline(
+            new KeyFrame(Duration.millis(0), new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    setOpacity(0.3);
+                }
+            }),
+            new KeyFrame(Duration.millis(100), new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    setOpacity(1.0);
+                }
+            }),
+            new KeyFrame(Duration.millis(200), new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    setOpacity(0.3);
+                }
+            }),
+            new KeyFrame(Duration.millis(300), new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    setOpacity(1.0);
+                }
+            }),
+            new KeyFrame(Duration.millis(400), new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    setOpacity(0.3);
+                }
+            }),
+            new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    setOpacity(1.0);
+                    blinking = false;
+                }
+            })
+        );
+        blinkTimeline.setCycleCount(1);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                blinkTimeline.play();
+            }
+        });
+    }
     /**
      * Method to update the invulnerable status.
      *
@@ -387,3 +450,23 @@ public class Agent extends AnimatedEntity {
         }
     }
 }
+/*  private void startBlinking() {
+        if (blinkTimeline != null) {
+            blinkTimeline.stop();
+        }
+        blinking = true;
+        blinkTimeline = new Timeline(
+            new KeyFrame(Duration.millis(0), e -> setOpacity(0.3)),
+            new KeyFrame(Duration.millis(100), e -> setOpacity(1.0)),
+            new KeyFrame(Duration.millis(200), e -> setOpacity(0.3)),
+            new KeyFrame(Duration.millis(300), e -> setOpacity(1.0)),
+            new KeyFrame(Duration.millis(400), e -> setOpacity(0.3)),
+            new KeyFrame(Duration.millis(500), e -> {
+                setOpacity(1.0);
+                blinking = false;
+            })
+        );
+        blinkTimeline.setCycleCount(1);
+        Platform.runLater(() -> blinkTimeline.play());
+    }
+ */
