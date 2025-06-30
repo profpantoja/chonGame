@@ -13,6 +13,7 @@ import chon.group.game.domain.environment.MainMenu;
 import chon.group.game.domain.environment.MenuOption;
 import chon.group.game.domain.environment.MenuPause;
 import chon.group.game.domain.environment.Setup;
+import chon.group.game.domain.environment.SoundManager;
 import chon.group.game.drawer.JavaFxDrawer;
 import chon.group.game.drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
@@ -24,8 +25,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
-import javafx.event.EventHandler;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 public class Engine extends Application {
@@ -47,6 +46,8 @@ public class Engine extends Application {
     long shotNow;
     private boolean canSlash = true;
     private boolean drawHitboxes = true;
+    private boolean victoryMusicPlayed = false;
+    private boolean gameOverMusicPlayed = false;
 
     public static void main(String[] args) {
         launch(args);
@@ -169,6 +170,7 @@ private void restoreAgentsState(boolean pause) {
         this.mediator = new JavaFxMediator(this.environment, this.graphicsContext);
         setHitboxesVisibility(drawHitboxes);
         gameInput.clear();
+        SoundManager.playMusic("/sounds/zelda.wav");
     }
 
     /**
@@ -177,29 +179,45 @@ private void restoreAgentsState(boolean pause) {
     private class GameLoop extends AnimationTimer {
         public void handle(long currentNanoTime) {
             graphicsContext.clearRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-
-            switch (gameStatus) {
-                case MAIN_MENU: 
-                    mainMenu.draw(); 
+  switch (gameStatus) {
+            case MAIN_MENU: 
+                SoundManager.playMusic("sounds/menuSound.wav");
+                mainMenu.draw(); 
+                victoryMusicPlayed = false;
+                gameOverMusicPlayed = false;
                 break;
-                case RUNNING:
-                    updateGameLogic();
-                    renderGameWorld();
-                    break;
-                case PAUSED:
-                    renderGameWorld();
-                    menuPause.draw();
-                    break;
-                case GAME_OVER:
-                    renderGameWorld(); 
-                    mediator.drawGameOver();
-                    break;
-                case VICTORY:
-                    renderGameWorld(); 
-                    mediator.drawWinScreen();
-                    break;
-            }
+            case RUNNING:
+                updateGameLogic();
+                renderGameWorld();
+                SoundManager.resumeMusic();
+                SoundManager.resumeAllSoundEffects();
+                break;
+            case PAUSED:
+                SoundManager.pauseMusic();
+                SoundManager.pauseAllSoundEffects();
+                renderGameWorld();
+                menuPause.draw();
+                break;
+            case GAME_OVER:
+                if (!gameOverMusicPlayed) {
+                    SoundManager.stopAll();
+                    SoundManager.playSound("/sounds/zelda.wav"); // coloque o caminho correto do som de derrota
+                    gameOverMusicPlayed = true;
+                }
+                renderGameWorld(); 
+                mediator.drawGameOver();
+                break;
+            case VICTORY:
+                if (!victoryMusicPlayed) {
+                    SoundManager.stopAll();
+                    SoundManager.playSound("/sounds/zelda.wav"); // coloque o caminho correto do som de vitória
+                    victoryMusicPlayed = true;
+                }
+                renderGameWorld(); 
+                mediator.drawWinScreen();
+                break;
         }
+    }
     }
     
     private void updateGameLogic() {

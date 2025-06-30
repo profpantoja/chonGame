@@ -32,7 +32,7 @@ public class Setup {
         // --- Protagonista ---
         // O protagonista é criado uma única vez para que seu estado (vida, etc.)
         // seja mantido entre os níveis.
-        Agent chonBota = new Agent(100, 390, 96, 256, 5, 1000, "/images/agents/chonBota.png", false,true);
+        Agent chonBota = new Agent(100, 390, 96, 256, 5, 1, "/images/agents/chonBota.png", false,true);
         chonBota.setHitbox(new Hitbox(114, 4, 30, 90));
         Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false,75); 
         Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false,64);
@@ -47,7 +47,7 @@ public class Setup {
         level1.setProtagonist(chonBota); // Adiciona o protagonista ao nível 1
         
         // Inimigos e colisões do nível 1
-        Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true,false);
+        Agent chonBot = new Agent(920, 440, 90, 65, 1, 5, "/images/agents/chonBot.png", true,false);
         chonBot.setHitbox(new Hitbox(17, 23, 33, 45));
         level1.getAgents().add(chonBot);
         
