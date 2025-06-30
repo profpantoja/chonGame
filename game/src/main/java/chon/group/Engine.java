@@ -10,6 +10,7 @@ import chon.group.game.domain.environment.Collision;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.domain.environment.GameStatus;
 import chon.group.game.domain.environment.MainMenu;
+import chon.group.game.domain.environment.MenuOption;
 import chon.group.game.domain.environment.MenuPause;
 import chon.group.game.domain.environment.Setup;
 import chon.group.game.drawer.JavaFxDrawer;
@@ -23,6 +24,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 public class Engine extends Application {
@@ -50,65 +53,114 @@ public class Engine extends Application {
     }
 
     public void start(Stage theStage) {
-        theStage.setTitle("Chon: The Learning Game");
-        Canvas canvas = new Canvas(WINDOW_WIDTH, WINDOW_HEIGHT);
-        this.graphicsContext = canvas.getGraphicsContext2D(); 
-        
-        resetGame();
+    // Setup Canvas and Graphics
+    theStage.setTitle("Chon: The Learning Game");
+    Canvas canvas = new Canvas(WINDOW_WIDTH, WINDOW_HEIGHT);
+    this.graphicsContext = canvas.getGraphicsContext2D(); 
 
-        JavaFxDrawer drawer = new JavaFxDrawer(this.graphicsContext, null); 
-        Image menuBackground = Setup.loadImage("/images/environment/menu_background_new.png");
-        this.mainMenu = new MainMenu(drawer, menuBackground);
-        this.menuPause = new MenuPause(drawer, environment.getPauseImage());
+    resetGame();
 
-        setupMenuActions(mainMenu, menuPause);
-        StackPane root = new StackPane(canvas);
-        Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
-        theStage.setScene(scene);
-        setupInputHandlers(scene);
-        
-        new GameLoop().start();
-        theStage.show();
-    }
+    this.mediator = new JavaFxMediator(environment, this.graphicsContext); 
+    JavaFxDrawer drawer = new JavaFxDrawer(this.graphicsContext, null); 
+
+    // Initialize Menus
+    Image menuBackground = Setup.loadImage("/images/environment/menu_background_new.png");
+    this.mainMenu = new MainMenu(drawer, menuBackground);
+    this.menuPause = new MenuPause(drawer, environment.getPauseImage());
+
+    //Setup Scene and Input
+    StackPane root = new StackPane(canvas);
+    Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
+    theStage.setScene(scene);
     
-    private void setupMenuActions(MainMenu mainMenu, MenuPause menuPause) {
-        mainMenu.setOnStartGame(() -> {
-            resetGame();
-            gameStatus = GameStatus.RUNNING;
-        });
-        mainMenu.setOnExit(() -> Platform.exit());
-        menuPause.setOnResume(() -> gameStatus = GameStatus.RUNNING);
-        menuPause.setOnExitToMenu(() -> {
-            mainMenu.reset();
-            gameStatus = GameStatus.MAIN_MENU;
-        });
-    }
+    setupInputHandlers(scene);
 
+    //Start Game Loop
+    new GameLoop().start();
+    theStage.show();
+}
+
+    /**
+     * Defines the input handlers for the game, based on the current game status.
+     */
     private void setupInputHandlers(Scene scene) {
-        scene.setOnKeyPressed((KeyEvent e) -> {
-            String key = e.getCode().toString();
-            switch (gameStatus) {
-                case MAIN_MENU: mainMenu.handleInput(e.getCode()); break;
-                case PAUSED: menuPause.handleInput(e.getCode()); break;
-                case RUNNING:
-                    if (key.equals("P")) gameStatus = GameStatus.PAUSED;
-                    else if (!gameInput.contains(key)) gameInput.add(key);
-                    break;
-                default:
-                    if (key.equals("ENTER")) {
-                        gameStatus = GameStatus.MAIN_MENU;
-                        mainMenu.reset();
-                    }
-                    break;
-            }
-        });
+    scene.setOnKeyPressed(this::handleKeyPressed);
+    scene.setOnKeyReleased(this::handleKeyReleased);
+}
 
-        scene.setOnKeyReleased((KeyEvent e) -> {
-            if (gameStatus == GameStatus.RUNNING) {
-                gameInput.remove(e.getCode().toString());
+private void handleKeyPressed(KeyEvent e) {
+    String key = e.getCode().toString();
+    System.out.println("Key pressed: " + key); 
+    switch (gameStatus) {
+        case MAIN_MENU:
+            MenuOption.Main mainOption = mainMenu.handleInput(e.getCode());
+            if (mainOption != null) {
+                switch (mainOption) {
+                    case START_GAME:
+                        resetGame();
+                        gameStatus = GameStatus.RUNNING;
+                        break;
+                    case EXIT:
+                        Platform.exit();
+                        break;
+                }
             }
-        });
+            break;
+        case PAUSED:
+            MenuOption.Pause pauseOption = menuPause.handleInput(e.getCode());
+            if (pauseOption != null) {
+                switch (pauseOption) {
+                    case RESUME:
+                        gameStatus = GameStatus.RUNNING;
+                        restoreAgentsState(false);
+                        break;
+                    case GO_BACK_TO_MENU:
+                        mainMenu.reset();
+                        gameStatus = GameStatus.MAIN_MENU;
+                        restoreAgentsState(false);
+                        break;
+                }
+            }
+            break;
+        case RUNNING:
+            if (e.getCode().toString().equals("P")) {
+                gameStatus = GameStatus.PAUSED;
+                menuPause.reset();
+                restoreAgentsState(true);
+            } else if (!gameInput.contains(key)) {
+                gameInput.add(key);
+            }
+            break;
+        default:
+            if (e.getCode().toString().equals("ENTER")) {
+                gameStatus = GameStatus.MAIN_MENU;
+                mainMenu.reset();
+                restoreAgentsState(false);
+            }
+            break;
     }
+}
+
+private void handleKeyReleased(KeyEvent e) {
+    if (gameStatus == GameStatus.RUNNING) {
+        gameInput.remove(e.getCode().toString());
+    }
+}
+
+   /**
+ * Centraliza a lógica de pausar/despausar agentes e protagonista.
+ */
+private void restoreAgentsState(boolean pause) {
+    environment.getProtagonist().setCheckMenu(pause);
+    environment.getProtagonist().setlastHitTime(System.currentTimeMillis());
+
+    List<Agent> agents = environment.getAgents();
+    for (int i = 0; i < agents.size(); i++) {
+        Agent agent = agents.get(i);
+        agent.setCheckMenu(pause);
+        agent.setlastHitTime(System.currentTimeMillis());
+    }
+}
 
     private void resetGame() {
         this.levels = Setup.createLevels();
@@ -119,12 +171,17 @@ public class Engine extends Application {
         gameInput.clear();
     }
 
+    /**
+     * The main game loop 
+     */
     private class GameLoop extends AnimationTimer {
         public void handle(long currentNanoTime) {
             graphicsContext.clearRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
             switch (gameStatus) {
-                case MAIN_MENU: mainMenu.draw(); break;
+                case MAIN_MENU: 
+                    mainMenu.draw(); 
+                break;
                 case RUNNING:
                     updateGameLogic();
                     renderGameWorld();
@@ -178,29 +235,35 @@ public class Engine extends Application {
                 if (shot != null) {
                     environment.getShots().add(shot);
                 }
-                
+                /* else {
+                    String currentSheet = protagonist.getCurrentSpritesheet();
+                    boolean isAttacking = currentSheet != null && currentSheet.equals("/images/agents/Link_Attack.png");
+                    
+                    if ((!isAttacking || (System.currentTimeMillis() - shotNow) >= 360) && !protagonist.isInvulnerable()) {
+                         if (currentSheet == null || !currentSheet.equals("/images/agents/Link_Standing.png")) {
+                            protagonist.setAnimation("/images/agents/Link_Standing.png", 4, 150);
+                        }
+                    }
+                }
+                 */
             }
             
             protagonist.moveGravity(gameInput);
             environment.checkBorders();
-        } else {
-            String currentSheet = protagonist.getCurrentSpritesheet();
-            boolean isAttacking = currentSheet != null && currentSheet.equals("/images/agents/Link_Attack.png");
-            
-            if ((!isAttacking || (System.currentTimeMillis() - shotNow) >= 360) && !protagonist.isInvulnerable()) {
-                 if (currentSheet == null || !currentSheet.equals("/images/agents/Link_Standing.png")) {
-                    protagonist.setAnimation("/images/agents/Link_Standing.png", 4, 150);
-                }
-            }
         }
-        protagonist.updateAnimation();
         
-        environment.getAgents().forEach(agent -> {
-             if (agent.getHitbox() != null && environment.getProtagonist().getHitbox() != null) {
-                agent.chase(environment.getProtagonist().getHitbox().getPosX(), environment.getProtagonist().getHitbox().getPosY());
-            }
-        });
+        // method chase for each agent
+        List<Agent> agents = environment.getAgents();
+        for (int i = 0; i < agents.size(); i++) {
+            Agent agent = agents.get(i);
+            if (agent.getHitbox() != null && environment.getProtagonist().getHitbox() != null) {
+               agent.chase(environment.getProtagonist().getHitbox().getPosX(), environment.getProtagonist().getHitbox().getPosY());
+           }
+        }
+        
+        protagonist.updateAnimation();
 
+        // update all agents and their shots
         checkCollisions();
         environment.detectCollision();
         environment.updateSlashes();
