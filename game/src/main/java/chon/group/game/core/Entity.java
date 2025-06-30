@@ -280,6 +280,14 @@ public abstract class Entity {
         } else if (movements.contains("LEFT")) {
             if (!flipped)
                 this.flipImage();
+            if (movements.contains("LEFT") && movements.contains("UP")) {
+                setPosY(posY -= speed/2);
+                setPosX(posX -= speed/2);
+            }
+            else if (movements.contains("LEFT") && movements.contains("DOWN")) {
+                setPosY(posY += speed/2);
+                setPosX(posX -= speed/2);
+            }
             setPosX(posX -= speed);
         } else if (movements.contains("UP")) {
             setPosY(posY -= speed);
