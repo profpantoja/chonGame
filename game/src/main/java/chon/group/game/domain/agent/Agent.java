@@ -196,10 +196,15 @@ public class Agent extends AnimatedEntity {
             this.setlastHitTime(System.currentTimeMillis()); 
 
             if(this.isDead()){
-                this.setWidth(256);
-                this.setAnimation(this.pathImageDeath, 2, 150);
-                System.out.println("Chon bota die!");
-                //SoundManager.playSound("sounds/gameOver.wav");
+                if (this.isProtagonist()) {
+                    this.setWidth(256);
+                    this.setAnimation(this.pathImageDeath, 2, 150);
+                    System.out.println("Chon bota die!");
+                    //SoundManager.playSound("sounds/gameOver.wav");
+                } else {
+                    // Enemy death animation (optional)
+                    System.out.println("Enemy died!");
+                }
             }
             else if(this.pathImageHit != null && !this.pathImageHit.isEmpty()){
                 this.setWidth(256); 

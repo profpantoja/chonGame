@@ -32,7 +32,7 @@ public class Setup {
         // --- Protagonista ---
         // O protagonista é criado uma única vez para que seu estado (vida, etc.)
         // seja mantido entre os níveis.
-        Agent chonBota = new Agent(100, 390, 90, 65, 5, 1000, "/images/agents/chonBota.png", false,true);
+        Agent chonBota = new Agent(100, 390, 90, 256, 5, 1000, "/images/agents/chonBota.png", false,true);
         chonBota.setHitbox(new Hitbox(114, 4, 30, 90));
         Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false,75); 
         Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false,64);
