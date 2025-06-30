@@ -174,7 +174,11 @@ public class Engine extends Application {
                     widthAnimation += protagonist.getWidth() - protagonist.getWeapon().getShotWidth();
                 }
                 environment.getSlashes().add(protagonist.getCloseWeapon().slash(protagonist.getPosX(), protagonist.getPosY(), direction));
-                environment.getShots().add(protagonist.getWeapon().fire(widthAnimation, protagonist.getPosY(), direction));
+                Shot shot = protagonist.getWeapon().fire(widthAnimation, protagonist.getPosY(), direction);
+                if (shot != null) {
+                    environment.getShots().add(shot);
+                }
+                
             }
             
             protagonist.moveGravity(gameInput);
