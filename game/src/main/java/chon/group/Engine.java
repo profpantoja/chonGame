@@ -249,7 +249,22 @@ public class Engine extends Application {
         // else if(environment.getAgents().isEmpty()){ ... } <-- LINHA REMOVIDA
 
         // 2. Verifica se o jogador completou as condições para trocar de nível
-        if (environment.levelChanger()) {
+        if (environment.levelChanger(currentLevelIndex == levels.size() - 1)) {
+            currentLevelIndex++;
+            if (currentLevelIndex >= levels.size()) {
+                gameStatus = GameStatus.VICTORY;
+            } else {
+                // Caso contrário, carrega o próximo nível
+                System.out.println("Trocando para o nível: " + (currentLevelIndex + 1));
+                this.environment = this.levels.get(currentLevelIndex);
+                this.mediator = new JavaFxMediator(this.environment, this.graphicsContext);
+                this.environment.getProtagonist().setPosX(100);
+                this.environment.getProtagonist().setPosY(390);
+                this.environment.setCameraX(0);
+                setHitboxesVisibility(drawHitboxes);
+            }
+        }
+        else if (environment.levelChanger()) {
             currentLevelIndex++;
             
             // 3. Se o índice do nível for maior ou igual ao número de níveis, o jogador venceu o jogo.
