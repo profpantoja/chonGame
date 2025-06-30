@@ -12,12 +12,12 @@ import chon.group.game.drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
-import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 /**
  * The {@code Engine} class represents the main entry point of the application
@@ -95,7 +95,6 @@ public class Engine extends Application {
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
                     String code = e.getCode().toString();
-                    input.clear();
 
                     System.out.println("Pressed: " + code);
 
@@ -114,6 +113,7 @@ public class Engine extends Application {
                 public void handle(KeyEvent e) {
                     String code = e.getCode().toString();
                     System.out.println("Released: " + code);
+                    
                     input.remove(code);
                 }
             });
