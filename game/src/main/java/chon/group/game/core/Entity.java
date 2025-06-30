@@ -9,7 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
-public abstract class Entity {
+    public abstract class Entity {
 
     /** X position (horizontal) of the entity. */
     private int posX;
@@ -269,26 +269,29 @@ public abstract class Entity {
             if (flipped)
                 this.flipImage();
             if (movements.contains("RIGHT") && movements.contains("UP")) {
-                setPosY(posY  -= speed/2) ;
-                setPosX(posX += speed/2);
+                setPosY(posY  -= speed) ;
+                setPosX(posX += speed);
             }
             else if (movements.contains("RIGHT") && movements.contains("DOWN")) {
-                setPosY(posY += speed/2);
-                setPosX(posX += speed/2);
+                setPosY(posY += speed);
+                setPosX(posX += speed);
+            }else{
+                setPosX(posX += speed);
             }
-            setPosX(posX += speed);
         } else if (movements.contains("LEFT")) {
             if (!flipped)
                 this.flipImage();
             if (movements.contains("LEFT") && movements.contains("UP")) {
-                setPosY(posY -= speed/2);
-                setPosX(posX -= speed/2);
+                setPosY(posY -= speed);
+                setPosX(posX -= speed);
             }
             else if (movements.contains("LEFT") && movements.contains("DOWN")) {
-                setPosY(posY += speed/2);
-                setPosX(posX -= speed/2);
+                setPosY(posY += speed);
+                setPosX(posX -= speed);
             }
-            setPosX(posX -= speed);
+            else{
+                setPosX(posX -= speed);
+            }
         } else if (movements.contains("UP")) {
             setPosY(posY -= speed);
         } else if (movements.contains("DOWN")) {
