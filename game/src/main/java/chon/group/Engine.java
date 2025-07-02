@@ -8,6 +8,7 @@ import java.util.List;
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Shot;
 import chon.group.game.domain.agent.Slash;
+import chon.group.game.domain.agent.AnimationStatus;
 import chon.group.game.domain.environment.Collision;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.domain.environment.Game;
@@ -51,7 +52,7 @@ public class Engine extends Application {
     
     private boolean canSlash = true;
     private boolean option = false;
-    private boolean drawHitboxes = true;
+    private boolean drawHitboxes = false;
     private boolean victoryMusicPlayed = false;
     private boolean gameOverMusicPlayed = false;
 
@@ -153,45 +154,41 @@ private void updateGameLogic() {
     }
     
     Agent protagonist = environment.getProtagonist();
-    if (!gameInput.isEmpty()) {
-        boolean isMoving = gameInput.contains("RIGHT") || gameInput.contains("LEFT") || gameInput.contains("UP") || gameInput.contains("DOWN");
-        if(isMoving && !protagonist.isInvulnerable()) {
-            protagonist.setAnimation("/images/agents/Link_Running.png", 6, 75);
+    if (!gameInput.isEmpty() && protagonist.getAnimationStatus() != AnimationStatus.DAMAGE) {
+
+        if(isMoving()) {
+            protagonist.changeAnimation(AnimationStatus.RUN);
         }
-        
         updateCameraPosition();
         
         if (gameInput.contains("SPACE")) {
             shotNow = System.currentTimeMillis();
-            protagonist.setAnimation("/images/agents/Link_Attack.png", 4, 75);
+            protagonist.changeAnimation(AnimationStatus.ATTACK);
             SoundManager.playSound("/sounds/attack.wav");
+
             gameInput.remove("SPACE");
             
             String direction = protagonist.isFlipped() ? "LEFT" : "RIGHT";
-            int widthAnimation = protagonist.getPosX();
-            if (!protagonist.isFlipped()) {
-                widthAnimation += protagonist.getWidth() - protagonist.getWeapon().getShotWidth();
-            }
             environment.getSlashes().add(protagonist.getCloseWeapon().slash(protagonist.getPosX(), protagonist.getPosY(), direction));
-            Shot shot = protagonist.getWeapon().fire(widthAnimation, protagonist.getPosY(), direction);
-            if (shot != null) {
-                environment.getShots().add(shot);
-            }
-            /* else {
-                String currentSheet = protagonist.getCurrentSpritesheet();
-                boolean isAttacking = currentSheet != null && currentSheet.equals("/images/agents/Link_Attack.png");
-                
-                if ((!isAttacking || (System.currentTimeMillis() - shotNow) >= 360) && !protagonist.isInvulnerable()) {
-                    if (currentSheet == null || !currentSheet.equals("/images/agents/Link_Standing.png")) {
-                        protagonist.setAnimation("/images/agents/Link_Standing.png", 4, 150);
-                    }
+
+            if (protagonist.getHitbox() != null)
+            {
+                int shotPosX = protagonist.isFlipped() ? protagonist.getHitbox().getPosX() - protagonist.getWeapon().getShotWidth() : protagonist.getHitbox().getPosX() + protagonist.getHitbox().getWidth() + protagonist.getWeapon().getShotWidth();
+                Shot shot = protagonist.getWeapon().fire(shotPosX, protagonist.getHitbox().getPosY(), direction);
+                if (shot != null) {
+                    environment.getShots().add(shot);
                 }
             }
-            */
         }
-        
+
         protagonist.moveGravity(gameInput);
         environment.checkBorders();
+    }
+    else {
+        if (System.currentTimeMillis() - shotNow > 300 && protagonist.getAnimationStatus() != AnimationStatus.DAMAGE) 
+        {
+            protagonist.changeAnimation(AnimationStatus.IDLE);
+        }
     }
     
     chase();
@@ -205,7 +202,21 @@ private void updateGameLogic() {
     environment.updateMessages();
 }
 
+private boolean isMoving() {
+    if (gameInput.contains("RIGHT") || gameInput.contains("LEFT") || gameInput.contains("UP") || gameInput.contains("DOWN")) 
+    {
+        return true;
+    }
+    return false;
+}
 
+private int getShotDirection() {
+    if(environment.getProtagonist().isFlipped()) {
+        return -1;
+    } else {
+        return 1;
+    }
+}
 
 /**
  * Draw the game world elements on the screen.

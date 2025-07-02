@@ -18,7 +18,7 @@ public class Shot extends Entity {
         this.damage = damage;
         this.direction = direction;
         this.setHitbox(new Hitbox(width/4, height/4, width/2, height/2));
-        this.getHitbox().setDrawHitbox(true);
+        //this.getHitbox().setDrawHitbox(true);
     }
 
     public boolean isDestructible() {

@@ -1,11 +1,13 @@
 package chon.group.game.domain.agent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import chon.group.game.domain.environment.Collision;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.messaging.Message;
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 import javafx.application.Platform;
@@ -48,15 +50,24 @@ public class Agent extends AnimatedEntity {
     /* The Agent's Close Weapon */
     private CloseWeapon closeWeapon;
 
+    private AnimationStatus animationStatus = null;
     
     /*Flag to stop the invulnerability status of the agent when on menu */
     private boolean checkMenu = false;
     
+    private String pathImageIdle;
+
+    private String pathImageRun;
+    
+    private String pathImageAttack;
+
     private String pathImageHit;
     
     private String pathImageDeath;
 
     private boolean blinking = false;
+
+    private PauseTransition damageStatusTimer;
 
     private Timeline blinkTimeline;
     
@@ -93,6 +104,16 @@ public class Agent extends AnimatedEntity {
     public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped, boolean isProtagonist) {
         super(new Image(Agent.class.getResource(pathImage).toExternalForm()), posX, posY, height, width, speed, health, pathImage, flipped);
         this.isProtagonist = isProtagonist;
+    }
+
+    public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped, boolean isProtagonist, String imagePathAttack, String imagePathIdle, String imagePathHit, String imagePathDeath, String imagePathRun) {
+        super(new Image(Agent.class.getResource(pathImage).toExternalForm()), posX, posY, height, width, speed, health, pathImage, flipped);
+        this.isProtagonist = isProtagonist;
+        this.pathImageAttack = imagePathAttack;
+        this.pathImageIdle = imagePathIdle;
+        this.pathImageHit = imagePathHit;
+        this.pathImageDeath = imagePathDeath;
+        this.pathImageRun = imagePathRun;
     }
 
     /**
@@ -208,9 +229,8 @@ public class Agent extends AnimatedEntity {
             if(this.isDead()){
                 if (this.isProtagonist()) {
                     this.setWidth(256);
-                    this.setAnimation(this.pathImageDeath, 2, 150);
+                    changeAnimation(AnimationStatus.DEAD);
                     System.out.println("Chon bota die!");
-                    //SoundManager.playSound("sounds/gameOver.wav");
                 } else {
                     // Enemy death animation (optional)
                     System.out.println("Enemy died!");
@@ -218,10 +238,9 @@ public class Agent extends AnimatedEntity {
             }
             else if(this.pathImageHit != null && !this.pathImageHit.isEmpty()){
                 this.setWidth(256); 
-                this.setAnimation(this.pathImageHit, 10, 300);
+                setDamageStatusForDuration(250);
                 startBlinking(); 
                 System.out.println("Chon bota took damage!");
-                //SoundManager.playSound("sounds/takedamage.wav");
             }
         }
     }
@@ -308,53 +327,42 @@ public class Agent extends AnimatedEntity {
             blinkTimeline.stop();
         }
         blinking = true;
-        blinkTimeline = new Timeline(
-            new KeyFrame(Duration.millis(0), new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent e) {
-                    setOpacity(0.3);
-                }
-            }),
-            new KeyFrame(Duration.millis(100), new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent e) {
-                    setOpacity(1.0);
-                }
-            }),
-            new KeyFrame(Duration.millis(200), new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent e) {
-                    setOpacity(0.3);
-                }
-            }),
-            new KeyFrame(Duration.millis(300), new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent e) {
-                    setOpacity(1.0);
-                }
-            }),
-            new KeyFrame(Duration.millis(400), new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent e) {
-                    setOpacity(0.3);
-                }
-            }),
-            new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent e) {
+
+        List<KeyFrame> frames = new ArrayList<>();
+        int duration = (int) INVULNERABILITY_COOLDOWN - 100; // total duration in ms
+        int interval = 100; // interval in ms
+
+        for (int t = 0; t <= duration; t += interval) {
+            final boolean visible = (t / interval) % 2 == 1;
+            if (t < duration) {
+                frames.add(new KeyFrame(Duration.millis(t), e -> setOpacity(visible ? 1.0 : 0.3)));
+            } else {
+                // Last frame: ensure visible and stop blinking
+                frames.add(new KeyFrame(Duration.millis(t), e -> {
                     setOpacity(1.0);
                     blinking = false;
-                }
-            })
-        );
-        blinkTimeline.setCycleCount(1);
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                blinkTimeline.play();
+                }));
             }
-        });
+        }
+
+        blinkTimeline = new Timeline(frames.toArray(new KeyFrame[0]));
+        blinkTimeline.setCycleCount(1);
+        Platform.runLater(() -> blinkTimeline.play());
     }
+
+    public void setDamageStatusForDuration(long millis) {
+        changeAnimation(AnimationStatus.DAMAGE);
+        if (damageStatusTimer != null) {
+            damageStatusTimer.stop();
+        }
+        damageStatusTimer = new PauseTransition(Duration.millis(millis));
+        damageStatusTimer.setOnFinished(e -> {
+            System.out.println("A");
+            changeAnimation(AnimationStatus.IDLE);
+        });
+        damageStatusTimer.play();
+    }
+
     /**
      * Method to update the invulnerable status.
      *
@@ -449,7 +457,72 @@ public class Agent extends AnimatedEntity {
             updateHitboxPosition();
         }
     }
+
+    public void changeAnimation(AnimationStatus newStatus) {
+        AnimationStatus oldStatus = getAnimationStatus();
+        if (oldStatus == newStatus) return;
+        setAnimationStatus(newStatus);
+        AnimationStatus currentStatus = getAnimationStatus();
+
+        if (currentStatus == AnimationStatus.IDLE) {
+            setAnimation(getPathImageIdle(), 4, 150);
+        }
+        if (currentStatus == AnimationStatus.DAMAGE) {
+            setAnimation(getPathImageHit(), 10, 1000);
+        }
+        if (currentStatus == AnimationStatus.RUN) {
+            setAnimation(getPathImageRun(), 6, 75);
+        }  
+        if (currentStatus == AnimationStatus.DEAD) {
+            setAnimation(getPathImageDeath(), 2, 150);
+        } 
+        if (currentStatus == AnimationStatus.ATTACK) {
+            setAnimation(getPathImageAttack(), 4, 75);
+        }
+    }
+
+    public AnimationStatus getAnimationStatus() {
+        return animationStatus;
+    }
+
+    public void setAnimationStatus(AnimationStatus animationStatus) {
+        this.animationStatus = animationStatus;
+    }
+
+    public String getPathImageIdle() {
+        return pathImageIdle;
+    }
+
+    public void setPathImageIdle(String pathImageIdle) {
+        this.pathImageIdle = pathImageIdle;
+    }
+
+    public String getPathImageRun() {
+        return pathImageRun;
+    }
+
+    public void setPathImageRun(String pathImageRun) {
+        this.pathImageRun = pathImageRun;
+    }
+
+    public String getPathImageAttack() {
+        return pathImageAttack;
+    }
+
+    public void setPathImageAttack(String pathImageAttack) {
+        this.pathImageAttack = pathImageAttack;
+    }
+
+    public String getPathImageHit() {
+        return pathImageHit;
+    }
+
+    public String getPathImageDeath() {
+        return pathImageDeath;
+    }
 }
+
+
 /*  private void startBlinking() {
         if (blinkTimeline != null) {
             blinkTimeline.stop();
