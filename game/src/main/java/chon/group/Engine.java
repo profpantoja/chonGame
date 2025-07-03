@@ -6,8 +6,8 @@ import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Cannon;
 import chon.group.game.domain.agent.CloseWeapon;
 import chon.group.game.domain.agent.Fireball;
-import chon.group.game.domain.agent.Weapon;
-import  chon.group.game.domain.agent.Sword;
+import chon.group.game.domain.agent.Sword;
+import  chon.group.game.domain.agent.Weapon;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.drawer.JavaFxMediator;
@@ -37,14 +37,14 @@ import javafx.stage.Stage;
  * <li>Execute the game loop for updating and rendering the game state.</li>
  * </ul>
  */
-public class Engine extends Application {
+ public class Engine extends Application {
 
     /* If the game is paused or not. */
     private boolean isPaused = false;
     /* If the player can slash again or not. */
     private boolean canSlash = true;
     /* If the player has made a decision about the weapon to use. */
-    private boolean weaponDecision = false;
+    private int weaponDecision = 0; // 0  = both, 1 = fireball, 2 = sword
 
 
 
@@ -175,45 +175,77 @@ public class Engine extends Application {
                             /* chonbota Only Moves if the Player Press Something */
                             /* Update the protagonist's movements if input exists */
                             if (!input.isEmpty()) {
-                                if(weaponDecision == false){
-                                    if (input.contains("SPACE") && canSlash) {
-                                    input.remove("SPACE");
-                                    /* Stop the weapon to attack */
-                                    canSlash = false;// prevents multiple slashes in a row
-
-                                    String direction = chonBota.isFlipped() ? "LEFT" : "RIGHT";
-                                    environment.getSlashes().add(
-                                        chonBota.getCloseWeapon().slash(chonBota.getPosX(), chonBota.getPosY(), direction)
-                                    );
-                                    }
-                                environment.getProtagonist().move(input);
-                                environment.checkBorders();
-                                }else{
-                                    if (!input.isEmpty()) {
-                                /* ChonBota Shoots Somebody Who Outdrew You */
-                                if (input.contains("SPACE")) {
-                                    input.remove("SPACE");
-                                        String direction;
-                                        if (chonBota.isFlipped())
-                                            direction = "LEFT";
-                                        else
-                                            direction = "RIGHT";
-                                        environment.getShots().add(
-                                            chonBota.getWeapon().fire(
-                                                chonBota.getPosX(),
-                                                chonBota.getPosY(),
-                                                direction
-                                            )
+                                switch(weaponDecision){
+                                    case 0:// Both weapons available
+                                     if (input.contains("Z")) {
+                                        input.remove("Z");
+                                            String direction;
+                                            if (chonBota.isFlipped())
+                                                direction = "LEFT";
+                                            else
+                                                direction = "RIGHT";
+                                            environment.getShots().add(
+                                                chonBota.getWeapon().fire(
+                                                    chonBota.getPosX(),
+                                                    chonBota.getPosY(),
+                                                    direction
+                                                )
+                                            );
+                                        }
+                                        if (input.contains("SPACE") && canSlash) {
+                                        input.remove("SPACE");
+                                        /* Stop the weapon to attack */
+                                        canSlash = false;// prevents multiple slashes in a row
+                                        String direction = chonBota.isFlipped() ? "LEFT" : "RIGHT";
+                                        environment.getSlashes().add(
+                                            chonBota.getCloseWeapon().slash(chonBota.getPosX(), 
+                                            chonBota.getPosY(),
+                                             direction)
                                         );
-                                    }
-                                    environment.getProtagonist().move(input);
-                                    environment.checkBorders();
-                                    
+                                        }
+                                        environment.getProtagonist().move(input);
+                                        environment.checkBorders();
+                                        
+                                    break;
+                                    case 1:// Fireball weapon available
+                                      if (input.contains("SPACE")) {
+                                        input.remove("SPACE");
+                                            String direction;
+                                            if (chonBota.isFlipped())
+                                                direction = "LEFT";
+                                            else
+                                                direction = "RIGHT";
+                                            environment.getShots().add(
+                                                chonBota.getWeapon().fire(
+                                                    chonBota.getPosX(),
+                                                    chonBota.getPosY(),
+                                                    direction
+                                                )
+                                            );
+                                        }
+                                        environment.getProtagonist().move(input);
+                                        environment.checkBorders();
+                                    break;
+
+                                    case 2:// Sword weapon available2   
+                                     if (input.contains("SPACE") && canSlash) {
+                                        input.remove("SPACE");
+                                        /* Stop the weapon to attack */
+                                        canSlash = false;// prevents multiple slashes in a row
+
+                                        String direction = chonBota.isFlipped() ? "LEFT" : "RIGHT";
+                                        environment.getSlashes().add(
+                                            chonBota.getCloseWeapon().slash(chonBota.getPosX(), chonBota.getPosY(), direction)
+                                        );
+                                        }
+                                        environment.getProtagonist().move(input);
+                                        environment.checkBorders();
+                                    break;
+
+
 
                                 }
 
-                                
-                                }
                             }
                             /* ChonBot's Automatic Movements */
                             /* Update the other agents' movements */
@@ -237,6 +269,7 @@ public class Engine extends Application {
             }.start();
             theStage.show();
 
+                            
         } catch (
 
         Exception e) {
