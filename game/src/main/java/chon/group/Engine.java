@@ -3,7 +3,6 @@ package chon.group;
 import java.util.ArrayList;
 
 import chon.group.game.domain.agent.Agent;
-import chon.group.game.domain.agent.Cannon;
 import chon.group.game.domain.agent.Fireball;
 import chon.group.game.domain.agent.Weapon;
 import chon.group.game.domain.environment.Environment;
@@ -66,7 +65,7 @@ public class Engine extends Application {
             /* Initialize the game environment and agents */
             Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
             Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
-            Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
+            //Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
             Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false);
             chonBota.setWeapon(fireball);
 
