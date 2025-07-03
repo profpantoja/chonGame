@@ -126,10 +126,8 @@ public class Engine extends Application {
                     /* If the agent died in the last loop */
                     if (environment.getProtagonist().isDead()) {
                         /* Still prints ongoing messages (e.g., last hit taken) */
-                        environment.updateMessages();
                         mediator.drawBackground();
                         mediator.drawAgents();
-                        mediator.drawMessages();
                         /* Rendering the Game Over Screen */
                         mediator.drawGameOver();
                     } else {
@@ -152,10 +150,8 @@ public class Engine extends Application {
                                     environment.getProtagonist().getPosY());
                             /* Render the game environment and agents */
                             environment.detectCollision();
-                            environment.updateMessages();
                             mediator.drawBackground();
                             mediator.drawAgents();
-                            mediator.drawMessages();
                         }
                     }
                 }

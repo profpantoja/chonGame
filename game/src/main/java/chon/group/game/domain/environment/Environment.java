@@ -1,11 +1,9 @@
 package chon.group.game.domain.environment;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import chon.group.game.domain.agent.Agent;
-import chon.group.game.messaging.Message;
 import javafx.scene.image.Image;
 
 /**
@@ -45,9 +43,6 @@ public class Environment {
     /** List of agents present in the environment. */
     private List<Agent> agents;
 
-    /** List of messages to display. */
-    private List<Message> messages;
-
     /**
      * Default constructor to create an empty environment.
      */
@@ -71,7 +66,6 @@ public class Environment {
         this.width = width;
         this.setImage(pathImage);
         this.agents = new ArrayList<Agent>();
-        this.messages = new ArrayList<Message>();
     }
 
     /**
@@ -92,7 +86,6 @@ public class Environment {
         this.width = width;
         this.setImage(pathImage);
         this.setAgents(agents);
-        this.messages = new ArrayList<Message>();
     }
 
     /**
@@ -259,24 +252,6 @@ public class Environment {
     }
 
     /**
-     * Gets the list of active messages.
-     * 
-     * @return List of messages objects currently being displayed
-     */
-    public List<Message> getMessages() {
-        return messages;
-    }
-
-    /**
-     * Sets the list of messages.
-     * 
-     * @param messages The new list of messages to display
-     */
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
-    }
-
-    /**
      * Checks if the protagonist is within the environment's boundaries and adjusts
      * its position if necessary.
      */
@@ -304,7 +279,7 @@ public class Environment {
                 System.out.println("Collision detected with agent: " + agent);
                 int damage = 100;
                 /* The protagonist takes damage when colliding with an agent. */
-                protagonist.takeDamage(damage, this.messages);
+                protagonist.takeDamage(damage);
             }
         }
     }
@@ -328,16 +303,6 @@ public class Environment {
                 a.getPosX() + a.getWidth() > b.getPosX() &&
                 a.getPosY() < b.getPosY() + b.getHeight() &&
                 a.getPosY() + a.getHeight() > b.getPosY();
-    }
-
-    public void updateMessages() {
-        Iterator<Message> iterator = this.messages.iterator();
-        while (iterator.hasNext()) {
-            Message message = iterator.next();
-            if (!message.update()) {
-                iterator.remove();
-            }
-        }
     }
 
 }
