@@ -75,7 +75,7 @@ public class Engine extends Application {
                     }
                     else if (code.equals("E") && !environment.getProtagonist().isEnergyDepleted()) {
                         // Habilidade especial que consome energia
-                        environment.getProtagonist().consumeEnergy(0.3);
+                        environment.getProtagonist().consumeEnergy(0.5);
                     }
 
                     if (!isPaused && !input.contains(code)) {
@@ -137,9 +137,9 @@ public class Engine extends Application {
     private void updateEnergySystem(Environment environment, ArrayList<String> input) {
         Agent protagonist = environment.getProtagonist();
         
-        // Consome energia ao se mover
+        // Recupera energia ao se mover
         if (!input.isEmpty()) {
-            protagonist.consumeEnergy(0.005);
+            protagonist.recoverEnergy(0.003);
         } 
         // Recupera energia quando parado
         else {
@@ -155,14 +155,17 @@ public class Engine extends Application {
     private void handleGameplay(Environment environment, ArrayList<String> input, Agent protagonist) {
         /* Update the protagonist's movements if input exists */
         if (!input.isEmpty()) {
-            if (input.contains("SPACE")) {
-                input.remove("SPACE");
-                String direction = protagonist.isFlipped() ? "LEFT" : "RIGHT";
-                environment.getShots().add(protagonist.getWeapon().fire(
-                    protagonist.getPosX(),
-                    protagonist.getPosY(),
-                    direction));
-            }
+           if (input.contains("SPACE")) {
+            input.remove("SPACE");
+            String direction = protagonist.isFlipped() ? "LEFT" : "RIGHT";
+            environment.getShots().add(protagonist.getWeapon().fire(
+            protagonist.getPosX(),
+            protagonist.getPosY(),
+            direction));
+
+        protagonist.consumeEnergy(0.1); // Consome 5% da energia total
+        }
+
             protagonist.move(input);
             environment.checkBorders();
         }

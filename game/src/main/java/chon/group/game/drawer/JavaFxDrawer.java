@@ -67,7 +67,7 @@ public class JavaFxDrawer {
         int borderThickness = 2;
         int barHeight = 5;
         int lifeSpan = Math.round((float) ((health * 100 / fullHealth) * width) / 100);
-        int barY = 15;
+        int barY = 30;
 
         this.gc.setFill(Color.BLACK);
         this.gc.fillRect(posX, posY - barY, width, barHeight + (borderThickness * 2));
@@ -93,7 +93,7 @@ public class JavaFxDrawer {
         int borderThickness = 2;
         int barHeight = 5;
         int energyWidth = (int)((energy / fullEnergy) * width);
-        int barY = 30; // Posicionado acima da barra de vida
+        int barY = 15; // Posicionado abaixo da barra de vida
 
         // Fundo da barra
         this.gc.setFill(Color.BLACK);

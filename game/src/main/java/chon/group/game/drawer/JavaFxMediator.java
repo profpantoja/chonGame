@@ -45,13 +45,13 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     agent.getWidth(),
                     agent.getHeight());
             
-            // Barra de energia (amarela)
+            // Barra de energia (azul)
             drawer.drawEnergyBar(agent.getEnergy(),
                     agent.getFullEnergy(),
                     agent.getWidth(),
                     agent.getPosX(),
                     agent.getPosY(),
-                    Color.YELLOW);
+                    Color.BLUE);
             
             // Barra de vida (verde)
             drawer.drawLifeBar(agent.getHealth(),
@@ -71,13 +71,13 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     protagonist.getWidth(),
                     protagonist.getHeight());
             
-            // Barra de energia do protagonista (amarela)
+            // Barra de energia do protagonista (azul)
             drawer.drawEnergyBar(protagonist.getEnergy(),
                     protagonist.getFullEnergy(),
                     protagonist.getWidth(),
                     protagonist.getPosX(),
                     protagonist.getPosY(),
-                    Color.YELLOW);
+                    Color.BLUE);
             
             // Barra de vida do protagonista (verde)
             drawer.drawLifeBar(protagonist.getHealth(),
