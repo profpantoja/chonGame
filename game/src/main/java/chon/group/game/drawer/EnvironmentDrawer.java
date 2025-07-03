@@ -38,9 +38,4 @@ public interface EnvironmentDrawer {
      */
     void drawPauseScreen();
 
-    /**
-     * Draws all the messages on the screen.
-     */ 
-    void drawMessages();
-
 }
