@@ -2,10 +2,11 @@ package chon.group;
 
 import java.util.ArrayList;
 
-import chon.group.game.domain.agent.Agent;
-import chon.group.game.domain.agent.Fireball;
-import chon.group.game.domain.agent.Weapon;
+import chon.group.game.core.agent.Agent;
+import chon.group.game.core.weapon.Weapon;
 import chon.group.game.domain.environment.Environment;
+import chon.group.game.domain.weapon.Cannon;
+import chon.group.game.domain.weapon.Lancer;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
@@ -65,9 +66,11 @@ public class Engine extends Application {
             /* Initialize the game environment and agents */
             Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
             Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
-            //Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
-            Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false);
-            chonBota.setWeapon(fireball);
+            Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
+            Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, "", false);
+
+            chonBota.setWeapon(cannon);
+            chonBota.setWeapon(lancer);
 
             Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
             environment.setProtagonist(chonBota);

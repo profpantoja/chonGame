@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import chon.group.game.core.Entity;
-import chon.group.game.domain.agent.Agent;
-import chon.group.game.domain.agent.Shot;
+import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.Entity;
+import chon.group.game.core.weapon.Shot;
 import chon.group.game.messaging.Message;
 import javafx.scene.image.Image;
 
