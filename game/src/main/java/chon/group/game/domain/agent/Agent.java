@@ -1,9 +1,6 @@
 package chon.group.game.domain.agent;
 
-import java.util.List;
-
 import chon.group.game.core.Entity;
-import chon.group.game.messaging.Message;
 
 /**
  * Represents an agent in the game, with properties such as position, size,
@@ -20,9 +17,6 @@ public class Agent extends Entity {
 
     /* Invulnerability (in milliseconds) */
     private final long INVULNERABILITY_COOLDOWN = 3000;
-
-    /* The Agent's Weapon */
-    private Weapon weapon;
 
     /**
      * Constructor to initialize the agent properties.
@@ -99,24 +93,6 @@ public class Agent extends Entity {
     }
 
     /**
-     * Gets the agent's weapon.
-     *
-     * @return its weapon.
-     */
-    public Weapon getWeapon() {
-        return weapon;
-    }
-
-    /**
-     * Sets the agent new weapon.
-     *
-     * @param weapon the new weapon
-     */
-    public void setWeapon(Weapon weapon) {
-        this.weapon = weapon;
-    }
-
-    /**
      * Gets if the agent is dead.
      *
      * @return if the agent is dead
@@ -132,10 +108,10 @@ public class Agent extends Entity {
      * @param damage the amount of damage to be applied
      */
     @Override
-    public void takeDamage(int damage, List<Message> messages) {
+    public void takeDamage(int damage) {
         this.invulnerable = this.updateInvulnerability();
         if (!this.invulnerable) {
-            super.takeDamage(damage, messages); 
+            super.takeDamage(damage); 
             this.lastHitTime = System.currentTimeMillis();
         }
     }

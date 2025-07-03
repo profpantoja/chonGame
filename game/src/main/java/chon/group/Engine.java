@@ -3,9 +3,6 @@ package chon.group;
 import java.util.ArrayList;
 
 import chon.group.game.domain.agent.Agent;
-import chon.group.game.domain.agent.Cannon;
-import chon.group.game.domain.agent.Fireball;
-import chon.group.game.domain.agent.Weapon;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.drawer.JavaFxMediator;
@@ -66,10 +63,6 @@ public class Engine extends Application {
             /* Initialize the game environment and agents */
             Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
             Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
-            Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
-            Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false);
-            chonBota.setWeapon(fireball);
-
             Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
             environment.setProtagonist(chonBota);
             environment.getAgents().add(chonBot);
@@ -132,38 +125,20 @@ public class Engine extends Application {
                     /* If the agent died in the last loop */
                     if (environment.getProtagonist().isDead()) {
                         /* Still prints ongoing messages (e.g., last hit taken) */
-                        environment.updateMessages();
-                        environment.updateShots();
                         mediator.drawBackground();
                         mediator.drawAgents();
-                        mediator.drawShots();
-                        mediator.drawMessages();
                         /* Rendering the Game Over Screen */
                         mediator.drawGameOver();
                     } else {
                         if (isPaused) {
                             mediator.drawBackground();
                             mediator.drawAgents();
-                            mediator.drawMessages();
-                            mediator.drawShots();
                             /* Rendering the Pause Screen */
                             mediator.drawPauseScreen();
                         } else {
                             /* ChonBota Only Moves if the Player Press Something */
                             /* Update the protagonist's movements if input exists */
                             if (!input.isEmpty()) {
-                                /* ChonBota Shoots Somebody Who Outdrew You */
-                                if (input.contains("SPACE")) {
-                                    input.remove("SPACE");
-                                    String direction;
-                                    if (chonBota.isFlipped())
-                                        direction = "LEFT";
-                                    else
-                                        direction = "RIGHT";
-                                    environment.getShots().add(chonBota.getWeapon().fire(chonBota.getPosX(),
-                                            chonBota.getPosY(),
-                                            direction));
-                                }
                                 /* ChonBota's Movements */
                                 environment.getProtagonist().move(input);
                                 environment.checkBorders();
@@ -176,12 +151,8 @@ public class Engine extends Application {
                             }
                             /* Render the game environment and agents */
                             environment.detectCollision();
-                            environment.updateShots();
-                            environment.updateMessages();
                             mediator.drawBackground();
                             mediator.drawAgents();
-                            mediator.drawShots();
-                            mediator.drawMessages();
                         }
                     }
                 }

@@ -3,7 +3,6 @@ package chon.group.game.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import chon.group.game.messaging.Message;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -304,15 +303,10 @@ public abstract class Entity {
      *
      * @param damage the amount of damage to be applied
      */
-    public void takeDamage(int damage, List<Message> messages) {
+    public void takeDamage(int damage) {
         if (this.getHealth() > 0) {
             /* Decrease health. */
             this.setHealth(this.getHealth() - damage);
-            messages.add(new Message(
-                    String.valueOf(damage),
-                    this.getPosX(),
-                    this.getPosY(),
-                    25));
             /* After taking the damage, the health must not be negative. */
             if (this.getHealth() < 0)
                 this.setHealth(0);
