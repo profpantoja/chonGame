@@ -10,7 +10,6 @@ import chon.group.game.domain.agent.Fireball;
 import chon.group.game.domain.agent.Hitbox;
 import chon.group.game.domain.agent.Sword;
 import chon.group.game.domain.agent.Weapon;
-// O import do JavaFxMediator não é mais necessário aqui
 import javafx.scene.image.Image;
 
 public class Game {
@@ -32,7 +31,7 @@ public class Game {
         // --- Protagonista ---
         // O protagonista é criado uma única vez para que seu estado (vida, etc.)
         // seja mantido entre os níveis.
-        Agent chonBota = new Agent(100, 628, 96, 256, 5, 1, "/images/agents/chonBota.png", false, true,
+        Agent chonBota = new Agent(100, 628, 96, 256, 5, 300, "/images/agents/chonBota.png", false, true,
         "/images/agents/Link_Attack.png",
         "/images/agents/Link_Standing.png",
         "/images/agents/Link_Running.png",
@@ -40,8 +39,9 @@ public class Game {
         "/images/agents/Link_Death.png");
         chonBota.setHitbox(new Hitbox(114, 4, 30, 90));
         Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false,75); 
+
         Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false,64);
-        CloseWeapon sword = new Sword(400, 390, 0, 0, 3, 0, "", false);
+        CloseWeapon sword = new Sword(400, 390, 0, 0, 3, 0, "", false, 100); // Slash width set to 100
         chonBota.setWeapon(fireball);
         chonBota.setCloseWeapon(sword);
         chonBota.setPathImageAttack("/images/agents/Link_Attack.png");
@@ -55,7 +55,7 @@ public class Game {
         level1.setProtagonist(chonBota); // Adiciona o protagonista ao nível 1
         
         // Inimigos e colisões do nível 1
-        Agent chonBot = new Agent(920, 628, 90, 65, 1, 5, "/images/agents/chonBot.png", true,false);
+        Agent chonBot = new Agent(920, 628, 90, 65, 1, 500, "/images/agents/chonBot.png", true,false);
         chonBot.setHitbox(new Hitbox(17, 23, 33, 45));
         level1.getAgents().add(chonBot);
         

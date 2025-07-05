@@ -5,9 +5,10 @@ import chon.group.game.core.Entity;
 public abstract class Weapon extends Entity {
 
     private long lastShootTime = 0;
-    private final long SHOOT_COOLDOWN = 1000; // Você pode tornar isso personalizável se quiser
+    private final long SHOOT_COOLDOWN = 400; // Você pode tornar isso personalizável se quiser
 
     private int shotWidth;
+
 
     public int getShotWidth() {
         return shotWidth;
@@ -16,6 +17,8 @@ public abstract class Weapon extends Entity {
     public void setShotWidth(int shotWidth) {
         this.shotWidth = shotWidth;
     }
+
+
 
     public Weapon(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped, int shotWidth) {
         super(posX, posY, height, width, speed, health, pathImage, flipped);

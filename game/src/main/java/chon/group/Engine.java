@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-
 import chon.group.game.domain.agent.Agent;
+import chon.group.game.domain.agent.AnimationStatus;
 import chon.group.game.domain.agent.Shot;
 import chon.group.game.domain.agent.Slash;
-import chon.group.game.domain.agent.AnimationStatus;
 import chon.group.game.domain.environment.Collision;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.domain.environment.Game;
@@ -55,6 +54,7 @@ public class Engine extends Application {
     private boolean drawHitboxes = false;
     private boolean victoryMusicPlayed = false;
     private boolean gameOverMusicPlayed = false;
+    private int weaponChoice = 2; //1 for fireball, 2 for sword,3 both
 
     public static void main(String[] args) {
         launch(args);
@@ -160,31 +160,27 @@ private void updateGameLogic() {
             protagonist.changeAnimation(AnimationStatus.RUN);
         }
         updateCameraPosition();
-        
-        if (gameInput.contains("SPACE")) {
-            shotNow = System.currentTimeMillis();
-            protagonist.changeAnimation(AnimationStatus.ATTACK);
-            SoundManager.playSound("/sounds/attack.wav");
 
-            gameInput.remove("SPACE");
-            
-            String direction = protagonist.isFlipped() ? "LEFT" : "RIGHT";
-            environment.getSlashes().add(protagonist.getCloseWeapon().slash(protagonist.getPosX(), protagonist.getPosY(), direction));
+        switch(weaponChoice){
+            case 1:
+              weaponAttack();
 
-            if (protagonist.getHitbox() != null)
-            {
-                int shotPosX = protagonist.isFlipped() ? protagonist.getHitbox().getPosX() - protagonist.getWeapon().getShotWidth() : protagonist.getHitbox().getPosX() + protagonist.getHitbox().getWidth() + protagonist.getWeapon().getShotWidth();
-                Shot shot = protagonist.getWeapon().fire(shotPosX, protagonist.getHitbox().getPosY(), direction);
-                if (shot != null) {
-                    environment.getShots().add(shot);
-                }
-            }
+            break;
+            case 2:
+                weaponAttackSlash();
+
+            break;
+
         }
+        
+
+
+
+
 
         protagonist.moveGravity(gameInput);
         environment.checkBorders();
-    }
-    else {
+    }else {
         if (System.currentTimeMillis() - shotNow > 300 && protagonist.getAnimationStatus() != AnimationStatus.DAMAGE) 
         {
             protagonist.changeAnimation(AnimationStatus.IDLE);
@@ -225,6 +221,7 @@ private void renderGameWorld(){
     mediator.drawBackgroundSideScrolling();
     mediator.drawAgentsSideScrolling();
     mediator.drawShotsSideScrolling();
+    mediator.drawSlashSideScrolling();
     mediator.drawMessagesSideScrolling();
     mediator.drawSlashes();
 }
@@ -473,4 +470,41 @@ private void handleKeyPressed(KeyEvent e) {
         gameInput.clear();
         SoundManager.playMusic("/sounds/gameMusic.wav");
     }
+
+        private void weaponAttack() {
+                if (gameInput.contains("SPACE")) {
+                shotNow = System.currentTimeMillis();
+                this.environment.getProtagonist().changeAnimation(AnimationStatus.ATTACK);
+                SoundManager.playSound("/sounds/attack.wav");
+
+                gameInput.remove("SPACE");
+                    
+                String direction = this.environment.getProtagonist().isFlipped() ? "LEFT" : "RIGHT";       
+                
+                    if (this.environment.getProtagonist().getHitbox() != null)
+                    {
+                        int shotPosX = this.environment.getProtagonist().isFlipped() ? this.environment.getProtagonist().getHitbox().getPosX() - this.environment.getProtagonist().getWeapon().getShotWidth() : this.environment.getProtagonist().getHitbox().getPosX() + this.environment.getProtagonist().getHitbox().getWidth() + this.environment.getProtagonist().getWeapon().getShotWidth();
+                        Shot shot = this.environment.getProtagonist().getWeapon().fire(shotPosX, this.environment.getProtagonist().getHitbox().getPosY(), direction);
+                        if (shot != null) {
+                            environment.getShots().add(shot);
+                        }
+                    }
+                }
+            }
+        private void weaponAttackSlash() {
+                if (gameInput.contains("SPACE")) {
+                    shotNow = System.currentTimeMillis();
+                    this.environment.getProtagonist().changeAnimation(AnimationStatus.ATTACK);
+                    SoundManager.playSound("/sounds/attack.wav");
+
+                    gameInput.remove("SPACE");
+
+                    String direction =this.environment.getProtagonist().isFlipped() ? "LEFT" : "RIGHT";
+                    environment.getSlashes().add(this.environment.getProtagonist().getCloseWeapon().slash(this.environment.getProtagonist().getPosX(), this.environment.getProtagonist().getPosY(), direction));
+                }       
+            }
+
+        
+        
+
 }

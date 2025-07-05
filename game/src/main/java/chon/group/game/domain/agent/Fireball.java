@@ -15,9 +15,9 @@ public class Fireball extends Weapon {
     protected Shot createShot(int posX, int posY, String direction) {
         int offset = getWidth(); // player's width
         if (direction.equals("RIGHT"))
-            posX += offset; // spawn at right edge
+            posX += getShotWidth() + 100;
         else
-            posX -= getShotWidth(); // spawn at left edge, accounting for shot's width
+            posX -= getShotWidth() + 100;
         return new Shot(posX,
                 posY,
                 47,

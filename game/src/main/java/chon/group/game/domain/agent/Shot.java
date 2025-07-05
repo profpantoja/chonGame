@@ -11,6 +11,13 @@ public class Shot extends Entity {
     private boolean destructible = false;
     private String direction;
     private int damage;
+    private int lifeSpan = 1000; 
+    private int ticksAlive = 0;
+
+
+    public boolean shouldRemove() {
+        return ticksAlive++ >= lifeSpan;
+    }
 
     public Shot(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped,
             int damage, String direction) {
@@ -73,4 +80,9 @@ public class Shot extends Entity {
             }
         }
     }
+
+    
+
+
+
 }

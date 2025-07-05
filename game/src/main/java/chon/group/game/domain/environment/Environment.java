@@ -518,6 +518,8 @@ public class Environment {
         Iterator<Shot> itShot = this.shots.iterator();
         while (itShot.hasNext()) {
             Shot shot = itShot.next();
+            boolean hit = false;
+
             if ((shot.getPosX() > this.width) || ((shot.getPosX() + shot.getWidth()) < 0)) {
                 itShot.remove();
             } else {
@@ -545,6 +547,11 @@ public class Environment {
                     shot.updateHitboxPosition();
                 }
             }
+            // Check if the slash intersects with the protagonist
+            if (hit || shot.shouldRemove()) {
+                itShot.remove();
+            }
+
         }
     }
 
@@ -570,6 +577,15 @@ public class Environment {
                     break;
                 }
             }
+
+        for (Collision collision : this.collisions) {
+            slash.checkCollision(collision);
+            if (collision.isDestroy()) {
+                hit = true;
+                break;
+            }
+        }
+
 
             // Check if the slash intersects with the protagonist
             if (hit || slash.shouldRemove()) {

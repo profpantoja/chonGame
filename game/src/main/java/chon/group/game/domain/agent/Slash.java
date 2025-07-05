@@ -71,10 +71,11 @@ public class Slash extends Entity {
             getPosY() < collision.getY() + collision.getHeight() &&
             getPosY() + getHeight() > collision.getY()) {
 
-            // Se a colisão deve destruir em contato com projéteis
             if (collision.isProjectileDestroy()) {
                 collision.setDestroy(true);
             }
         }
     }
+    
+
 }
