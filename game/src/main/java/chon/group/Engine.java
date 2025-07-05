@@ -124,6 +124,7 @@ private class GameLoop extends AnimationTimer {
             }
             renderGameWorld(); 
             mediator.drawGameOver();
+            environment.updateMessages();
             break;
             case SETTINGS:
                 SoundManager.pauseMusic();
@@ -135,16 +136,19 @@ private class GameLoop extends AnimationTimer {
             if (!victoryMusicPlayed) {
                 SoundManager.stopAll();
                 SoundManager.playSound("/sounds/zelda.wav"); // coloque o caminho correto do som de vitória
+                mediator.drawMessagesSideScrolling();
                 victoryMusicPlayed = true;
             }
             renderGameWorld(); 
             mediator.drawWinScreen();
+            environment.updateMessages();
             break;
         }
     }
 }
 
 private void updateGameLogic() {
+    System.out.println(environment.getProtagonist().getAnimationStatus());
     verifyGameStatus();
     if(gameStatus != GameStatus.RUNNING) return;
     
@@ -154,9 +158,9 @@ private void updateGameLogic() {
     }
     
     Agent protagonist = environment.getProtagonist();
-    if (!gameInput.isEmpty() && protagonist.getAnimationStatus() != AnimationStatus.DAMAGE) {
+    if (!gameInput.isEmpty() && protagonist.getAnimationStatus() != AnimationStatus.DAMAGE && protagonist.getAnimationStatus() != AnimationStatus.ATTACK) {
 
-        if(isMoving()) {
+        if(isMoving() && !isJumping() && protagonist.getAnimationStatus() != AnimationStatus.DAMAGE && protagonist.getAnimationStatus() != AnimationStatus.ATTACK) {
             protagonist.changeAnimation(AnimationStatus.RUN);
         }
         updateCameraPosition();
@@ -164,28 +168,21 @@ private void updateGameLogic() {
         switch(weaponChoice){
             case 1:
               weaponAttack();
-
             break;
             case 2:
                 weaponAttackSlash();
-
             break;
-
         }
-        
-
-
-
-
 
         protagonist.moveGravity(gameInput);
         environment.checkBorders();
     }else {
-        if (System.currentTimeMillis() - shotNow > 300 && protagonist.getAnimationStatus() != AnimationStatus.DAMAGE) 
+        if (!isJumping() && protagonist.getAnimationStatus() != AnimationStatus.ATTACK && protagonist.getAnimationStatus() != AnimationStatus.DAMAGE) 
         {
             protagonist.changeAnimation(AnimationStatus.IDLE);
         }
     }
+    protagonist.gravityEffect();
     
     chase();
     
@@ -198,8 +195,13 @@ private void updateGameLogic() {
     environment.updateMessages();
 }
 
+private boolean isJumping() {
+    if (environment.getProtagonist().isIsJumping()) return true;
+    return false;
+}
+
 private boolean isMoving() {
-    if (gameInput.contains("RIGHT") || gameInput.contains("LEFT") || gameInput.contains("UP") || gameInput.contains("DOWN")) 
+    if (gameInput.contains("RIGHT") || gameInput.contains("LEFT")) 
     {
         return true;
     }
@@ -473,6 +475,7 @@ private void handleKeyPressed(KeyEvent e) {
 
         private void weaponAttack() {
                 if (gameInput.contains("SPACE")) {
+                this.environment.getProtagonist().setAttackStatusForDuration(300);
                 shotNow = System.currentTimeMillis();
                 this.environment.getProtagonist().changeAnimation(AnimationStatus.ATTACK);
                 SoundManager.playSound("/sounds/attack.wav");
@@ -493,6 +496,7 @@ private void handleKeyPressed(KeyEvent e) {
             }
         private void weaponAttackSlash() {
                 if (gameInput.contains("SPACE")) {
+                    this.environment.getProtagonist().setAttackStatusForDuration(300);
                     shotNow = System.currentTimeMillis();
                     this.environment.getProtagonist().changeAnimation(AnimationStatus.ATTACK);
                     SoundManager.playSound("/sounds/attack.wav");

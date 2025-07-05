@@ -35,9 +35,10 @@ public class Agent extends AnimatedEntity {
     private Weapon weapon;
 
     private boolean isJumping = false;
+    private boolean isGrounded = false;
 
     /* Velocidade inicial do pulo (negativo = sobe) */
-    private int jumpVelocity = -23;
+    private int jumpVelocity = -34;
 
     private int currentVelocityY = 0;
 
@@ -65,9 +66,12 @@ public class Agent extends AnimatedEntity {
     
     private String pathImageDeath;
 
+    private String pathImageJump;
+
     private boolean blinking = false;
 
     private PauseTransition damageStatusTimer;
+    private PauseTransition attackStatusTimer;
 
     private Timeline blinkTimeline;
     
@@ -106,7 +110,7 @@ public class Agent extends AnimatedEntity {
         this.isProtagonist = isProtagonist;
     }
 
-    public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped, boolean isProtagonist, String imagePathAttack, String imagePathIdle, String imagePathHit, String imagePathDeath, String imagePathRun) {
+    public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped, boolean isProtagonist, String imagePathAttack, String imagePathIdle, String imagePathHit, String imagePathDeath, String imagePathRun, String imagePathJump) {
         super(new Image(Agent.class.getResource(pathImage).toExternalForm()), posX, posY, height, width, speed, health, pathImage, flipped);
         this.isProtagonist = isProtagonist;
         this.pathImageAttack = imagePathAttack;
@@ -114,6 +118,7 @@ public class Agent extends AnimatedEntity {
         this.pathImageHit = imagePathHit;
         this.pathImageDeath = imagePathDeath;
         this.pathImageRun = imagePathRun;
+        this.pathImageJump = imagePathJump;
     }
 
     /**
@@ -298,6 +303,8 @@ public class Agent extends AnimatedEntity {
                     if (dy > 0) {
                         setPosY(getPosY() + fix);
                     } else {
+                        isJumping = false;
+                        currentVelocityY = 0;
                         setPosY(getPosY() - fix);
                     }
                 }
@@ -357,10 +364,21 @@ public class Agent extends AnimatedEntity {
         }
         damageStatusTimer = new PauseTransition(Duration.millis(millis));
         damageStatusTimer.setOnFinished(e -> {
-            System.out.println("A");
             changeAnimation(AnimationStatus.IDLE);
         });
         damageStatusTimer.play();
+    }
+
+    public void setAttackStatusForDuration(long millis) {
+        changeAnimation(AnimationStatus.ATTACK);
+        if (attackStatusTimer != null) {
+            attackStatusTimer.stop();
+        }
+        attackStatusTimer = new PauseTransition(Duration.millis(millis));
+        attackStatusTimer.setOnFinished(e -> {
+            changeAnimation(AnimationStatus.IDLE);
+        });
+        attackStatusTimer.play();
     }
 
     /**
@@ -401,28 +419,20 @@ public class Agent extends AnimatedEntity {
         /* PULO: apenas se for protagonista */
         if (isProtagonist) {
             if ((movements.contains("UP")) && !isJumping)
-    {
+            {
+                changeAnimation(AnimationStatus.JUMP); 
+                isGrounded = false;
                 isJumping = true;
                 currentVelocityY = jumpVelocity;
             }
 
-            if (isJumping) {
-                this.setPosY(this.getPosY() + currentVelocityY);
-                currentVelocityY += gravity;
+        }
+    }
 
-                /* Se está tocando no chão */
-                if (this.getPosY() >= groundY) {
-                    this.setPosY(groundY);
-                    isJumping = false;
-                    currentVelocityY = 0;
-                }
-            } else {
-                // Fixa a Chonbota no chão, caso não esteja pulando
-                this.setPosY(groundY);
-            }
-        } else {
-            // Chonbot não pula, está sempre no chão
-            this.setPosY(groundY);
+    public void gravityEffect() {
+        if (!isGrounded) {
+            this.setPosY(this.getPosY() + currentVelocityY);
+            currentVelocityY += gravity;
         }
     }
 
@@ -479,6 +489,9 @@ public class Agent extends AnimatedEntity {
         if (currentStatus == AnimationStatus.ATTACK) {
             setAnimation(getPathImageAttack(), 4, 75);
         }
+        if (currentStatus == AnimationStatus.JUMP) {
+            setAnimation(getPathImageJump(), 3, 150);
+        }
     }
 
     public AnimationStatus getAnimationStatus() {
@@ -519,6 +532,30 @@ public class Agent extends AnimatedEntity {
 
     public String getPathImageDeath() {
         return pathImageDeath;
+    }
+
+    public boolean isIsJumping() {
+        return isJumping;
+    }
+
+    public void setIsJumping(boolean isJumping) {
+        this.isJumping = isJumping;
+    }
+
+    public String getPathImageJump() {
+        return pathImageJump;
+    }
+
+    public void setPathImageJump(String pathImageJump) {
+        this.pathImageJump = pathImageJump;
+    }
+
+    public boolean isIsGrounded() {
+        return isGrounded;
+    }
+
+    public void setIsGrounded(boolean isGrounded) {
+        this.isGrounded = isGrounded;
     }
 }
 
