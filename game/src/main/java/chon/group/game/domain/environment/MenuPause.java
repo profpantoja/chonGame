@@ -1,5 +1,6 @@
 package chon.group.game.domain.environment;
 
+import chon.group.game.domain.types.PauseEnum;
 import chon.group.game.drawer.JavaFxDrawer;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -7,7 +8,7 @@ import javafx.scene.input.KeyCode;
 public class MenuPause {
 
     private int selectedOptionIndex = 0;
-    private final MenuOption.Pause[] options = MenuOption.Pause.values();
+    private final PauseEnum.Pause[] options = PauseEnum.Pause.values();
     private final JavaFxDrawer drawer;
     private final Image backgroundImage;
 
@@ -22,7 +23,7 @@ public class MenuPause {
     }
 
     // Retorna a opção escolhida ao pressionar ENTER, ou null caso contrário
-    public MenuOption.Pause handleInput(KeyCode code) {
+    public PauseEnum.Pause handleInput(KeyCode code) {
         switch (code) {
             case UP:
                 selectedOptionIndex = (selectedOptionIndex - 1 + options.length) % options.length;

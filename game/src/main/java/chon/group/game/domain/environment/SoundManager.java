@@ -10,39 +10,29 @@ public class SoundManager {
 
     private static double musicVolume = 1.0;
     private static double sfxVolume = 1.0;
-    // Cache for files after saved
+
     private static final HashMap<String, Media> mediaCache = new HashMap<>();
     private static final ArrayList<MediaPlayer> activeSoundEffects = new ArrayList<>();
 
-    // Player to control the mediaPlayer (stop, pause).
     private static MediaPlayer backgroundMusicPlayer;
-    
 
-    /**
-     * Play a sound effect
-     *
-     * @param resourcePath path sound effect  
-     * (ex: "/sounds/background_music.wav").
-     */
     public static void playSound(String resourcePath) {
         try {
-            Media media = mediaCache.computeIfAbsent(resourcePath, path -> {
-                URL resourceUrl = SoundManager.class.getResource(path);
+            Media media = mediaCache.get(resourcePath);
+            if (media == null) {
+                URL resourceUrl = SoundManager.class.getResource(resourcePath);
                 if (resourceUrl == null) {
-                    System.err.println("Arquivo de som não encontrado: " + path);
-                    return null;
+                    System.err.println("Arquivo de som não encontrado: " + resourcePath);
+                    return;
                 }
-                return new Media(resourceUrl.toString());
-            });
+                media = new Media(resourceUrl.toString());
+                mediaCache.put(resourcePath, media);
+            }
 
             if (media != null) {
-                MediaPlayer soundPlayer = new MediaPlayer(media); // Add to active sound effects list
-                soundPlayer.setVolume(sfxVolume); // 
-                activeSoundEffects.add(soundPlayer);// This allows multiple sound effects to play simultaneously
-
-
-                // When it ends, remove from  the active list
-                soundPlayer.setOnEndOfMedia(() -> activeSoundEffects.remove(soundPlayer));
+                MediaPlayer soundPlayer = new MediaPlayer(media);
+                soundPlayer.setVolume(sfxVolume);
+                activeSoundEffects.add(soundPlayer);
                 soundPlayer.play();
             }
         } catch (Exception e) {
@@ -73,33 +63,33 @@ public class SoundManager {
         return sfxVolume;
     }
 
-    /**
-     * Put Game Music in loop, and stop, whem another music appears
-     *
-     * @param resourcePath path music  
-     * (ex: "/sounds/background_music.wav").
-     */
     public static void playMusic(String resourcePath) {
-        // Stop current music
+        // Não tocar novamente se já estiver tocando a mesma música
         if (backgroundMusicPlayer != null) {
+            Media media = backgroundMusicPlayer.getMedia();
+            if (media != null && media.getSource().equals(SoundManager.class.getResource(resourcePath).toString())) {
+                // Mesma música já tocando, não faz nada
+                return;
+            }
             backgroundMusicPlayer.stop();
         }
-        
+
         try {
-            Media media = mediaCache.computeIfAbsent(resourcePath, path -> {
-                URL resourceUrl = SoundManager.class.getResource(path);
+            Media media = mediaCache.get(resourcePath);
+            if (media == null) {
+                URL resourceUrl = SoundManager.class.getResource(resourcePath);
                 if (resourceUrl == null) {
-                    System.err.println("Arquivo de música não encontrado: " + path);
-                    return null;
+                    System.err.println("Arquivo de música não encontrado: " + resourcePath);
+                    return;
                 }
-                return new Media(resourceUrl.toString());
-            });
-            
+                media = new Media(resourceUrl.toString());
+                mediaCache.put(resourcePath, media);
+            }
+
             if (media != null) {
                 backgroundMusicPlayer = new MediaPlayer(media);
-                // loop music
-                backgroundMusicPlayer.setVolume(musicVolume); // Adiciona controle de volume da música
-                backgroundMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+                backgroundMusicPlayer.setVolume(musicVolume);
+                backgroundMusicPlayer.setCycleCount(1); // Toca só uma vez
                 backgroundMusicPlayer.play();
             }
         } catch (Exception e) {
@@ -108,9 +98,18 @@ public class SoundManager {
         }
     }
 
-    /**
-     * Stop Music
-     */
+    public static boolean isCurrentMusic(String resourcePath) {
+        if (backgroundMusicPlayer == null) return false;
+        Media media = backgroundMusicPlayer.getMedia();
+        if (media == null) return false;
+
+        URL resourceUrl = SoundManager.class.getResource(resourcePath);
+        if (resourceUrl == null) return false;
+
+        return media.getSource().equals(resourceUrl.toString());
+    }
+
+
     public static void stopMusic() {
         if (backgroundMusicPlayer != null) {
             backgroundMusicPlayer.stop();
@@ -118,18 +117,12 @@ public class SoundManager {
         }
     }
 
-    /**
-     * Pause Music
-     */
     public static void pauseMusic() {
         if (backgroundMusicPlayer != null) {
             backgroundMusicPlayer.pause();
         }
     }
-        
-    /**
-     * Resume Music
-     */
+
     public static void resumeMusic() {
         if (backgroundMusicPlayer != null) {
             backgroundMusicPlayer.play();
@@ -148,11 +141,6 @@ public class SoundManager {
         }
     }
 
-    // ...existing code...
-
-    /**
-     * Para todos os efeitos sonoros ativos.
-     */
     public static void stopAllSoundEffects() {
         for (MediaPlayer mp : new ArrayList<>(activeSoundEffects)) {
             mp.stop();
@@ -160,11 +148,22 @@ public class SoundManager {
         activeSoundEffects.clear();
     }
 
-    /**
-     * Para toda a música e todos os efeitos sonoros.
-     */
-   public static void stopAll() {
+    public static void stopAll() {
         stopMusic();
         stopAllSoundEffects();
+    }
+
+    /**
+     * Deve ser chamado no loop principal do jogo para limpar efeitos já encerrados.
+     */
+    public static void update() {
+        ArrayList<MediaPlayer> finished = new ArrayList<>();
+        for (MediaPlayer mp : activeSoundEffects) {
+            MediaPlayer.Status status = mp.getStatus();
+            if (status == MediaPlayer.Status.STOPPED || status == MediaPlayer.Status.DISPOSED) {
+                finished.add(mp);
+            }
+        }
+        activeSoundEffects.removeAll(finished);
     }
 }

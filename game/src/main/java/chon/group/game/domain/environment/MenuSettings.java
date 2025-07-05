@@ -1,5 +1,6 @@
 package chon.group.game.domain.environment;
 
+import chon.group.game.domain.types.SettingsEnum;
 import chon.group.game.drawer.JavaFxDrawer;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -22,7 +23,7 @@ public class MenuSettings {
         drawer.drawMenuSettings(backgroundImage, "Settings", musicVolume, sfxVolume, options, selectedOptionIndex);
     }
 
-    public MenuOption.Settings handleInput(KeyCode code) {
+    public SettingsEnum.Settings handleInput(KeyCode code) {
         switch (code) {
             case UP:
                 selectedOptionIndex = (selectedOptionIndex - 1 + options.length) % options.length;
@@ -38,11 +39,11 @@ public class MenuSettings {
                 break;
             case ENTER:
                 if (options[selectedOptionIndex].equals("Voltar")) {
-                    return MenuOption.Settings.BACK;
+                    return SettingsEnum.Settings.BACK;
                 }
                 break;
             case ESCAPE:
-                return MenuOption.Settings.BACK;
+                return SettingsEnum.Settings.BACK;
             default:
                 break;
         }

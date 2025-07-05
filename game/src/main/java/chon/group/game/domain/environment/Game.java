@@ -16,7 +16,13 @@ public class Game {
 
     private Game() {
     }
-    
+
+    public static String gameMusic = "/sounds/gameMusic.wav"; //Put the gameMusic path 
+    public static String gameOverMusic = "/sounds/gameOveMusic.wav"; //Put the gameOverMusic path 
+    public static String menuSound = "/sounds/menuSound.wav"; //Put the menuSound path 
+    public static String attackFX = "/sounds/attackFX.wav"; //Put the attackFX path 
+    public static String winSound = "/sounds/winSound.wav"; //Put the winSound path 
+
     /**
      * O método agora cria e retorna uma LISTA de ambientes (níveis).
      * Toda a lógica de troca de nível foi removida desta classe.
@@ -86,6 +92,23 @@ public class Game {
         level2.createGround(worldWidth, 50, "/images/environment/brick.png"); // Adiciona chão ao nível 2 também
         
         environments.add(level2);
+
+        // --- Nível 3 ---
+
+        Environment lvl3 = new Environment(0, 0, 4096, 768, "/images/environment/mountain.png");
+        lvl3.setProtagonist(chonBota); // Adiciona a MESMA instância do protagonista ao nível 3
+        
+        lvl3.setPauseImage("");             
+        lvl3.setGameOverImage("/images/environment/gameover.png");
+        lvl3.setWinImage("/images/environment/gameover.png");
+        
+        Agent chonMegaBoss = new Agent(920, 440,100, 75, 1, 1, "/images/agents/chonBota.png", true,false);
+        chonMegaBoss.setHitbox(new Hitbox(20, 15, 60, 60)); 
+        lvl3.getAgents().add(chonMegaBoss);
+        lvl3.createGround(worldWidth, 50, "/images/environment/brick.png"); // Adiciona chão ao nível 3 também
+        
+        environments.add(lvl3);
+
 
         return environments;
     }

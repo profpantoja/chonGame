@@ -1,4 +1,5 @@
 package chon.group.game.domain.environment;
+import chon.group.game.domain.types.MainEnum;
 import chon.group.game.drawer.JavaFxDrawer;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -6,7 +7,7 @@ import javafx.scene.input.KeyCode;
 public class MainMenu {
 
     private int selectedOption = 0;
-    private final MenuOption.Main[] options = MenuOption.Main.values();
+    private final MainEnum.Main[] options = MainEnum.Main.values();
     private JavaFxDrawer drawer;
     private Image backgroundImage;
 
@@ -21,7 +22,7 @@ public class MainMenu {
     }
 
     // Retorna a opção escolhida ao pressionar ENTER, ou null caso contrário
-    public MenuOption.Main handleInput(KeyCode code) {
+    public MainEnum.Main handleInput(KeyCode code) {
         switch (code) {
             case UP:
                 selectedOption = (selectedOption - 1 + options.length) % options.length;
