@@ -28,6 +28,7 @@ public class JavaFxDrawer {
      */
     public JavaFxDrawer(GraphicsContext gc, EnvironmentDrawer mediator) {
         this.gc = gc;
+        this.gc.setImageSmoothing(false);
         this.mediator = mediator;
     }
 

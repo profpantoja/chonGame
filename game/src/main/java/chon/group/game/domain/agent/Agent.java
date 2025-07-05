@@ -36,13 +36,14 @@ public class Agent extends AnimatedEntity {
 
     private boolean isJumping = false;
     private boolean isGrounded = false;
+    private boolean gravityEffects = true;
 
     /* Velocidade inicial do pulo (negativo = sobe) */
-    private int jumpVelocity = -34;
+    private int jumpVelocity = -20;
 
     private int currentVelocityY = 0;
 
-    private final int gravity = 3;
+    private final int gravity = 1;
 
     private final int groundY = 800;
 
@@ -105,12 +106,13 @@ public class Agent extends AnimatedEntity {
      * @param isProtagonist the agent's protagonist or not
      */
 
-    public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped, boolean isProtagonist) {
+    public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped, boolean isProtagonist, boolean gravityEffects) {
         super(new Image(Agent.class.getResource(pathImage).toExternalForm()), posX, posY, height, width, speed, health, pathImage, flipped);
         this.isProtagonist = isProtagonist;
+        this.gravityEffects = gravityEffects;
     }
 
-    public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped, boolean isProtagonist, String imagePathAttack, String imagePathIdle, String imagePathHit, String imagePathDeath, String imagePathRun, String imagePathJump) {
+    public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped, boolean isProtagonist, String imagePathAttack, String imagePathIdle, String imagePathHit, String imagePathDeath, String imagePathRun, String imagePathJump, boolean gravityEffects) {
         super(new Image(Agent.class.getResource(pathImage).toExternalForm()), posX, posY, height, width, speed, health, pathImage, flipped);
         this.isProtagonist = isProtagonist;
         this.pathImageAttack = imagePathAttack;
@@ -119,6 +121,7 @@ public class Agent extends AnimatedEntity {
         this.pathImageDeath = imagePathDeath;
         this.pathImageRun = imagePathRun;
         this.pathImageJump = imagePathJump;
+        this.gravityEffects = gravityEffects;
     }
 
     /**
@@ -436,7 +439,6 @@ public class Agent extends AnimatedEntity {
         }
     }
 
-    @Override
      /**
      * Moves the entity based on the movement commands provided.
      *
@@ -444,7 +446,7 @@ public class Agent extends AnimatedEntity {
      *
      */
 
-    public void move(List<String> movements) {
+    public void moveNonGravity(List<String> movements) {
         if (movements.contains("RIGHT")) {
             if (isFlipped()) {
                 flipImage();
@@ -465,6 +467,18 @@ public class Agent extends AnimatedEntity {
         } else if (movements.contains("DOWN")) {
             setPosY(getPosY() + getSpeed());
             updateHitboxPosition();
+        }
+    }
+
+    @Override
+    public void move(List<String> gameInput) {
+        if (this.getAnimationStatus() == AnimationStatus.DAMAGE && this.getAnimationStatus() == AnimationStatus.ATTACK) return;
+        if (this.isGravityEffects()) {
+            moveGravity(gameInput);
+            gravityEffect();
+        }
+        else {
+            moveNonGravity(gameInput);
         }
     }
 
@@ -557,6 +571,16 @@ public class Agent extends AnimatedEntity {
     public void setIsGrounded(boolean isGrounded) {
         this.isGrounded = isGrounded;
     }
+
+    public boolean isGravityEffects() {
+        return gravityEffects;
+    }
+
+    public void setGravityEffects(boolean gravityEffects) {
+        this.gravityEffects = gravityEffects;
+    }
+
+
 }
 
 
