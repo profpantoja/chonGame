@@ -23,7 +23,10 @@ public class Slash extends Entity {
         super(posX, posY, height, width, speed, health, pathImage, flipped);
         this.damage = damage;
         this.direction = direction;
+        //modify hitbox size
+        this.setHitbox(new Hitbox(width / 6, height / 6, width / 1, height / 1));
     }
+
 
     public boolean isDestructible() {
         return destructible;

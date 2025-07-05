@@ -15,16 +15,18 @@ public class Sword extends CloseWeapon {
 
     protected Slash createSlash(int posX, int posY, String direction) {
         if (direction.equals("RIGHT"))
-            posX += 95 + getSlashWidth();
+        // Adjust the position based on the direction
+            posX += 60+ getSlashWidth();
         else
-            posX -= 95 + getSlashWidth();
+        // Adjust the position based on the direction flipped
+            posX -= -90 + getSlashWidth();
         return new Slash(posX,
                 posY,
-                50,
+                60,
                 getSlashWidth(),
                 3,
                 0,
-                "/images/weapons/slash/SlashTeste1.png",
+                "/images/weapons/slash/HitboxAtaque.png",
                 false,
                 100,
                 direction);

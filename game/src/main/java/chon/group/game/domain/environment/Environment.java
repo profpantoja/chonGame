@@ -564,7 +564,7 @@ public class Environment {
         Iterator<Slash> itSlash = this.slashes.iterator();
         while (itSlash.hasNext()) {
             Slash slash = itSlash.next();
-
+            
             boolean hit = false;
             Iterator<Agent> itAgent = this.agents.iterator();
             while (itAgent.hasNext()) {
@@ -572,27 +572,30 @@ public class Environment {
                 if (this.intersect(agent, slash)) {
                     agent.takeDamage(slash.getDamage(), this.messages);
                     if (agent.isDead())
-                        itAgent.remove(); 
+                    itAgent.remove(); 
                     hit = true;
                     break;
                 }
             }
-
-        for (Collision collision : this.collisions) {
-            slash.checkCollision(collision);
-            if (collision.isDestroy()) {
-                hit = true;
-                break;
+            
+            for (Collision collision : this.collisions) {
+                slash.checkCollision(collision);
+                if (collision.isDestroy()) {
+                    hit = true;
+                    break;
+                }
+                
             }
-        }
-
-
+            
+            
             // Check if the slash intersects with the protagonist
             if (hit || slash.shouldRemove()) {
                 itSlash.remove();
             }
+            slash.updateHitboxPosition();
         }
-}
+        
+    }
 
 
 }

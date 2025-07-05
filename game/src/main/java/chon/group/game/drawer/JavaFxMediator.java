@@ -4,8 +4,8 @@ import java.util.Iterator;
 
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Shot;
-import chon.group.game.domain.environment.Collision;
 import chon.group.game.domain.agent.Slash;
+import chon.group.game.domain.environment.Collision;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.messaging.Message;
 import javafx.scene.canvas.GraphicsContext;
@@ -363,6 +363,23 @@ public class JavaFxMediator implements EnvironmentDrawer {
                         shot.getHitbox().getPosY(),
                         shot.getHitbox().getWidth(),
                         shot.getHitbox().getHeight());
+            }
+        }
+
+        
+            public void drawSlashSideScrolling() {
+            double cameraX = this.environment.getCameraX();
+            Iterator<Slash> iterator = this.environment.getSlashes().iterator();
+            while (iterator.hasNext()) {
+                Slash slash = iterator.next();
+                int screenX = (int) (slash.getPosX() - cameraX);          
+                int hitboxScreenX = (int) (slash.getHitbox().getPosX() - cameraX);
+                drawer.drawImage(slash.getImage(),screenX,slash.getPosY(),slash.getWidth(),slash.getHeight());
+                drawer.drawImage(slash.getHitbox().getImage(),
+                        hitboxScreenX,
+                        slash.getHitbox().getPosY(),
+                        slash.getHitbox().getWidth(),
+                        slash.getHitbox().getHeight());
             }
         }
 
