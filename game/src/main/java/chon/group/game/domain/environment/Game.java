@@ -37,12 +37,14 @@ public class Game {
         // --- Protagonista ---
         // O protagonista é criado uma única vez para que seu estado (vida, etc.)
         // seja mantido entre os níveis.
-        Agent chonBota = new Agent(100, 628, 96, 256, 5, 300, "/images/agents/chonBota.png", false, true,
+        Agent chonBota = new Agent(100, 628, 96, 256, 5, 1000, "/images/agents/chonBota.png", false, true,
         "/images/agents/Link_Attack.png",
         "/images/agents/Link_Standing.png",
-        "/images/agents/Link_Running.png",
         "/images/agents/Link_Damage.png",
-        "/images/agents/Link_Death.png");
+        "/images/agents/Link_Death.png",
+        "/images/agents/Link_Running.png",
+        "/images/agents/Link_Jumping.png",
+        true);
         chonBota.setHitbox(new Hitbox(114, 4, 30, 90));
         Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false,75); 
 
@@ -50,21 +52,17 @@ public class Game {
         CloseWeapon sword = new Sword(400, 390, 0, 0, 3, 0, "", false, 100); // Slash width set to 100
         chonBota.setWeapon(fireball);
         chonBota.setCloseWeapon(sword);
-        chonBota.setPathImageAttack("/images/agents/Link_Attack.png");
-        chonBota.setPathImageIdle("/images/agents/Link_Standing.png");
-        chonBota.setPathImageRun("/images/agents/Link_Running.png");
-        chonBota.setPathImageHit("/images/agents/Link_Damage.png");
-        chonBota.setPathImageDeath("/images/agents/Link_Death.png");
         
         // --- Nível 1 ---
         Environment level1 = new Environment(0, 0, worldWidth, worldHeight, "/images/environment/castle.png");
         level1.setProtagonist(chonBota); // Adiciona o protagonista ao nível 1
         
         // Inimigos e colisões do nível 1
-        Agent chonBot = new Agent(920, 628, 90, 65, 1, 500, "/images/agents/chonBot.png", true,false);
+        Agent chonBot = new Agent(920, 628, 90, 65, 1, 500, "/images/agents/chonBot.png", true, false, true);
         chonBot.setHitbox(new Hitbox(17, 23, 33, 45));
         level1.getAgents().add(chonBot);
-        
+        Collision c = new Collision(600, 600, 64, 64, "/images/environment/brick.png", false, false, 0, false, false, false);
+        level1.getCollisions().add(c);
         level1.createGround(worldWidth, 50, "/images/environment/brick.png");
         //level1.getCollisions().add(new Collision(350, 570, 192, 64, "/images/environment/brick.png", false, false, 0, false, false, false));
         //level1.getCollisions().add(new Collision(600, 450, 192, 64, "/images/environment/brick.png", false, true, 0, false, false, true));
@@ -86,7 +84,7 @@ public class Game {
         level2.setGameOverImage("/images/environment/gameover.png");
         level2.setWinImage("/images/environment/gameover.png");
         
-        Agent chonBoss = new Agent(920, 440,100, 75, 1, 1, "/images/agents/chonBot.png", true,false);
+        Agent chonBoss = new Agent(920, 440,100, 75, 1, 1, "/images/agents/chonBot.png", true,false, true);
         chonBoss.setHitbox(new Hitbox(20, 15, 60, 60)); 
         level2.getAgents().add(chonBoss);
         level2.createGround(worldWidth, 50, "/images/environment/brick.png"); // Adiciona chão ao nível 2 também
