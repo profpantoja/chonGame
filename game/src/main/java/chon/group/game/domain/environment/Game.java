@@ -58,10 +58,12 @@ public class Game {
         level1.setProtagonist(chonBota); // Adiciona o protagonista ao nível 1
         
         // Inimigos e colisões do nível 1
-        Agent chonBot = new Agent(920, 628, 90, 65, 1, 500, "/images/agents/chonBot.png", false, false, true);
+        Agent chonBot = new Agent(100, 628, 90, 65, 1, 500, "/images/agents/chonBot.png", false, false, true);
         chonBot.setHitbox(new Hitbox(5, 10, 55, 70));
         level1.getAgents().add(chonBot);
         Collision c = new Collision(600, 600, 64, 64, "/images/environment/brick.png", false, false, 0, false, false, false);
+        //Collision c2 = new Collision(694, 600, 64, 64, "/images/environment/brick.png", false, false, 0, false, false, false);
+        //Collision c3 = new Collision(744, 500, 64, 64, "/images/environment/brick.png", false, false, 0, false, false, false);
         level1.getCollisions().add(c);
         level1.createGround(worldWidth, 50, "/images/environment/brick.png");
         //level1.getCollisions().add(new Collision(350, 570, 192, 64, "/images/environment/brick.png", false, false, 0, false, false, false));

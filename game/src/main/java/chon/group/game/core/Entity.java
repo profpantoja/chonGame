@@ -3,7 +3,9 @@ package chon.group.game.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Hitbox;
+import chon.group.game.domain.environment.Collision;
 import chon.group.game.messaging.Message;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
@@ -308,17 +310,99 @@ public abstract class Entity {
      * @param targetX the target's X (horizontal) position
      * @param targetY the target's Y (vertical) position
      */
-    public void chase(int targetX, int targetY) {
-        if (targetX > this.posX) {
-            this.move(new ArrayList<String>(List.of("RIGHT")));
-        } else if (targetX < this.posX) {
-            this.move(new ArrayList<String>(List.of("LEFT")));
+    public void chase(int targetX, int targetY, List<Collision> platforms) {
+        int prevX = this.getPosX();
+
+        // Horizontal movement
+        if (targetX < this.getPosX()) {
+            if (!this.isFlipped()) {
+                this.flipImage();
+                this.setFlipped(true);
+            }
+            this.setPosX(this.getPosX() - this.getSpeed());
+        } else if (targetX > this.getPosX()) {
+            if (this.isFlipped()) {
+                this.flipImage();
+                this.setFlipped(false);
+            }
+            this.setPosX(this.getPosX() + this.getSpeed());
         }
-        if (targetY > this.posY) {
+
+        // Detect if stuck (didn't move horizontally)
+        boolean stuck = (this.getPosX() == prevX);
+
+        // Only jump if the target is significantly higher and a platform is reachable
+        int verticalThreshold = 48;
+        if (targetY < this.posY - verticalThreshold && this instanceof Agent) {
+            Agent agent = (Agent) this;
+            if (!agent.isIsJumping() && agent.isIsGrounded()) {
+                if (canReachPlatformAbove(agent, platforms)) {
+                    agent.move(new ArrayList<String>(List.of("UP")));
+                    return;
+                }
+            }
+        } else if (targetY > this.posY) {
             this.move(new ArrayList<String>(List.of("DOWN")));
-        } else if (targetY < this.posY) {
-            this.move(new ArrayList<String>(List.of("UP")));
         }
+
+        // --- NEW LOGIC: Jump if facing a wall/platform and can reach above ---
+        if (this instanceof Agent) {
+            Agent agent = (Agent) this;
+            if (!agent.isIsJumping() && agent.isIsGrounded()) {
+                if (isObstacleAhead(agent, platforms)) {
+                    if (canReachPlatformAbove(agent, platforms)) {
+                        agent.move(new ArrayList<String>(List.of("UP")));
+                    }
+                }
+            }
+        }
+    }
+
+    // Helper: checks if there is a platform above within jump reach
+    private boolean canReachPlatformAbove(Agent agent, List<Collision> platforms) {
+        int agentLeft = agent.getPosX();
+        int agentRight = agent.getPosX() + agent.getWidth();
+        int jumpHeight = Math.abs(agent.getJumpVelocity()) * 2; // estimate max jump height
+
+        for (Collision platform : platforms) {
+            int platLeft = platform.getX();
+            int platRight = platform.getX() + platform.getWidth();
+            int platY = platform.getY();
+
+            // Platform must be above agent and within jump height
+            if (platY < agent.getPosY() && agent.getPosY() - platY <= jumpHeight) {
+                // Platform must overlap horizontally with agent
+                if (platRight > agentLeft && platLeft < agentRight) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // Helper: checks if there is a platform directly in front of the agent
+    private boolean isObstacleAhead(Agent agent, List<Collision> platforms) {
+        int direction = agent.isFlipped() ? -1 : 1;
+        int aheadX = agent.getPosX() + direction * agent.getSpeed();
+        int agentTop = agent.getPosY();
+        int agentBottom = agent.getPosY() + agent.getHeight();
+
+        for (Collision platform : platforms) {
+            int platLeft = platform.getX();
+            int platRight = platform.getX() + platform.getWidth();
+            int platTop = platform.getY();
+            int platBottom = platform.getY() + platform.getHeight();
+
+            // Check if the platform is directly in front horizontally and overlaps vertically
+            boolean horizontal = (direction == -1 && aheadX < platRight && aheadX > platLeft) ||
+                                (direction == 1 && aheadX + agent.getWidth() > platLeft && aheadX + agent.getWidth() < platRight);
+            boolean vertical = agentBottom > platTop && agentTop < platBottom;
+
+            if (horizontal && vertical) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

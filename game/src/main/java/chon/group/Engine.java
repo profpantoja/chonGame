@@ -163,6 +163,7 @@ private void updateGameLogic() {
     if(gameStatus != GameStatus.RUNNING) return;
 
     chase();
+    for (Agent agent : environment.getAgents()) agent.gravityEffect(); 
     updateHitboxes();
     weaponAttack();
     updateCameraPosition();
@@ -262,7 +263,7 @@ private void chase(){
     for (int i = 0; i < agents.size(); i++) {
         Agent agent = agents.get(i);
         if (agent.getHitbox() != null && environment.getProtagonist().getHitbox() != null) {
-            agent.chase(environment.getProtagonist().getHitbox().getPosX(), environment.getProtagonist().getHitbox().getPosY());
+            agent.chase(environment.getProtagonist().getHitbox().getPosX(), environment.getProtagonist().getHitbox().getPosY(), environment.getCollisions());
         }
     }
 }

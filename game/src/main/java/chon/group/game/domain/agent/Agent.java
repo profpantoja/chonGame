@@ -110,6 +110,7 @@ public class Agent extends AnimatedEntity {
         super(new Image(Agent.class.getResource(pathImage).toExternalForm()), posX, posY, height, width, speed, health, pathImage, flipped);
         this.isProtagonist = isProtagonist;
         this.gravityEffects = gravityEffects;
+        setAnimation(pathImage, 1, 1000);
     }
 
     public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped, boolean isProtagonist, String imagePathAttack, String imagePathIdle, String imagePathHit, String imagePathDeath, String imagePathRun, String imagePathJump, boolean gravityEffects) {
@@ -122,6 +123,7 @@ public class Agent extends AnimatedEntity {
         this.pathImageRun = imagePathRun;
         this.pathImageJump = imagePathJump;
         this.gravityEffects = gravityEffects;
+        setAnimation(pathImage, 1, 1000);
     }
 
     /**
@@ -305,7 +307,8 @@ public class Agent extends AnimatedEntity {
                 } else {
                     if (dy > 0) {
                         setPosY(getPosY() + fix);
-                    } else {
+                    } else if (dy < 0) {
+                        isGrounded = true;
                         isJumping = false;
                         currentVelocityY = 0;
                         setPosY(getPosY() - fix);
@@ -420,7 +423,7 @@ public class Agent extends AnimatedEntity {
         }
 
         /* PULO: apenas se for protagonista */
-        if (isProtagonist) {
+        //if (isProtagonist) {
             if ((movements.contains("UP")) && !isJumping)
             {
                 changeAnimation(AnimationStatus.JUMP); 
@@ -428,11 +431,11 @@ public class Agent extends AnimatedEntity {
                 isJumping = true;
                 currentVelocityY = jumpVelocity;
             }
-
-        }
+        //}
     }
 
     public void gravityEffect() {
+        isGrounded = false;
         if (!isGrounded) {
             this.setPosY(this.getPosY() + currentVelocityY);
             currentVelocityY += gravity;
@@ -475,7 +478,7 @@ public class Agent extends AnimatedEntity {
         if (this.getAnimationStatus() == AnimationStatus.DAMAGE && this.getAnimationStatus() == AnimationStatus.ATTACK) return;
         if (this.isGravityEffects()) {
             moveGravity(gameInput);
-            gravityEffect();
+            if (this.isProtagonist) gravityEffect();
         }
         else {
             moveNonGravity(gameInput);
@@ -578,6 +581,14 @@ public class Agent extends AnimatedEntity {
 
     public void setGravityEffects(boolean gravityEffects) {
         this.gravityEffects = gravityEffects;
+    }
+
+    public int getJumpVelocity() {
+        return jumpVelocity;
+    }
+
+    public void setJumpVelocity(int jumpVelocity) {
+        this.jumpVelocity = jumpVelocity;
     }
 
 

@@ -115,6 +115,7 @@ public class AnimatedEntity extends Entity {
      * @param frameDuration Duration of each frame in milliseconds
      */
     public void setAnimation(String spritesheetPath, int frameCount, long frameDuration) {
+        if (spritesheetPath == null) return;
         this.spritesheet = new Image(getClass().getResource(spritesheetPath).toExternalForm());
         this.frameCount = frameCount;
         this.frameDuration = frameDuration;
@@ -152,8 +153,9 @@ public class AnimatedEntity extends Entity {
      */
     public Image getCurrentFrameImage() {
         if (spritesheet == null || frameCount <= 1) {
-            Image baseImage = this.isFlipped() ? getFlippedImage() : this.getImage();
+            Image baseImage = this.getImage();
             ImageView imageView = new ImageView(baseImage);
+            imageView.setScaleX(-1);
             imageView.setOpacity(opacity);
             SnapshotParameters params = new SnapshotParameters();
             params.setFill(Color.TRANSPARENT);
