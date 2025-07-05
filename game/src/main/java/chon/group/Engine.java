@@ -488,7 +488,6 @@ private void handleKeyPressed(KeyEvent e) {
     
     private void weaponAttack() {
         if (isAttacking()) {
-            System.out.println("NOPE");
             return;
         }
         if (gameInput.contains("SPACE")) {

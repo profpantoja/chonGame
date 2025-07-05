@@ -58,8 +58,8 @@ public class Game {
         level1.setProtagonist(chonBota); // Adiciona o protagonista ao nível 1
         
         // Inimigos e colisões do nível 1
-        Agent chonBot = new Agent(920, 628, 90, 65, 1, 500, "/images/agents/chonBot.png", true, false, true);
-        chonBot.setHitbox(new Hitbox(17, 23, 33, 45));
+        Agent chonBot = new Agent(920, 628, 90, 65, 1, 500, "/images/agents/chonBot.png", false, false, true);
+        chonBot.setHitbox(new Hitbox(5, 10, 55, 70));
         level1.getAgents().add(chonBot);
         Collision c = new Collision(600, 600, 64, 64, "/images/environment/brick.png", false, false, 0, false, false, false);
         level1.getCollisions().add(c);
@@ -84,8 +84,8 @@ public class Game {
         level2.setGameOverImage("/images/environment/gameover.png");
         level2.setWinImage("/images/environment/gameover.png");
         
-        Agent chonBoss = new Agent(920, 440,100, 75, 1, 1, "/images/agents/chonBot.png", true,false, true);
-        chonBoss.setHitbox(new Hitbox(20, 15, 60, 60)); 
+        Agent chonBoss = new Agent(920, 440,100, 75, 1, 1, "/images/agents/chonBot.png", false,false, true);
+        chonBoss.setHitbox(new Hitbox(5, 10, 55, 90)); 
         level2.getAgents().add(chonBoss);
         level2.createGround(worldWidth, 50, "/images/environment/brick.png"); // Adiciona chão ao nível 2 também
         
@@ -100,8 +100,8 @@ public class Game {
         lvl3.setGameOverImage("/images/environment/gameover.png");
         lvl3.setWinImage("/images/environment/gameover.png");
         
-        Agent chonMegaBoss = new Agent(920, 440,100, 75, 1, 1, "/images/agents/chonBota.png", true,false);
-        chonMegaBoss.setHitbox(new Hitbox(20, 15, 60, 60)); 
+        Agent chonMegaBoss = new Agent(920, 440,100, 75, 1, 1, "/images/agents/chonBota.png", true,false, true);
+        chonMegaBoss.setHitbox(new Hitbox(5, 10, 55, 90)); 
         lvl3.getAgents().add(chonMegaBoss);
         lvl3.createGround(worldWidth, 50, "/images/environment/brick.png"); // Adiciona chão ao nível 3 também
         
