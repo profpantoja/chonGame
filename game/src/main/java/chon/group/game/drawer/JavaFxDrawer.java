@@ -178,6 +178,14 @@ public class JavaFxDrawer {
         }
     }
 }
+public void drawText(String texto, double x, double y, Color cor) {
+    gc.setFill(cor);
+    gc.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+    gc.fillText(texto, x, y);
+}
+
+
+
 
 
 

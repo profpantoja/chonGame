@@ -178,20 +178,25 @@ public void drawGameOver() {
 @Override
 public void drawCoins() {
     for (Coin coin : environment.getCoins()) {
-        // Coin follows if it is near the protagonist
         coin.followAgentIfClose(environment.getProtagonist(), 150);
 
-        // If the distance is too small, it is considered as collected
         double dx = coin.getPosX() - environment.getProtagonist().getPosX();
         double dy = coin.getPosY() - environment.getProtagonist().getPosY();
         double distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < 20) {
+        if (!coin.isCollected() && distance < 20) {
             coin.setCollected(true);
-            System.out.println("Moeda coletada!");
+            environment.adicionarMoedaColetada();
+            System.out.println("Moeda coletada! Total: " + environment.getMoedasColetadas());
         }
     }
+
     drawer.drawCoins(environment.getCoins(), 32, 32);
 }
+@Override
+public void drawCoinCounter() {
+    drawer.drawText("Moedas: " + environment.getMoedasColetadas(), 20, 30, Color.GOLD);
+}
+
 
 }

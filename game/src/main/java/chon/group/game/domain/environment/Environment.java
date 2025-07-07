@@ -23,6 +23,8 @@ import javafx.scene.text.FontWeight;
  * and agents.
  */
 public class Environment {
+    private int moedasColetadas = 0;
+
 
     /** The X (horizontal) position of the environment. */
     private int posX;
@@ -480,6 +482,14 @@ public class Environment {
                 a.getPosY() < b.getPosY() + b.getHeight() &&
                 a.getPosY() + a.getHeight() > b.getPosY();
     }
+
+    public int getMoedasColetadas() {
+    return moedasColetadas;
+    }
+
+   public void adicionarMoedaColetada() {
+    moedasColetadas++;
+   }
 
 
     public List<Agent> getShots() {

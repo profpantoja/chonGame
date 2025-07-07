@@ -178,6 +178,9 @@ environment.setCoins(moedas);
                             mediator.drawAgents();
                             mediator.drawMessages();
                             mediator.drawCoins();
+                            mediator.drawMessages();
+                            mediator.drawCoinCounter();
+
                         }
                     }
                 }

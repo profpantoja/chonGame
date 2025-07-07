@@ -58,5 +58,6 @@ public interface EnvironmentDrawer {
 
     void drawCoins();
 
+    void drawCoinCounter();
 
 }
