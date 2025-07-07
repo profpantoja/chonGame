@@ -194,12 +194,4 @@ public void drawCoins() {
     drawer.drawCoins(environment.getCoins(), 32, 32);
 }
 
-public void drawCoinCounter() {
-    long collected = environment.getCoins().stream().filter(Coin::isCollected).count();
-    int total = environment.getCoins().size();
-    drawer.drawCoinCounter((int) collected, total, environment.getWidth());
-}
-
-    
-
 }

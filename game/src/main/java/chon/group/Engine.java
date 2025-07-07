@@ -148,7 +148,6 @@ environment.setCoins(moedas);
                         
                         mediator.drawMessages();
                         mediator.drawCoins();
-                        mediator.drawCoinCounter();
                         /* Rendering the Game Over Screen */
                         mediator.drawGameOver();
                     } else {
@@ -179,7 +178,6 @@ environment.setCoins(moedas);
                             mediator.drawAgents();
                             mediator.drawMessages();
                             mediator.drawCoins();
-                            mediator.drawCoinCounter();
                         }
                     }
                 }
