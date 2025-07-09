@@ -1,9 +1,6 @@
 package chon.group.game.core.weapon;
 
-import java.util.List;
-
 import chon.group.game.core.agent.Entity;
-import chon.group.game.messaging.Message;
 
 public abstract class Shot extends Entity {
 
@@ -43,15 +40,10 @@ public abstract class Shot extends Entity {
     }
 
     @Override
-    public void takeDamage(int damage, List<Message> messages) {
+    public void takeDamage(int damage) {
         if (destructible) {
             /* Decrease health. */
             this.setHealth(this.getHealth() - damage);
-            messages.add(new Message(
-                    String.valueOf(damage),
-                    this.getPosX(),
-                    this.getPosY(),
-                    25));
             /* After taking the damage, the health must not be negative. */
             if (this.getHealth() < 0)
                 this.setHealth(0);

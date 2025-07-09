@@ -1,9 +1,6 @@
 package chon.group.game.core.agent;
 
-import java.util.List;
-
 import chon.group.game.core.weapon.Weapon;
-import chon.group.game.messaging.Message;
 
 /**
  * Represents an agent in the game, with properties such as position, size,
@@ -132,10 +129,10 @@ public class Agent extends Entity {
      * @param damage the amount of damage to be applied
      */
     @Override
-    public void takeDamage(int damage, List<Message> messages) {
+    public void takeDamage(int damage) {
         this.invulnerable = this.updateInvulnerability();
         if (!this.invulnerable) {
-            super.takeDamage(damage, messages); 
+            super.takeDamage(damage); 
             this.lastHitTime = System.currentTimeMillis();
         }
     }

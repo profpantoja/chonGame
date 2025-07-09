@@ -39,11 +39,6 @@ public interface EnvironmentDrawer {
     void drawPauseScreen();
 
     /**
-     * Draws all the messages on the screen.
-     */
-    void drawMessages();
-
-    /**
      * Draws the Game Over screen when the protagonist is dead.
      */
     void drawShots();

@@ -5,7 +5,6 @@ import java.util.Iterator;
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.domain.environment.Environment;
-import chon.group.game.messaging.Message;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -137,25 +136,6 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 (int) this.environment.getPauseImage().getHeight(),
                 this.environment.getWidth(),
                 this.environment.getHeight());
-    }
-
-    /**
-     * Draws damage messaages that appear when agents take damage.
-     * The message float upward and fade out over time.
-     */
-    @Override
-    public void drawMessages() {
-        Iterator<Message> iterator = this.environment.getMessages().iterator();
-        while (iterator.hasNext()) {
-            Message message = iterator.next();
-            drawer.drawMessages(message.getSize(),
-                    message.getOpacity(),
-                    Color.BLACK,
-                    Color.WHEAT,
-                    String.valueOf(message.getMessage()),
-                    message.getPosX(),
-                    message.getPosY());
-        }
     }
 
     @Override

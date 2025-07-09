@@ -1,10 +1,7 @@
 package chon.group.game.domain.weapon;
 
-import java.util.List;
-
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Weapon;
-import chon.group.game.messaging.Message;
 
 public class Lancer extends Weapon {
 
@@ -31,7 +28,7 @@ public class Lancer extends Weapon {
     }
 
     @Override
-    public void takeDamage(int damage, List<Message> messages) {
+    public void takeDamage(int damage) {
 
     }
 

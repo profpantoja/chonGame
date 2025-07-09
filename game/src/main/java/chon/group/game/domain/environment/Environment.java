@@ -7,7 +7,6 @@ import java.util.List;
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Entity;
 import chon.group.game.core.weapon.Shot;
-import chon.group.game.messaging.Message;
 import javafx.scene.image.Image;
 
 /**
@@ -32,9 +31,6 @@ public class Environment extends Entity {
     /** List of agents present in the environment. */
     private List<Agent> agents;
 
-    /** List of messages to display. */
-    private List<Message> messages;
-
     /** List of shots present in the environment. */
     private List<Shot> shots;
 
@@ -51,7 +47,6 @@ public class Environment extends Entity {
     public Environment(int posX, int posY, int width, int height, String pathImage) {
         super(posX, posY, height, width, width, height, pathImage);
         this.agents = new ArrayList<Agent>();
-        this.messages = new ArrayList<Message>();
         this.shots = new ArrayList<Shot>();
     }
 
@@ -69,7 +64,6 @@ public class Environment extends Entity {
     public Environment(int posX, int posY, int width, int height, String pathImage, ArrayList<Agent> agents) {
         super(posX, posY, height, width, width, height, pathImage);
         this.agents = agents;
-        this.messages = new ArrayList<Message>();
         this.shots = new ArrayList<Shot>();
     }
 
@@ -147,24 +141,6 @@ public class Environment extends Entity {
     }
 
     /**
-     * Gets the list of active messages.
-     * 
-     * @return List of messages objects currently being displayed
-     */
-    public List<Message> getMessages() {
-        return messages;
-    }
-
-    /**
-     * Sets the list of messages.
-     * 
-     * @param messages The new list of messages to display
-     */
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
-    }
-
-    /**
      * Gets the list of shots present in the environment.
      *
      * @return the list of shots
@@ -211,7 +187,7 @@ public class Environment extends Entity {
                 // System.out.println("Collision detected with agent: " + agent);
                 int damage = 100;
                 /* The protagonist takes damage when colliding with an agent. */
-                protagonist.takeDamage(damage, this.messages);
+                protagonist.takeDamage(damage);
             }
         }
     }
@@ -237,16 +213,6 @@ public class Environment extends Entity {
                 a.getPosY() + a.getHeight() > b.getPosY();
     }
 
-    public void updateMessages() {
-        Iterator<Message> iterator = this.messages.iterator();
-        while (iterator.hasNext()) {
-            Message message = iterator.next();
-            if (!message.update()) {
-                iterator.remove();
-            }
-        }
-    }
-
     public void updateShots() {
         Iterator<Shot> itShot = this.shots.iterator();
         while (itShot.hasNext()) {
@@ -255,14 +221,14 @@ public class Environment extends Entity {
                 itShot.remove();
             } else {
                 if (this.intersect(protagonist, shot)) {
-                    protagonist.takeDamage(shot.getDamage(), this.messages);
+                    protagonist.takeDamage(shot.getDamage());
                     itShot.remove();
                 } else {
                     Iterator<Agent> itAgent = this.agents.iterator();
                     while (itAgent.hasNext()) {
                         Agent agent = itAgent.next();
                         if (this.intersect(agent, shot)) {
-                            agent.takeDamage(shot.getDamage(), this.messages);
+                            agent.takeDamage(shot.getDamage());
                             if (agent.isDead())
                                 itAgent.remove();
                             itShot.remove();
