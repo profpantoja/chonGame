@@ -38,21 +38,26 @@ public class Environment extends Entity {
     /** List of shots present in the environment. */
     private List<Shot> shots;
 
+    /** The camera instance for the environment. */
+    private Camera camera;
+
     /**
      * Constructor to initialize the environment with dimensions, position, and a
      * background image.
      *
      * @param posX      the initial X (horizontal) position of the environment
      * @param posY      the initial Y (vertical) position of the environment
-     * @param width     the width of the environment
+     * @param worldWidth the width of the environment
      * @param height    the height of the environment
      * @param pathImage the path to the background image
+     * @param screenWidth the width of the screen for camera calculations
      */
-    public Environment(int posX, int posY, int width, int height, String pathImage) {
-        super(posX, posY, height, width, width, height, pathImage);
-        this.agents = new ArrayList<Agent>();
-        this.messages = new ArrayList<Message>();
-        this.shots = new ArrayList<Shot>();
+      public Environment(int posX, int posY, int worldWidth, int height, String pathImage, double screenWidth) {
+        super(posX, posY, height, worldWidth, worldWidth, height, pathImage);
+        this.agents = new ArrayList<>();
+        this.messages = new ArrayList<>();
+        this.shots = new ArrayList<>();
+        this.camera = new Camera(screenWidth, worldWidth);
     }
 
     /**
@@ -71,6 +76,13 @@ public class Environment extends Entity {
         this.agents = agents;
         this.messages = new ArrayList<Message>();
         this.shots = new ArrayList<Shot>();
+    }
+
+    public Camera getCamera() { 
+        return camera; 
+    }
+    public void updateCamera() { 
+        if (camera != null) camera.update(); 
     }
 
     /**
@@ -125,6 +137,7 @@ public class Environment extends Entity {
      */
     public void setProtagonist(Agent protagonist) {
         this.protagonist = protagonist;
+        if (camera != null) camera.setTarget(protagonist);
     }
 
     /**
