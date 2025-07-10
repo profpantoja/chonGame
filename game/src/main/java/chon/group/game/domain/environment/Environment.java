@@ -47,17 +47,17 @@ public class Environment extends Entity {
      *
      * @param posX        the initial X (horizontal) position of the environment
      * @param posY        the initial Y (vertical) position of the environment
-     * @param worldWidth  the width of the environment
+     * @param width  the width of the environment
      * @param height      the height of the environment
      * @param pathImage   the path to the background image
      * @param screenWidth the width of the screen for camera calculations
      */
-    public Environment(int posX, int posY, int worldWidth, int height, String pathImage, double screenWidth) {
-        super(posX, posY, height, worldWidth, worldWidth, height, pathImage);
+    public Environment(int posX, int posY, int height, int width, double screenWidth, String pathImage) {
+        super(posX, posY, height, width, 0, 0, pathImage);
         this.agents = new ArrayList<>();
         this.messages = new ArrayList<>();
         this.shots = new ArrayList<>();
-        this.camera = new Camera(screenWidth, worldWidth, 0.2, 0.8);
+        this.camera = new Camera(screenWidth, width, 0.2, 0.8);
     }
 
     /**

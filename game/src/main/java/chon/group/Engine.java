@@ -61,13 +61,14 @@ public class Engine extends Application {
     @Override
     public void start(Stage theStage) {
         try {
-            /* Initialize the game environment and agents */
-            double windowWidth = 1280;
-            double windowHeight = 768;
-            int worldWidth = 4080;
+            /* Define some size properties for both Canvas and Environment */
+            double canvasWidth = 1280;
+            double canvasHeight = 780;
+            int worldWidth = 4096;
 
-            Environment environment = new Environment(1280, 780, worldWidth, (int) windowHeight,
-                    "/images/environment/castle.png", windowWidth);
+            /* Initialize the game environment, agents and weapons */
+            Environment environment = new Environment(0, 0, 780, worldWidth,
+                    canvasWidth, "/images/environment/castle.png");
             Agent chonBota = new Agent(400, 390, 90, 65, 5, 1000, "/images/agents/chonBota.png", false);
             Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
             Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, "", false);
@@ -82,13 +83,13 @@ public class Engine extends Application {
             environment.setGameOverImage("/images/environment/gameover.png");
 
             /* Set up the graphical canvas */
-            Canvas canvas = new Canvas(windowWidth, windowHeight);
+            Canvas canvas = new Canvas(canvasWidth, canvasHeight);
             GraphicsContext gc = canvas.getGraphicsContext2D();
             EnvironmentDrawer mediator = new JavaFxMediator(environment, gc);
 
             /* Set up the scene and stage */
             StackPane root = new StackPane();
-            Scene scene = new Scene(root, windowWidth, windowHeight);
+            Scene scene = new Scene(root, canvasWidth, canvasHeight);
             theStage.setTitle("Chon: The Learning Game");
             theStage.setScene(scene);
 
