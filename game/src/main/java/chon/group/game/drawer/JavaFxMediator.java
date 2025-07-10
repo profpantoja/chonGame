@@ -2,8 +2,9 @@ package chon.group.game.drawer;
 
 import java.util.Iterator;
 
-import chon.group.game.domain.agent.Agent;
-import chon.group.game.domain.collectibles.Coin;
+import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.GameObject;
+import chon.group.game.core.weapon.Shot;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.messaging.Message;
 import javafx.scene.canvas.GraphicsContext;
@@ -160,38 +161,43 @@ public void drawGameOver() {
     }
 
     @Override
-    public void drawShots() {
-        Iterator<Agent> iterator = this.environment.getShots().iterator();
-        while (iterator.hasNext()) {
-            Agent shot = iterator.next();          
-            drawer.drawImage(shot.getImage(),
-                    shot.getPosX(),
-                    shot.getPosY(),
-                    shot.getWidth(),
-                    shot.getHeight());
-        }
+public void drawShots() {
+    Iterator<Shot> iterator = this.environment.getShots().iterator();
+    while (iterator.hasNext()) {
+        Shot shot = iterator.next();          
+        drawer.drawImage(shot.getImage(),
+                shot.getPosX(),
+                shot.getPosY(),
+                shot.getWidth(),
+                shot.getHeight());
     }
+}
 
-    /**
-     * Draw coins that will be collected by the protagonist when they are near the agents
-     */
 @Override
-public void drawCoins() {
-    for (Coin coin : environment.getCoins()) {
-        // Coin follows if it is near the protagonist
-        coin.followAgentIfClose(environment.getProtagonist(), 150);
+public void drawObjects() {
+    for (GameObject obj : environment.getObjects()) {
+        if (!obj.isCollected() && obj.isCollectible()) {
+            // Atração ao protagonista
+            obj.followAgentIfClose(environment.getProtagonist(), 100, 6); // raio, velocidade
 
-        // If the distance is too small, it is considered as collected
-        double dx = coin.getPosX() - environment.getProtagonist().getPosX();
-        double dy = coin.getPosY() - environment.getProtagonist().getPosY();
-        double distance = Math.sqrt(dx * dx + dy * dy);
+            // Verifica se chegou perto o suficiente para coletar
+            double dx = obj.getPosX() - environment.getProtagonist().getPosX();
+            double dy = obj.getPosY() - environment.getProtagonist().getPosY();
+            double distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < 20) {
-            coin.setCollected(true);
-            System.out.println("Moeda coletada!");
+            if (distance < 20) {
+                obj.onCollect(environment.getProtagonist());
+                continue; // evita desenhar se acabou de coletar
+            }
+
+            // Desenha o objeto na tela
+            drawer.drawImage(obj.getImage(),
+                    obj.getPosX(),
+                    obj.getPosY(),
+                    obj.getWidth(),
+                    obj.getHeight());
         }
     }
-    drawer.drawCoins(environment.getCoins(), 32, 32);
 }
 
 }

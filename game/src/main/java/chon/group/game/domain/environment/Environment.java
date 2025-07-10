@@ -1,13 +1,15 @@
 package chon.group.game.domain.environment;
 
-import chon.group.game.domain.collectibles.Coin;
+import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.Entity;
+import chon.group.game.core.agent.GameObject;
+import chon.group.game.core.weapon.Shot;
 import chon.group.game.messaging.Message;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import chon.group.game.domain.agent.Agent;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -22,22 +24,7 @@ import javafx.scene.text.FontWeight;
  * prints an agent's coordinates, and detects collisions between the protagonist
  * and agents.
  */
-public class Environment {
-
-    /** The X (horizontal) position of the environment. */
-    private int posX;
-
-    /** The Y (vertical) position of the environment. */
-    private int posY;
-
-    /** The width of the environment. */
-    private int width;
-
-    /** The height of the environment. */
-    private int height;
-
-    /** The background image of the environment. */
-    private Image image;
+public class Environment extends Entity {
 
     /** The background image of the pause. */
     private Image pauseImage;
@@ -51,21 +38,18 @@ public class Environment {
     /** List of agents present in the environment. */
     private List<Agent> agents = new ArrayList<Agent>();
 
-    private List<Coin> coins = new ArrayList<>();
+    private List<GameObject> objects;
+
+
+
 
         /** List of messages to display. */
     private List<Message> messages;
 
-    /**
+    private List<Shot> shots = new ArrayList<>();
 
     /** The graphics context used to render the environment. */
     private GraphicsContext gc;
-
-    /**
-     * Default constructor to create an empty environment.
-     */
-    public Environment() {
-    }
 
     /**
      * Constructor to initialize the environment with dimensions, position, and a
@@ -78,11 +62,7 @@ public class Environment {
      * @param pathImage the path to the background image
      */
     public Environment(int posX, int posY, int width, int height, String pathImage) {
-        this.posX = posX;
-        this.posY = posY;
-        this.height = height;
-        this.width = width;
-        this.setImage(pathImage);
+        super(posX, posY, height, width, width, height, pathImage);
         this.agents = new ArrayList<Agent>();
         this.messages = new ArrayList<Message>();
 
@@ -100,10 +80,7 @@ public class Environment {
      * @param agents    the list of agents in the environment
      */
     public Environment(int posX, int posY, int width, int height, String pathImage, ArrayList<Agent> agents) {
-        this.posX = posX;
-        this.posY = posY;
-        this.height = height;
-        this.width = width;
+        super(posX, posY, height, width, width, height, pathImage);
         this.setImage(pathImage);
         this.setAgents(agents);
         this.messages = new ArrayList<Message>();
@@ -195,10 +172,15 @@ public class Environment {
      *
      * @param pathImage the path to the new background image
      */
+    
     public void setImage(String pathImage) {
         this.image = new Image(getClass().getResource(pathImage).toExternalForm());
     }
 
+     /* Gets the background image for the pause.
+     *
+     * @return the pause image
+     */
     public Image getPauseImage() {
         return pauseImage;
     }
@@ -261,21 +243,7 @@ public class Environment {
         this.agents = agents;
     }
 
-    /**
-     * Gets the list of coins present in the environment.
-     *
-     * @return the list of coins
-     */
-    public List<Coin> getCoins() { return coins; }
-
-    /**
-     * Sets the list of coins present in the environment.
-     *
-     * @param coins the new list of coins
-     */
-    public void setCoins(List<Coin> coins) { 
-        this.coins = coins;
-     }
+    
 
     /**
      * Gets the graphics context used to render the environment.
@@ -293,6 +261,14 @@ public class Environment {
      */
     public void setGc(GraphicsContext gc) {
         this.gc = gc;
+    }
+
+        public List<GameObject> getObjects() {
+        return objects;
+    }
+
+    public void setObjects(List<GameObject> objects) {
+        this.objects = objects;
     }
 
     /**
@@ -426,23 +402,27 @@ public class Environment {
     public List<Message> getMessages() {
         return messages;
     }
- 
+
+    public void setShots(List<Shot> shots) {
+    this.shots = shots;
+}
+
+public List<Shot> getShots() {
+    return shots;
+}
+
     public void checkBorders() {
         if (this.protagonist.getPosX() < 0) {
             this.protagonist.setPosX(0);
-        } else if ((this.protagonist.getPosX() + this.protagonist.getWidth()) > this.width) {
-            this.protagonist.setPosX(this.width - protagonist.getWidth());
+        } else if ((this.protagonist.getPosX() + this.protagonist.getWidth()) > this.getWidth()) {
+            this.protagonist.setPosX(this.getWidth() - protagonist.getWidth());
         } else if (this.protagonist.getPosY() < 0) {
             this.protagonist.setPosY(0);
-        } else if ((this.protagonist.getPosY() + this.protagonist.getHeight()) > this.height) {
-            this.protagonist.setPosY(this.height - this.protagonist.getHeight());
+        } else if ((this.protagonist.getPosY() + this.protagonist.getHeight()) > this.getHeight()) {
+            this.protagonist.setPosY(this.getHeight() - this.protagonist.getHeight());
         }
     }
 
-    /**
-     * Detects collisions between the protagonist and other agents in the
-     * environment.
-     */
 
     /**
      * Detects collisions between the protagonist and other agents in the
@@ -462,6 +442,14 @@ public class Environment {
     }
 
 
+        private boolean intersect(Entity a, Entity b) {
+        // Returns true if there is a collision between two agents
+        return a.getPosX() < b.getPosX() + b.getWidth() &&
+                a.getPosX() + a.getWidth() > b.getPosX() &&
+                a.getPosY() < b.getPosY() + b.getHeight() &&
+                a.getPosY() + a.getHeight() > b.getPosY();
+    }
+
     /**
      * Checks if two agents collide with each other based on their positions and
      * dimensions.
@@ -471,21 +459,11 @@ public class Environment {
      * of the image represented by each agent.
      *
      * @param a the first agent
-     * @param b the second agent
+     * @param agent the second agent
      * @return true if the agents collide, otherwise false
      */
-    private boolean intersect(Agent a, Agent b) {
-        return a.getPosX() < b.getPosX() + b.getWidth() &&
-                a.getPosX() + a.getWidth() > b.getPosX() &&
-                a.getPosY() < b.getPosY() + b.getHeight() &&
-                a.getPosY() + a.getHeight() > b.getPosY();
-    }
 
 
-    public List<Agent> getShots() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getShots'");
-    }
 
         public void updateMessages() {
         Iterator<Message> iterator = this.messages.iterator();
@@ -496,4 +474,33 @@ public class Environment {
             }
         }
     }
+
+
+    public void updateShots() {
+        Iterator<Shot> itShot = this.shots.iterator();
+        while (itShot.hasNext()) {
+            Shot shot = itShot.next();
+            if ((shot.getPosX() > this.getWidth()) || ((shot.getPosX() + shot.getWidth()) < 0)) {
+                itShot.remove();
+            } else {
+                if (intersect(protagonist, shot)) {
+                    protagonist.takeDamage(shot.getDamage(), this.messages);
+                    itShot.remove();
+                } else {
+                    Iterator<Agent> itAgent = this.agents.iterator();
+                    while (itAgent.hasNext()) {
+                        Agent agent = itAgent.next();
+                        if (intersect(agent, shot)) {
+                            agent.takeDamage(shot.getDamage(), this.messages);
+                            if (agent.isDead())
+                                itAgent.remove();
+                            itShot.remove();
+                        }
+                    }
+                }
+                shot.move(new ArrayList<>(List.of(shot.getDirection())));
+            }
+        }
+    }
+
 }

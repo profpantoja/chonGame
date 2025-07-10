@@ -2,7 +2,7 @@ package chon.group.game.drawer;
 
 import java.util.List;
 
-import chon.group.game.domain.collectibles.Coin;
+import chon.group.game.core.agent.GameObject;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -167,17 +167,20 @@ public class JavaFxDrawer {
      * @param width
      * @param height
      */
-   public void drawCoins(List<Coin> coins, int width, int height) {
-    for (Coin coin : coins) {
-        if (!coin.isCollected()) {
-            this.drawImage(coin.getImage(),
-                (int) coin.getPosX(),
-                (int) coin.getPosY(),
-                width,
-                height);
+
+public void drawObjects(List<GameObject> objects) {
+    for (GameObject object : objects) {
+        if (!object.isCollected()) {
+            this.drawImage(object.getImage(),
+                (int) object.getPosX(),
+                (int) object.getPosY(),
+                object.getWidth(),
+                object.getHeight());
         }
     }
 }
+
+
 
 
 

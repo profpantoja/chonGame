@@ -3,9 +3,12 @@ package chon.group;
 import java.util.ArrayList;
 import java.util.List;
 
-import chon.group.game.domain.agent.Agent;
-import chon.group.game.domain.collectibles.Coin;
+import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.GameObject;
+import chon.group.game.core.weapon.Weapon;
 import chon.group.game.domain.environment.Environment;
+import chon.group.game.domain.weapon.Cannon;
+import chon.group.game.domain.weapon.Lancer;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
@@ -67,19 +70,27 @@ public class Engine extends Application {
             Agent Voldemort = new Agent(920, 440, 90, 65, 2, 3, "/images/agents/valdemortpng-removebg-preview.png", true);
             environment.setProtagonist(HarryPotter);
             environment.getAgents().add(Voldemort);
+            Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
+            Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, "", false);
+
+            HarryPotter.setWeapon(lancer);
+
+            environment.setProtagonist(HarryPotter);
+            environment.getAgents().add(Voldemort);
             environment.setPauseImage("/images/environment/pause.png");
             environment.setGameOverImage("/images/environment/gameover.png");
             
 
-            List<Coin> moedas = new ArrayList<>();
-moedas.add(new Coin(200, 200, "/images/agents/coin.png"));
-moedas.add(new Coin(400, 300, "/images/agents/coin.png"));
-moedas.add(new Coin(600, 500, "/images/agents/coin.png"));
-moedas.add(new Coin(800, 250, "/images/agents/coin.png"));
-moedas.add(new Coin(1000, 400, "/images/agents/coin.png"));
-moedas.add(new Coin(300, 600, "/images/agents/coin.png"));
-moedas.add(new Coin(700, 150, "/images/agents/coin.png"));
-environment.setCoins(moedas);
+List<GameObject> objects = new ArrayList<>();
+objects.add(new GameObject(200, 200, 32, 32, "/images/agents/coin.png", true, false));
+objects.add(new GameObject(400, 300, 32, 32, "/images/agents/coin.png",true, false));
+objects.add(new GameObject(600, 500, 32, 32, "/images/agents/coin.png",true, false));
+objects.add(new GameObject(800, 250, 32, 32, "/images/agents/coin.png",true, false));
+objects.add(new GameObject(1000, 400, 32, 32, "/images/agents/coin.png",true, false));
+objects.add(new GameObject(300, 600, 32, 32, "/images/agents/coin.png",true, false));
+objects.add(new GameObject(700, 150, 32, 32, "/images/agents/coin.png",true, false));
+environment.setObjects(objects);
+
 
 
             /* Set up the graphical canvas */ 
@@ -125,7 +136,6 @@ environment.setCoins(moedas);
 
             /* Start the game loop */ 
             new AnimationTimer() {
-
                 /**
                  * The game loop, called on each frame.
                  *
@@ -147,7 +157,7 @@ environment.setCoins(moedas);
                         mediator.drawAgents();
                         
                         mediator.drawMessages();
-                        mediator.drawCoins();
+                        mediator.drawObjects();
                         /* Rendering the Game Over Screen */
                         mediator.drawGameOver();
                     } else {
@@ -177,7 +187,7 @@ environment.setCoins(moedas);
                             mediator.drawBackground();
                             mediator.drawAgents();
                             mediator.drawMessages();
-                            mediator.drawCoins();
+                            mediator.drawObjects();
                         }
                     }
                 }

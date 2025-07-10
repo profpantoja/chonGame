@@ -56,7 +56,6 @@ public interface EnvironmentDrawer {
      */
     void drawGameOver();
 
-    void drawCoins();
-
+    void drawObjects();
 
 }
