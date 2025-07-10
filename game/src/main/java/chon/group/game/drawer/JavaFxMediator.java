@@ -200,4 +200,19 @@ public void drawObjects() {
     }
 }
 
+public void drawObjectCounter() {
+    int total = environment.getObjects().size();
+    int collected = 0;
+
+    for (GameObject obj : environment.getObjects()) {
+        if (obj.isCollected()) {
+            collected++;
+        }
+    }
+
+    String text = "Objetos: " + collected + "/" + total;
+    drawer.drawText(text, 20, 30, Color.GOLD, 20); // posição (20, 30) com tamanho 20
+}
+
+
 }

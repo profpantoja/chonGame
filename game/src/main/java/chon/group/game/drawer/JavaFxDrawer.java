@@ -180,6 +180,13 @@ public void drawObjects(List<GameObject> objects) {
     }
 }
 
+public void drawText(String text, int x, int y, Color color, int fontSize) {
+    gc.setFill(color);
+    gc.setFont(new javafx.scene.text.Font("Arial", fontSize));
+    gc.fillText(text, x, y);
+}
+
+
 
 
 

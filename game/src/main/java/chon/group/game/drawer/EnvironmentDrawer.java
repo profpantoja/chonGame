@@ -58,4 +58,7 @@ public interface EnvironmentDrawer {
 
     void drawObjects();
 
+    void drawObjectCounter();
+
+
 }

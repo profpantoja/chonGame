@@ -158,6 +158,8 @@ environment.setObjects(objects);
                         
                         mediator.drawMessages();
                         mediator.drawObjects();
+                        mediator.drawObjectCounter();
+
                         /* Rendering the Game Over Screen */
                         mediator.drawGameOver();
                     } else {
@@ -188,6 +190,8 @@ environment.setObjects(objects);
                             mediator.drawAgents();
                             mediator.drawMessages();
                             mediator.drawObjects();
+                            mediator.drawObjectCounter();
+
                         }
                     }
                 }
