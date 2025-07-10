@@ -18,7 +18,7 @@ import javafx.scene.paint.Color;
  * and the {@link JavaFxDrawer} to manage graphical rendering.
  */
 public class JavaFxMediator implements EnvironmentDrawer {
-    
+
     private final Camera camera;
     private final Environment environment;
     private final JavaFxDrawer drawer;
@@ -42,7 +42,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
      */
     @Override
     public void clearEnvironment() {
-         drawer.clearScreen((int)camera.getScreenWidth(), this.environment.getHeight());
+        drawer.clearScreen((int) camera.getScreenWidth(), this.environment.getHeight());
     }
 
     /**
@@ -52,9 +52,9 @@ public class JavaFxMediator implements EnvironmentDrawer {
     public void drawBackground() {
         int screenX = (int) camera.worldToScreenX(this.environment.getPosX());
         drawer.drawImage(this.environment.getImage(),
-        screenX, this.environment.getPosY(),
-        this.environment.getWidth(),
-        this.environment.getHeight());
+                screenX, this.environment.getPosY(),
+                this.environment.getWidth(),
+                this.environment.getHeight());
     }
 
     /**
@@ -62,17 +62,19 @@ public class JavaFxMediator implements EnvironmentDrawer {
      * including their health bars and status panels.
      */
     @Override
-     public void drawAgents() {
+    public void drawAgents() {
         for (Agent agent : this.environment.getAgents()) {
             int screenX = (int) camera.worldToScreenX(agent.getPosX());
             drawer.drawImage(agent.getImage(), screenX, agent.getPosY(), agent.getWidth(), agent.getHeight());
-            drawer.drawLifeBar(agent.getHealth(), agent.getFullHealth(), agent.getWidth(), screenX, agent.getPosY(), Color.DARKRED);
+            drawer.drawLifeBar(agent.getHealth(), agent.getFullHealth(), agent.getWidth(), screenX, agent.getPosY(),
+                    Color.DARKRED);
         }
-        
+
         Agent protagonist = this.environment.getProtagonist();
         int protagonistScreenX = (int) camera.worldToScreenX(protagonist.getPosX());
-        drawer.drawImage(protagonist.getImage(), protagonistScreenX, protagonist.getPosY(), protagonist.getWidth(), protagonist.getHeight());
-        
+        drawer.drawImage(protagonist.getImage(), protagonistScreenX, protagonist.getPosY(), protagonist.getWidth(),
+                protagonist.getHeight());
+
         drawLifeBar();
         drawStatusPanel();
     }
@@ -88,7 +90,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 protagonist.getHealth(),
                 protagonist.getFullHealth(),
                 protagonist.getWidth(),
-                screenX, 
+                screenX,
                 protagonist.getPosY(),
                 Color.GREEN);
     }
@@ -100,7 +102,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
     public void drawStatusPanel() {
         Agent protagonist = this.environment.getProtagonist();
         int screenX = (int) camera.worldToScreenX(protagonist.getPosX());
-        drawer.drawStatusPanel((int)protagonist.getPosX(), protagonist.getPosY(), screenX, protagonist.getPosY());
+        drawer.drawStatusPanel((int) protagonist.getPosX(), protagonist.getPosY(), screenX, protagonist.getPosY());
     }
 
     /**
@@ -110,10 +112,10 @@ public class JavaFxMediator implements EnvironmentDrawer {
     @Override
     public void drawPauseScreen() {
         drawer.drawScreen(this.environment.getPauseImage(),
-        (int) this.environment.getPauseImage().getWidth(),
-        (int) this.environment.getPauseImage().getHeight(),
-        (int)camera.getScreenWidth(),
-        this.environment.getHeight());
+                (int) this.environment.getPauseImage().getWidth(),
+                (int) this.environment.getPauseImage().getHeight(),
+                (int) camera.getScreenWidth(),
+                this.environment.getHeight());
     }
 
     /**
@@ -125,7 +127,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
         drawer.drawScreen(this.environment.getGameOverImage(),
                 (int) this.environment.getPauseImage().getWidth(),
                 (int) this.environment.getPauseImage().getHeight(),
-                (int)camera.getScreenWidth(),
+                (int) camera.getScreenWidth(),
                 this.environment.getHeight());
     }
 
@@ -140,12 +142,12 @@ public class JavaFxMediator implements EnvironmentDrawer {
             Message message = iterator.next();
             double screenX = camera.worldToScreenX(message.getPosX());
             drawer.drawMessages(message.getSize(),
-            message.getOpacity(),
-            Color.BLACK,
-            Color.WHEAT,
-            String.valueOf(message.getMessage()),
-            screenX,
-            message.getPosY());
+                    message.getOpacity(),
+                    Color.BLACK,
+                    Color.WHEAT,
+                    String.valueOf(message.getMessage()),
+                    screenX,
+                    message.getPosY());
         }
     }
 
@@ -156,9 +158,9 @@ public class JavaFxMediator implements EnvironmentDrawer {
             Shot shot = iterator.next();
             int screenX = (int) camera.worldToScreenX(shot.getPosX());
             drawer.drawImage(shot.getImage(),
-            screenX, shot.getPosY(),
-            shot.getWidth(),
-            shot.getHeight());
+                    screenX, shot.getPosY(),
+                    shot.getWidth(),
+                    shot.getHeight());
         }
     }
 
