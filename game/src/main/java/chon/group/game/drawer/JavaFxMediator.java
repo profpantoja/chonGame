@@ -187,6 +187,7 @@ public void drawObjects() {
 
             if (distance < 20) {
                 obj.onCollect(environment.getProtagonist());
+                System.out.println("Objeto coletado!");
                 continue; // evita desenhar se acabou de coletar
             }
 
