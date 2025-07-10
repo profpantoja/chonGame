@@ -12,22 +12,22 @@ import javafx.scene.paint.Color;
 public abstract class Entity {
 
     /** X position (horizontal) of the entity. */
-    private int posX;
+    protected int posX;
 
     /** Y (vertical) position of the entity. */
-    private int posY;
+    protected int posY;
 
     /** Height of the entity. */
-    private int height;
+    protected int height;
 
     /** Width of the entity. */
-    private int width;
+    protected int width;
 
     /** entity speed. */
-    private int speed;
+    protected int speed;
 
     /** Image representing the entity. */
-    private Image image;
+    protected Image image;
 
     /** Indicates if the entity is facing left. */
     private boolean flipped = false;
@@ -57,6 +57,15 @@ public abstract class Entity {
         this.speed = speed;
         this.health = health;
         this.fullHealth = health;
+        this.image = new Image(getClass().getResource(pathImage).toExternalForm());
+    }
+
+    //1 contrutor 
+    public Entity(int posX, int posY, int height, int width, String pathImage) {
+        this.posX = posX;
+        this.posY = posY;
+        this.width = width;
+        this.height = height;
         this.image = new Image(getClass().getResource(pathImage).toExternalForm());
     }
 

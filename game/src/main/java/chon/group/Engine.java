@@ -1,8 +1,10 @@
 package chon.group;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.GameObject;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.domain.weapon.Cannon;
@@ -37,7 +39,6 @@ import javafx.scene.layout.StackPane;
  */
 public class Engine extends Application {
 
-    /* If the game is paused or not. */
     private boolean isPaused = false;
 
     /**
@@ -63,30 +64,43 @@ public class Engine extends Application {
     @Override
     public void start(Stage theStage) {
         try {
-            /* Initialize the game environment and agents */
-            Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
-            Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
+            /* Initialize the game environment and agents */ 
+            Environment environment = new Environment(0, 0, 1200, 700, "/images/environment/Hogwarts.png");
+            Agent HarryPotter = new Agent(400, 390, 90, 65, 5, 1000, "/images/agents/HarryPotter.png", false);
+            Agent Voldemort = new Agent(920, 440, 90, 65, 2, 3, "/images/agents/valdemortpng-removebg-preview.png", true);
+            environment.setProtagonist(HarryPotter);
+            environment.getAgents().add(Voldemort);
             Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
             Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, "", false);
 
-            chonBota.setWeapon(cannon);
-            chonBota.setWeapon(lancer);
+            HarryPotter.setWeapon(lancer);
 
-            Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
-            environment.setProtagonist(chonBota);
-            environment.getAgents().add(chonBot);
+            environment.setProtagonist(HarryPotter);
+            environment.getAgents().add(Voldemort);
             environment.setPauseImage("/images/environment/pause.png");
             environment.setGameOverImage("/images/environment/gameover.png");
+            
 
-            /* Set up the graphical canvas */
+List<GameObject> objects = new ArrayList<>();
+objects.add(new GameObject(200, 200, 32, 32, "/images/agents/coin.png", true, false));
+objects.add(new GameObject(400, 300, 32, 32, "/images/agents/coin.png",true, false));
+objects.add(new GameObject(600, 500, 32, 32, "/images/agents/coin.png",true, false));
+objects.add(new GameObject(800, 250, 32, 32, "/images/agents/coin.png",true, false));
+objects.add(new GameObject(1000, 400, 32, 32, "/images/agents/coin.png",true, false));
+objects.add(new GameObject(300, 600, 32, 32, "/images/agents/coin.png",true, false));
+objects.add(new GameObject(700, 150, 32, 32, "/images/agents/coin.png",true, false));
+environment.setObjects(objects);
+
+
+
+            /* Set up the graphical canvas */ 
             Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
             GraphicsContext gc = canvas.getGraphicsContext2D();
             EnvironmentDrawer mediator = new JavaFxMediator(environment, gc);
-
-            /* Set up the scene and stage */
+            /* Set up the scene and stage */ 
             StackPane root = new StackPane();
             Scene scene = new Scene(root, environment.getWidth(), environment.getHeight());
-            theStage.setTitle("Chon: The Learning Game");
+            theStage.setTitle("Harry Potter Game");
             theStage.setScene(scene);
 
             root.getChildren().add(canvas);
@@ -120,7 +134,7 @@ public class Engine extends Application {
                 }
             });
 
-            /* Start the game loop */
+            /* Start the game loop */ 
             new AnimationTimer() {
                 /**
                  * The game loop, called on each frame.
@@ -130,70 +144,63 @@ public class Engine extends Application {
                 @Override
                 public void handle(long arg0) {
                     mediator.clearEnvironment();
+                    environment.detectCollision();
+                    
                     /* Branching the Game Loop */
                     /* If the agent died in the last loop */
                     if (environment.getProtagonist().isDead()) {
                         /* Still prints ongoing messages (e.g., last hit taken) */
                         environment.updateMessages();
-                        environment.updateShots();
                         mediator.drawBackground();
+                        
+
                         mediator.drawAgents();
-                        mediator.drawShots();
+                        
                         mediator.drawMessages();
+                        mediator.drawObjects();
+                        mediator.drawObjectCounter();
+
                         /* Rendering the Game Over Screen */
                         mediator.drawGameOver();
                     } else {
                         if (isPaused) {
                             mediator.drawBackground();
+                            environment.detectCollision();
+
                             mediator.drawAgents();
-                            mediator.drawMessages();
-                            mediator.drawShots();
                             /* Rendering the Pause Screen */
                             mediator.drawPauseScreen();
                         } else {
                             /* ChonBota Only Moves if the Player Press Something */
                             /* Update the protagonist's movements if input exists */
                             if (!input.isEmpty()) {
-                                /* ChonBota Shoots Somebody Who Outdrew You */
-                                if (input.contains("SPACE")) {
-                                    input.remove("SPACE");
-                                    String direction;
-                                    if (chonBota.isFlipped())
-                                        direction = "LEFT";
-                                    else
-                                        direction = "RIGHT";
-                                    environment.getShots().add(chonBota.getWeapon().fire(chonBota.getPosX(),
-                                            chonBota.getPosY(),
-                                            direction));
-                                }
                                 /* ChonBota's Movements */
                                 environment.getProtagonist().move(input);
                                 environment.checkBorders();
                             }
                             /* ChonBot's Automatic Movements */
                             /* Update the other agents' movements */
-                            for (Agent agent : environment.getAgents()) {
-                                agent.chase(environment.getProtagonist().getPosX(),
-                                        environment.getProtagonist().getPosY());
-                            }
+                            environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
+                                    environment.getProtagonist().getPosY());
+                                    
                             /* Render the game environment and agents */
-                            environment.detectCollision();
-                            environment.updateShots();
+
                             environment.updateMessages();
                             mediator.drawBackground();
                             mediator.drawAgents();
-                            mediator.drawShots();
                             mediator.drawMessages();
+                            mediator.drawObjects();
+                            mediator.drawObjectCounter();
+
                         }
                     }
                 }
             }.start();
             theStage.show();
 
-        } catch (
-
-        Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 }

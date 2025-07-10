@@ -23,6 +23,7 @@ public interface EnvironmentDrawer {
      */
     void drawAgents();
 
+
     /**
      * Draws the life bar for agents or players.
      */
@@ -32,6 +33,8 @@ public interface EnvironmentDrawer {
      * Draws the status panel displaying relevant game information.
      */
     void drawStatusPanel();
+
+
 
     /**
      * Draws the pause screen when the game is paused.
@@ -53,4 +56,7 @@ public interface EnvironmentDrawer {
      */
     void drawGameOver();
 
+    void drawObjects();
+
+    void drawObjectCounter();
 }

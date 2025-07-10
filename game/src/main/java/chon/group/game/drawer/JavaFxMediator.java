@@ -3,6 +3,7 @@ package chon.group.game.drawer;
 import java.util.Iterator;
 
 import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.GameObject;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.messaging.Message;
@@ -130,14 +131,15 @@ public class JavaFxMediator implements EnvironmentDrawer {
      * Draws the pause screen overlay, displaying a pause image centered within the
      * environment.
      */
-    @Override
-    public void drawGameOver() {
-        drawer.drawScreen(this.environment.getGameOverImage(),
-                (int) this.environment.getPauseImage().getWidth(),
-                (int) this.environment.getPauseImage().getHeight(),
-                this.environment.getWidth(),
-                this.environment.getHeight());
-    }
+@Override
+public void drawGameOver() {
+    drawer.drawScreen(this.environment.getGameOverImage(),
+            (int) this.environment.getGameOverImage().getWidth(),
+            (int) this.environment.getGameOverImage().getHeight(),
+            this.environment.getWidth(),
+            this.environment.getHeight());
+}
+
 
     /**
      * Draws damage messaages that appear when agents take damage.
@@ -159,16 +161,59 @@ public class JavaFxMediator implements EnvironmentDrawer {
     }
 
     @Override
-    public void drawShots() {
-        Iterator<Shot> iterator = this.environment.getShots().iterator();
-        while (iterator.hasNext()) {
-            Shot shot = iterator.next();          
-            drawer.drawImage(shot.getImage(),
-                    shot.getPosX(),
-                    shot.getPosY(),
-                    shot.getWidth(),
-                    shot.getHeight());
+public void drawShots() {
+    Iterator<Shot> iterator = this.environment.getShots().iterator();
+    while (iterator.hasNext()) {
+        Shot shot = iterator.next();          
+        drawer.drawImage(shot.getImage(),
+                shot.getPosX(),
+                shot.getPosY(),
+                shot.getWidth(),
+                shot.getHeight());
+    }
+}
+
+@Override
+public void drawObjects() {
+    for (GameObject obj : environment.getObjects()) {
+        if (!obj.isCollected() && obj.isCollectible()) {
+            // Atração ao protagonista
+            obj.followAgentIfClose(environment.getProtagonist(), 100, 6);
+
+            // Verifica se chegou perto o suficiente para coletar
+            double dx = obj.getPosX() - environment.getProtagonist().getPosX();
+            double dy = obj.getPosY() - environment.getProtagonist().getPosY();
+            double distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < 20) {
+                obj.onCollect(environment.getProtagonist());
+                System.out.println("Objeto coletado!");
+                continue; // evita desenhar se acabou de coletar
+            }
+
+            // Desenha o objeto na tela
+            drawer.drawImage(obj.getImage(),
+                    obj.getPosX(),
+                    obj.getPosY(),
+                    obj.getWidth(),
+                    obj.getHeight());
         }
     }
+}
+
+public void drawObjectCounter() {
+    int total = environment.getObjects().size();
+    int collected = 0;
+
+    for (GameObject obj : environment.getObjects()) {
+        if (obj.isCollected()) {
+            collected++;
+        }
+    }
+
+    String text = "Objetos: " + collected + "/" + total;
+    drawer.drawText(text, 20, 30, Color.GOLD, 20); // posição (20, 30) com tamanho 20
+}
+
 
 }

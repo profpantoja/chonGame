@@ -1,5 +1,8 @@
 package chon.group.game.drawer;
 
+import java.util.List;
+
+import chon.group.game.core.agent.GameObject;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -157,4 +160,35 @@ public class JavaFxDrawer {
 
         gc.setGlobalAlpha(1.0);
     }
+
+    /**
+     * Draws coins that are collected by the protagonist
+     * @param coins
+     * @param width
+     * @param height
+     */
+
+public void drawObjects(List<GameObject> objects) {
+    for (GameObject object : objects) {
+        if (!object.isCollected()) {
+            this.drawImage(object.getImage(),
+                (int) object.getPosX(),
+                (int) object.getPosY(),
+                object.getWidth(),
+                object.getHeight());
+        }
+    }
+}
+
+public void drawText(String text, int x, int y, Color color, int fontSize) {
+    gc.setFill(color);
+    gc.setFont(new javafx.scene.text.Font("Arial", fontSize));
+    gc.fillText(text, x, y);
+}
+
+
+
+
+
+
 }
