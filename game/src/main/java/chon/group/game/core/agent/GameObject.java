@@ -56,7 +56,6 @@ public class GameObject extends Entity{
      */
     public void onCollect(Entity collector) {
         this.collected = true;
-        // Pode ser customizado por subclasses
     }
 
     /**

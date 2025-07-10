@@ -178,7 +178,7 @@ public void drawObjects() {
     for (GameObject obj : environment.getObjects()) {
         if (!obj.isCollected() && obj.isCollectible()) {
             // Atração ao protagonista
-            obj.followAgentIfClose(environment.getProtagonist(), 100, 6); // raio, velocidade
+            obj.followAgentIfClose(environment.getProtagonist(), 100, 6);
 
             // Verifica se chegou perto o suficiente para coletar
             double dx = obj.getPosX() - environment.getProtagonist().getPosX();
@@ -187,6 +187,7 @@ public void drawObjects() {
 
             if (distance < 20) {
                 obj.onCollect(environment.getProtagonist());
+                System.out.println("Objeto coletado!");
                 continue; // evita desenhar se acabou de coletar
             }
 
