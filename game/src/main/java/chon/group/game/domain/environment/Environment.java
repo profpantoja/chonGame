@@ -45,19 +45,19 @@ public class Environment extends Entity {
      * Constructor to initialize the environment with dimensions, position, and a
      * background image.
      *
-     * @param posX      the initial X (horizontal) position of the environment
-     * @param posY      the initial Y (vertical) position of the environment
-     * @param worldWidth the width of the environment
-     * @param height    the height of the environment
-     * @param pathImage the path to the background image
+     * @param posX        the initial X (horizontal) position of the environment
+     * @param posY        the initial Y (vertical) position of the environment
+     * @param worldWidth  the width of the environment
+     * @param height      the height of the environment
+     * @param pathImage   the path to the background image
      * @param screenWidth the width of the screen for camera calculations
      */
-      public Environment(int posX, int posY, int worldWidth, int height, String pathImage, double screenWidth) {
+    public Environment(int posX, int posY, int worldWidth, int height, String pathImage, double screenWidth) {
         super(posX, posY, height, worldWidth, worldWidth, height, pathImage);
         this.agents = new ArrayList<>();
         this.messages = new ArrayList<>();
         this.shots = new ArrayList<>();
-        this.camera = new Camera(screenWidth, worldWidth);
+        this.camera = new Camera(screenWidth, worldWidth, 0.2, 0.8);
     }
 
     /**
@@ -76,13 +76,6 @@ public class Environment extends Entity {
         this.agents = agents;
         this.messages = new ArrayList<Message>();
         this.shots = new ArrayList<Shot>();
-    }
-
-    public Camera getCamera() { 
-        return camera; 
-    }
-    public void updateCamera() { 
-        if (camera != null) camera.update(); 
     }
 
     /**
@@ -137,7 +130,8 @@ public class Environment extends Entity {
      */
     public void setProtagonist(Agent protagonist) {
         this.protagonist = protagonist;
-        if (camera != null) camera.setTarget(protagonist);
+        if (camera != null)
+            camera.setTarget(protagonist);
     }
 
     /**
@@ -193,6 +187,24 @@ public class Environment extends Entity {
      */
     public void setShots(List<Shot> shots) {
         this.shots = shots;
+    }
+
+    /**
+     * Gets the camera of the environment.
+     *
+     * @return the camera of the environment
+     */
+    public Camera getCamera() {
+        return camera;
+    }
+
+    /**
+     * Sets the camera of the environment.
+     *
+     * @param camera is the new camera of the environment
+     */
+    public void setCamera(Camera camera) {
+        this.camera = camera;
     }
 
     /**
@@ -285,6 +297,11 @@ public class Environment extends Entity {
                 shot.move(new ArrayList<>(List.of(shot.getDirection())));
             }
         }
+    }
+
+    public void updateCamera() {
+        if (this.camera != null)
+            this.camera.update();
     }
 
 }
