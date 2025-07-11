@@ -3,7 +3,7 @@ package chon.group.game.drawer;
 import java.util.Iterator;
 
 import chon.group.game.core.agent.Agent;
-import chon.group.game.core.agent.GameObject;
+import chon.group.game.core.agent.Object;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.messaging.Message;
@@ -175,10 +175,10 @@ public void drawShots() {
 
 @Override
 public void drawObjects() {
-    for (GameObject obj : environment.getObjects()) {
+    for (Object obj : environment.getObjects()) {
         if (!obj.isCollected() && obj.isCollectible()) {
             // Atração ao protagonista
-            obj.followAgentIfClose(environment.getProtagonist(), 100, 6); // raio, velocidade
+            obj.followAgentIfClose(environment.getProtagonist(), 150, 6); // raio, velocidade
 
             // Verifica se chegou perto o suficiente para coletar
             double dx = obj.getPosX() - environment.getProtagonist().getPosX();

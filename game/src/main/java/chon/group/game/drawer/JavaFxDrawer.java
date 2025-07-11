@@ -2,7 +2,7 @@ package chon.group.game.drawer;
 
 import java.util.List;
 
-import chon.group.game.core.agent.GameObject;
+import chon.group.game.core.agent.Object;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -168,8 +168,8 @@ public class JavaFxDrawer {
      * @param height
      */
 
-public void drawObjects(List<GameObject> objects) {
-    for (GameObject object : objects) {
+public void drawObjects(List<Object> objects) {
+    for (Object object : objects) {
         if (!object.isCollected()) {
             this.drawImage(object.getImage(),
                 (int) object.getPosX(),

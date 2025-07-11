@@ -4,23 +4,23 @@ import chon.group.game.core.agent.Entity;
 import javafx.scene.image.Image;
 
 /**
- * Representa um objeto genérico do jogo que pode ser coletável e/ou destrutível.
+ * Representa um objeto genérico do jogo que pode ser coletável e/ou
+ * destrutível.
  */
-public class GameObject extends Entity{
+public class Object extends Entity {
     private boolean collected = false;
     private boolean destructible;
     private boolean collectible;
 
-        public GameObject(int posX, int posY, int height, int width, String pathImage,
-        boolean collectible, boolean destructible) {
+    public Object(int posX, int posY, int height, int width, String pathImage,
+            boolean collectible, boolean destructible) {
         super(posX, posY, height, width, pathImage);
         this.collectible = collectible;
         this.destructible = destructible;
     }
 
-
     // Construtor adicional simplificado
-    public GameObject(int posX, int posY, int height, int width, String imagePath) {
+    public Object(int posX, int posY, int height, int width, String imagePath) {
         super(posX, posY, height, width, imagePath);
         this.collectible = true;
         this.destructible = false;
@@ -68,19 +68,19 @@ public class GameObject extends Entity{
     }
 
     public void followAgentIfClose(Entity target, double attractionRadius, double speed) {
-    double dx = target.getPosX() - this.getPosX();
-    double dy = target.getPosY() - this.getPosY();
-    double distance = Math.sqrt(dx * dx + dy * dy);
+        double dx = target.getPosX() - this.getPosX();
+        double dy = target.getPosY() - this.getPosY();
+        double distance = Math.sqrt(dx * dx + dy * dy);
 
-    if (distance < attractionRadius) {
-        // Normaliza o vetor direção
-        double directionX = dx / distance;
-        double directionY = dy / distance;
+        if (distance < attractionRadius) {
+            // Normaliza o vetor direção
+            double directionX = dx / distance;
+            double directionY = dy / distance;
 
-        // Move um pouco na direção do protagonista
-        this.setPosX((int)(this.getPosX() + directionX * speed));
-        this.setPosY((int)(this.getPosY() + directionY * speed));
+            // Move um pouco na direção do protagonista
+            this.setPosX((int) (this.getPosX() + directionX * speed));
+            this.setPosY((int) (this.getPosY() + directionY * speed));
+        }
     }
-}
 
 }

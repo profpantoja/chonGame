@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import chon.group.game.core.agent.Agent;
-import chon.group.game.core.agent.GameObject;
+import chon.group.game.core.agent.Object;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.domain.weapon.Cannon;
@@ -64,10 +64,11 @@ public class Engine extends Application {
     @Override
     public void start(Stage theStage) {
         try {
-            /* Initialize the game environment and agents */ 
+            /* Initialize the game environment and agents */
             Environment environment = new Environment(0, 0, 1200, 700, "/images/environment/Hogwarts.png");
-            Agent HarryPotter = new Agent(400, 390, 90, 65, 5, 1000, "/images/agents/HarryPotter.png", false);
-            Agent Voldemort = new Agent(920, 440, 90, 65, 2, 3, "/images/agents/valdemortpng-removebg-preview.png", true);
+            Agent HarryPotter = new Agent(400, 390, 90, 65, 4, 1000, "/images/agents/HarryPotter.png", false);
+            Agent Voldemort = new Agent(920, 440, 90, 65, 1, 3, "/images/agents/valdemortpng-removebg-preview.png",
+                    true);
             environment.setProtagonist(HarryPotter);
             environment.getAgents().add(Voldemort);
             Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
@@ -79,25 +80,22 @@ public class Engine extends Application {
             environment.getAgents().add(Voldemort);
             environment.setPauseImage("/images/environment/pause.png");
             environment.setGameOverImage("/images/environment/gameover.png");
-            
 
-List<GameObject> objects = new ArrayList<>();
-objects.add(new GameObject(200, 200, 32, 32, "/images/agents/coin.png", true, false));
-objects.add(new GameObject(400, 300, 32, 32, "/images/agents/coin.png",true, false));
-objects.add(new GameObject(600, 500, 32, 32, "/images/agents/coin.png",true, false));
-objects.add(new GameObject(800, 250, 32, 32, "/images/agents/coin.png",true, false));
-objects.add(new GameObject(1000, 400, 32, 32, "/images/agents/coin.png",true, false));
-objects.add(new GameObject(300, 600, 32, 32, "/images/agents/coin.png",true, false));
-objects.add(new GameObject(700, 150, 32, 32, "/images/agents/coin.png",true, false));
-environment.setObjects(objects);
+            List<Object> objects = new ArrayList<>();
+            objects.add(new Object(200, 200, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(400, 300, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(600, 500, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(800, 250, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(1000, 400, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(300, 600, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(700, 150, 32, 32, "/images/agents/coin.png", true, false));
+            environment.setObjects(objects);
 
-
-
-            /* Set up the graphical canvas */ 
+            /* Set up the graphical canvas */
             Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
             GraphicsContext gc = canvas.getGraphicsContext2D();
             EnvironmentDrawer mediator = new JavaFxMediator(environment, gc);
-            /* Set up the scene and stage */ 
+            /* Set up the scene and stage */
             StackPane root = new StackPane();
             Scene scene = new Scene(root, environment.getWidth(), environment.getHeight());
             theStage.setTitle("Harry Potter Game");
@@ -134,7 +132,7 @@ environment.setObjects(objects);
                 }
             });
 
-            /* Start the game loop */ 
+            /* Start the game loop */
             new AnimationTimer() {
                 /**
                  * The game loop, called on each frame.
@@ -145,17 +143,16 @@ environment.setObjects(objects);
                 public void handle(long arg0) {
                     mediator.clearEnvironment();
                     environment.detectCollision();
-                    
+
                     /* Branching the Game Loop */
                     /* If the agent died in the last loop */
                     if (environment.getProtagonist().isDead()) {
                         /* Still prints ongoing messages (e.g., last hit taken) */
                         environment.updateMessages();
                         mediator.drawBackground();
-                        
 
                         mediator.drawAgents();
-                        
+
                         mediator.drawMessages();
                         mediator.drawObjects();
                         /* Rendering the Game Over Screen */
@@ -166,6 +163,8 @@ environment.setObjects(objects);
                             environment.detectCollision();
 
                             mediator.drawAgents();
+                            mediator.drawMessages();
+                            mediator.drawObjects();
                             /* Rendering the Pause Screen */
                             mediator.drawPauseScreen();
                         } else {
@@ -180,7 +179,7 @@ environment.setObjects(objects);
                             /* Update the other agents' movements */
                             environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
                                     environment.getProtagonist().getPosY());
-                                    
+
                             /* Render the game environment and agents */
 
                             environment.updateMessages();
