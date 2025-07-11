@@ -1,20 +1,15 @@
 package chon.group.game.domain.environment;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Entity;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.messaging.Message;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 /**
  * Represents the game environment, including properties such as dimensions,
@@ -36,33 +31,37 @@ public class Environment extends Entity {
     private Agent protagonist;
 
     /** List of agents present in the environment. */
-    private List<Agent> agents = new ArrayList<Agent>();
+    private List<Agent> agents;
 
     private List<Object> objects;
 
     /** List of messages to display. */
     private List<Message> messages;
 
-    private List<Shot> shots = new ArrayList<>();
+    /** List of shots present in the environment. */
+    private List<Shot> shots;
 
-    /** The graphics context used to render the environment. */
-    private GraphicsContext gc;
+    /** The camera instance for the environment. */
+    private Camera camera;
 
     /**
      * Constructor to initialize the environment with dimensions, position, and a
      * background image.
      *
-     * @param posX      the initial X (horizontal) position of the environment
-     * @param posY      the initial Y (vertical) position of the environment
-     * @param width     the width of the environment
-     * @param height    the height of the environment
-     * @param pathImage the path to the background image
+     * @param posX        the initial X (horizontal) position of the environment
+     * @param posY        the initial Y (vertical) position of the environment
+     * @param width       the width of the environment
+     * @param height      the height of the environment
+     * @param pathImage   the path to the background image
+     * @param screenWidth the width of the screen for camera calculations
      */
-    public Environment(int posX, int posY, int width, int height, String pathImage) {
-        super(posX, posY, height, width, width, height, pathImage);
+    public Environment(int posX, int posY, int height, int width, double screenWidth, String pathImage) {
+        super(posX, posY, height, width, 0, 0, pathImage);
         this.agents = new ArrayList<Agent>();
+        this.objects = new ArrayList<Object>();
         this.messages = new ArrayList<Message>();
-
+        this.shots = new ArrayList<Shot>();
+        this.camera = new Camera(screenWidth, width, 0.2, 0.8);
     }
 
     /**
@@ -78,103 +77,13 @@ public class Environment extends Entity {
      */
     public Environment(int posX, int posY, int width, int height, String pathImage, ArrayList<Agent> agents) {
         super(posX, posY, height, width, width, height, pathImage);
-        this.setImage(pathImage);
-        this.setAgents(agents);
+        this.agents = agents;
+        this.objects = new ArrayList<Object>();
         this.messages = new ArrayList<Message>();
+        this.shots = new ArrayList<Shot>();
     }
 
     /**
-     * Gets the X (horizontal) position of the environment.
-     *
-     * @return the X position of the environment
-     */
-    public int getPosX() {
-        return posX;
-    }
-
-    /**
-     * Sets the X (horizontal) position of the environment.
-     *
-     * @param posX the new X position of the environment
-     */
-    public void setPosX(int posX) {
-        this.posX = posX;
-    }
-
-    /**
-     * Gets the Y (vertical) position of the environment.
-     *
-     * @return the Y position of the environment
-     */
-    public int getPosY() {
-        return posY;
-    }
-
-    /**
-     * Sets the Y (vertical) position of the environment.
-     *
-     * @param posY the new Y position of the environment
-     */
-    public void setPosY(int posY) {
-        this.posY = posY;
-    }
-
-    /**
-     * Gets the width of the environment.
-     *
-     * @return the width of the environment
-     */
-    public int getWidth() {
-        return width;
-    }
-
-    /**
-     * Sets the width of the environment.
-     *
-     * @param width the new width of the environment
-     */
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    /**
-     * Gets the height of the environment.
-     *
-     * @return the height of the environment
-     */
-    public int getHeight() {
-        return height;
-    }
-
-    /**
-     * Sets the height of the environment.
-     *
-     * @param height the new height of the environment
-     */
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    /**
-     * Gets the background image of the environment.
-     *
-     * @return the background image of the environment
-     */
-    public Image getImage() {
-        return image;
-    }
-
-    /**
-     * Sets the background image of the environment.
-     *
-     * @param pathImage the path to the new background image
-     */
-
-    public void setImage(String pathImage) {
-        this.image = new Image(getClass().getResource(pathImage).toExternalForm());
-    }
-
-    /*
      * Gets the background image for the pause.
      *
      * @return the pause image
@@ -183,6 +92,11 @@ public class Environment extends Entity {
         return pauseImage;
     }
 
+    /**
+     * Sets the background image for the pause.
+     *
+     * @param pathImage the path to the new pause image
+     */
     public void setPauseImage(String pathImage) {
         this.pauseImage = new Image(getClass().getResource(pathImage).toExternalForm());
     }
@@ -221,6 +135,8 @@ public class Environment extends Entity {
      */
     public void setProtagonist(Agent protagonist) {
         this.protagonist = protagonist;
+        if (camera != null)
+            camera.setTarget(protagonist);
     }
 
     /**
@@ -239,24 +155,7 @@ public class Environment extends Entity {
      */
     public void setAgents(ArrayList<Agent> agents) {
         this.agents = agents;
-    }
 
-    /**
-     * Gets the graphics context used to render the environment.
-     *
-     * @return the graphics context
-     */
-    public GraphicsContext getGc() {
-        return gc;
-    }
-
-    /**
-     * Sets the graphics context used to render the environment.
-     *
-     * @param gc the new graphics context
-     */
-    public void setGc(GraphicsContext gc) {
-        this.gc = gc;
     }
 
     public List<Object> getObjects() {
@@ -268,124 +167,14 @@ public class Environment extends Entity {
     }
 
     /**
-     * Draws the environment's background on the graphics context.
-     */
-    public void drawBackground() {
-        gc.drawImage(this.image, this.posX, this.posY, this.width, this.height);
-    }
-
-    public void drawPauseScreen() {
-        if (pauseImage != null && gc != null) {
-            double centerX = (this.width - pauseImage.getWidth()) / 2;
-            double centerY = (this.height - pauseImage.getHeight()) / 2;
-
-            // Draw image on the center of screen
-            gc.drawImage(pauseImage, centerX, centerY);
-        } else {
-            System.out.println("Pause image not set or GraphicsContext is null.");
-        }
-    }
-
-    /**
-     * Renders all agents and the protagonist in the environment.
-     */
-    public void drawAgents() {
-        for (Agent agent : this.agents) {
-            gc.drawImage(agent.getImage(), agent.getPosX(), agent.getPosY(), agent.getWidth(), agent.getHeight());
-        }
-        gc.drawImage(this.protagonist.getImage(), this.protagonist.getPosX(), this.protagonist.getPosY(),
-                this.protagonist.getWidth(), this.protagonist.getHeight());
-        printStatusPanel(this.protagonist);
-        drawLifeBar();
-    }
-
-    /**
-     * Clears the environment area, removing previously drawn elements.
-     */
-    public void clearEnvironment() {
-        gc.clearRect(0, 0, this.width, this.height);
-    }
-
-    /**
-     * Displays a status panel showing the protagonist's coordinates.
-     *
-     * @param agent the protagonist whose information will be displayed
-     */
-    public void printStatusPanel(Agent agent) {
-        Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
-        gc.setFont(theFont);
-        gc.setFill(Color.BLACK);
-        gc.fillText("X: " + agent.getPosX(), agent.getPosX() + 10, agent.getPosY() - 40);
-        gc.fillText("Y: " + agent.getPosY(), agent.getPosX() + 10, agent.getPosY() - 25);
-    }
-
-    /**
-     * Draws a health bar above the protagonist to represent their current health
-     * visually.
-     * The health bar consists of:
-     * <ul>
-     * <li>A black border representing the health bar's background.</li>
-     * <li>A green inner bar representing the actual health percentage of the
-     * protagonist.</li>
-     * </ul>
+     * Gets the list of active messages.
      * 
-     * The size of the health bar is dynamically calculated based on the
-     * protagonist's
-     * current health (`getHealth()`), maximum health (`getFullHealth()`), and width
-     * (`getWidth()`).
-     * 
-     * <p>
-     * The health bar is drawn a fixed distance above the protagonist's position.
-     * </p>
-     *
-     * <p>
-     * <strong>Key Calculations:</strong>
-     * </p>
-     * <ul>
-     * <li><strong>lifePercentage:</strong> Percentage of current health relative to
-     * maximum health.</li>
-     * <li><strong>lifeSpan:</strong> Width of the green inner bar based on health
-     * percentage.</li>
-     * </ul>
+     * @return List of messages objects currently being displayed
      */
-    public void drawLifeBar() {
-        /* The border's thickness. */
-        int borderThickness = 2;
-        /* The bar's height. */
-        int barHeight = 5;
-        /* The life span proportion calculated based on actual and maximum health. */
-        int lifeSpan = Math.round(
-                (float) ((protagonist.getHealth() * 100 / protagonist.getFullHealth()) * protagonist.getWidth()) / 100);
-        /* Int points before the agent's y position. The initial bar's position. */
-        int barY = 15;
-        /* The outside background of the health bar. */
-        gc.setFill(Color.BLACK);
-        /* The height is a little bit bigger to give a border experience. */
-        gc.fillRect(protagonist.getPosX(),
-                protagonist.getPosY() - barY,
-                protagonist.getWidth(),
-                barHeight + (borderThickness * 2));
-        /**
-         * The inside of the health bar. It is the effective life of the agent.
-         * The border height plus the thickness multiplied by two (beggining and end at
-         * X).
-         */
-        gc.setFill(Color.GREEN);
-        /**
-         * The initial position considering the border from both X and Y points.
-         * The life span less the border thickness multiplied by two (beggining and end
-         * at Y).
-         */
-        gc.fillRect(protagonist.getPosX() + borderThickness,
-                protagonist.getPosY() - (barY - borderThickness),
-                (lifeSpan - (borderThickness * 2)),
-                barHeight);
+    public List<Message> getMessages() {
+        return messages;
     }
 
-    /**
-     * Checks if the protagonist is within the environment's boundaries and adjusts
-     * its position if necessary.
-     */
     /**
      * Sets the list of messages.
      * 
@@ -395,18 +184,46 @@ public class Environment extends Entity {
         this.messages = messages;
     }
 
-    public List<Message> getMessages() {
-        return messages;
-    }
-
-    public void setShots(List<Shot> shots) {
-        this.shots = shots;
-    }
-
+    /**
+     * Gets the list of shots present in the environment.
+     *
+     * @return the list of shots
+     */
     public List<Shot> getShots() {
         return shots;
     }
 
+    /**
+     * Sets the list of shots present in the environment.
+     *
+     * @param agents the new list of shots
+     */
+    public void setShots(List<Shot> shots) {
+        this.shots = shots;
+    }
+
+    /**
+     * Gets the camera of the environment.
+     *
+     * @return the camera of the environment
+     */
+    public Camera getCamera() {
+        return camera;
+    }
+
+    /**
+     * Sets the camera of the environment.
+     *
+     * @param camera is the new camera of the environment
+     */
+    public void setCamera(Camera camera) {
+        this.camera = camera;
+    }
+
+    /**
+     * Checks if the protagonist is within the environment's boundaries and adjusts
+     * its position if necessary.
+     */
     public void checkBorders() {
         if (this.protagonist.getPosX() < 0) {
             this.protagonist.setPosX(0);
@@ -422,26 +239,19 @@ public class Environment extends Entity {
     /**
      * Detects collisions between the protagonist and other agents in the
      * environment.
+     * When a collision occurs and the protagonist takes damage, a message is
+     * created to display the damage amount.
      */
-
     public void detectCollision() {
         for (Agent agent : this.agents) {
-            if (intersect(this.protagonist, agent)) {
-                System.out.println("Collision detected with agent: " + agent);
-                // if (!(this.protagonist.getHealth() <= 0))
-                // this.protagonist.setHealth(this.protagonist.getHealth() - 1);
+            if (protagonist != null && intersect(this.protagonist, agent)) {
+                /* Removing the console output for collision. */
+                // System.out.println("Collision detected with agent: " + agent);
+                int damage = 100;
                 /* The protagonist takes damage when colliding with an agent. */
-                protagonist.takeDamage(50, this.messages);
+                protagonist.takeDamage(damage, this.messages);
             }
         }
-    }
-
-    private boolean intersect(Entity a, Entity b) {
-        // Returns true if there is a collision between two agents
-        return a.getPosX() < b.getPosX() + b.getWidth() &&
-                a.getPosX() + a.getWidth() > b.getPosX() &&
-                a.getPosY() < b.getPosY() + b.getHeight() &&
-                a.getPosY() + a.getHeight() > b.getPosY();
     }
 
     /**
@@ -452,10 +262,39 @@ public class Environment extends Entity {
      * if their areas overlap. The collision is calculated by comparing the edges
      * of the image represented by each agent.
      *
-     * @param a     the first agent
-     * @param agent the second agent
+     * @param a the first agent
+     * @param b the second agent
      * @return true if the agents collide, otherwise false
      */
+
+    private boolean intersect(Entity a, Entity b) {
+        // Returns true if there is a collision between two agents
+        return a.getPosX() < b.getPosX() + b.getWidth() &&
+                a.getPosX() + a.getWidth() > b.getPosX() &&
+                a.getPosY() < b.getPosY() + b.getHeight() &&
+                a.getPosY() + a.getHeight() > b.getPosY();
+    }
+
+    public void updateObjects() {
+        Iterator<Object> iterator = this.objects.iterator();
+        while (iterator.hasNext()) {
+            Object object = iterator.next();
+            if (!object.isCollected() && object.isCollectible()) {
+                object.follow(this.getProtagonist(), 200, 5);
+                // Verifica se chegou perto o suficiente para coletar
+                double dx = object.getPosX() - this.getProtagonist().getPosX();
+                double dy = object.getPosY() - this.getProtagonist().getPosY();
+                double distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < 20) {
+                    object.onCollect();
+                }
+            } else {
+                if (object.isCollected() && object.isCollectible()) {
+                    iterator.remove();
+                }
+            }
+        }
+    }
 
     public void updateMessages() {
         Iterator<Message> iterator = this.messages.iterator();
@@ -474,14 +313,14 @@ public class Environment extends Entity {
             if ((shot.getPosX() > this.getWidth()) || ((shot.getPosX() + shot.getWidth()) < 0)) {
                 itShot.remove();
             } else {
-                if (intersect(protagonist, shot)) {
+                if (this.intersect(protagonist, shot)) {
                     protagonist.takeDamage(shot.getDamage(), this.messages);
                     itShot.remove();
                 } else {
                     Iterator<Agent> itAgent = this.agents.iterator();
                     while (itAgent.hasNext()) {
                         Agent agent = itAgent.next();
-                        if (intersect(agent, shot)) {
+                        if (this.intersect(agent, shot)) {
                             agent.takeDamage(shot.getDamage(), this.messages);
                             if (agent.isDead())
                                 itAgent.remove();
@@ -492,6 +331,11 @@ public class Environment extends Entity {
                 shot.move(new ArrayList<>(List.of(shot.getDirection())));
             }
         }
+    }
+
+    public void updateCamera() {
+        if (this.camera != null)
+            this.camera.update();
     }
 
 }

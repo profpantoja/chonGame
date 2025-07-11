@@ -16,7 +16,6 @@ public class Object extends Entity {
         this.destructible = destructible;
     }
 
-    // Construtor adicional simplificado
     public Object(int posX, int posY, int height, int width, String imagePath) {
         super(posX, posY, height, width, imagePath);
         this.collectible = true;
@@ -51,9 +50,8 @@ public class Object extends Entity {
      * Define o comportamento de coleta quando próximo ao agente.
      * Pode ser sobrescrito em subclasses.
      */
-    public void onCollect(Entity collector) {
+    public void onCollect() {
         this.collected = true;
-        // Pode ser customizado por subclasses
     }
 
     /**
@@ -61,10 +59,10 @@ public class Object extends Entity {
      * Pode ser sobrescrito em subclasses.
      */
     public void onDestroy() {
-        this.collected = true; // Pode ser considerado como removido também
+        this.collected = true; 
     }
 
-    public void followAgentIfClose(Entity target, double attractionRadius, double speed) {
+    public void follow(Entity target, double attractionRadius, double speed) {
         double dx = target.getPosX() - this.getPosX();
         double dy = target.getPosY() - this.getPosY();
         double distance = Math.sqrt(dx * dx + dy * dy);

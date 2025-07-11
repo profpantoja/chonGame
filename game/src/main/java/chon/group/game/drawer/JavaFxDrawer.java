@@ -1,8 +1,5 @@
 package chon.group.game.drawer;
 
-import java.util.List;
-
-import chon.group.game.core.agent.Object;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -88,12 +85,13 @@ public class JavaFxDrawer {
      * @param posX The x-coordinate of the protagonist.
      * @param posY The y-coordinate of the protagonist.
      */
-    public void drawStatusPanel(int posX, int posY) {
+    public void drawStatusPanel(int posX, int posY, int camX) {
         Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
         this.gc.setFont(theFont);
         this.gc.setFill(Color.BLACK);
-        this.gc.fillText("X: " + posX, posX + 10, posY - 40);
-        this.gc.fillText("Y: " + posY, posX + 10, posY - 25);
+        this.gc.fillText("X: " + posX, (posX - camX) + 5, posY - 55);
+        this.gc.fillText("Y: " + posY, (posX - camX) + 5, posY - 40);
+        this.gc.fillText("CamX: " + camX, (posX - camX) + 5, posY - 25);
     }
 
     /**
@@ -160,28 +158,4 @@ public class JavaFxDrawer {
 
         gc.setGlobalAlpha(1.0);
     }
-
-    /**
-     * Draws coins that are collected by the protagonist
-     * @param coins
-     * @param width
-     * @param height
-     */
-
-public void drawObjects(List<Object> objects) {
-    for (Object object : objects) {
-        if (!object.isCollected()) {
-            this.drawImage(object.getImage(),
-                (int) object.getPosX(),
-                (int) object.getPosY(),
-                object.getWidth(),
-                object.getHeight());
-        }
-    }
-}
-
-
-
-
-
 }

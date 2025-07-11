@@ -23,6 +23,10 @@ public interface EnvironmentDrawer {
      */
     void drawAgents();
 
+    /**
+     * Draws all the objects on the screen.
+     */
+    void drawObjects();
 
     /**
      * Draws the life bar for agents or players.
@@ -53,7 +57,5 @@ public interface EnvironmentDrawer {
      * Draws the Game Over screen when the protagonist is dead.
      */
     void drawGameOver();
-
-    void drawObjects();
 
 }

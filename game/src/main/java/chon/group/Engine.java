@@ -64,23 +64,28 @@ public class Engine extends Application {
     @Override
     public void start(Stage theStage) {
         try {
+            /* Define some size properties for both Canvas and Environment */
+            double canvasWidth = 1280;
+            double canvasHeight = 780;
+            int worldWidth = 4096;
+
             /* Initialize the game environment and agents */
-            Environment environment = new Environment(0, 0, 1200, 700, "/images/environment/Hogwarts.png");
-            Agent HarryPotter = new Agent(400, 390, 90, 65, 4, 1000, "/images/agents/HarryPotter.png", false);
-            Agent Voldemort = new Agent(920, 440, 90, 65, 1, 3, "/images/agents/valdemortpng-removebg-preview.png",
-                    true);
-            environment.setProtagonist(HarryPotter);
-            environment.getAgents().add(Voldemort);
+            Environment environment = new Environment(0, 0, 780, worldWidth,
+                    canvasWidth, "/images/environment/castle.png");
+            Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
             Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
             Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, "", false);
 
-            HarryPotter.setWeapon(lancer);
+            chonBota.setWeapon(cannon);
+            chonBota.setWeapon(lancer);
 
-            environment.setProtagonist(HarryPotter);
-            environment.getAgents().add(Voldemort);
+            Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
+            environment.setProtagonist(chonBota);
+            environment.getAgents().add(chonBot);
             environment.setPauseImage("/images/environment/pause.png");
             environment.setGameOverImage("/images/environment/gameover.png");
 
+            /* Set up some collectable objects */
             List<Object> objects = new ArrayList<>();
             objects.add(new Object(200, 200, 32, 32, "/images/agents/coin.png", true, false));
             objects.add(new Object(400, 300, 32, 32, "/images/agents/coin.png", true, false));
@@ -92,17 +97,17 @@ public class Engine extends Application {
             environment.setObjects(objects);
 
             /* Set up the graphical canvas */
-            Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
+            Canvas canvas = new Canvas(canvasWidth, canvasHeight);
             GraphicsContext gc = canvas.getGraphicsContext2D();
             EnvironmentDrawer mediator = new JavaFxMediator(environment, gc);
+
             /* Set up the scene and stage */
             StackPane root = new StackPane();
-            Scene scene = new Scene(root, environment.getWidth(), environment.getHeight());
-            theStage.setTitle("Harry Potter Game");
+            Scene scene = new Scene(root, canvasWidth, canvasHeight);
+            theStage.setTitle("Chon: The Learning Game");
             theStage.setScene(scene);
 
             root.getChildren().add(canvas);
-            theStage.show();
 
             /* Handle keyboard input */
             ArrayList<String> input = new ArrayList<String>();
@@ -143,50 +148,65 @@ public class Engine extends Application {
                 public void handle(long arg0) {
                     mediator.clearEnvironment();
                     environment.detectCollision();
-
                     /* Branching the Game Loop */
                     /* If the agent died in the last loop */
                     if (environment.getProtagonist().isDead()) {
                         /* Still prints ongoing messages (e.g., last hit taken) */
                         environment.updateMessages();
+                        environment.updateShots();
                         mediator.drawBackground();
-
                         mediator.drawAgents();
-
-                        mediator.drawMessages();
                         mediator.drawObjects();
+                        mediator.drawShots();
+                        mediator.drawMessages();
                         /* Rendering the Game Over Screen */
                         mediator.drawGameOver();
                     } else {
                         if (isPaused) {
                             mediator.drawBackground();
-                            environment.detectCollision();
-
                             mediator.drawAgents();
-                            mediator.drawMessages();
                             mediator.drawObjects();
+                            mediator.drawShots();
+                            mediator.drawMessages();
                             /* Rendering the Pause Screen */
                             mediator.drawPauseScreen();
                         } else {
                             /* ChonBota Only Moves if the Player Press Something */
                             /* Update the protagonist's movements if input exists */
                             if (!input.isEmpty()) {
+                                /* ChonBota Shoots Somebody Who Outdrew You */
+                                if (input.contains("SPACE")) {
+                                    input.remove("SPACE");
+                                    String direction;
+                                    if (chonBota.isFlipped())
+                                        direction = "LEFT";
+                                    else
+                                        direction = "RIGHT";
+                                    environment.getShots().add(chonBota.getWeapon().fire(chonBota.getPosX(),
+                                            chonBota.getPosY(),
+                                            direction));
+                                }
                                 /* ChonBota's Movements */
                                 environment.getProtagonist().move(input);
                                 environment.checkBorders();
                             }
                             /* ChonBot's Automatic Movements */
                             /* Update the other agents' movements */
-                            environment.getAgents().get(0).chase(environment.getProtagonist().getPosX(),
-                                    environment.getProtagonist().getPosY());
-
+                            for (Agent agent : environment.getAgents()) {
+                                agent.chase(environment.getProtagonist().getPosX(),
+                                        environment.getProtagonist().getPosY());
+                            }
                             /* Render the game environment and agents */
-
+                            environment.detectCollision();
+                            environment.updateObjects();
+                            environment.updateShots();
                             environment.updateMessages();
+                            environment.updateCamera();
                             mediator.drawBackground();
                             mediator.drawAgents();
-                            mediator.drawMessages();
                             mediator.drawObjects();
+                            mediator.drawShots();
+                            mediator.drawMessages();
                         }
                     }
                 }
