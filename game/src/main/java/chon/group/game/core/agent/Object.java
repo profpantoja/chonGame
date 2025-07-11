@@ -1,8 +1,5 @@
 package chon.group.game.core.agent;
 
-import chon.group.game.core.agent.Entity;
-import javafx.scene.image.Image;
-
 /**
  * Representa um objeto genérico do jogo que pode ser coletável e/ou
  * destrutível.

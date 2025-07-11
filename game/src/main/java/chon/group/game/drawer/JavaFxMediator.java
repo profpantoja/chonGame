@@ -131,15 +131,14 @@ public class JavaFxMediator implements EnvironmentDrawer {
      * Draws the pause screen overlay, displaying a pause image centered within the
      * environment.
      */
-@Override
-public void drawGameOver() {
-    drawer.drawScreen(this.environment.getGameOverImage(),
-            (int) this.environment.getGameOverImage().getWidth(),
-            (int) this.environment.getGameOverImage().getHeight(),
-            this.environment.getWidth(),
-            this.environment.getHeight());
-}
-
+    @Override
+    public void drawGameOver() {
+        drawer.drawScreen(this.environment.getGameOverImage(),
+                (int) this.environment.getGameOverImage().getWidth(),
+                (int) this.environment.getGameOverImage().getHeight(),
+                this.environment.getWidth(),
+                this.environment.getHeight());
+    }
 
     /**
      * Draws damage messaages that appear when agents take damage.
@@ -161,44 +160,48 @@ public void drawGameOver() {
     }
 
     @Override
-public void drawShots() {
-    Iterator<Shot> iterator = this.environment.getShots().iterator();
-    while (iterator.hasNext()) {
-        Shot shot = iterator.next();          
-        drawer.drawImage(shot.getImage(),
-                shot.getPosX(),
-                shot.getPosY(),
-                shot.getWidth(),
-                shot.getHeight());
-    }
-}
-
-@Override
-public void drawObjects() {
-    for (Object obj : environment.getObjects()) {
-        if (!obj.isCollected() && obj.isCollectible()) {
-            // Atração ao protagonista
-            obj.followAgentIfClose(environment.getProtagonist(), 150, 6); // raio, velocidade
-
-            // Verifica se chegou perto o suficiente para coletar
-            double dx = obj.getPosX() - environment.getProtagonist().getPosX();
-            double dy = obj.getPosY() - environment.getProtagonist().getPosY();
-            double distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance < 20) {
-                obj.onCollect(environment.getProtagonist());
-                System.out.println("Objeto coletado!");
-                continue; // evita desenhar se acabou de coletar
-            }
-
-            // Desenha o objeto na tela
-            drawer.drawImage(obj.getImage(),
-                    obj.getPosX(),
-                    obj.getPosY(),
-                    obj.getWidth(),
-                    obj.getHeight());
+    public void drawShots() {
+        Iterator<Shot> iterator = this.environment.getShots().iterator();
+        while (iterator.hasNext()) {
+            Shot shot = iterator.next();
+            drawer.drawImage(shot.getImage(),
+                    shot.getPosX(),
+                    shot.getPosY(),
+                    shot.getWidth(),
+                    shot.getHeight());
         }
     }
-}
+
+    @Override
+    public void drawObjects() {
+        /*
+         * Mover esse comportamennto
+         * para o Environment
+         */
+        for (Object obj : environment.getObjects()) {
+            if (!obj.isCollected() && obj.isCollectible()) {
+                // Atração ao protagonista
+                obj.followAgentIfClose(environment.getProtagonist(), 150, 6); // raio, velocidade
+
+                // Verifica se chegou perto o suficiente para coletar
+                double dx = obj.getPosX() - environment.getProtagonist().getPosX();
+                double dy = obj.getPosY() - environment.getProtagonist().getPosY();
+                double distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < 20) {
+                    obj.onCollect(environment.getProtagonist());
+                    System.out.println("Objeto coletado!");
+                    continue; // evita desenhar se acabou de coletar
+                }
+
+                // Desenha o objeto na tela
+                drawer.drawImage(obj.getImage(),
+                        obj.getPosX(),
+                        obj.getPosY(),
+                        obj.getWidth(),
+                        obj.getHeight());
+            }
+        }
+    }
 
 }
