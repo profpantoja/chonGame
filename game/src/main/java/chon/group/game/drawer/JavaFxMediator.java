@@ -39,7 +39,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
      */
     @Override
     public void clearEnvironment() {
-        drawer.clearScreen(this.environment.getWidth(), this.environment.getHeight());
+        drawer.clearScreen((int) this.environment.getCamera().getScreenWidth(), this.environment.getHeight());
     }
 
     /**
@@ -47,9 +47,9 @@ public class JavaFxMediator implements EnvironmentDrawer {
      */
     @Override
     public void drawBackground() {
+        int posX = (int) (this.environment.getCamera().getPosX() * -1);
         drawer.drawImage(this.environment.getImage(),
-                this.environment.getPosX(),
-                this.environment.getPosY(),
+                posX, this.environment.getPosY(),
                 this.environment.getWidth(),
                 this.environment.getHeight());
     }
@@ -61,33 +61,30 @@ public class JavaFxMediator implements EnvironmentDrawer {
     @Override
     public void drawAgents() {
         for (Agent agent : this.environment.getAgents()) {
+            int newPosX = (int) this.environment.getCamera().updateEntity(agent);
             drawer.drawImage(agent.getImage(),
-                    agent.getPosX(),
+                    newPosX,
                     agent.getPosY(),
                     agent.getWidth(),
                     agent.getHeight());
             drawer.drawLifeBar(agent.getHealth(),
                     agent.getFullHealth(),
                     agent.getWidth(),
-                    agent.getPosX(),
+                    newPosX,
                     agent.getPosY(),
                     Color.DARKRED);
         }
-        drawer.drawImage(this.environment.getProtagonist().getImage(),
-                this.environment.getProtagonist().getPosX(),
-                this.environment.getProtagonist().getPosY(),
-                this.environment.getProtagonist().getWidth(),
-                this.environment.getProtagonist().getHeight());
-        drawer.drawLifeBar(this.environment.getProtagonist().getHealth(),
-                this.environment.getProtagonist().getFullHealth(),
-                this.environment.getProtagonist().getWidth(),
-                this.environment.getProtagonist().getPosX(),
-                this.environment.getProtagonist().getPosY(),
-                Color.GREEN);
-        drawer.drawStatusPanel(this.environment.getProtagonist().getPosX(),
-                this.environment.getProtagonist().getPosY());
-        drawer.drawStatusPanel(this.environment.getProtagonist().getPosX(),
-                this.environment.getProtagonist().getPosY());
+
+        Agent protagonist = this.environment.getProtagonist();
+        int newPosX = (int) this.environment.getCamera().updateEntity(protagonist);
+        drawer.drawImage(protagonist.getImage(),
+                newPosX,
+                protagonist.getPosY(),
+                protagonist.getWidth(),
+                protagonist.getHeight());
+
+        this.drawLifeBar();
+        this.drawStatusPanel();
     }
 
     /**
@@ -95,12 +92,13 @@ public class JavaFxMediator implements EnvironmentDrawer {
      */
     @Override
     public void drawLifeBar() {
+        Agent protagonist = this.environment.getProtagonist();
         drawer.drawLifeBar(
-                this.environment.getProtagonist().getHealth(),
-                this.environment.getProtagonist().getFullHealth(),
-                this.environment.getProtagonist().getWidth(),
-                this.environment.getProtagonist().getPosX(),
-                this.environment.getProtagonist().getPosY(),
+                protagonist.getHealth(),
+                protagonist.getFullHealth(),
+                protagonist.getWidth(),
+                (int) this.environment.getCamera().updateEntity(protagonist),
+                protagonist.getPosY(),
                 Color.GREEN);
     }
 
@@ -109,8 +107,10 @@ public class JavaFxMediator implements EnvironmentDrawer {
      */
     @Override
     public void drawStatusPanel() {
-        drawer.drawStatusPanel(this.environment.getProtagonist().getPosX(),
-                this.environment.getProtagonist().getPosY());
+        Agent protagonist = this.environment.getProtagonist();
+        drawer.drawStatusPanel(protagonist.getPosX(),
+                protagonist.getPosY(),
+                (int) this.environment.getCamera().getPosX());
     }
 
     /**
@@ -122,7 +122,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
         drawer.drawScreen(this.environment.getPauseImage(),
                 (int) this.environment.getPauseImage().getWidth(),
                 (int) this.environment.getPauseImage().getHeight(),
-                this.environment.getWidth(),
+                (int) this.environment.getCamera().getScreenWidth(),
                 this.environment.getHeight());
     }
 
@@ -135,7 +135,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
         drawer.drawScreen(this.environment.getGameOverImage(),
                 (int) this.environment.getPauseImage().getWidth(),
                 (int) this.environment.getPauseImage().getHeight(),
-                this.environment.getWidth(),
+                (int) this.environment.getCamera().getScreenWidth(),
                 this.environment.getHeight());
     }
 
@@ -153,7 +153,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     Color.BLACK,
                     Color.WHEAT,
                     String.valueOf(message.getMessage()),
-                    message.getPosX(),
+                    message.getPosX() - this.environment.getCamera().getPosX(),
                     message.getPosY());
         }
     }
@@ -162,9 +162,9 @@ public class JavaFxMediator implements EnvironmentDrawer {
     public void drawShots() {
         Iterator<Shot> iterator = this.environment.getShots().iterator();
         while (iterator.hasNext()) {
-            Shot shot = iterator.next();          
+            Shot shot = iterator.next();
             drawer.drawImage(shot.getImage(),
-                    shot.getPosX(),
+                    (int) this.environment.getCamera().updateEntity(shot),
                     shot.getPosY(),
                     shot.getWidth(),
                     shot.getHeight());

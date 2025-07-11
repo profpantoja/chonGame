@@ -22,7 +22,7 @@ public class Lancer extends Weapon {
                 posY,
                 42,
                 64,
-                3,
+                4,
                 0,
                 "/images/weapons/fireball/fireball001.png",
                 false,

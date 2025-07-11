@@ -19,7 +19,7 @@ public class Agent extends Entity {
     private boolean invulnerable = false;
 
     /* Invulnerability (in milliseconds) */
-    private final long INVULNERABILITY_COOLDOWN = 3000;
+    private final long INVULNERABILITY_COOLDOWN = 1000;
 
     /* The Agent's Weapon */
     private Weapon weapon;
