@@ -87,13 +87,16 @@ public class Engine extends Application {
 
             /* Set up some collectable objects */
             List<Object> objects = new ArrayList<>();
-            objects.add(new Object(200, 200, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(400, 300, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(600, 500, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(800, 250, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(1000, 400, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(300, 600, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(700, 150, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(200, 350, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(400, 380, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(1000, 600, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(1400, 380, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(1800, 650, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(2000, 580, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(2300, 380, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(2600, 500, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(2900, 380, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(2950, 400, 32, 32, "/images/agents/coin.png", true, false));
             environment.setObjects(objects);
 
             /* Set up the graphical canvas */
@@ -197,7 +200,6 @@ public class Engine extends Application {
                                         environment.getProtagonist().getPosY());
                             }
                             /* Render the game environment and agents */
-                            environment.detectCollision();
                             environment.updateObjects();
                             environment.updateShots();
                             environment.updateMessages();
