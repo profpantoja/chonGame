@@ -69,7 +69,7 @@ public class Engine extends Application {
             /* Initialize the game environment, agents and weapons */
             Environment environment = new Environment(0, 0, 780, worldWidth,
                     canvasWidth, "/images/environment/castle.png");
-            Agent chonBota = new Agent(400, 390, 90, 65, 5, 1000, "/images/agents/chonBota.png", false);
+            Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
             Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
             Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, "", false);
 

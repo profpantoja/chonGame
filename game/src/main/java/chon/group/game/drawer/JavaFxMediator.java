@@ -61,19 +61,30 @@ public class JavaFxMediator implements EnvironmentDrawer {
     @Override
     public void drawAgents() {
         for (Agent agent : this.environment.getAgents()) {
-            int screenX = (int) this.environment.getCamera().worldToScreenX(agent.getPosX());
-            drawer.drawImage(agent.getImage(), screenX, agent.getPosY(), agent.getWidth(), agent.getHeight());
-            drawer.drawLifeBar(agent.getHealth(), agent.getFullHealth(), agent.getWidth(), screenX, agent.getPosY(),
+            int newPosX = (int) this.environment.getCamera().updateEntity(agent);
+            drawer.drawImage(agent.getImage(),
+                    newPosX,
+                    agent.getPosY(),
+                    agent.getWidth(),
+                    agent.getHeight());
+            drawer.drawLifeBar(agent.getHealth(),
+                    agent.getFullHealth(),
+                    agent.getWidth(),
+                    newPosX,
+                    agent.getPosY(),
                     Color.DARKRED);
         }
 
         Agent protagonist = this.environment.getProtagonist();
-        int protagonistScreenX = (int) this.environment.getCamera().worldToScreenX(protagonist.getPosX());
-        drawer.drawImage(protagonist.getImage(), protagonistScreenX, protagonist.getPosY(), protagonist.getWidth(),
+        int newPosX = (int) this.environment.getCamera().updateEntity(protagonist);
+        drawer.drawImage(protagonist.getImage(),
+                newPosX,
+                protagonist.getPosY(),
+                protagonist.getWidth(),
                 protagonist.getHeight());
 
-        drawLifeBar();
-        drawStatusPanel();
+        this.drawLifeBar();
+        this.drawStatusPanel();
     }
 
     /**
@@ -82,12 +93,11 @@ public class JavaFxMediator implements EnvironmentDrawer {
     @Override
     public void drawLifeBar() {
         Agent protagonist = this.environment.getProtagonist();
-        int screenX = (int) this.environment.getCamera().worldToScreenX(protagonist.getPosX());
         drawer.drawLifeBar(
                 protagonist.getHealth(),
                 protagonist.getFullHealth(),
                 protagonist.getWidth(),
-                screenX,
+                (int) this.environment.getCamera().updateEntity(protagonist),
                 protagonist.getPosY(),
                 Color.GREEN);
     }
@@ -98,12 +108,9 @@ public class JavaFxMediator implements EnvironmentDrawer {
     @Override
     public void drawStatusPanel() {
         Agent protagonist = this.environment.getProtagonist();
-        int screenX = (int) this.environment.getCamera().worldToScreenX(protagonist.getPosX());
-        drawer.drawStatusPanel((int) protagonist.getPosX(),
+        drawer.drawStatusPanel(protagonist.getPosX(),
                 protagonist.getPosY(),
-                (int) this.environment.getCamera().getPosX(),
-                screenX,
-                protagonist.getPosY());
+                (int) this.environment.getCamera().getPosX());
     }
 
     /**
@@ -141,13 +148,12 @@ public class JavaFxMediator implements EnvironmentDrawer {
         Iterator<Message> iterator = this.environment.getMessages().iterator();
         while (iterator.hasNext()) {
             Message message = iterator.next();
-            double screenX = this.environment.getCamera().worldToScreenX(message.getPosX());
             drawer.drawMessages(message.getSize(),
                     message.getOpacity(),
                     Color.BLACK,
                     Color.WHEAT,
                     String.valueOf(message.getMessage()),
-                    screenX,
+                    message.getPosX() - this.environment.getCamera().getPosX(),
                     message.getPosY());
         }
     }
@@ -157,9 +163,9 @@ public class JavaFxMediator implements EnvironmentDrawer {
         Iterator<Shot> iterator = this.environment.getShots().iterator();
         while (iterator.hasNext()) {
             Shot shot = iterator.next();
-            int screenX = (int) this.environment.getCamera().worldToScreenX(shot.getPosX());
             drawer.drawImage(shot.getImage(),
-                    screenX, shot.getPosY(),
+                    (int) this.environment.getCamera().updateEntity(shot),
+                    shot.getPosY(),
                     shot.getWidth(),
                     shot.getHeight());
         }

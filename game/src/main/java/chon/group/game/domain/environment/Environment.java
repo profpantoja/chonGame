@@ -47,7 +47,7 @@ public class Environment extends Entity {
      *
      * @param posX        the initial X (horizontal) position of the environment
      * @param posY        the initial Y (vertical) position of the environment
-     * @param width  the width of the environment
+     * @param width       the width of the environment
      * @param height      the height of the environment
      * @param pathImage   the path to the background image
      * @param screenWidth the width of the screen for camera calculations
@@ -302,6 +302,13 @@ public class Environment extends Entity {
     public void updateCamera() {
         if (this.camera != null)
             this.camera.update();
+        /*
+         * Precisa colocar a alteração da posição X e Y do ambiente a partir da posição
+         * X da camera.
+         * 
+         * Precisa avaliar se a posição relativa em relação a camera altera a posição
+         * dos outros componentes.
+         */
     }
 
 }

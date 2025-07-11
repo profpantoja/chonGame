@@ -89,8 +89,8 @@ public class Camera {
         }
     }
 
-    public double worldToScreenX(double worldX) {
-        return worldX - this.posX;
+    public double updateEntity(Entity entity) {
+        return entity.getPosX() - this.posX;
     }
 
 }
