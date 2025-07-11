@@ -46,7 +46,6 @@ public class Engine extends Application {
      *
      * @param args command-line arguments passed to the application.
      */
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -69,7 +68,7 @@ public class Engine extends Application {
             double canvasHeight = 780;
             int worldWidth = 4096;
 
-            /* Initialize the game environment and agents */
+            /* Initialize the game environment, agents and weapons */
             Environment environment = new Environment(0, 0, 780, worldWidth,
                     canvasWidth, "/images/environment/castle.png");
             Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
@@ -113,29 +112,22 @@ public class Engine extends Application {
             root.getChildren().add(canvas);
 
             /* Handle keyboard input */
-            ArrayList<String> input = new ArrayList<String>();
+            ArrayList<String> input = new ArrayList<>();
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
                     String code = e.getCode().toString();
-                    input.clear();
-
-                    System.out.println("Pressed: " + code);
-
                     if (code.equals("P")) {
                         isPaused = !isPaused;
                     }
-
                     if (!isPaused && !input.contains(code)) {
                         input.add(code);
                     }
-
                 }
             });
 
             scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
                     String code = e.getCode().toString();
-                    System.out.println("Released: " + code);
                     input.remove(code);
                 }
             });
@@ -214,7 +206,6 @@ public class Engine extends Application {
                 }
             }.start();
             theStage.show();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
