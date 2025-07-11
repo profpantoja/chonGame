@@ -1,7 +1,10 @@
 package chon.group;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.Object;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.domain.weapon.Cannon;
@@ -36,7 +39,6 @@ import javafx.scene.layout.StackPane;
  */
 public class Engine extends Application {
 
-    /* If the game is paused or not. */
     private boolean isPaused = false;
 
     /**
@@ -82,6 +84,20 @@ public class Engine extends Application {
             environment.setPauseImage("/images/environment/pause.png");
             environment.setGameOverImage("/images/environment/gameover.png");
 
+            /* Set up some collectable objects */
+            List<Object> objects = new ArrayList<>();
+            objects.add(new Object(200, 350, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(400, 380, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(1000, 600, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(1400, 380, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(1800, 650, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(2000, 580, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(2300, 380, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(2600, 500, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(2900, 380, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(2950, 400, 32, 32, "/images/agents/coin.png", true, false));
+            environment.setObjects(objects);
+
             /* Set up the graphical canvas */
             Canvas canvas = new Canvas(canvasWidth, canvasHeight);
             GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -126,6 +142,7 @@ public class Engine extends Application {
                 @Override
                 public void handle(long arg0) {
                     mediator.clearEnvironment();
+                    environment.detectCollision();
                     /* Branching the Game Loop */
                     /* If the agent died in the last loop */
                     if (environment.getProtagonist().isDead()) {
@@ -134,6 +151,7 @@ public class Engine extends Application {
                         environment.updateShots();
                         mediator.drawBackground();
                         mediator.drawAgents();
+                        mediator.drawObjects();
                         mediator.drawShots();
                         mediator.drawMessages();
                         /* Rendering the Game Over Screen */
@@ -142,8 +160,9 @@ public class Engine extends Application {
                         if (isPaused) {
                             mediator.drawBackground();
                             mediator.drawAgents();
-                            mediator.drawMessages();
+                            mediator.drawObjects();
                             mediator.drawShots();
+                            mediator.drawMessages();
                             /* Rendering the Pause Screen */
                             mediator.drawPauseScreen();
                         } else {
@@ -173,12 +192,13 @@ public class Engine extends Application {
                                         environment.getProtagonist().getPosY());
                             }
                             /* Render the game environment and agents */
-                            environment.detectCollision();
+                            environment.updateObjects();
                             environment.updateShots();
                             environment.updateMessages();
                             environment.updateCamera();
                             mediator.drawBackground();
                             mediator.drawAgents();
+                            mediator.drawObjects();
                             mediator.drawShots();
                             mediator.drawMessages();
                         }
@@ -190,4 +210,5 @@ public class Engine extends Application {
             e.printStackTrace();
         }
     }
+
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Entity;
+import chon.group.game.core.agent.Object;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.messaging.Message;
 import javafx.scene.image.Image;
@@ -32,6 +33,8 @@ public class Environment extends Entity {
     /** List of agents present in the environment. */
     private List<Agent> agents;
 
+    private List<Object> objects;
+
     /** List of messages to display. */
     private List<Message> messages;
 
@@ -54,9 +57,10 @@ public class Environment extends Entity {
      */
     public Environment(int posX, int posY, int height, int width, double screenWidth, String pathImage) {
         super(posX, posY, height, width, 0, 0, pathImage);
-        this.agents = new ArrayList<>();
-        this.messages = new ArrayList<>();
-        this.shots = new ArrayList<>();
+        this.agents = new ArrayList<Agent>();
+        this.objects = new ArrayList<Object>();
+        this.messages = new ArrayList<Message>();
+        this.shots = new ArrayList<Shot>();
         this.camera = new Camera(screenWidth, width, 0.2, 0.8);
     }
 
@@ -74,6 +78,7 @@ public class Environment extends Entity {
     public Environment(int posX, int posY, int width, int height, String pathImage, ArrayList<Agent> agents) {
         super(posX, posY, height, width, width, height, pathImage);
         this.agents = agents;
+        this.objects = new ArrayList<Object>();
         this.messages = new ArrayList<Message>();
         this.shots = new ArrayList<Shot>();
     }
@@ -151,6 +156,14 @@ public class Environment extends Entity {
     public void setAgents(ArrayList<Agent> agents) {
         this.agents = agents;
 
+    }
+
+    public List<Object> getObjects() {
+        return objects;
+    }
+
+    public void setObjects(List<Object> objects) {
+        this.objects = objects;
     }
 
     /**
@@ -262,6 +275,27 @@ public class Environment extends Entity {
                 a.getPosY() + a.getHeight() > b.getPosY();
     }
 
+    public void updateObjects() {
+        Iterator<Object> iterator = this.objects.iterator();
+        while (iterator.hasNext()) {
+            Object object = iterator.next();
+            if (!object.isCollected() && object.isCollectible()) {
+                object.follow(this.getProtagonist(), 200, 5);
+                // Verifica se chegou perto o suficiente para coletar
+                double dx = object.getPosX() - this.getProtagonist().getPosX();
+                double dy = object.getPosY() - this.getProtagonist().getPosY();
+                double distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < 20) {
+                    object.onCollect();
+                }
+            } else {
+                if (object.isCollected() && object.isCollectible()) {
+                    iterator.remove();
+                }
+            }
+        }
+    }
+
     public void updateMessages() {
         Iterator<Message> iterator = this.messages.iterator();
         while (iterator.hasNext()) {
@@ -302,13 +336,6 @@ public class Environment extends Entity {
     public void updateCamera() {
         if (this.camera != null)
             this.camera.update();
-        /*
-         * Precisa colocar a alteração da posição X e Y do ambiente a partir da posição
-         * X da camera.
-         * 
-         * Precisa avaliar se a posição relativa em relação a camera altera a posição
-         * dos outros componentes.
-         */
     }
 
 }

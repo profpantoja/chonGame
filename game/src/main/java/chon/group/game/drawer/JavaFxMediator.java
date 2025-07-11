@@ -3,6 +3,7 @@ package chon.group.game.drawer;
 import java.util.Iterator;
 
 import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.Object;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.messaging.Message;
@@ -85,6 +86,23 @@ public class JavaFxMediator implements EnvironmentDrawer {
 
         this.drawLifeBar();
         this.drawStatusPanel();
+<<<<<<< HEAD
+    }
+
+    /**
+     * Renders all objects within the environment.
+     */
+    @Override
+    public void drawObjects() {
+        for (Object object : environment.getObjects()) {
+            drawer.drawImage(object.getImage(),
+                    (int) this.environment.getCamera().updateEntity(object),
+                    object.getPosY(),
+                    object.getWidth(),
+                    object.getHeight());
+        }
+=======
+>>>>>>> origin/main
     }
 
     /**
