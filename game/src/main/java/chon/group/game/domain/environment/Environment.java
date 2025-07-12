@@ -225,15 +225,14 @@ public class Environment extends Entity {
      * its position if necessary.
      */
     public void checkBorders() {
-        if (this.protagonist.getPosX() < 0) {
+        if (this.protagonist.getPosX() < 0)
             this.protagonist.setPosX(0);
-        } else if ((this.protagonist.getPosX() + this.protagonist.getWidth()) > this.getWidth()) {
-            this.protagonist.setPosX(this.getWidth() - protagonist.getWidth());
-        } else if (this.protagonist.getPosY() < 0) {
+        if ((this.protagonist.getPosX() + this.protagonist.getWidth()) > this.width)
+            this.protagonist.setPosX(this.width - protagonist.getWidth());
+        if (this.protagonist.getPosY() < 0)
             this.protagonist.setPosY(0);
-        } else if ((this.protagonist.getPosY() + this.protagonist.getHeight()) > this.getHeight()) {
-            this.protagonist.setPosY(this.getHeight() - this.protagonist.getHeight());
-        }
+        if ((this.protagonist.getPosY() + this.protagonist.getHeight()) > this.height)
+            this.protagonist.setPosY(this.height - this.protagonist.getHeight());
     }
 
     /**
