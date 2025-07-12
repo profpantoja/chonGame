@@ -86,7 +86,6 @@ public class JavaFxMediator implements EnvironmentDrawer {
 
         this.drawLifeBar();
         this.drawStatusPanel();
-<<<<<<< HEAD
     }
 
     /**
@@ -101,8 +100,6 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     object.getWidth(),
                     object.getHeight());
         }
-=======
->>>>>>> origin/main
     }
 
     /**
