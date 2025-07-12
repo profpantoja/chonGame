@@ -1,12 +1,14 @@
 package chon.group;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import chon.group.game.domain.agent.Agent;
-import chon.group.game.domain.agent.Cannon;
-import chon.group.game.domain.agent.Fireball;
-import chon.group.game.domain.agent.Weapon;
+import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.Object;
+import chon.group.game.core.weapon.Weapon;
 import chon.group.game.domain.environment.Environment;
+import chon.group.game.domain.weapon.Cannon;
+import chon.group.game.domain.weapon.Lancer;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
@@ -37,7 +39,6 @@ import javafx.stage.Stage;
  */
 public class Engine extends Application {
 
-    /* If the game is paused or not. */
     private boolean isPaused = false;
 
     /**
@@ -45,7 +46,6 @@ public class Engine extends Application {
      *
      * @param args command-line arguments passed to the application.
      */
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -63,12 +63,20 @@ public class Engine extends Application {
     @Override
     public void start(Stage theStage) {
         try {
-            /* Initialize the game environment and agents */
-            Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
+            /* Define some size properties for both Canvas and Environment */
+            double canvasWidth = 1280;
+            double canvasHeight = 780;
+            int worldWidth = 4096;
+
+            /* Initialize the game environment, agents and weapons */
+            Environment environment = new Environment(0, 0, 780, worldWidth,
+                    canvasWidth, "/images/environment/castle.png");
             Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
             Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
-            Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false);
-            chonBota.setWeapon(fireball);
+            Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, "", false);
+
+            chonBota.setWeapon(cannon);
+            chonBota.setWeapon(lancer);
 
             Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
             environment.setProtagonist(chonBota);
@@ -76,51 +84,56 @@ public class Engine extends Application {
             environment.setPauseImage("/images/environment/pause.png");
             environment.setGameOverImage("/images/environment/gameover.png");
 
+            /* Set up some collectable objects */
+            List<Object> objects = new ArrayList<>();
+            objects.add(new Object(200, 350, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(400, 380, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(1000, 600, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(1400, 380, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(1800, 650, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(2000, 580, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(2300, 380, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(2600, 500, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(2900, 380, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(2950, 400, 32, 32, "/images/agents/coin.png", true, false));
+            environment.setObjects(objects);
+
             /* Set up the graphical canvas */
-            Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
+            Canvas canvas = new Canvas(canvasWidth, canvasHeight);
             GraphicsContext gc = canvas.getGraphicsContext2D();
             EnvironmentDrawer mediator = new JavaFxMediator(environment, gc);
 
             /* Set up the scene and stage */
             StackPane root = new StackPane();
-            Scene scene = new Scene(root, environment.getWidth(), environment.getHeight());
+            Scene scene = new Scene(root, canvasWidth, canvasHeight);
             theStage.setTitle("Chon: The Learning Game");
             theStage.setScene(scene);
 
             root.getChildren().add(canvas);
-            theStage.show();
 
             /* Handle keyboard input */
-            ArrayList<String> input = new ArrayList<String>();
+            ArrayList<String> input = new ArrayList<>();
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
                     String code = e.getCode().toString();
-
-                    System.out.println("Pressed: " + code);
-
                     if (code.equals("P")) {
                         isPaused = !isPaused;
                     }
-
                     if (!isPaused && !input.contains(code)) {
                         input.add(code);
                     }
-
                 }
             });
 
             scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
                     String code = e.getCode().toString();
-                    System.out.println("Released: " + code);
-                    
                     input.remove(code);
                 }
             });
 
             /* Start the game loop */
             new AnimationTimer() {
-
                 /**
                  * The game loop, called on each frame.
                  *
@@ -129,6 +142,7 @@ public class Engine extends Application {
                 @Override
                 public void handle(long arg0) {
                     mediator.clearEnvironment();
+                    environment.detectCollision();
                     /* Branching the Game Loop */
                     /* If the agent died in the last loop */
                     if (environment.getProtagonist().isDead()) {
@@ -137,6 +151,7 @@ public class Engine extends Application {
                         environment.updateShots();
                         mediator.drawBackground();
                         mediator.drawAgents();
+                        mediator.drawObjects();
                         mediator.drawShots();
                         mediator.drawMessages();
                         /* Rendering the Game Over Screen */
@@ -145,8 +160,9 @@ public class Engine extends Application {
                         if (isPaused) {
                             mediator.drawBackground();
                             mediator.drawAgents();
-                            mediator.drawMessages();
+                            mediator.drawObjects();
                             mediator.drawShots();
+                            mediator.drawMessages();
                             /* Rendering the Pause Screen */
                             mediator.drawPauseScreen();
                         } else {
@@ -176,11 +192,13 @@ public class Engine extends Application {
                                         environment.getProtagonist().getPosY());
                             }
                             /* Render the game environment and agents */
-                            environment.detectCollision();
+                            environment.updateObjects();
                             environment.updateShots();
                             environment.updateMessages();
+                            environment.updateCamera();
                             mediator.drawBackground();
                             mediator.drawAgents();
+                            mediator.drawObjects();
                             mediator.drawShots();
                             mediator.drawMessages();
                         }
@@ -188,11 +206,9 @@ public class Engine extends Application {
                 }
             }.start();
             theStage.show();
-
-        } catch (
-
-        Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 }

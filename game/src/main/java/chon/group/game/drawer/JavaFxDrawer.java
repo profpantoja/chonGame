@@ -85,12 +85,13 @@ public class JavaFxDrawer {
      * @param posX The x-coordinate of the protagonist.
      * @param posY The y-coordinate of the protagonist.
      */
-    public void drawStatusPanel(int posX, int posY) {
+    public void drawStatusPanel(int posX, int posY, int camX) {
         Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
         this.gc.setFont(theFont);
         this.gc.setFill(Color.BLACK);
-        this.gc.fillText("X: " + posX, posX + 10, posY - 40);
-        this.gc.fillText("Y: " + posY, posX + 10, posY - 25);
+        this.gc.fillText("X: " + posX, (posX - camX) + 5, posY - 55);
+        this.gc.fillText("Y: " + posY, (posX - camX) + 5, posY - 40);
+        this.gc.fillText("CamX: " + camX, (posX - camX) + 5, posY - 25);
     }
 
     /**
