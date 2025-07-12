@@ -66,11 +66,11 @@ public class Engine extends Application {
             /* Define some size properties for both Canvas and Environment */
             double canvasWidth = 1280;
             double canvasHeight = 780;
-            int worldWidth = 4096;
+            int worldWidth = 8024;
 
             /* Initialize the game environment, agents and weapons */
             Environment environment = new Environment(0, 0, 780, worldWidth,
-                    canvasWidth, "/images/environment/castle.png");
+                    canvasWidth, "/images/environment/castleLong.png");
             Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
             Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
             Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, "", false);
