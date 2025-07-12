@@ -67,7 +67,7 @@ public class JavaFxDrawer {
         int borderThickness = 2;
         int barHeight = 5;
         int lifeSpan = Math.round((float) ((health * 100 / fullHealth) * width) / 100);
-        int barY = 30;
+        int barY = 19;
 
         this.gc.setFill(Color.BLACK);
         this.gc.fillRect(posX, posY - barY, width, barHeight + (borderThickness * 2));
@@ -92,19 +92,19 @@ public class JavaFxDrawer {
     public void drawEnergyBar(double energy, double fullEnergy, int width, int posX, int posY, Color color) {
         int borderThickness = 2;
         int barHeight = 5;
-        int energyWidth = (int)((energy / fullEnergy) * width);
-        int barY = 15; // Posicionado abaixo da barra de vida
+        int energyWidth = (int) ((energy / fullEnergy) * width);
+        int barY = 12; // Posicionado abaixo da barra de vida
 
         // Fundo da barra
         this.gc.setFill(Color.BLACK);
-        this.gc.fillRect(posX, posY - barY, width, barHeight + (borderThickness * 2));
+        this.gc.fillRect(posX , posY - barY, width, barHeight + (borderThickness * 2));
 
         // Barra de energia (com gradiente de cor)
         Color energyColor = Color.color(
-            color.getRed(), 
-            color.getGreen(), 
-            color.getBlue(), 
-            0.7 // Slightly transparent
+                color.getRed(),
+                color.getGreen(),
+                color.getBlue(),
+                0.7 // Slightly transparent
         );
         this.gc.setFill(energyColor);
         this.gc.fillRect(posX + borderThickness,
@@ -123,8 +123,8 @@ public class JavaFxDrawer {
         Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
         this.gc.setFont(theFont);
         this.gc.setFill(Color.BLACK);
-        this.gc.fillText("X: " + posX, posX + 10, posY - 40);
-        this.gc.fillText("Y: " + posY, posX + 10, posY - 25);
+        this.gc.fillText("X: " + posX, posX + 10, posY - 55);
+        this.gc.fillText("Y: " + posY, posX + 10, posY - 40);
     }
 
     /**
