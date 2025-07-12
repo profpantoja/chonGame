@@ -61,7 +61,7 @@ public class Environment extends Entity {
         this.objects = new ArrayList<Object>();
         this.messages = new ArrayList<Message>();
         this.shots = new ArrayList<Shot>();
-        this.camera = new Camera(screenWidth, width, 0.2, 0.8);
+        this.camera = new Camera(screenWidth, width, 0.49, 0.51);
     }
 
     /**

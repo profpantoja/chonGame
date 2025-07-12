@@ -19,7 +19,7 @@ public class Lancer extends Weapon {
         else
             posX -= 64 + 1;
         return new Fireball(posX,
-                posY,
+                posY + 30,
                 42,
                 64,
                 4,
