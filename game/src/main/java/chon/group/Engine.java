@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import chon.group.game.domain.agent.Agent;
 import chon.group.game.domain.agent.Cannon;
 import chon.group.game.domain.agent.Fireball;
+import chon.group.game.domain.agent.Shot;
 import chon.group.game.domain.agent.Weapon;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.drawer.EnvironmentDrawer;
@@ -73,10 +74,6 @@ public class Engine extends Application {
                     if (code.equals("P")) {
                         isPaused = !isPaused;
                     }
-                    else if (code.equals("E") && !environment.getProtagonist().isEnergyDepleted()) {
-                        // Habilidade especial que consome energia
-                        environment.getProtagonist().consumeEnergy(0.5);
-                    }
 
                     if (!isPaused && !input.contains(code)) {
                         input.add(code);
@@ -96,7 +93,7 @@ public class Engine extends Application {
                 @Override
                 public void handle(long now) {
                     mediator.clearEnvironment();
-                    
+
                     /* Energy system update */
                     if (now - lastEnergyUpdate >= ENERGY_UPDATE_INTERVAL) {
                         updateEnergySystem(environment, input);
@@ -136,45 +133,27 @@ public class Engine extends Application {
 
     private void updateEnergySystem(Environment environment, ArrayList<String> input) {
         Agent protagonist = environment.getProtagonist();
-        
-        // Recupera energia ao se mover
-        if (!input.isEmpty()) {
-            protagonist.recoverEnergy(0.003);
-        } 
-        // Recupera energia quando parado
-        else {
-            protagonist.recoverEnergy(0.003);
-        }
-        
-        // Penalidade quando energia acaba
-        if (protagonist.isEnergyDepleted()) {
-            protagonist.takeDamage(1, environment.getMessages());
-        }
+        protagonist.recoverEnergy();
     }
 
     private void handleGameplay(Environment environment, ArrayList<String> input, Agent protagonist) {
         /* Update the protagonist's movements if input exists */
         if (!input.isEmpty()) {
-           if (input.contains("SPACE")) {
-            input.remove("SPACE");
-            String direction = protagonist.isFlipped() ? "LEFT" : "RIGHT";
-            environment.getShots().add(protagonist.getWeapon().fire(
-            protagonist.getPosX(),
-            protagonist.getPosY(),
-            direction));
-
-        protagonist.consumeEnergy(0.1); // Consome 5% da energia total
-        }
-
+            if (input.contains("SPACE")) {
+                input.remove("SPACE");
+                Shot shot = protagonist.useWeapon();
+                if (shot != null)
+                    environment.getShots().add(shot);
+            }
             protagonist.move(input);
             environment.checkBorders();
         }
-        
+
         /* Update other agents' movements */
         for (Agent agent : environment.getAgents()) {
             agent.chase(protagonist.getPosX(), protagonist.getPosY());
         }
-        
+
         environment.detectCollision();
         environment.updateShots();
         environment.updateMessages();

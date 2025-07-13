@@ -12,21 +12,26 @@ import chon.group.game.messaging.Message;
  */
 public class Agent extends Entity {
 
-    /* The time of the last hit taken. */
+    /** The time of the last hit taken. */
     private long lastHitTime = 0;
 
-    /* Flag to control the invulnerability status of the agent. */
+    /** Flag to control the invulnerability status of the agent. */
     private boolean invulnerable = false;
 
-    /* Invulnerability (in milliseconds) */
+    /** Invulnerability (in milliseconds) */
     private final long INVULNERABILITY_COOLDOWN = 3000;
 
-    /* The Agent's Weapon */
+    /** The Agent's Weapon */
     private Weapon weapon;
 
-    /* Energy system */
+    /** The initial agent's energy */
     private double energy;
+
+    /** The maximum agent's energy. */
     private final double fullEnergy;
+
+    /** The agent's energy recovery factor */
+    private final double recoveryFactor;
 
     /**
      * Constructor to initialize the agent properties.
@@ -43,6 +48,7 @@ public class Agent extends Entity {
         super(posX, posY, height, width, speed, health, pathImage);
         this.energy = 1.0;
         this.fullEnergy = 1.0;
+        this.recoveryFactor = 0.002;
     }
 
     /**
@@ -61,12 +67,13 @@ public class Agent extends Entity {
         super(posX, posY, height, width, speed, health, pathImage, flipped);
         this.energy = 1.0;
         this.fullEnergy = 1.0;
+        this.recoveryFactor = 0.002;
     }
 
     /**
      * Gets the last hit taken.
      */
-    public long getlastHitTime() {
+    public long getLastHitTime() {
         return lastHitTime;
     }
 
@@ -75,7 +82,7 @@ public class Agent extends Entity {
      *
      * @param lastHitTime the new image
      */
-    public void setlastHitTime(long lastHitTime) {
+    public void setLastHitTime(long lastHitTime) {
         this.lastHitTime = lastHitTime;
     }
 
@@ -133,6 +140,10 @@ public class Agent extends Entity {
         return energy;
     }
 
+    public void setEnergy(double energy) {
+        this.energy = energy;
+    }
+
     /**
      * Gets the maximum energy capacity.
      *
@@ -140,6 +151,10 @@ public class Agent extends Entity {
      */
     public double getFullEnergy() {
         return fullEnergy;
+    }
+
+    public double getRecoveryFactor() {
+        return recoveryFactor;
     }
 
     /**
@@ -156,16 +171,16 @@ public class Agent extends Entity {
      *
      * @param amount the amount of energy to recover
      */
-    public void recoverEnergy(double amount) {
-        this.energy = Math.min(this.fullEnergy, this.energy + amount);
+    public void recoverEnergy() {
+        this.energy = Math.min(this.fullEnergy, (this.energy + this.recoveryFactor));
     }
 
     /**
-     * Checks if energy is depleted.
+     * Checks if energy is empty.
      *
      * @return true if energy is 0 or less
      */
-    public boolean isEnergyDepleted() {
+    public boolean isEnergyEmpty() {
         return this.energy <= 0;
     }
 
@@ -188,7 +203,7 @@ public class Agent extends Entity {
     public void takeDamage(int damage, List<Message> messages) {
         this.invulnerable = this.updateInvulnerability();
         if (!this.invulnerable) {
-            super.takeDamage(damage, messages); 
+            super.takeDamage(damage, messages);
             this.lastHitTime = System.currentTimeMillis();
         }
     }
@@ -204,4 +219,14 @@ public class Agent extends Entity {
         }
         return true;
     }
+
+    public Shot useWeapon() {
+        String direction = this.isFlipped() ? "LEFT" : "RIGHT";
+        if (this.energy >= 0.1) {
+            this.consumeEnergy(0.1);
+            return this.weapon.fire(this.getPosX(), this.getPosY(), direction);
+        } else
+            return null;
+    }
+
 }

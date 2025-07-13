@@ -44,16 +44,12 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     agent.getPosY(),
                     agent.getWidth(),
                     agent.getHeight());
-            
-            // Barra de energia (azul)
             drawer.drawEnergyBar(agent.getEnergy(),
                     agent.getFullEnergy(),
                     agent.getWidth(),
                     agent.getPosX(),
                     agent.getPosY(),
                     Color.BLUE);
-            
-            // Barra de vida (verde)
             drawer.drawLifeBar(agent.getHealth(),
                     agent.getFullHealth(),
                     agent.getWidth(),
@@ -70,25 +66,9 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     protagonist.getPosY(),
                     protagonist.getWidth(),
                     protagonist.getHeight());
-            
-            // Barra de energia do protagonista (azul)
-            drawer.drawEnergyBar(protagonist.getEnergy(),
-                    protagonist.getFullEnergy(),
-                    protagonist.getWidth(),
-                    protagonist.getPosX(),
-                    protagonist.getPosY(),
-                    Color.BLUE);
-            
-            // Barra de vida do protagonista (verde)
-            drawer.drawLifeBar(protagonist.getHealth(),
-                    protagonist.getFullHealth(),
-                    protagonist.getWidth(),
-                    protagonist.getPosX(),
-                    protagonist.getPosY(),
-                    Color.GREEN);
-            
-            drawer.drawStatusPanel(protagonist.getPosX(),
-                    protagonist.getPosY());
+            this.drawLifeBar();
+            this.drawEnergyBar();
+            this.drawStatusPanel();
         }
     }
 
@@ -103,6 +83,20 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     protagonist.getPosX(),
                     protagonist.getPosY(),
                     Color.GREEN);
+        }
+    }
+
+    @Override
+    public void drawEnergyBar() {
+        Agent protagonist = this.environment.getProtagonist();
+        if (protagonist != null) {
+            drawer.drawEnergyBar(
+                    protagonist.getEnergy(),
+                    protagonist.getFullEnergy(),
+                    protagonist.getWidth(),
+                    protagonist.getPosX(),
+                    protagonist.getPosY(),
+                    Color.BLUE);
         }
     }
 
