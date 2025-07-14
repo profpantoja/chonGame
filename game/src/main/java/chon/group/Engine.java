@@ -1,24 +1,26 @@
 package chon.group;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import chon.group.game.domain.agent.Agent;
-import chon.group.game.domain.agent.Cannon;
-import chon.group.game.domain.agent.Fireball;
-import chon.group.game.domain.agent.Shot;
-import chon.group.game.domain.agent.Weapon;
+import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.Object;
+import chon.group.game.core.weapon.Shot;
+import chon.group.game.core.weapon.Weapon;
 import chon.group.game.domain.environment.Environment;
+import chon.group.game.domain.weapon.Cannon;
+import chon.group.game.domain.weapon.Lancer;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
-import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 /**
  * The {@code Engine} class represents the main entry point of the application
@@ -27,9 +29,12 @@ import javafx.scene.layout.StackPane;
 public class Engine extends Application {
 
     private boolean isPaused = false;
-    private long lastEnergyUpdate = 0;
-    private static final long ENERGY_UPDATE_INTERVAL = 16_000_000; // 16ms (≈60fps)
 
+    /**
+     * Main entry point of the application.
+     *
+     * @param args command-line arguments passed to the application.
+     */
     public static void main(String[] args) {
         launch(args);
     }
@@ -37,12 +42,20 @@ public class Engine extends Application {
     @Override
     public void start(Stage theStage) {
         try {
-            /* Initialize the game environment and agents */
-            Environment environment = new Environment(0, 0, 1280, 780, "/images/environment/castle.png");
+            /* Define some size properties for both Canvas and Environment */
+            double canvasWidth = 1280;
+            double canvasHeight = 780;
+            int worldWidth = 8024;
+
+            /* Initialize the game environment, agents and weapons */
+            Environment environment = new Environment(0, 0, 780, worldWidth,
+                    canvasWidth, "/images/environment/castleLong.png");
             Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
             Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
-            Weapon fireball = new Fireball(400, 390, 0, 0, 3, 0, "", false);
-            chonBota.setWeapon(fireball);
+            Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, "", false);
+
+            chonBota.setWeapon(cannon);
+            chonBota.setWeapon(lancer);
 
             Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
             environment.setProtagonist(chonBota);
@@ -50,31 +63,41 @@ public class Engine extends Application {
             environment.setPauseImage("/images/environment/pause.png");
             environment.setGameOverImage("/images/environment/gameover.png");
 
+            /* Set up some collectable objects */
+            List<Object> objects = new ArrayList<>();
+            objects.add(new Object(200, 350, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(400, 380, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(1000, 600, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(1400, 380, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(1800, 650, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(2000, 580, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(2300, 380, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(2600, 500, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(2900, 380, 32, 32, "/images/agents/coin.png", true, false));
+            objects.add(new Object(2950, 400, 32, 32, "/images/agents/coin.png", true, false));
+            environment.setObjects(objects);
+
             /* Set up the graphical canvas */
-            Canvas canvas = new Canvas(environment.getWidth(), environment.getHeight());
+            Canvas canvas = new Canvas(canvasWidth, canvasHeight);
             GraphicsContext gc = canvas.getGraphicsContext2D();
             EnvironmentDrawer mediator = new JavaFxMediator(environment, gc);
 
             /* Set up the scene and stage */
             StackPane root = new StackPane();
-            Scene scene = new Scene(root, environment.getWidth(), environment.getHeight());
+            Scene scene = new Scene(root, canvasWidth, canvasHeight);
             theStage.setTitle("Chon: The Learning Game");
             theStage.setScene(scene);
 
             root.getChildren().add(canvas);
-            theStage.show();
 
             /* Handle keyboard input */
-            ArrayList<String> input = new ArrayList<String>();
+            ArrayList<String> input = new ArrayList<>();
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
                     String code = e.getCode().toString();
-                    input.clear();
-
                     if (code.equals("P")) {
                         isPaused = !isPaused;
                     }
-
                     if (!isPaused && !input.contains(code)) {
                         input.add(code);
                     }
@@ -93,18 +116,15 @@ public class Engine extends Application {
                 @Override
                 public void handle(long now) {
                     mediator.clearEnvironment();
-
-                    /* Energy system update */
-                    if (now - lastEnergyUpdate >= ENERGY_UPDATE_INTERVAL) {
-                        updateEnergySystem(environment, input);
-                        lastEnergyUpdate = now;
-                    }
-
+                    environment.detectCollision();
+                    /* Branching the Game Loop */
+                    /* If the agent died in the last loop */
                     if (environment.getProtagonist().isDead()) {
                         environment.updateMessages();
                         environment.updateShots();
                         mediator.drawBackground();
                         mediator.drawAgents();
+                        mediator.drawObjects();
                         mediator.drawShots();
                         mediator.drawMessages();
                         mediator.drawGameOver();
@@ -112,20 +132,50 @@ public class Engine extends Application {
                         if (isPaused) {
                             mediator.drawBackground();
                             mediator.drawAgents();
-                            mediator.drawMessages();
+                            mediator.drawObjects();
                             mediator.drawShots();
+                            mediator.drawMessages();
+                            /** Rendering the Pause Screen */
                             mediator.drawPauseScreen();
                         } else {
-                            handleGameplay(environment, input, chonBota);
+                            /** ChonBota Only Moves if the Player Press Something */
+                            /** Update the protagonist's movements if input exists */
+                            if (!input.isEmpty()) {
+                                /** ChonBota Shoots Somebody Who Outdrew You */
+                                /** But only if she has enough energy */
+                                if (input.contains("SPACE")) {
+                                    input.remove("SPACE");
+                                    Shot shot = environment.getProtagonist().useWeapon();
+                                    if (shot != null)
+                                        environment.getShots().add(shot);
+
+                                }
+                                /* ChonBota's Movements */
+                                environment.getProtagonist().move(input);
+                                environment.checkBorders();
+                            }
+                            /* ChonBot's Automatic Movements */
+                            /* Update the other agents' movements */
+                            for (Agent agent : environment.getAgents()) {
+                                agent.chase(environment.getProtagonist().getPosX(),
+                                        environment.getProtagonist().getPosY());
+                            }
+                            /* Render the game environment and agents */
+                            environment.updateObjects();
+                            environment.updateShots();
+                            environment.updateMessages();
+                            environment.updateCamera();
+                            environment.getProtagonist().recoverEnergy();
                             mediator.drawBackground();
                             mediator.drawAgents();
+                            mediator.drawObjects();
                             mediator.drawShots();
                             mediator.drawMessages();
                         }
                     }
                 }
             }.start();
-
+            theStage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -136,26 +186,4 @@ public class Engine extends Application {
         protagonist.recoverEnergy();
     }
 
-    private void handleGameplay(Environment environment, ArrayList<String> input, Agent protagonist) {
-        /* Update the protagonist's movements if input exists */
-        if (!input.isEmpty()) {
-            if (input.contains("SPACE")) {
-                input.remove("SPACE");
-                Shot shot = protagonist.useWeapon();
-                if (shot != null)
-                    environment.getShots().add(shot);
-            }
-            protagonist.move(input);
-            environment.checkBorders();
-        }
-
-        /* Update other agents' movements */
-        for (Agent agent : environment.getAgents()) {
-            agent.chase(protagonist.getPosX(), protagonist.getPosY());
-        }
-
-        environment.detectCollision();
-        environment.updateShots();
-        environment.updateMessages();
-    }
 }

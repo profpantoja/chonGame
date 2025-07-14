@@ -24,6 +24,11 @@ public interface EnvironmentDrawer {
     void drawAgents();
 
     /**
+     * Draws all the objects on the screen.
+     */
+    void drawObjects();
+
+    /**
      * Draws the life bar for agents or players.
      */
     void drawLifeBar();

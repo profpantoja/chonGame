@@ -16,7 +16,7 @@
             <artifactId>javafx-controls</artifactId>
             <version>16</version>
         </dependency>
-    </dependencies>
+    </dependencies>  
     <repositories>
         <repository>
             <id>openjfx</id>
