@@ -223,8 +223,8 @@ public class Agent extends Entity {
 
     public Shot useWeapon() {
         String direction = this.isFlipped() ? "LEFT" : "RIGHT";
-        if (this.energy >= 0.1) {
-            this.consumeEnergy(0.1);
+        if (this.energy >= this.getWeapon().getEnergyCost()) {
+            this.consumeEnergy(this.getWeapon().getEnergyCost());
             return this.weapon.fire(this.getPosX(), this.getPosY(), direction);
         } else
             return null;

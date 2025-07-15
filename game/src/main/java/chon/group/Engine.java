@@ -51,8 +51,8 @@ public class Engine extends Application {
             Environment environment = new Environment(0, 0, 780, worldWidth,
                     canvasWidth, "/images/environment/castleLong.png");
             Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
-            Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
-            Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, "", false);
+            Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, 0.05, "", false);
+            Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
 
             chonBota.setWeapon(cannon);
             chonBota.setWeapon(lancer);
@@ -179,11 +179,6 @@ public class Engine extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private void updateEnergySystem(Environment environment, ArrayList<String> input) {
-        Agent protagonist = environment.getProtagonist();
-        protagonist.recoverEnergy();
     }
 
 }
