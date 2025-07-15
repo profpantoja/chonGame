@@ -35,6 +35,18 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 this.drawer = new JavaFxDrawer(gc, this);
         }
 
+        @Override
+        /**
+         * Renders the Game.
+         */
+        public void renderGame() {
+                this.drawBackground();
+                this.drawAgents();
+                this.drawObjects();
+                this.drawShots();
+                this.drawMessages();
+        }
+
         /**
          * Clears the environment by erasing all drawn elements on the screen.
          */

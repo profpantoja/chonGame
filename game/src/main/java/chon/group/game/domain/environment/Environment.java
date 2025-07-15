@@ -337,4 +337,12 @@ public class Environment extends Entity {
             this.camera.update();
     }
 
+    public void update() {
+        this.updateObjects();
+        this.updateShots();
+        this.updateMessages();
+        this.updateCamera();
+        this.getProtagonist().recoverEnergy();
+    }
+
 }

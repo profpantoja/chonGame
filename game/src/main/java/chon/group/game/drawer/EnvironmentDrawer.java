@@ -8,6 +8,9 @@ package chon.group.game.drawer;
  */
 public interface EnvironmentDrawer {
 
+    /** Render the Game */
+    void renderGame();
+
     /**
      * Clears the environment, removing all elements.
      */

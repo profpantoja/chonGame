@@ -3,9 +3,9 @@ package chon.group;
 import java.util.ArrayList;
 import java.util.List;
 
+import chon.group.game.Game;
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Object;
-import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.domain.environment.Environment;
 import chon.group.game.domain.weapon.Cannon;
@@ -111,69 +111,12 @@ public class Engine extends Application {
                 }
             });
 
+            Game chonGame = new Game(environment, mediator, input);
             /* Start the game loop */
             new AnimationTimer() {
                 @Override
                 public void handle(long now) {
-                    mediator.clearEnvironment();
-                    environment.detectCollision();
-                    /* Branching the Game Loop */
-                    /* If the agent died in the last loop */
-                    if (environment.getProtagonist().isDead()) {
-                        environment.updateMessages();
-                        environment.updateShots();
-                        mediator.drawBackground();
-                        mediator.drawAgents();
-                        mediator.drawObjects();
-                        mediator.drawShots();
-                        mediator.drawMessages();
-                        /** Rendering the Game Over Screen */
-                        mediator.drawGameOver();
-                    } else {
-                        if (isPaused) {
-                            mediator.drawBackground();
-                            mediator.drawAgents();
-                            mediator.drawObjects();
-                            mediator.drawShots();
-                            mediator.drawMessages();
-                            /** Rendering the Pause Screen */
-                            mediator.drawPauseScreen();
-                        } else {
-                            /** ChonBota Only Moves if the Player Press Something */
-                            /** Update the protagonist's movements if input exists */
-                            if (!input.isEmpty()) {
-                                /** ChonBota Shoots Somebody Who Outdrew You */
-                                /** But only if she has enough energy */
-                                if (input.contains("SPACE")) {
-                                    input.remove("SPACE");
-                                    Shot shot = environment.getProtagonist().useWeapon();
-                                    if (shot != null)
-                                        environment.getShots().add(shot);
-
-                                }
-                                /* ChonBota's Movements */
-                                environment.getProtagonist().move(input);
-                                environment.checkBorders();
-                            }
-                            /* ChonBot's Automatic Movements */
-                            /* Update the other agents' movements */
-                            for (Agent agent : environment.getAgents()) {
-                                agent.chase(environment.getProtagonist().getPosX(),
-                                        environment.getProtagonist().getPosY());
-                            }
-                            /* Render the game environment and agents */
-                            environment.updateObjects();
-                            environment.updateShots();
-                            environment.updateMessages();
-                            environment.updateCamera();
-                            environment.getProtagonist().recoverEnergy();
-                            mediator.drawBackground();
-                            mediator.drawAgents();
-                            mediator.drawObjects();
-                            mediator.drawShots();
-                            mediator.drawMessages();
-                        }
-                    }
+                    chonGame.loop();
                 }
             }.start();
             theStage.show();
