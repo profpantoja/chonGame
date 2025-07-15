@@ -127,6 +127,7 @@ public class Engine extends Application {
                         mediator.drawObjects();
                         mediator.drawShots();
                         mediator.drawMessages();
+                        /** Rendering the Game Over Screen */
                         mediator.drawGameOver();
                     } else {
                         if (isPaused) {
