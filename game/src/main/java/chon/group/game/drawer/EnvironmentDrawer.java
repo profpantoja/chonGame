@@ -34,6 +34,11 @@ public interface EnvironmentDrawer {
     void drawLifeBar();
 
     /**
+     * Draws the energy bar for agents or players.
+     */
+    void drawEnergyBar();
+
+    /**
      * Draws the status panel displaying relevant game information.
      */
     void drawStatusPanel();

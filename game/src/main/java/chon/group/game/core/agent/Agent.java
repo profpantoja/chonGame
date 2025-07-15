@@ -2,6 +2,7 @@ package chon.group.game.core.agent;
 
 import java.util.List;
 
+import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.messaging.Message;
 
@@ -12,17 +13,26 @@ import chon.group.game.messaging.Message;
  */
 public class Agent extends Entity {
 
-    /* The time of the last hit taken. */
+    /** The time of the last hit taken. */
     private long lastHitTime = 0;
 
-    /* Flag to control the invulnerability status of the agent. */
+    /** Flag to control the invulnerability status of the agent. */
     private boolean invulnerable = false;
 
     /* Invulnerability (in milliseconds) */
     private final long INVULNERABILITY_COOLDOWN = 1000;
 
-    /* The Agent's Weapon */
+    /** The Agent's Weapon */
     private Weapon weapon;
+
+    /** The initial agent's energy */
+    private double energy;
+
+    /** The maximum agent's energy. */
+    private final double fullEnergy;
+
+    /** The agent's energy recovery factor */
+    private final double recoveryFactor;
 
     /**
      * Constructor to initialize the agent properties.
@@ -37,6 +47,9 @@ public class Agent extends Entity {
      */
     public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage) {
         super(posX, posY, height, width, speed, health, pathImage);
+        this.energy = 1.0;
+        this.fullEnergy = 1.0;
+        this.recoveryFactor = 0.0002;
     }
 
     /**
@@ -53,6 +66,9 @@ public class Agent extends Entity {
      */
     public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped) {
         super(posX, posY, height, width, speed, health, pathImage, flipped);
+        this.energy = 1.0;
+        this.fullEnergy = 1.0;
+        this.recoveryFactor = 0.0002;
     }
 
     /**
@@ -117,6 +133,59 @@ public class Agent extends Entity {
     }
 
     /**
+     * Gets the current energy level (0.0 to 1.0).
+     *
+     * @return current energy level
+     */
+    public double getEnergy() {
+        return energy;
+    }
+
+    public void setEnergy(double energy) {
+        this.energy = energy;
+    }
+
+    /**
+     * Gets the maximum energy capacity.
+     *
+     * @return maximum energy
+     */
+    public double getFullEnergy() {
+        return fullEnergy;
+    }
+
+    public double getRecoveryFactor() {
+        return recoveryFactor;
+    }
+
+    /**
+     * Consumes a specified amount of energy.
+     *
+     * @param amount the amount of energy to consume
+     */
+    public void consumeEnergy(double amount) {
+        this.energy = Math.max(0, this.energy - amount);
+    }
+
+    /**
+     * Recovers a specified amount of energy.
+     *
+     * @param amount the amount of energy to recover
+     */
+    public void recoverEnergy() {
+        this.energy = Math.min(this.fullEnergy, (this.energy + this.recoveryFactor));
+    }
+
+    /**
+     * Checks if energy is empty.
+     *
+     * @return true if energy is 0 or less
+     */
+    public boolean isEnergyEmpty() {
+        return this.energy <= 0;
+    }
+
+    /**
      * Gets if the agent is dead.
      *
      * @return if the agent is dead
@@ -135,7 +204,7 @@ public class Agent extends Entity {
     public void takeDamage(int damage, List<Message> messages) {
         this.invulnerable = this.updateInvulnerability();
         if (!this.invulnerable) {
-            super.takeDamage(damage, messages); 
+            super.takeDamage(damage, messages);
             this.lastHitTime = System.currentTimeMillis();
         }
     }
@@ -150,6 +219,15 @@ public class Agent extends Entity {
             return false;
         }
         return true;
+    }
+
+    public Shot useWeapon() {
+        String direction = this.isFlipped() ? "LEFT" : "RIGHT";
+        if (this.energy >= this.getWeapon().getEnergyCost()) {
+            this.consumeEnergy(this.getWeapon().getEnergyCost());
+            return this.weapon.fire(this.getPosX(), this.getPosY(), direction);
+        } else
+            return null;
     }
 
 }
