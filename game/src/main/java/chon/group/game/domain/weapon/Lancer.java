@@ -8,8 +8,9 @@ import chon.group.game.messaging.Message;
 
 public class Lancer extends Weapon {
 
-    public Lancer(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped) {
-        super(posX, posY, height, width, speed, health, pathImage, flipped);
+    public Lancer(int posX, int posY, int height, int width, int speed, int health, double energyCost, String pathImage,
+            boolean flipped) {
+        super(posX, posY, height, width, speed, health, energyCost, pathImage, flipped);
     }
 
     @Override
@@ -19,7 +20,7 @@ public class Lancer extends Weapon {
         else
             posX -= 64 + 1;
         return new Fireball(posX,
-                posY,
+                posY + 30,
                 42,
                 64,
                 4,
