@@ -76,48 +76,53 @@ public class Engine extends Application {
             objects.add(new Object(2600, 500, 32, 32, "/images/agents/coin.png", true, false));
             objects.add(new Object(2900, 380, 32, 32, "/images/agents/coin.png", true, false));
             objects.add(new Object(2950, 400, 32, 32, "/images/agents/coin.png", true, false));
-            environment.setObjects(objects);
 
-            /* Set up the levels */
+
+            /**
+             * Sets up the game levels by creating and configuring Level instances.
+             * <p>
+             * Each level is initialized with a background image, a list of enemy agents,
+             * and a list of collectible or interactive objects placed in the level.
+             * </p>
+             * <p>
+             * The levels are then linked sequentially so that completing one
+             * progresses the player to the next.
+             * </p>
+             * <p>
+             * Finally, the first level is applied to the game environment,
+             * initializing it with the appropriate agents, objects, and background.
+             * </p>
+             */
             List<Level> levels = new ArrayList<>();
 
-            levels.add(new Level("/images/environment/castle.png",
-                List.of(
+            levels.add(new Level("/images/environment/castleLong.png",
+                new ArrayList<>(List.of(
                     new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true)
-                ),
-                List.of(
-                    new Object(200, 350, 32, 32, "/images/agents/coin.png", true, false),
-                    new Object(400, 380, 32, 32, "/images/agents/coin.png", true, false)
-                )
+                )),
+                new ArrayList<>(objects.subList(0, 9))
             ));
 
             levels.add(new Level("/images/environment/mountain.png",
-                List.of(
+                new ArrayList<>(List.of(
                     new Agent(1300, 440, 90, 65, 2, 600, "/images/agents/chonBot.png", true)
-                ),
-                List.of(
-                    new Object(1000, 600, 32, 32, "/images/agents/coin.png", true, false),
-                    new Object(1400, 380, 32, 32, "/images/agents/coin.png", true, false)
-                )
+                )),
+                new ArrayList<>(objects.subList(0, 0))
             ));
 
-            levels.add(new Level("/images/environment/castle.png",
-                List.of(
-                    new Agent(2000, 440, 90, 65, 3, 700, "/images/agents/chonBot.png", true)
-                ),
-                List.of(
-                    new Object(1800, 650, 32, 32, "/images/agents/coin.png", true, false),
-                    new Object(2000, 580, 32, 32, "/images/agents/coin.png", true, false)
-                )
+            levels.add(new Level("/images/environment/castleLong.png",
+                new ArrayList<>(List.of(
+                    new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true)
+                )),
+                new ArrayList<>(objects.subList(0, 9))
             ));
 
-            // Link levels together
-
+            // Link levels together sequentially
             for (int i = 0; i < levels.size() - 1; i++) {
                 levels.get(i).setNextLevel(levels.get(i + 1));
             }
 
-            // Set the next level for the protagonist
+            // Set the first level as the current level and apply it to the environment,
+            // initializing the protagonist and level data.
             final Level[] currentLevel = new Level[]{levels.get(0)};
             currentLevel[0].applyTo(environment, chonBota);
 

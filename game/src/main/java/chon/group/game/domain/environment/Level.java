@@ -25,7 +25,7 @@ public class Level {
 
         this.image = new Image(resource.toExternalForm());
         this.agents = new ArrayList<>(agents);
-        this.objects = objects;
+        this.objects = new ArrayList<>(objects); 
     }
 
     public void applyTo(Environment env, Agent protagonist) {
