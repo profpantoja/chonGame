@@ -22,10 +22,10 @@ public class Game {
 
     public void loop() {
 
-        //if (input.contains("P")) {
-            ///isPaused = !isPaused;
-            ///input.remove("P");
-        //}
+        if (input.contains("P")) {
+            isPaused = !isPaused;
+            input.remove("P");
+        }
 
         mediator.clearEnvironment();
         /* Branching the Game Loop */

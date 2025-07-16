@@ -28,8 +28,6 @@ import javafx.stage.Stage;
  */
 public class Engine extends Application {
 
-    private boolean isPaused = false;
-
     /**
      * Main entry point of the application.
      *
@@ -95,10 +93,7 @@ public class Engine extends Application {
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
                     String code = e.getCode().toString();
-                    if (code.equals("P")) {
-                        isPaused = !isPaused;
-                    }
-                    if (!isPaused && !input.contains(code)) {
+                    if (!input.contains(code)) {
                         input.add(code);
                     }
                 }
@@ -107,7 +102,8 @@ public class Engine extends Application {
             scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
                     String code = e.getCode().toString();
-                    input.remove(code);
+                    if (!code.equals("P"))
+                        input.remove(code);
                 }
             });
 
