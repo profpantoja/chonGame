@@ -13,6 +13,7 @@ public class Game {
     private EnvironmentDrawer mediator;
     ArrayList<String> input;
     private boolean isPaused = false;
+    private GameStatus status = GameStatus.START;
 
     public Game(Environment environment, EnvironmentDrawer mediator, ArrayList<String> input) {
         this.environment = environment;
@@ -21,6 +22,27 @@ public class Game {
     }
 
     public void loop() {
+        this.updateControls();
+        switch (this.status) {
+            case START:
+                this.init();
+                break;
+            case RUNNING:
+                this.running();
+                break;
+            case PAUSED:
+                this.pause();
+                break;
+            case WIN:
+                this.win();
+                break;
+            case GAME_OVER:
+                this.gameOver();
+                break;
+        }
+    }
+
+    public void loop(String del) {
 
         if (input.contains("P")) {
             isPaused = !isPaused;
@@ -65,7 +87,6 @@ public class Game {
             /* ChonBota's Movements */
             environment.getProtagonist().move(input);
             environment.checkBorders();
-            environment.detectCollision();
         }
         /* ChonBot's Automatic Movements */
         /* Update the other agents' movements */
@@ -82,20 +103,36 @@ public class Game {
         /* Render the game environment and agents */
         environment.update();
         mediator.renderGame();
+        /* If the agent died in this loop */
+        if (environment.getProtagonist().isDead())
+            this.status = GameStatus.GAME_OVER;
     }
 
     public void pause() {
+        this.environment.updateMessages();
         mediator.renderGame();
         /** Rendering the Pause Screen */
         mediator.drawPauseScreen();
     }
 
     public void init() {
-
+        this.status = GameStatus.RUNNING;
     }
 
     public void win() {
+        this.status = GameStatus.START;
+    }
 
+    private void updateControls() {
+        if (this.input.contains("P")) {
+            if (this.status.equals(GameStatus.RUNNING)) {
+                this.status = GameStatus.PAUSED;
+            } else {
+                if (this.status.equals(GameStatus.PAUSED))
+                    this.status = GameStatus.RUNNING;
+            }
+            this.input.remove("P");
+        }
     }
 
 }
