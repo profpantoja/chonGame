@@ -275,6 +275,13 @@ public class Environment extends Entity {
                 a.getPosY() + a.getHeight() > b.getPosY();
     }
 
+    /**
+     * Resets the camera position to the initial state.
+     */
+    public void resetCamera(){
+        camera.setPosX(0);
+    }
+
     public void updateObjects() {
         Iterator<Object> iterator = this.objects.iterator();
         while (iterator.hasNext()) {
