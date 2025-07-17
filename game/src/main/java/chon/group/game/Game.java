@@ -3,8 +3,8 @@ package chon.group.game;
 import java.util.ArrayList;
 
 import chon.group.game.core.agent.Agent;
+import chon.group.game.core.environment.Environment;
 import chon.group.game.core.weapon.Shot;
-import chon.group.game.domain.environment.Environment;
 import chon.group.game.drawer.EnvironmentDrawer;
 
 public class Game {
@@ -12,13 +12,44 @@ public class Game {
     private Environment environment;
     private EnvironmentDrawer mediator;
     ArrayList<String> input;
-    private boolean isPaused = false;
     private GameStatus status = GameStatus.START;
 
     public Game(Environment environment, EnvironmentDrawer mediator, ArrayList<String> input) {
         this.environment = environment;
         this.mediator = mediator;
         this.input = input;
+    }
+
+    public Environment getEnvironment() {
+        return environment;
+    }
+
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
+
+    public EnvironmentDrawer getMediator() {
+        return mediator;
+    }
+
+    public void setMediator(EnvironmentDrawer mediator) {
+        this.mediator = mediator;
+    }
+
+    public ArrayList<String> getInput() {
+        return input;
+    }
+
+    public void setInput(ArrayList<String> input) {
+        this.input = input;
+    }
+
+    public GameStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(GameStatus status) {
+        this.status = status;
     }
 
     public void loop() {
@@ -42,27 +73,6 @@ public class Game {
         }
     }
 
-    public void loop(String del) {
-
-        if (input.contains("P")) {
-            isPaused = !isPaused;
-            input.remove("P");
-        }
-
-        mediator.clearEnvironment();
-        /* Branching the Game Loop */
-        /* If the agent died in the last loop */
-        if (environment.getProtagonist().isDead()) {
-            this.gameOver();
-        } else {
-            if (isPaused) {
-                this.pause();
-            } else {
-                this.running();
-            }
-        }
-    }
-
     public void gameOver() {
         environment.updateMessages();
         environment.updateShots();
@@ -82,7 +92,6 @@ public class Game {
                 Shot shot = environment.getProtagonist().useWeapon();
                 if (shot != null)
                     environment.getShots().add(shot);
-
             }
             /* ChonBota's Movements */
             environment.getProtagonist().move(input);

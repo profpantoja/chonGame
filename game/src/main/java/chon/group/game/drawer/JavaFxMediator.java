@@ -4,8 +4,8 @@ import java.util.Iterator;
 
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Object;
+import chon.group.game.core.environment.Environment;
 import chon.group.game.core.weapon.Shot;
-import chon.group.game.domain.environment.Environment;
 import chon.group.game.messaging.Message;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;

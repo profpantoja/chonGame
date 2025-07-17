@@ -1,15 +1,9 @@
 package chon.group;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import chon.group.game.Game;
-import chon.group.game.core.agent.Agent;
-import chon.group.game.core.agent.Object;
-import chon.group.game.core.weapon.Weapon;
-import chon.group.game.domain.environment.Environment;
-import chon.group.game.domain.weapon.Cannon;
-import chon.group.game.domain.weapon.Lancer;
+import chon.group.game.GameSet;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
@@ -40,49 +34,15 @@ public class Engine extends Application {
     @Override
     public void start(Stage theStage) {
         try {
-            /* Define some size properties for both Canvas and Environment */
-            double canvasWidth = 1280;
-            double canvasHeight = 780;
-            int worldWidth = 8024;
-
-            /* Initialize the game environment, agents and weapons */
-            Environment environment = new Environment(0, 0, 780, worldWidth,
-                    canvasWidth, "/images/environment/castleLong.png");
-            Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
-            Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, 0.05, "", false);
-            Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
-
-            chonBota.setWeapon(cannon);
-            chonBota.setWeapon(lancer);
-
-            Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
-            environment.setProtagonist(chonBota);
-            environment.getAgents().add(chonBot);
-            environment.setPauseImage("/images/environment/pause.png");
-            environment.setGameOverImage("/images/environment/gameover.png");
-
-            /* Set up some collectable objects */
-            List<Object> objects = new ArrayList<>();
-            objects.add(new Object(200, 350, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(400, 380, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(1000, 600, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(1400, 380, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(1800, 650, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(2000, 580, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(2300, 380, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(2600, 500, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(2900, 380, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(2950, 400, 32, 32, "/images/agents/coin.png", true, false));
-            environment.setObjects(objects);
+            GameSet gameSet = new GameSet();
 
             /* Set up the graphical canvas */
-            Canvas canvas = new Canvas(canvasWidth, canvasHeight);
+            Canvas canvas = new Canvas(gameSet.getCanvasWidth(), gameSet.getCanvasHeight());
             GraphicsContext gc = canvas.getGraphicsContext2D();
-            EnvironmentDrawer mediator = new JavaFxMediator(environment, gc);
 
             /* Set up the scene and stage */
             StackPane root = new StackPane();
-            Scene scene = new Scene(root, canvasWidth, canvasHeight);
+            Scene scene = new Scene(root, gameSet.getCanvasWidth(), gameSet.getCanvasHeight());
             theStage.setTitle("Chon: The Learning Game");
             theStage.setScene(scene);
 
@@ -107,7 +67,8 @@ public class Engine extends Application {
                 }
             });
 
-            Game chonGame = new Game(environment, mediator, input);
+            EnvironmentDrawer mediator = new JavaFxMediator(gameSet.getEnvironment(), gc);
+            Game chonGame = new Game(gameSet.getEnvironment(), mediator, input);
             /* Start the game loop */
             new AnimationTimer() {
                 @Override

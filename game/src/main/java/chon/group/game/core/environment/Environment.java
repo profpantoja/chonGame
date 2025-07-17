@@ -1,4 +1,4 @@
-package chon.group.game.domain.environment;
+package chon.group.game.core.environment;
 
 import java.util.ArrayList;
 import java.util.Iterator;
