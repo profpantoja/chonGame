@@ -1,8 +1,5 @@
 package chon.group.game.drawer;
 
-import java.util.List;
-
-import chon.group.game.core.agent.GameObject;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -70,7 +67,7 @@ public class JavaFxDrawer {
         int borderThickness = 2;
         int barHeight = 5;
         int lifeSpan = Math.round((float) ((health * 100 / fullHealth) * width) / 100);
-        int barY = 15;
+        int barY = 19;
 
         this.gc.setFill(Color.BLACK);
         this.gc.fillRect(posX, posY - barY, width, barHeight + (borderThickness * 2));
@@ -83,17 +80,52 @@ public class JavaFxDrawer {
     }
 
     /**
+     * Renders the agent's energy bar.
+     *
+     * @param energy     The current energy value (0.0 to 1.0).
+     * @param fullEnergy The maximum energy value (typically 1.0).
+     * @param width      The width of the energy bar.
+     * @param posX       The x-coordinate position.
+     * @param posY       The y-coordinate position.
+     * @param color      The base color of the energy bar.
+     */
+    public void drawEnergyBar(double energy, double fullEnergy, int width, int posX, int posY, Color color) {
+        int borderThickness = 2;
+        int barHeight = 5;
+        int energyWidth = (int) ((energy / fullEnergy) * width);
+        int barY = 12; // Posicionado abaixo da barra de vida
+
+        // Fundo da barra
+        this.gc.setFill(Color.BLACK);
+        this.gc.fillRect(posX, posY - barY, width, barHeight + (borderThickness * 2));
+
+        // Barra de energia (com gradiente de cor)
+        Color energyColor = Color.color(
+                color.getRed(),
+                color.getGreen(),
+                color.getBlue(),
+                0.7 // Slightly transparent
+        );
+        this.gc.setFill(energyColor);
+        this.gc.fillRect(posX + borderThickness,
+                posY - (barY - borderThickness),
+                (energyWidth - (borderThickness * 2)),
+                barHeight);
+    }
+
+    /**
      * Displays a status panel showing the protagonist's coordinates.
      *
      * @param posX The x-coordinate of the protagonist.
      * @param posY The y-coordinate of the protagonist.
      */
-    public void drawStatusPanel(int posX, int posY) {
+    public void drawStatusPanel(int posX, int posY, int camX) {
         Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
         this.gc.setFont(theFont);
         this.gc.setFill(Color.BLACK);
-        this.gc.fillText("X: " + posX, posX + 10, posY - 40);
-        this.gc.fillText("Y: " + posY, posX + 10, posY - 25);
+        this.gc.fillText("X: " + posX, (posX - camX) + 5, posY - 55);
+        this.gc.fillText("Y: " + posY, (posX - camX) + 5, posY - 40);
+        this.gc.fillText("CamX: " + camX, (posX - camX) + 5, posY - 25);
     }
 
     /**
@@ -151,7 +183,6 @@ public class JavaFxDrawer {
                 posX,
                 posY + offset);
 
-        // gc.setFill(Color.rgb(255, 30, 30));
         gc.setFill(fillColor);
         gc.fillText(
                 String.valueOf(message),
@@ -160,35 +191,4 @@ public class JavaFxDrawer {
 
         gc.setGlobalAlpha(1.0);
     }
-
-    /**
-     * Draws coins that are collected by the protagonist
-     * @param coins
-     * @param width
-     * @param height
-     */
-
-public void drawObjects(List<GameObject> objects) {
-    for (GameObject object : objects) {
-        if (!object.isCollected()) {
-            this.drawImage(object.getImage(),
-                (int) object.getPosX(),
-                (int) object.getPosY(),
-                object.getWidth(),
-                object.getHeight());
-        }
-    }
-}
-
-public void drawText(String text, int x, int y, Color color, int fontSize) {
-    gc.setFill(color);
-    gc.setFont(new javafx.scene.text.Font("Arial", fontSize));
-    gc.fillText(text, x, y);
-}
-
-
-
-
-
-
 }
