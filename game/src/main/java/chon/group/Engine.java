@@ -1,46 +1,26 @@
 package chon.group;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import chon.group.game.domain.environment.SoundManager;
-import chon.group.game.core.agent.Agent;
-import chon.group.game.core.agent.Object;
-import chon.group.game.core.weapon.Weapon;
-import chon.group.game.domain.environment.Environment;
-import chon.group.game.domain.weapon.Cannon;
-import chon.group.game.domain.weapon.Lancer;
+import chon.group.game.Game;
+import chon.group.game.GameSet;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
-import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 /**
  * The {@code Engine} class represents the main entry point of the application
  * and serves as the game engine for "Chon: The Learning Game."
- * <p>
- * This class extends {@link javafx.application.Application} and manages the
- * game initialization, rendering, and main game loop using
- * {@link javafx.animation.AnimationTimer}.
- * </p>
- * 
- * <h2>Responsibilities</h2>
- * <ul>
- * <li>Set up the game environment, agents, and graphical components.</li>
- * <li>Handle keyboard input for controlling the protagonist agent.</li>
- * <li>Execute the game loop for updating and rendering the game state.</li>
- * </ul>
  */
 public class Engine extends Application {
-
-    private boolean isPaused = false;
 
     /**
      * Main entry point of the application.
@@ -51,79 +31,30 @@ public class Engine extends Application {
         launch(args);
     }
 
-    /**
-     * Starts the JavaFX application and initializes the game environment, agents,
-     * and graphical components.
-     * <p>
-     * This method sets up the game scene, handles input events, and starts the
-     * game loop using {@link AnimationTimer}.
-     * </p>
-     *
-     * @param theStage the primary stage for the application.
-     */
     @Override
     public void start(Stage theStage) {
         try {
-            /* Define some size properties for both Canvas and Environment */
-            double canvasWidth = 1280;
-            double canvasHeight = 780;
-            int worldWidth = 4096;
-
-            /* Initialize the game environment, agents and weapons */
-            Environment environment = new Environment(0, 0, 780, worldWidth,
-                    canvasWidth, "/images/environment/castle.png");
-            Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
-            Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, "", false);
-            Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, "", false);
-
-            chonBota.setWeapon(cannon);
-            chonBota.setWeapon(lancer);
-
-            Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
-            environment.setProtagonist(chonBota);
-            environment.getAgents().add(chonBot);
-            environment.setPauseImage("/images/environment/pause.png");
-            environment.setGameOverImage("/images/environment/gameover.png");
-
-            /* Set up some collectable objects */
-            List<Object> objects = new ArrayList<>();
-            objects.add(new Object(200, 350, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(400, 380, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(1000, 600, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(1400, 380, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(1800, 650, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(2000, 580, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(2300, 380, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(2600, 500, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(2900, 380, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(2950, 400, 32, 32, "/images/agents/coin.png", true, false));
-            environment.setObjects(objects);
+            GameSet gameSet = new GameSet();
 
             /* Set up the graphical canvas */
-            Canvas canvas = new Canvas(canvasWidth, canvasHeight);
+            Canvas canvas = new Canvas(gameSet.getCanvasWidth(), gameSet.getCanvasHeight());
             GraphicsContext gc = canvas.getGraphicsContext2D();
-            EnvironmentDrawer mediator = new JavaFxMediator(environment, gc);
 
             /* Set up the scene and stage */
             StackPane root = new StackPane();
-            Scene scene = new Scene(root, canvasWidth, canvasHeight);
+            Scene scene = new Scene(root, gameSet.getCanvasWidth(), gameSet.getCanvasHeight());
             theStage.setTitle("Chon: The Learning Game");
             theStage.setScene(scene);
 
             root.getChildren().add(canvas);
             theStage.show();
 
-             SoundManager.playMusic("/sounds/zelda.wav");
-
             /* Handle keyboard input */
             ArrayList<String> input = new ArrayList<>();
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
                     String code = e.getCode().toString();
-                    if (code.equals("P")) {
-                        isPaused = !isPaused;
-                    }
-                    if (!isPaused && !input.contains(code)) {
+                    if (!input.contains(code)) {
                         input.add(code);
                     }
                 }
@@ -132,83 +63,18 @@ public class Engine extends Application {
             scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
                     String code = e.getCode().toString();
-                    input.remove(code);
+                    if (!code.equals("P"))
+                        input.remove(code);
                 }
             });
 
+            EnvironmentDrawer mediator = new JavaFxMediator(gameSet.getEnvironment(), gc);
+            Game chonGame = new Game(gameSet.getEnvironment(), mediator, input);
             /* Start the game loop */
             new AnimationTimer() {
-                /**
-                 * The game loop, called on each frame.
-                 *
-                 * @param now the timestamp of the current frame in nanoseconds.
-                 */
                 @Override
-                public void handle(long arg0) {
-                    mediator.clearEnvironment();
-                    environment.detectCollision();
-                    /* Branching the Game Loop */
-                    /* If the agent died in the last loop */
-                    if (environment.getProtagonist().isDead()) {
-                        SoundManager.playSound("/sounds/zelda.wav");
-                        /* Still prints ongoing messages (e.g., last hit taken) */
-                        environment.updateMessages();
-                        environment.updateShots();
-                        mediator.drawBackground();
-                        mediator.drawAgents();
-                        mediator.drawObjects();
-                        mediator.drawShots();
-                        mediator.drawMessages();
-                        /* Rendering the Game Over Screen */
-                        mediator.drawGameOver();
-                    } else {
-                        if (isPaused) {
-                            mediator.drawBackground();
-                            mediator.drawAgents();
-                            mediator.drawObjects();
-                            mediator.drawShots();
-                            mediator.drawMessages();
-                            /* Rendering the Pause Screen */
-                            mediator.drawPauseScreen();
-                        } else {
-                            /* ChonBota Only Moves if the Player Press Something */
-                            /* Update the protagonist's movements if input exists */
-                            if (!input.isEmpty()) {
-                                /* ChonBota Shoots Somebody Who Outdrew You */
-                                if (input.contains("SPACE")) {
-                                    input.remove("SPACE");
-                                    SoundManager.playSound("/sounds/zelda.wav");
-                                    String direction;
-                                    if (chonBota.isFlipped())
-                                        direction = "LEFT";
-                                    else
-                                        direction = "RIGHT";
-                                    environment.getShots().add(chonBota.getWeapon().fire(chonBota.getPosX(),
-                                            chonBota.getPosY(),
-                                            direction));
-                                }
-                                /* ChonBota's Movements */
-                                environment.getProtagonist().move(input);
-                                environment.checkBorders();
-                            }
-                            /* ChonBot's Automatic Movements */
-                            /* Update the other agents' movements */
-                            for (Agent agent : environment.getAgents()) {
-                                agent.chase(environment.getProtagonist().getPosX(),
-                                        environment.getProtagonist().getPosY());
-                            }
-                            /* Render the game environment and agents */
-                            environment.updateObjects();
-                            environment.updateShots();
-                            environment.updateMessages();
-                            environment.updateCamera();
-                            mediator.drawBackground();
-                            mediator.drawAgents();
-                            mediator.drawObjects();
-                            mediator.drawShots();
-                            mediator.drawMessages();
-                        }
-                    }
+                public void handle(long now) {
+                    chonGame.loop();
                 }
             }.start();
             theStage.show();
