@@ -8,6 +8,9 @@ package chon.group.game.drawer;
  */
 public interface EnvironmentDrawer {
 
+    /** Render the Game */
+    void renderGame();
+
     /**
      * Clears the environment, removing all elements.
      */
@@ -24,19 +27,24 @@ public interface EnvironmentDrawer {
     void drawAgents();
 
     /**
+     * Draws all the objects on the screen.
+     */
+    void drawObjects();
+
+    /**
      * Draws the life bar for agents or players.
      */
     void drawLifeBar();
 
     /**
+     * Draws the energy bar for agents or players.
+     */
+    void drawEnergyBar();
+
+    /**
      * Draws the status panel displaying relevant game information.
      */
     void drawStatusPanel();
-
-    /**
-     * Draws the pause screen when the game is paused.
-     */
-    void drawPauseScreen();
 
     /**
      * Draws all the messages on the screen.
@@ -54,50 +62,7 @@ public interface EnvironmentDrawer {
     void drawGameOver();
 
     /**
-     * Draws the background for side-scrolling environments.
+     * Draws the pause screen when the game is paused.
      */
-
-     //method implemets for side-scrolling games
-    void drawBackgroundSideScrolling();
-
-    /**
-     * Draws the agents in a side-scrolling environment.
-     */
-
-     //method implemets for side-scrolling games
-    void drawAgentsSideScrolling();
-
-    /**
-     * Draws the shots for agents in a side-scrolling environment.
-    */
-
-    //method implemets for side-scrolling games
-    void drawShotsSideScrolling();
-
-    /**
-     * Draws the status panel displaying relevant game information.
-     */
-
-    //method implemets for side-scrolling games
-    void drawStatusPanelSideScrolling();
-
-    /**
-     * Draws the messages in a side-scrolling environment.
-     */
-    
-    //method implemets for side-scrolling games
-    void drawMessagesSideScrolling();
-    
-    /**
-     * Clears the environment for side-scrolling games.
-     */
-
-    //method implemets for side-scrolling games
-    void clearEnvironmentSideScrolling();
-
-    /**
-     * Draws the win screen when the player wins the game.
-     */
-    void drawWinScreen();
-    
+    void drawPauseScreen();
 }
