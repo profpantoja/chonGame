@@ -95,6 +95,7 @@ public class Game {
             }
             /* ChonBota's Movements */
             environment.getProtagonist().move(input);
+            environment.getProtagonist().sprint(input);
             environment.checkBorders();
         }
         /* ChonBot's Automatic Movements */

@@ -348,4 +348,23 @@ import javafx.scene.paint.Color;
         }
     }
 
+    /**
+     
+    Makes the Entity run based on the movement commands provided.
+    @param movements a list of movement directions ("RIGHT", "LEFT", "UP",
+    "DOWN") and "SHIFT" to run
+    */
+    public void sprint(List<String> movements) {
+        if (movements.contains("SHIFT")) {
+            if (movements.contains("RIGHT")) {
+                setPosX(posX += speed * 2);
+            } else if (movements.contains("LEFT")) {
+                setPosX(posX -= speed * 2);
+            } else if (movements.contains("UP")) {
+                setPosY(posY -= speed * 2);
+            } else if (movements.contains("DOWN")) {
+                setPosY(posY += speed * 2);
+            }
+        }
+    }
 }
