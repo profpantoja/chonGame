@@ -33,6 +33,9 @@ public class Agent extends Entity {
 
     /** The agent's energy recovery factor */
     private final double recoveryFactor;
+    
+    /** The energy cost required for the agent to perform an action */
+    private double energyCost;
 
     /**
      * Constructor to initialize the agent properties.
@@ -69,6 +72,7 @@ public class Agent extends Entity {
         this.energy = 1.0;
         this.fullEnergy = 1.0;
         this.recoveryFactor = 0.0002;
+        this.energyCost = 0.01;
     }
 
     /**
@@ -159,6 +163,24 @@ public class Agent extends Entity {
     }
 
     /**
+     * Gets the energy cost of performing an action.
+     *
+     * @return the energy cost
+     */
+    public double getEnergyCost() {
+        return energyCost;
+    }
+
+    /**
+     * Sets the energy cost required to perform an action.
+     *
+     * @param energyCost the new energy cost
+     */
+    public void setEnergyCost(double energyCost) {
+        this.energyCost = energyCost;
+    }
+
+    /**
      * Consumes a specified amount of energy.
      *
      * @param amount the amount of energy to consume
@@ -228,6 +250,31 @@ public class Agent extends Entity {
             return this.weapon.fire(this.getPosX(), this.getPosY(), direction);
         } else
             return null;
+    }
+
+    @Override
+    /**
+     
+    Makes the agent sprint based on the movement commands provided, but only if there is enough energy in the energy bar.
+    @param movements a list of movement directions ("RIGHT", "LEFT", "UP",
+    "DOWN") and "SHIFT" to sprint
+    */
+    public void sprint(List<String> movements) {
+        if (movements.contains("SHIFT") && this.energy >= this.energyCost) {
+            if (movements.contains("RIGHT")) {
+                setPosX(posX += speed * 2);
+                this.consumeEnergy(this.energyCost);
+            } else if (movements.contains("LEFT")) {
+                setPosX(posX -= speed * 2);
+                this.consumeEnergy(this.energyCost);
+            } else if (movements.contains("UP")) {
+                setPosY(posY -= speed * 2);
+                this.consumeEnergy(this.energyCost);
+            } else if (movements.contains("DOWN")) {
+                setPosY(posY += speed * 2);
+                this.consumeEnergy(this.energyCost);
+            }
+        }
     }
 
 }

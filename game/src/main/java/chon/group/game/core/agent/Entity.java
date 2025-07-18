@@ -350,9 +350,9 @@ import javafx.scene.paint.Color;
 
     /**
      
-    Makes the Entity run based on the movement commands provided.
+    Makes the Entity sprint based on the movement commands provided.
     @param movements a list of movement directions ("RIGHT", "LEFT", "UP",
-    "DOWN") and "SHIFT" to run
+    "DOWN") and "SHIFT" to sprint
     */
     public void sprint(List<String> movements) {
         if (movements.contains("SHIFT")) {
