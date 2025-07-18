@@ -13,125 +13,116 @@ import javafx.scene.image.Image;
 
 /**
  * Represents the game environment, including properties such as dimensions,
- * position,
- * background image, agents, and the protagonist.
- * The environment also controls rendering, restricts the environment area,
- * prints an agent's coordinates, and detects collisions between the protagonist
- * and agents.
+ * position, background image, agents, protagonist, objects, shots, messages, and camera.
+ * The environment is responsible for updating the state of all elements,
+ * detecting collisions, and tracking game progress such as score and collectible status.
  */
 public class Environment extends Entity {
 
-    /** The background image of the pause. */
+    /** The background image for the pause screen. */
     private Image pauseImage;
 
-    /** The background image of the game over. */
+    /** The background image for the game over screen. */
     private Image gameOverImage;
 
-    /** The protagonist instance. */
+    /** The protagonist of the environment. */
     private Agent protagonist;
 
     /** List of agents present in the environment. */
     private List<Agent> agents;
 
+    /** List of collectible/destructible objects in the environment. */
     private List<Object> objects;
 
-    /** List of messages to display. */
+    /** List of messages currently being displayed. */
     private List<Message> messages;
 
-    /** List of shots present in the environment. */
+    /** List of shots in the environment. */
     private List<Shot> shots;
 
-    /** The camera instance for the environment. */
+    /** The camera used to follow the protagonist. */
     private Camera camera;
 
+    /** Number of objects collected so far. */
+    private int collectedCount = 0;
+
+    /** Total number of collectible objects in the environment. */
+    private int totalCollectibleCount = 0;
+
+    /** Current score of the player. */
+    private int score = 0;
+
     /**
-     * Constructor to initialize the environment with dimensions, position, and a
-     * background image.
+     * Constructor to initialize the environment with dimensions, position, and a background image.
      *
-     * @param posX        the initial X (horizontal) position of the environment
-     * @param posY        the initial Y (vertical) position of the environment
-     * @param width       the width of the environment
+     * @param posX        the initial X position of the environment
+     * @param posY        the initial Y position of the environment
      * @param height      the height of the environment
+     * @param width       the width of the environment
+     * @param screenWidth the screen width used for camera calculations
      * @param pathImage   the path to the background image
-     * @param screenWidth the width of the screen for camera calculations
      */
     public Environment(int posX, int posY, int height, int width, double screenWidth, String pathImage) {
         super(posX, posY, height, width, 0, 0, pathImage);
-        this.agents = new ArrayList<Agent>();
-        this.objects = new ArrayList<Object>();
-        this.messages = new ArrayList<Message>();
-        this.shots = new ArrayList<Shot>();
+        this.agents = new ArrayList<>();
+        this.objects = new ArrayList<>();
+        this.messages = new ArrayList<>();
+        this.shots = new ArrayList<>();
         this.camera = new Camera(screenWidth, width, 0.49, 0.51);
     }
 
     /**
-     * Constructor to initialize the environment with dimensions, position, a
-     * background image, and a list of agents.
+     * Constructor to initialize the environment with a background and a predefined agent list.
      *
-     * @param posX      the initial X (horizontal) position of the environment
-     * @param posY      the initial Y (vertical) position of the environment
+     * @param posX      the initial X position
+     * @param posY      the initial Y position
      * @param width     the width of the environment
      * @param height    the height of the environment
      * @param pathImage the path to the background image
-     * @param agents    the list of agents in the environment
+     * @param agents    the list of agents
      */
     public Environment(int posX, int posY, int width, int height, String pathImage, ArrayList<Agent> agents) {
         super(posX, posY, height, width, width, height, pathImage);
         this.agents = agents;
-        this.objects = new ArrayList<Object>();
-        this.messages = new ArrayList<Message>();
-        this.shots = new ArrayList<Shot>();
+        this.objects = new ArrayList<>();
+        this.messages = new ArrayList<>();
+        this.shots = new ArrayList<>();
     }
 
-    /**
-     * Gets the background image for the pause.
-     *
-     * @return the pause image
-     */
     public Image getPauseImage() {
         return pauseImage;
     }
 
     /**
-     * Sets the background image for the pause.
+     * Sets the background image for the pause screen.
      *
-     * @param pathImage the path to the new pause image
+     * @param pathImage the path to the image
      */
     public void setPauseImage(String pathImage) {
         this.pauseImage = new Image(getClass().getResource(pathImage).toExternalForm());
     }
 
-    /**
-     * Gets the background image for the game over.
-     *
-     * @return the game over image
-     */
     public Image getGameOverImage() {
         return gameOverImage;
     }
 
     /**
-     * Sets the background image for the game over.
+     * Sets the background image for the game over screen.
      *
-     * @param pathImage the path to the new game over image
+     * @param pathImage the path to the image
      */
     public void setGameOverImage(String pathImage) {
         this.gameOverImage = new Image(getClass().getResource(pathImage).toExternalForm());
     }
 
-    /**
-     * Gets the protagonist of the environment.
-     *
-     * @return the protagonist of the environment
-     */
     public Agent getProtagonist() {
         return protagonist;
     }
 
     /**
-     * Sets the protagonist of the environment.
+     * Sets the protagonist of the game and attaches the camera to it.
      *
-     * @param protagonist the new protagonist of the environment
+     * @param protagonist the protagonist agent
      */
     public void setProtagonist(Agent protagonist) {
         this.protagonist = protagonist;
@@ -139,23 +130,12 @@ public class Environment extends Entity {
             camera.setTarget(protagonist);
     }
 
-    /**
-     * Gets the list of agents present in the environment.
-     *
-     * @return the list of agents
-     */
     public List<Agent> getAgents() {
         return agents;
     }
 
-    /**
-     * Sets the list of agents present in the environment.
-     *
-     * @param agents the new list of agents
-     */
     public void setAgents(ArrayList<Agent> agents) {
         this.agents = agents;
-
     }
 
     public List<Object> getObjects() {
@@ -166,137 +146,127 @@ public class Environment extends Entity {
         this.objects = objects;
     }
 
-    /**
-     * Gets the list of active messages.
-     * 
-     * @return List of messages objects currently being displayed
-     */
     public List<Message> getMessages() {
         return messages;
     }
 
-    /**
-     * Sets the list of messages.
-     * 
-     * @param messages The new list of messages to display
-     */
     public void setMessages(List<Message> messages) {
         this.messages = messages;
     }
 
-    /**
-     * Gets the list of shots present in the environment.
-     *
-     * @return the list of shots
-     */
     public List<Shot> getShots() {
         return shots;
     }
 
-    /**
-     * Sets the list of shots present in the environment.
-     *
-     * @param agents the new list of shots
-     */
     public void setShots(List<Shot> shots) {
         this.shots = shots;
     }
 
-    /**
-     * Gets the camera of the environment.
-     *
-     * @return the camera of the environment
-     */
     public Camera getCamera() {
         return camera;
     }
 
-    /**
-     * Sets the camera of the environment.
-     *
-     * @param camera is the new camera of the environment
-     */
     public void setCamera(Camera camera) {
         this.camera = camera;
     }
 
     /**
-     * Checks if the protagonist is within the environment's boundaries and adjusts
-     * its position if necessary.
+     * Gets the number of objects collected by the protagonist.
+     *
+     * @return the number of collected objects
      */
-    public void checkBorders() {
-        if (this.protagonist.getPosX() < 0)
-            this.protagonist.setPosX(0);
-        if ((this.protagonist.getPosX() + this.protagonist.getWidth()) > this.width)
-            this.protagonist.setPosX(this.width - protagonist.getWidth());
-        if (this.protagonist.getPosY() < 0)
-            this.protagonist.setPosY(0);
-        if ((this.protagonist.getPosY() + this.protagonist.getHeight()) > this.height)
-            this.protagonist.setPosY(this.height - this.protagonist.getHeight());
+    public int getCollectedCount() {
+        return collectedCount;
     }
 
     /**
-     * Detects collisions between the protagonist and other agents in the
-     * environment.
-     * When a collision occurs and the protagonist takes damage, a message is
-     * created to display the damage amount.
+     * Gets the total number of collectible objects in the environment.
+     *
+     * @return the total number of collectibles
+     */
+    public int getTotalCollectibleCount() {
+        return totalCollectibleCount;
+    }
+
+    /**
+     * Gets the current score of the player.
+     *
+     * @return the current score
+     */
+    public int getScore() {
+        return score;
+    }
+
+    /**
+     * Ensures the protagonist stays within the boundaries of the environment.
+     */
+    public void checkBorders() {
+        if (protagonist.getPosX() < 0)
+            protagonist.setPosX(0);
+        if ((protagonist.getPosX() + protagonist.getWidth()) > width)
+            protagonist.setPosX(width - protagonist.getWidth());
+        if (protagonist.getPosY() < 0)
+            protagonist.setPosY(0);
+        if ((protagonist.getPosY() + protagonist.getHeight()) > height)
+            protagonist.setPosY(height - protagonist.getHeight());
+    }
+
+    /**
+     * Detects collisions between the protagonist and agents.
+     * Applies damage if a collision is detected.
      */
     public void detectCollision() {
-        for (Agent agent : this.agents) {
-            if (protagonist != null && intersect(this.protagonist, agent)) {
-                /* Removing the console output for collision. */
-                // System.out.println("Collision detected with agent: " + agent);
+        for (Agent agent : agents) {
+            if (protagonist != null && intersect(protagonist, agent)) {
                 int damage = 100;
-                /* The protagonist takes damage when colliding with an agent. */
-                protagonist.takeDamage(damage, this.messages);
+                protagonist.takeDamage(damage, messages);
             }
         }
     }
 
     /**
-     * Checks if two agents collide with each other based on their positions and
-     * dimensions.
+     * Checks if two entities intersect (collide).
      *
-     * This method uses the coordinates and dimensions of both agents to determine
-     * if their areas overlap. The collision is calculated by comparing the edges
-     * of the image represented by each agent.
-     *
-     * @param a the first agent
-     * @param b the second agent
-     * @return true if the agents collide, otherwise false
+     * @param a the first entity
+     * @param b the second entity
+     * @return true if their areas overlap, false otherwise
      */
-
     private boolean intersect(Entity a, Entity b) {
-        // Returns true if there is a collision between two agents
         return a.getPosX() < b.getPosX() + b.getWidth() &&
-                a.getPosX() + a.getWidth() > b.getPosX() &&
-                a.getPosY() < b.getPosY() + b.getHeight() &&
-                a.getPosY() + a.getHeight() > b.getPosY();
+               a.getPosX() + a.getWidth() > b.getPosX() &&
+               a.getPosY() < b.getPosY() + b.getHeight() &&
+               a.getPosY() + a.getHeight() > b.getPosY();
     }
 
+    /**
+     * Updates all collectible objects in the environment.
+     * Makes them follow the protagonist and handles collection.
+     */
     public void updateObjects() {
-        Iterator<Object> iterator = this.objects.iterator();
+        Iterator<Object> iterator = objects.iterator();
         while (iterator.hasNext()) {
             Object object = iterator.next();
             if (!object.isCollected() && object.isCollectible()) {
-                object.follow(this.getProtagonist(), 200, 5);
-                // Verifica se chegou perto o suficiente para coletar
-                double dx = object.getPosX() - this.getProtagonist().getPosX();
-                double dy = object.getPosY() - this.getProtagonist().getPosY();
+                object.follow(protagonist, 200, 5);
+                double dx = object.getPosX() - protagonist.getPosX();
+                double dy = object.getPosY() - protagonist.getPosY();
                 double distance = Math.sqrt(dx * dx + dy * dy);
                 if (distance < 20) {
                     object.onCollect();
+                    collectedCount++;
+                    score += 10;
                 }
-            } else {
-                if (object.isCollected() && object.isCollectible()) {
-                    iterator.remove();
-                }
+            } else if (object.isCollected() && object.isCollectible()) {
+                iterator.remove();
             }
         }
     }
 
+    /**
+     * Updates and removes expired messages from the environment.
+     */
     public void updateMessages() {
-        Iterator<Message> iterator = this.messages.iterator();
+        Iterator<Message> iterator = messages.iterator();
         while (iterator.hasNext()) {
             Message message = iterator.next();
             if (!message.update()) {
@@ -305,25 +275,30 @@ public class Environment extends Entity {
         }
     }
 
+    /**
+     * Updates the state of all shots in the environment.
+     * Handles movement, boundary removal, and collision with agents or protagonist.
+     */
     public void updateShots() {
-        Iterator<Shot> itShot = this.shots.iterator();
+        Iterator<Shot> itShot = shots.iterator();
         while (itShot.hasNext()) {
             Shot shot = itShot.next();
-            if ((shot.getPosX() > this.getWidth()) || ((shot.getPosX() + shot.getWidth()) < 0)) {
+            if ((shot.getPosX() > getWidth()) || ((shot.getPosX() + shot.getWidth()) < 0)) {
                 itShot.remove();
             } else {
-                if (this.intersect(protagonist, shot)) {
-                    protagonist.takeDamage(shot.getDamage(), this.messages);
+                if (intersect(protagonist, shot)) {
+                    protagonist.takeDamage(shot.getDamage(), messages);
                     itShot.remove();
                 } else {
-                    Iterator<Agent> itAgent = this.agents.iterator();
+                    Iterator<Agent> itAgent = agents.iterator();
                     while (itAgent.hasNext()) {
                         Agent agent = itAgent.next();
-                        if (this.intersect(agent, shot)) {
-                            agent.takeDamage(shot.getDamage(), this.messages);
+                        if (intersect(agent, shot)) {
+                            agent.takeDamage(shot.getDamage(), messages);
                             if (agent.isDead())
                                 itAgent.remove();
                             itShot.remove();
+                            break;
                         }
                     }
                 }
@@ -332,18 +307,34 @@ public class Environment extends Entity {
         }
     }
 
+    /**
+     * Updates the camera based on the protagonist’s current position.
+     */
     public void updateCamera() {
-        if (this.camera != null)
-            this.camera.update();
+        if (camera != null)
+            camera.update();
     }
 
+    /**
+     * Performs a full update cycle of the environment.
+     * Includes updating objects, shots, messages, camera,
+     * checking collisions, and recovering protagonist energy.
+     */
     public void update() {
-        this.updateObjects();
-        this.updateShots();
-        this.updateMessages();
-        this.updateCamera();
-        this.detectCollision();
-        this.getProtagonist().recoverEnergy();
+        updateObjects();
+        updateShots();
+        updateMessages();
+        updateCamera();
+        detectCollision();
+        protagonist.recoverEnergy();
     }
 
+    /**
+     * Counts how many collectible objects are currently in the environment.
+     */
+    public void countTotalCollectibles() {
+        totalCollectibleCount = (int) objects.stream()
+            .filter(Object::isCollectible)
+            .count();
+    }
 }
