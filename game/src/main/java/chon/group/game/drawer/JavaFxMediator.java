@@ -22,6 +22,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
         private final Environment environment;
         private final JavaFxDrawer drawer;
 
+
         /**
          * Constructs a JavaFxMediator with the specified environment and graphics
          * context.
@@ -221,4 +222,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
                                         shot.getHeight());
                 }
         }
+
+        
+
 }

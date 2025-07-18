@@ -65,4 +65,5 @@ public interface EnvironmentDrawer {
      * Draws the Game Over screen when the protagonist is dead.
      */
     void drawGameOver();
+
 }

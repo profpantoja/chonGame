@@ -191,4 +191,6 @@ public class JavaFxDrawer {
 
         gc.setGlobalAlpha(1.0);
     }
+
+    
 }

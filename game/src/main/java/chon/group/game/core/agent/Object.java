@@ -1,5 +1,7 @@
 package chon.group.game.core.agent;
 
+import java.util.List;
+
 /**
  * Representa um objeto genérico do jogo que pode ser coletável e/ou
  * destrutível.
@@ -8,6 +10,11 @@ public class Object extends Entity {
     private boolean collected = false;
     private boolean destructible;
     private boolean collectible;
+
+    private List<Object> objects;
+    private int totalObjects = 0;
+    private int collectedObjects = 0;
+    private int score = 0;
 
     public Object(int posX, int posY, int height, int width, String pathImage,
             boolean collectible, boolean destructible) {
@@ -77,5 +84,36 @@ public class Object extends Entity {
             this.setPosY((int) (this.getPosY() + directionY * speed));
         }
     }
+
+    
+    public void registerObject(Object obj) {
+        objects.add(obj);
+        totalObjects++;
+    }
+
+
+    public void notifyCollected(Object obj) {
+        collectedObjects++;
+        // Remova se desejar
+        objects.remove(obj);
+    }
+
+    public int getObjectTotal() {
+        return totalObjects;
+    }
+
+    public int getObjectCollected() {
+        return collectedObjects;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void addScore(int amount) {
+        score += amount;
+    }
+
+    
 
 }
