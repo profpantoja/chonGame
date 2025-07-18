@@ -23,18 +23,15 @@ public class MenuPause {
 
     // Retorna a opção escolhida ao pressionar ENTER, ou null caso contrário
     public MenuOption.Pause handleInput(KeyCode code) {
-        switch (code) {
-            case UP:
-                selectedOptionIndex = (selectedOptionIndex - 1 + options.length) % options.length;
-                break;
-            case DOWN:
-                selectedOptionIndex = (selectedOptionIndex + 1) % options.length;
-                break;
-            case ENTER:
-                return options[selectedOptionIndex];
-        }
-        return null;
+    if (code == KeyCode.UP) {
+        selectedOptionIndex = (selectedOptionIndex - 1 + options.length) % options.length;
+    } else if (code == KeyCode.DOWN) {
+        selectedOptionIndex = (selectedOptionIndex + 1) % options.length;
+    } else if (code == KeyCode.ENTER) {
+        return options[selectedOptionIndex];
     }
+    return null;
+}
 
     public void reset() {
         this.selectedOptionIndex = 0;

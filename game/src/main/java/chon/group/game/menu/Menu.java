@@ -22,18 +22,15 @@ public class Menu {
 
     // Retorna a opção escolhida ao pressionar ENTER, ou null caso contrário
     public MenuOption.Main handleInput(KeyCode code) {
-        switch (code) {
-            case UP:
-                selectedOption = (selectedOption - 1 + options.length) % options.length;
-                break;
-            case DOWN:
-                selectedOption = (selectedOption + 1) % options.length;
-                break;
-            case ENTER:
-                return options[selectedOption];
-        }
-        return null;
+    if (code == KeyCode.UP) {
+        selectedOption = (selectedOption - 1 + options.length) % options.length;
+    } else if (code == KeyCode.DOWN) {
+        selectedOption = (selectedOption + 1) % options.length;
+    } else if (code == KeyCode.ENTER) {
+        return options[selectedOption];
     }
+    return null;
+}
 
     public void reset() {
         this.selectedOption = 0;

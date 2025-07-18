@@ -40,8 +40,6 @@ public class Engine extends Application {
     }
     /* Game state variables */
     private GameStatus gameStatus = GameStatus.START;
-    private Menu mainMenu;
-    private MenuPause menuPause;
 
     @Override
     public void start(Stage theStage) {
