@@ -16,6 +16,7 @@ public class GameSet {
     private int canvasHeight;
     private Environment environment;
 
+
     public GameSet() {
         this.load();
     }
@@ -80,7 +81,11 @@ public class GameSet {
         objects.add(new Object(5000, 380, 32, 32, "/images/agents/coin.png", true, false));
         objects.add(new Object(6200, 400, 32, 32, "/images/agents/coin.png", true, false));
 
+        // Register objects into the environment and count total collectibles
         environment.setObjects(objects);
+        environment.countTotalCollectibles();
+
+
     }
 
 }

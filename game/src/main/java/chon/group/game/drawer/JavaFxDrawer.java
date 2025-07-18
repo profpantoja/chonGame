@@ -97,7 +97,7 @@ public class JavaFxDrawer {
 
         // Fundo da barra
         this.gc.setFill(Color.BLACK);
-        this.gc.fillRect(posX , posY - barY, width, barHeight + (borderThickness * 2));
+        this.gc.fillRect(posX, posY - barY, width, barHeight + (borderThickness * 2));
 
         // Barra de energia (com gradiente de cor)
         Color energyColor = Color.color(
@@ -191,4 +191,6 @@ public class JavaFxDrawer {
 
         gc.setGlobalAlpha(1.0);
     }
+
+    
 }
