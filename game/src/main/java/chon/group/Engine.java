@@ -1,264 +1,88 @@
 package chon.group;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import chon.group.game.domain.agent.Agent;
-import chon.group.game.domain.environment.Environment;
-import chon.group.game.domain.environment.GameStatus;
-import chon.group.game.domain.environment.MainMenu;
-import chon.group.game.domain.environment.MenuOption;
-import chon.group.game.domain.environment.MenuPause;
-import chon.group.game.domain.environment.Setup;
-import chon.group.game.drawer.JavaFxDrawer;
+import chon.group.game.Game;
+import chon.group.game.GameSet;
+import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.stage.Stage;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
-import javafx.event.EventHandler;
-import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
+
+/**
+ * The {@code Engine} class represents the main entry point of the application
+ * and serves as the game engine for "Chon: The Learning Game."
+ */
 
 public class Engine extends Application {
 
-    private GameStatus gameStatus = GameStatus.MAIN_MENU;
-    private Environment environment;
-    private JavaFxMediator mediator;
-    private MainMenu mainMenu;
-    private MenuPause menuPause;
-    private GraphicsContext graphicsContext; 
-    private final List<String> gameInput = new ArrayList<>();
-
-    // --- Window Dimensions ---
-    private static final double WINDOW_WIDTH = 1280;
-    private static final double WINDOW_HEIGHT = 768;
-
+    /**
+     * Main entry point of the application.
+     *
+     * @param args command-line arguments passed to the application.
+     */
     public static void main(String[] args) {
         launch(args);
     }
 
+    @Override
     public void start(Stage theStage) {
-        // Setup Canvas and Graphics
-        theStage.setTitle("Chon: The Learning Game");
-        Canvas canvas = new Canvas(WINDOW_WIDTH, WINDOW_HEIGHT);
-        this.graphicsContext = canvas.getGraphicsContext2D(); 
-        this.environment = Setup.createEnvironment();
-        this.mediator = new JavaFxMediator(environment, this.graphicsContext); 
-        JavaFxDrawer drawer = new JavaFxDrawer(this.graphicsContext, null); 
+        try {
+            GameSet gameSet = new GameSet();
 
-        // Initialize Menus
-        Image menuBackground = Setup.loadImage("/images/environment/menu_background_new.png");
-        this.mainMenu = new MainMenu(drawer, menuBackground);
-        this.menuPause = new MenuPause(drawer, environment.getPauseImage());
+            /* Set up the graphical canvas */
+            Canvas canvas = new Canvas(gameSet.getCanvasWidth(), gameSet.getCanvasHeight());
+            GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        //Setup Scene and Input
-        StackPane root = new StackPane(canvas);
-        Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
-        theStage.setScene(scene);
-        
-        setupInputHandlers(scene);
+            /* Set up the scene and stage */
+            StackPane root = new StackPane();
+            Scene scene = new Scene(root, gameSet.getCanvasWidth(), gameSet.getCanvasHeight());
+            theStage.setTitle("Chon: The Learning Game");
+            theStage.setScene(scene);
 
-        //Start Game Loop
-        new GameLoop().start();
-        
-        theStage.show();
-    }
+            root.getChildren().add(canvas);
 
-    /**
-     * Defines the input handlers for the game, based on the current game status.
-     */
-    private void setupInputHandlers(Scene scene) {
-    scene.setOnKeyPressed(this::handleKeyPressed);
-    scene.setOnKeyReleased(this::handleKeyReleased);
-}
-
-private void handleKeyPressed(KeyEvent e) {
-    String key = e.getCode().toString();
-    System.out.println("Key pressed: " + key); 
-    switch (gameStatus) {
-        case MAIN_MENU:
-            MenuOption.Main mainOption = mainMenu.handleInput(e.getCode());
-            if (mainOption != null) {
-                switch (mainOption) {
-                    case START_GAME:
-                        resetGame();
-                        gameStatus = GameStatus.RUNNING;
-                        break;
-                    case EXIT:
-                        Platform.exit();
-                        break;
-                }
-            }
-            break;
-        case PAUSED:
-            MenuOption.Pause pauseOption = menuPause.handleInput(e.getCode());
-            if (pauseOption != null) {
-                switch (pauseOption) {
-                    case RESUME:
-                        gameStatus = GameStatus.RUNNING;
-                        restoreAgentsState(false);
-                        break;
-                    case GO_BACK_TO_MENU:
-                        mainMenu.reset();
-                        gameStatus = GameStatus.MAIN_MENU;
-                        restoreAgentsState(false);
-                        break;
-                }
-            }
-            break;
-        case RUNNING:
-            if (e.getCode().toString().equals("P")) {
-                gameStatus = GameStatus.PAUSED;
-                menuPause.reset();
-                restoreAgentsState(true);
-            } else if (!gameInput.contains(key)) {
-                gameInput.add(key);
-            }
-            break;
-        default:
-            if (e.getCode().toString().equals("ENTER")) {
-                gameStatus = GameStatus.MAIN_MENU;
-                mainMenu.reset();
-                restoreAgentsState(false);
-            }
-            break;
-    }
-}
-
-private void handleKeyReleased(KeyEvent e) {
-    if (gameStatus == GameStatus.RUNNING) {
-        gameInput.remove(e.getCode().toString());
-    }
-}
-
-   /**
- * Centraliza a lógica de pausar/despausar agentes e protagonista.
- */
-private void restoreAgentsState(boolean pause) {
-    environment.getProtagonist().setCheckMenu(pause);
-    environment.getProtagonist().setlastHitTime(System.currentTimeMillis());
-
-    List<Agent> agents = environment.getAgents();
-    for (int i = 0; i < agents.size(); i++) {
-        Agent agent = agents.get(i);
-        agent.setCheckMenu(pause);
-        agent.setlastHitTime(System.currentTimeMillis());
-    }
-}
-
-    /**
-     * Resets the game state to its initial configuration.
-     */
-    private void resetGame() {
-        this.environment = Setup.createEnvironment();
-        // Recria o mediator para apontar para o novo ambiente, usando o gc guardado na classe.
-        this.mediator = new JavaFxMediator(this.environment, this.graphicsContext);
-        gameInput.clear();
-    }
-
-    /**
-     * The main game loop 
-     */
-    private class GameLoop extends AnimationTimer {
-        
-        public void handle(long currentNanoTime) {
-            graphicsContext.clearRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-
-            // game status switch to handle different game states
-            switch (gameStatus) {
-                case MAIN_MENU:
-                    mainMenu.draw();
-                    break;
-                case RUNNING:
-                    updateGameLogic();
-                    renderGameWorld();
-                    // Verify if the game is over or if the player has won
-                    if (environment.getProtagonist().isDead()) {
-                        gameStatus = GameStatus.GAME_OVER;
-                    } else if (environment.getAgents().isEmpty()) {
-                        gameStatus = GameStatus.VICTORY;
+            /* Handle keyboard input */
+            ArrayList<String> input = new ArrayList<>();
+            scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+                public void handle(KeyEvent e) {
+                    String code = e.getCode().toString();
+                    if (!input.contains(code)) {
+                        input.add(code);
                     }
-                    break;
-                case PAUSED:
-                    renderGameWorld(); // draw the game world static in background
-                    menuPause.draw(); // draw the pause menu
-                    break;
-                case GAME_OVER:
-                    renderGameWorld(); 
-                    mediator.drawGameOver();
-                    break;
-                case VICTORY:
-                    renderGameWorld(); 
-                    mediator.drawWinScreen();
-                    break;
-            }
-        }
-    }
+                }
+            });
 
-    private void updateGameLogic() {
+            scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+                public void handle(KeyEvent e) {
+                    String code = e.getCode().toString();
+                    if (!code.equals("P"))
+                        input.remove(code);
+                }
+            });
+
+            EnvironmentDrawer mediator = new JavaFxMediator(gameSet.getEnvironment(), gc);
+            Game chonGame = new Game(gameSet.getEnvironment(), mediator, input);
+            /* Start the game loop */
+            new AnimationTimer() {
+                @Override
+                public void handle(long now) {
+                    chonGame.loop();
+                }
+            }.start();
+            theStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         
-        // Protagonist movement and actions
-        if (!gameInput.isEmpty()) {
-            environment.getProtagonist().move(gameInput);
-            updateCameraPosition();
-            if (gameInput.contains("SPACE")) {
-                String direction = environment.getProtagonist().isFlipped() ? "LEFT" : "RIGHT";
-                Agent protagonist = environment.getProtagonist();
-                environment.getShots().add(protagonist.getWeapon().fire(protagonist.getPosX(), protagonist.getPosY(), direction));
-                gameInput.remove("SPACE"); // Evita múltiplos tiros com uma pressionada
-            }
-            environment.checkBorders();
-        }
-        
-        // method chase for each agent
-        List<Agent> agents = environment.getAgents();
-        int protagonistX = environment.getProtagonist().getPosX();
-        int protagonistY = environment.getProtagonist().getPosY();
-        for (int i = 0; i < agents.size(); i++) {
-            Agent agent = agents.get(i);
-            agent.chase(protagonistX, protagonistY);
-        }
-
-        // update all agents and their shots
-        environment.detectCollision();
-        environment.updateShots();
-        environment.updateMessages();
     }
 
-    /**
-     * Draw the game world elements on the screen.
-     */
-    private void renderGameWorld() {
-        mediator.drawBackgroundSideScrolling();
-        mediator.drawAgentsSideScrolling();
-        mediator.drawShotsSideScrolling();
-        mediator.drawMessagesSideScrolling();
-    }
-
-    /**
-     * The camera follows the protagonist, but only moves when the protagonist is between 15% and 80% of the screen width.
-     */
-    private void updateCameraPosition() {
-        double protagonistX = environment.getProtagonist().getPosX();
-        double cameraX = environment.getCameraX();
-        double protagonistSpeed = environment.getProtagonist().getSpeed();
-
-        double rightBoundary = cameraX + WINDOW_WIDTH * 0.80; // 80% right of the screen
-        double leftBoundary = cameraX + WINDOW_WIDTH * 0.15; // 15% left of the screen
-
-        if (protagonistX > rightBoundary) {
-            double newCameraX = cameraX + protagonistSpeed;
-            double maxCameraX = environment.getWidth() - WINDOW_WIDTH;
-            environment.setCameraX(Math.min(newCameraX, maxCameraX));
-        } else if (protagonistX < leftBoundary) {
-            double newCameraX = cameraX - protagonistSpeed;
-            environment.setCameraX(Math.max(newCameraX, 0));
-        }
-    }
 }
