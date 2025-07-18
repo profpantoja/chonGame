@@ -259,12 +259,12 @@ public class JavaFxDrawer {
         gc.setFont(Font.font("Verdana", FontWeight.BOLD, 32));
         gc.setFill(Color.WHITE);
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText(title, getCanvasWidth() / 2, menuY + 60);
+        gc.fillText(title, getCanvasWidth() / 2, menuY + 330);
 
         gc.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
         for (int i = 0; i < options.length; i++) {
             gc.setFill((i == selectedIndex) ? Color.YELLOW : Color.WHITE);
-            double optionY = menuY + 120 + (i * 50);
+            double optionY = menuY + 380 + (i * 50);
             gc.fillText(options[i], getCanvasWidth() / 2, optionY);
         }
         
