@@ -8,6 +8,9 @@ package chon.group.game.drawer;
  */
 public interface EnvironmentDrawer {
 
+    /** Render the Game */
+    void renderGame();
+
     /**
      * Clears the environment, removing all elements.
      */
@@ -24,9 +27,19 @@ public interface EnvironmentDrawer {
     void drawAgents();
 
     /**
+     * Draws all the objects on the screen.
+     */
+    void drawObjects();
+
+    /**
      * Draws the life bar for agents or players.
      */
     void drawLifeBar();
+
+    /**
+     * Draws the energy bar for agents or players.
+     */
+    void drawEnergyBar();
 
     /**
      * Draws the status panel displaying relevant game information.
