@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import chon.group.game.Panel;
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Entity;
 import chon.group.game.core.agent.Object;
+import chon.group.game.core.weapon.Panel;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.messaging.Message;
 import javafx.scene.image.Image;
