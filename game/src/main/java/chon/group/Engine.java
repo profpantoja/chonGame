@@ -55,7 +55,7 @@ public class Engine extends Application {
     @Override
     public void start(Stage theStage) {
         try {
-            
+
             /* 
              * Initialize the game set, which contains the environment and other game components.
             */
@@ -82,41 +82,22 @@ public class Engine extends Application {
 
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
-                   switch (chonGame.getStatus()) {
-                        case START:
-                            MenuOption.Main mainOpt = mainMenu.handleInput(e.getCode());
-                            if (mainOpt == MenuOption.Main.START_GAME) { 
-                                resetGame(gc);
-                                chonGame.setStatus(GameStatus.RUNNING); 
-                                mainMenu.reset(); 
-                            }
-                            else if (mainOpt == MenuOption.Main.EXIT) 
+                    if (chonGame.getStatus() == GameStatus.START) {
+                        MenuOption.Main mainOpt = mainMenu.handleInput(e.getCode());
+                        if (mainOpt == MenuOption.Main.START_GAME) {
+                            resetGame(gc); // <-- reinicia tudo!
+                            chonGame.setStatus(GameStatus.RUNNING);
+                            mainMenu.reset();
+                            return; // Evita processar o resto
+                        } else if (mainOpt == MenuOption.Main.EXIT) {
                             javafx.application.Platform.exit();
-                            break;
-                        case PAUSED:
-                            MenuOption.Pause pauseOpt = menuPause.handleInput(e.getCode());
-                            if (pauseOpt == MenuOption.Pause.RESUME) {
-                                chonGame.setStatus(GameStatus.RUNNING);
-                                menuPause.reset(); 
-                            }
-                            else if (pauseOpt == MenuOption.Pause.GO_BACK_TO_MENU) { 
-                                chonGame.setStatus(GameStatus.START);
-                                menuPause.reset();
-                                mainMenu.reset();
-                            }
-                            break;
-                        case RUNNING:
-                            if (e.getCode().toString().equals("P")) { 
-                                chonGame.setStatus(GameStatus.PAUSED);
-                                menuPause.reset(); 
-                            }
-                            else if (!input.contains(e.getCode().toString()))
-                                input.add(e.getCode().toString());
-                            break;
-                        default: break;
+                            return;
+                        }
                     }
+                    
+                    chonGame.handleInput(e);
                 }
-            });
+        });
 
             scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
@@ -129,7 +110,7 @@ public class Engine extends Application {
             // Start the game loop
             gameLoop = new AnimationTimer() {
                 public void handle(long now) {
-                    chonGame.loop(); // Sempre chama o chonGame atual!
+                    chonGame.loop();
                 }
             };
         gameLoop.start();

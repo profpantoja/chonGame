@@ -7,7 +7,9 @@ import chon.group.game.core.environment.Environment;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.menu.Menu;
+import chon.group.game.menu.MenuOption;
 import chon.group.game.menu.MenuPause;
+import javafx.scene.input.KeyEvent;
 
 public class Game {
     private Menu mainMenu;
@@ -172,6 +174,48 @@ public class Game {
                     this.status = GameStatus.RUNNING;
             }
             this.input.remove("P");
+        }
+    }
+
+    public void handleInput(KeyEvent e) {
+        switch (status) {
+            case START:
+                MenuOption.Main mainOpt = mainMenu.handleInput(e.getCode());
+                if (mainOpt == MenuOption.Main.START_GAME) {
+                    // reinicialização, etc.
+                    setStatus(GameStatus.RUNNING);
+                    mainMenu.reset();
+                } else if (mainOpt == MenuOption.Main.EXIT) {
+                    javafx.application.Platform.exit();
+                }
+                break;
+            case PAUSED:
+                MenuOption.Pause pauseOpt = menuPause.handleInput(e.getCode());
+                if (pauseOpt == MenuOption.Pause.RESUME) {
+                    setStatus(GameStatus.RUNNING);
+                    menuPause.reset();
+                } else if (pauseOpt == MenuOption.Pause.GO_BACK_TO_MENU) {
+                    setStatus(GameStatus.START);
+                    menuPause.reset();
+                    mainMenu.reset();
+                }
+                break;
+            case RUNNING:
+                if (e.getCode().toString().equals("P")) {
+                    setStatus(GameStatus.PAUSED);
+                    menuPause.reset();
+                } else if (!input.contains(e.getCode().toString())) {
+                    input.add(e.getCode().toString());
+                }
+                break;
+            default: break;
+        }
+    }
+
+    public void handleKeyReleased(KeyEvent e) {
+        String code = e.getCode().toString();
+        if (!code.equals("P")) {
+            input.remove(code);
         }
     }
 
