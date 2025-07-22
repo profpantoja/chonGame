@@ -16,7 +16,8 @@ public class Object extends Entity {
     private int score = 0;
 
     /**
-     * Constructs a game object with specified position, size, image, and properties.
+     * Constructs a game object with specified position, size, image, and
+     * properties.
      *
      * @param posX         The x-coordinate of the object.
      * @param posY         The y-coordinate of the object.
@@ -26,26 +27,20 @@ public class Object extends Entity {
      * @param collectible  Whether the object is collectible.
      * @param destructible Whether the object is destructible.
      */
-    public Object(int posX, int posY, int height, int width, String pathImage,
-                  boolean collectible, boolean destructible) {
-        super(posX, posY, height, width, pathImage);
+    public Object(int posX,
+            int posY,
+            int height,
+            int width,
+            int speed,
+            int health,
+            String pathImage,
+            boolean flipped,
+            boolean visibleBars,
+            boolean collectible, 
+            boolean destructible) {
+        super(posX, posY, height, width, speed, health, pathImage, flipped, visibleBars);
         this.collectible = collectible;
         this.destructible = destructible;
-    }
-
-    /**
-     * Constructs a collectible and non-destructible object with default properties.
-     *
-     * @param posX      The x-coordinate of the object.
-     * @param posY      The y-coordinate of the object.
-     * @param height    The height of the object.
-     * @param width     The width of the object.
-     * @param imagePath The image path of the object.
-     */
-    public Object(int posX, int posY, int height, int width, String imagePath) {
-        super(posX, posY, height, width, imagePath);
-        this.collectible = true;
-        this.destructible = false;
     }
 
     /** @return Whether the object has been collected. */

@@ -2,7 +2,6 @@ package chon.group.game.drawer;
 
 import java.util.Iterator;
 
-import chon.group.game.GamePanel;
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.environment.Environment;
@@ -10,31 +9,30 @@ import chon.group.game.core.weapon.Shot;
 import chon.group.game.messaging.Message;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 /**
  * The {@code JavaFxMediator} class serves as an intermediary for rendering the
- * game environment and its elements using JavaFX. It coordinates the interaction
- * between the {@link Environment} and the {@link JavaFxDrawer} to manage graphical rendering.
+ * game environment and its elements using JavaFX. It coordinates the
+ * interaction
+ * between the {@link Environment} and the {@link JavaFxDrawer} to manage
+ * graphical rendering.
  */
 public class JavaFxMediator implements EnvironmentDrawer {
 
     private final Environment environment;
     private final JavaFxDrawer drawer;
-    private final GamePanel gamePanel;
 
     /**
-     * Constructs a JavaFxMediator with the specified environment and graphics context.
+     * Constructs a JavaFxMediator with the specified environment and graphics
+     * context.
      *
-     * @param environment The game environment containing agents and the protagonist.
+     * @param environment The game environment containing agents and the
+     *                    protagonist.
      * @param gc          The {@link GraphicsContext} used for rendering.
-     * @param gamePanel   The UI panel used for rendering game statistics and status.
-     * @param pixelFont   The font used in the UI panel.
      */
-    public JavaFxMediator(Environment environment, GraphicsContext gc, GamePanel gamePanel, Font pixelFont) {
+    public JavaFxMediator(Environment environment, GraphicsContext gc) {
         this.environment = environment;
         this.drawer = new JavaFxDrawer(gc, this);
-        this.gamePanel = new GamePanel(gc, pixelFont);
     }
 
     /**
@@ -83,18 +81,21 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     agent.getPosY(),
                     agent.getWidth(),
                     agent.getHeight());
-            drawer.drawEnergyBar(agent.getEnergy(),
-                    agent.getFullEnergy(),
-                    agent.getWidth(),
-                    newPosX,
-                    agent.getPosY(),
-                    Color.BLUE);
-            drawer.drawLifeBar(agent.getHealth(),
-                    agent.getFullHealth(),
-                    agent.getWidth(),
-                    newPosX,
-                    agent.getPosY(),
-                    Color.GREEN);
+
+            if (agent.isVisibleBars())
+                drawer.drawEnergyBar(agent.getEnergy(),
+                        agent.getFullEnergy(),
+                        agent.getWidth(),
+                        newPosX,
+                        agent.getPosY(),
+                        Color.BLUE);
+            if (agent.isVisibleBars())
+                drawer.drawLifeBar(agent.getHealth(),
+                        agent.getFullHealth(),
+                        agent.getWidth(),
+                        newPosX,
+                        agent.getPosY(),
+                        Color.GREEN);
         }
 
         Agent protagonist = this.environment.getProtagonist();
@@ -104,10 +105,12 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 protagonist.getPosY(),
                 protagonist.getWidth(),
                 protagonist.getHeight());
-
-        this.drawLifeBar();
-        this.drawEnergyBar();
-        this.drawStatusPanel();
+        if (protagonist.isVisibleBars()) {
+            this.drawSingleLifeBar();
+            this.drawSingleEnergyBar();
+        }
+        this.drawDebugPanel();
+        this.drawPanel();
     }
 
     /**
@@ -128,7 +131,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
      * Draws the protagonist's life bar on the screen.
      */
     @Override
-    public void drawLifeBar() {
+    public void drawSingleLifeBar() {
         Agent protagonist = this.environment.getProtagonist();
         if (protagonist != null) {
             drawer.drawLifeBar(
@@ -145,7 +148,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
      * Draws the protagonist's energy bar on the screen.
      */
     @Override
-    public void drawEnergyBar() {
+    public void drawSingleEnergyBar() {
         Agent protagonist = this.environment.getProtagonist();
         if (protagonist != null) {
             drawer.drawEnergyBar(
@@ -158,16 +161,9 @@ public class JavaFxMediator implements EnvironmentDrawer {
         }
     }
 
-    /**
-     * Draws the protagonist's status panel with stats like score, life, energy, and collected items.
-     */
     @Override
-    public void drawStatusPanel() {
+    public void drawPanel() {
         Agent protagonist = this.environment.getProtagonist();
-        drawer.drawStatusPanel(protagonist.getPosX(),
-                protagonist.getPosY(),
-                (int) this.environment.getCamera().getPosX());
-
         int collected = environment.getCollectedCount();
         int total = environment.getTotalCollectibleCount();
         int score = environment.getScore();
@@ -175,12 +171,37 @@ public class JavaFxMediator implements EnvironmentDrawer {
         int maxLife = protagonist.getFullHealth();
         double energy = protagonist.getEnergy();
         double maxEnergy = protagonist.getFullEnergy();
-
-        gamePanel.drawPanel(life, maxLife, collected, total, score, energy, maxEnergy);
+        drawer.drawPanel(life,
+                maxLife,
+                collected,
+                total,
+                score,
+                energy,
+                maxEnergy,
+                null,
+                this.environment.getPanel().getLifeIcon(),
+                this.environment.getPanel().getEnergyIcon(),
+                this.environment.getPanel().getItemIcon(),
+                this.environment.getPanel().getScoreIcon(),
+                this.environment.getPanel().getPanelWidth(),
+                this.environment.getPanel().getPanelHeight());
     }
 
     /**
-     * Draws the pause screen overlay, displaying a pause image centered within the environment.
+     * Draws the protagonist's status panel with stats like score, life, energy, and
+     * collected items.
+     */
+    @Override
+    public void drawDebugPanel() {
+        Agent protagonist = this.environment.getProtagonist();
+        drawer.drawDebugPanel(protagonist.getPosX(),
+                protagonist.getPosY(),
+                (int) this.environment.getCamera().getPosX());
+    }
+
+    /**
+     * Draws the pause screen overlay, displaying a pause image centered within the
+     * environment.
      */
     @Override
     public void drawPauseScreen() {
@@ -192,7 +213,8 @@ public class JavaFxMediator implements EnvironmentDrawer {
     }
 
     /**
-     * Draws the game over screen overlay, displaying a game over image centered within the environment.
+     * Draws the game over screen overlay, displaying a game over image centered
+     * within the environment.
      */
     @Override
     public void drawGameOver() {

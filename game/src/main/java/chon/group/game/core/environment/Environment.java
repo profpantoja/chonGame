@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import chon.group.game.Panel;
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Entity;
 import chon.group.game.core.agent.Object;
@@ -13,9 +14,11 @@ import javafx.scene.image.Image;
 
 /**
  * Represents the game environment, including properties such as dimensions,
- * position, background image, agents, protagonist, objects, shots, messages, and camera.
+ * position, background image, agents, protagonist, objects, shots, messages,
+ * and camera.
  * The environment is responsible for updating the state of all elements,
- * detecting collisions, and tracking game progress such as score and collectible status.
+ * detecting collisions, and tracking game progress such as score and
+ * collectible status.
  */
 public class Environment extends Entity {
 
@@ -43,6 +46,8 @@ public class Environment extends Entity {
     /** The camera used to follow the protagonist. */
     private Camera camera;
 
+    private Panel panel;
+
     /** Number of objects collected so far. */
     private int collectedCount = 0;
 
@@ -53,7 +58,8 @@ public class Environment extends Entity {
     private int score = 0;
 
     /**
-     * Constructor to initialize the environment with dimensions, position, and a background image.
+     * Constructor to initialize the environment with dimensions, position, and a
+     * background image.
      *
      * @param posX        the initial X position of the environment
      * @param posY        the initial Y position of the environment
@@ -62,31 +68,14 @@ public class Environment extends Entity {
      * @param screenWidth the screen width used for camera calculations
      * @param pathImage   the path to the background image
      */
-    public Environment(int posX, int posY, int height, int width, double screenWidth, String pathImage) {
-        super(posX, posY, height, width, 0, 0, pathImage);
+    public Environment(int posX, int posY, int height, int width, double screenWidth, String pathImage, Panel panel) {
+        super(posX, posY, height, width, 0, 0, pathImage, false, false);
         this.agents = new ArrayList<>();
         this.objects = new ArrayList<>();
         this.messages = new ArrayList<>();
         this.shots = new ArrayList<>();
         this.camera = new Camera(screenWidth, width, 0.49, 0.51);
-    }
-
-    /**
-     * Constructor to initialize the environment with a background and a predefined agent list.
-     *
-     * @param posX      the initial X position
-     * @param posY      the initial Y position
-     * @param width     the width of the environment
-     * @param height    the height of the environment
-     * @param pathImage the path to the background image
-     * @param agents    the list of agents
-     */
-    public Environment(int posX, int posY, int width, int height, String pathImage, ArrayList<Agent> agents) {
-        super(posX, posY, height, width, width, height, pathImage);
-        this.agents = agents;
-        this.objects = new ArrayList<>();
-        this.messages = new ArrayList<>();
-        this.shots = new ArrayList<>();
+        this.panel = panel;
     }
 
     public Image getPauseImage() {
@@ -170,6 +159,14 @@ public class Environment extends Entity {
         this.camera = camera;
     }
 
+    public Panel getPanel() {
+        return panel;
+    }
+
+    public void setPanel(Panel panel) {
+        this.panel = panel;
+    }
+
     /**
      * Gets the number of objects collected by the protagonist.
      *
@@ -233,9 +230,9 @@ public class Environment extends Entity {
      */
     private boolean intersect(Entity a, Entity b) {
         return a.getPosX() < b.getPosX() + b.getWidth() &&
-               a.getPosX() + a.getWidth() > b.getPosX() &&
-               a.getPosY() < b.getPosY() + b.getHeight() &&
-               a.getPosY() + a.getHeight() > b.getPosY();
+                a.getPosX() + a.getWidth() > b.getPosX() &&
+                a.getPosY() < b.getPosY() + b.getHeight() &&
+                a.getPosY() + a.getHeight() > b.getPosY();
     }
 
     /**
@@ -334,7 +331,7 @@ public class Environment extends Entity {
      */
     public void countTotalCollectibles() {
         totalCollectibleCount = (int) objects.stream()
-            .filter(Object::isCollectible)
-            .count();
+                .filter(Object::isCollectible)
+                .count();
     }
 }

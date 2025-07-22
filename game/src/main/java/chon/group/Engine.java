@@ -67,8 +67,8 @@ public class Engine extends Application {
                 }
             });
 
-        // Set up the environment drawer and game instance
-            EnvironmentDrawer mediator = new JavaFxMediator(gameSet.getEnvironment(), gc, null, null);
+           
+            EnvironmentDrawer mediator = new JavaFxMediator(gameSet.getEnvironment(), gc);
             Game chonGame = new Game(gameSet.getEnvironment(), mediator, input);
 
             // Start the game loop
