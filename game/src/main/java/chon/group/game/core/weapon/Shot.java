@@ -13,7 +13,7 @@ public abstract class Shot extends Entity {
 
     public Shot(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped,
             int damage, String direction) {
-        super(posX, posY, height, width, speed, health, pathImage, flipped);
+        super(posX, posY, height, width, speed, health, pathImage, flipped, false);
         this.damage = damage;
         this.direction = direction;
     }

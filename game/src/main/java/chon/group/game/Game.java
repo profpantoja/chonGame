@@ -11,8 +11,9 @@ public class Game {
 
     private Environment environment;
     private EnvironmentDrawer mediator;
-    ArrayList<String> input;
+    private ArrayList<String> input;
     private GameStatus status = GameStatus.START;
+    private boolean debugMode = true;
 
     public Game(Environment environment, EnvironmentDrawer mediator, ArrayList<String> input) {
         this.environment = environment;
@@ -50,6 +51,14 @@ public class Game {
 
     public void setStatus(GameStatus status) {
         this.status = status;
+    }
+
+    public boolean isDebugMode() {
+        return debugMode;
+    }
+
+    public void setDebugMode(boolean debugMode) {
+        this.debugMode = debugMode;
     }
 
     public void loop() {

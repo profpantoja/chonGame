@@ -7,7 +7,7 @@ public abstract class Weapon extends Entity {
     private double energyCost;
 
     public Weapon(int posX, int posY, int height, int width, int speed, int health, double energyCost, String pathImage, boolean flipped) {
-        super(posX, posY, height, width, speed, health, pathImage, flipped);
+        super(posX, posY, height, width, speed, health, pathImage, flipped, false);
         this.energyCost = energyCost;
     }
 
