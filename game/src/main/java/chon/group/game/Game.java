@@ -135,10 +135,12 @@ public class Game {
 
     public void init() {
         this.status = GameStatus.RUNNING;
+        mediator.renderGame();
     }
 
     public void win() {
         this.status = GameStatus.START;
+        mediator.renderGame();
     }
 
     private void updateControls() {
