@@ -1,4 +1,4 @@
-package chon.group.game.domain.environment;
+package chon.group.game.core.environment;
 
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Object;

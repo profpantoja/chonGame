@@ -1,16 +1,9 @@
 package chon.group;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import chon.group.game.core.agent.Agent;
-import chon.group.game.core.agent.Object;
-import chon.group.game.core.weapon.Shot;
-import chon.group.game.core.weapon.Weapon;
-import chon.group.game.domain.environment.Environment;
-import chon.group.game.domain.environment.Level;
-import chon.group.game.domain.weapon.Cannon;
-import chon.group.game.domain.weapon.Lancer;
+import chon.group.game.Game;
+import chon.group.game.GameSet;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.drawer.JavaFxMediator;
 import javafx.animation.AnimationTimer;
@@ -29,8 +22,6 @@ import javafx.stage.Stage;
  */
 public class Engine extends Application {
 
-    private boolean isPaused = false;
-
     /**
      * Main entry point of the application.
      *
@@ -43,97 +34,15 @@ public class Engine extends Application {
     @Override
     public void start(Stage theStage) {
         try {
-            /* Define some size properties for both Canvas and Environment */
-            double canvasWidth = 1280;
-            double canvasHeight = 780;
-            int worldWidth = 8024;
-
-            /* Initialize the game environment, agents and weapons */
-            Environment environment = new Environment(0, 0, 780, worldWidth,
-                    canvasWidth, "/images/environment/castleLong.png");
-            Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
-            Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, 0.05, "", false);
-            Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
-
-            chonBota.setWeapon(cannon);
-            chonBota.setWeapon(lancer);
-
-            Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
-            environment.setProtagonist(chonBota);
-            environment.getAgents().add(chonBot);
-            environment.setPauseImage("/images/environment/pause.png");
-            environment.setGameOverImage("/images/environment/gameover.png");
-
-            /* Set up some collectable objects */
-            List<Object> objects = new ArrayList<>();
-            objects.add(new Object(200, 350, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(400, 380, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(1000, 600, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(1400, 380, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(1800, 650, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(2000, 580, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(2300, 380, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(2600, 500, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(2900, 380, 32, 32, "/images/agents/coin.png", true, false));
-            objects.add(new Object(2950, 400, 32, 32, "/images/agents/coin.png", true, false));
-
-
-            /**
-             * Sets up the game levels by creating and configuring Level instances.
-             * <p>
-             * Each level is initialized with a background image, a list of enemy agents,
-             * and a list of collectible or interactive objects placed in the level.
-             * </p>
-             * <p>
-             * The levels are then linked sequentially so that completing one
-             * progresses the player to the next.
-             * </p>
-             * <p>
-             * Finally, the first level is applied to the game environment,
-             * initializing it with the appropriate agents, objects, and background.
-             * </p>
-             */
-            List<Level> levels = new ArrayList<>();
-
-            levels.add(new Level("/images/environment/castleLong.png",
-                new ArrayList<>(List.of(
-                    new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true)
-                )),
-                new ArrayList<>(objects.subList(0, 9))
-            ));
-
-            levels.add(new Level("/images/environment/mountain.png",
-                new ArrayList<>(List.of(
-                    new Agent(1300, 440, 90, 65, 2, 600, "/images/agents/chonBot.png", true)
-                )),
-                new ArrayList<>(objects.subList(0, 0))
-            ));
-
-            levels.add(new Level("/images/environment/castleLong.png",
-                new ArrayList<>(List.of(
-                    new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true)
-                )),
-                new ArrayList<>(objects.subList(0, 9))
-            ));
-
-            // Link levels together sequentially
-            for (int i = 0; i < levels.size() - 1; i++) {
-                levels.get(i).setNextLevel(levels.get(i + 1));
-            }
-
-            // Set the first level as the current level and apply it to the environment,
-            // initializing the protagonist and level data.
-            final Level[] currentLevel = new Level[]{levels.get(0)};
-            currentLevel[0].applyTo(environment, chonBota);
+            GameSet gameSet = new GameSet();
 
             /* Set up the graphical canvas */
-            Canvas canvas = new Canvas(canvasWidth, canvasHeight);
+            Canvas canvas = new Canvas(gameSet.getCanvasWidth(), gameSet.getCanvasHeight());
             GraphicsContext gc = canvas.getGraphicsContext2D();
-            EnvironmentDrawer mediator = new JavaFxMediator(environment, gc);
 
             /* Set up the scene and stage */
             StackPane root = new StackPane();
-            Scene scene = new Scene(root, canvasWidth, canvasHeight);
+            Scene scene = new Scene(root, gameSet.getCanvasWidth(), gameSet.getCanvasHeight());
             theStage.setTitle("Chon: The Learning Game");
             theStage.setScene(scene);
 
@@ -144,10 +53,7 @@ public class Engine extends Application {
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
                     String code = e.getCode().toString();
-                    if (code.equals("P")) {
-                        isPaused = !isPaused;
-                    }
-                    if (!isPaused && !input.contains(code)) {
+                    if (!input.contains(code)) {
                         input.add(code);
                     }
                 }
@@ -156,93 +62,22 @@ public class Engine extends Application {
             scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
                     String code = e.getCode().toString();
-                    input.remove(code);
+                    if (!code.equals("P"))
+                        input.remove(code);
                 }
             });
 
-            /* Start the game loop */
+           
+            EnvironmentDrawer mediator = new JavaFxMediator(gameSet.getEnvironment(), gc);
+            Game chonGame = new Game(gameSet.getEnvironment(), mediator, input);
+
+            // Start the game loop
             new AnimationTimer() {
-                @Override
                 public void handle(long now) {
-                    mediator.clearEnvironment();
-                    environment.detectCollision();
-                    /* Branching the Game Loop */
-                    /* If the agent died in the last loop */
-                    if (environment.getProtagonist().isDead()) {
-                        environment.updateMessages();
-                        environment.updateShots();
-                        mediator.drawBackground();
-                        mediator.drawAgents();
-                        mediator.drawObjects();
-                        mediator.drawShots();
-                        mediator.drawMessages();
-                        /** Rendering the Game Over Screen */
-                        mediator.drawGameOver();
-                    } else {
-                        if (isPaused) {
-                            mediator.drawBackground();
-                            mediator.drawAgents();
-                            mediator.drawObjects();
-                            mediator.drawShots();
-                            mediator.drawMessages();
-                            /** Rendering the Pause Screen */
-                            mediator.drawPauseScreen();
-                        } else {
-                            /** ChonBota Only Moves if the Player Press Something */
-                            /** Update the protagonist's movements if input exists */
-                            if (!input.isEmpty()) {
-                                /** ChonBota Shoots Somebody Who Outdrew You */
-                                /** But only if she has enough energy */
-                                if (input.contains("SPACE")) {
-                                    input.remove("SPACE");
-                                    Shot shot = environment.getProtagonist().useWeapon();
-                                    if (shot != null)
-                                        environment.getShots().add(shot);
-
-                                }
-                                /* ChonBota's Movements */
-                                environment.getProtagonist().move(input);
-                                environment.checkBorders();
-                            }
-                            /* ChonBot's Automatic Movements */
-                            /* Update the other agents' movements */
-                            for (Agent agent : environment.getAgents()) {
-                                agent.chase(environment.getProtagonist().getPosX(),
-                                        environment.getProtagonist().getPosY());
-                            }
-                            /* Render the game environment and agents */
-                            environment.updateObjects();
-                            environment.updateShots();
-                            environment.updateMessages();
-                            environment.updateCamera();
-                            environment.getProtagonist().recoverEnergy();
-                            mediator.drawBackground();
-                            mediator.drawAgents();
-                            mediator.drawObjects();
-                            mediator.drawShots();
-                            mediator.drawMessages();
-                        }
-                    }
-                    /*
-                     * Check if the current level is completed and if so, proceed to the next level.
-                     */
-                    if (currentLevel[0].isCompleted(environment)) {
-                        Level next = currentLevel[0].getNextLevel();
-                        if (next != null) {
-                            // Reset the protagonist's position
-                            chonBota.setPosX(100);
-                            chonBota.setPosY(390);
-
-                            // Apply the next level to the environment
-                            currentLevel[0] = next;
-                            currentLevel[0].applyTo(environment, chonBota);
-
-                            // Reset the camera position
-                            environment.resetCamera();
-                        }
-                    }
+                    chonGame.loop();
                 }
             }.start();
+
             theStage.show();
         } catch (Exception e) {
             e.printStackTrace();

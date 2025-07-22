@@ -38,6 +38,9 @@ import javafx.scene.paint.Color;
     /** The maximum entity's health. */
     private int fullHealth;
 
+    /** Indicates if the existing bars of life or energy are visible or not. */
+    private boolean visibleBars = false;    
+
     /**
      * Constructor to initialize the entity properties.
      *
@@ -49,39 +52,7 @@ import javafx.scene.paint.Color;
      * @param health    the entity's health
      * @param pathImage the path to the entity's image
      */
-    public Entity(int posX, int posY, int height, int width, int speed, int health, String pathImage) {
-        this.posX = posX;
-        this.posY = posY;
-        this.height = height;
-        this.width = width;
-        this.speed = speed;
-        this.health = health;
-        this.fullHealth = health;
-        this.image = new Image(getClass().getResource(pathImage).toExternalForm());
-    }
-
-    //1 contrutor 
-    public Entity(int posX, int posY, int height, int width, String pathImage) {
-        this.posX = posX;
-        this.posY = posY;
-        this.width = width;
-        this.height = height;
-        this.image = new Image(getClass().getResource(pathImage).toExternalForm());
-    }
-
-    /**
-     * Constructor to initialize the entity properties including its direction.
-     *
-     * @param posX      the entity's initial X (horizontal) position
-     * @param posY      the entity's initial Y (vertical) position
-     * @param height    the entity's height
-     * @param width     the entity's width
-     * @param speed     the entity's speed
-     * @param health    the entity's health
-     * @param pathImage the path to the entity's image
-     * @param flipped   the entity's direction (RIGHT=0 or LEFT=1)
-     */
-    public Entity(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped) {
+    public Entity(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped, boolean visibleBars) {
         this.posX = posX;
         this.posY = posY;
         this.height = height;
@@ -91,6 +62,7 @@ import javafx.scene.paint.Color;
         this.fullHealth = health;
         this.image = new Image(getClass().getResource(pathImage).toExternalForm());
         this.flipped = flipped;
+        this.visibleBars = visibleBars;
     }
 
     /**
@@ -255,6 +227,14 @@ import javafx.scene.paint.Color;
         this.fullHealth = fullHealth;
     }
 
+    public boolean isVisibleBars() {
+        return visibleBars;
+    }
+
+    public void setVisibleBars(boolean visible) {
+        this.visibleBars = visible;
+    }
+    
     /**
      * Flips the Image horizontally.
      */
