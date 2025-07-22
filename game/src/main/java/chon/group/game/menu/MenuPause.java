@@ -8,17 +8,10 @@ public class MenuPause {
 
     private int selectedOptionIndex = 0;
     private final MenuOption.Pause[] options = MenuOption.Pause.values();
-    private final JavaFxDrawer drawer;
     private final Image backgroundImage;
 
     public MenuPause(JavaFxDrawer drawer, Image backgroundImage) {
-        this.drawer = drawer;
         this.backgroundImage = backgroundImage;
-    }
-
-    public void draw() {
-        String[] labels = {"Resume", "Go back to Menu"};
-        drawer.drawMenuPause("Paused", selectedOptionIndex, backgroundImage, labels);
     }
 
     // Retorna a opção escolhida ao pressionar ENTER, ou null caso contrário
@@ -35,5 +28,17 @@ public class MenuPause {
 
     public void reset() {
         this.selectedOptionIndex = 0;
+    }
+
+     public int getSelectedOptionIndex() {
+        return selectedOptionIndex; 
+    }
+
+    public Image getBackgroundImage() {
+        return backgroundImage; 
+    }
+
+    public String[] getLabels() { 
+        return new String[]{"Resume", "Go back to Menu"}; 
     }
 }

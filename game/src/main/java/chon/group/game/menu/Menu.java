@@ -7,17 +7,10 @@ public class Menu {
 
     private int selectedOption = 0;
     private final MenuOption.Main[] options = MenuOption.Main.values();
-    private JavaFxDrawer drawer;
     private Image backgroundImage;
 
     public Menu(JavaFxDrawer drawer, Image backgroundImage) {
-        this.drawer = drawer;
         this.backgroundImage = backgroundImage;
-    }
-
-    public void draw() {
-        String[] labels = {"Start Game", "Exit"};
-        drawer.drawMainMenu(backgroundImage, "Chon Game", selectedOption, labels);
     }
 
     // Retorna a opção escolhida ao pressionar ENTER, ou null caso contrário
@@ -35,4 +28,17 @@ public class Menu {
     public void reset() {
         this.selectedOption = 0;
     }
+
+    public int getSelectedOption() {
+        return selectedOption; 
+    }
+
+    public Image getBackgroundImage() {
+        return backgroundImage; 
+    }
+
+    public String[] getLabels() { 
+        return new String[]{"Start Game", "Exit"}; 
+    }
+
 }

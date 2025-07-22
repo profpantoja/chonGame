@@ -47,24 +47,6 @@ public class Agent extends Entity {
     private final double recoveryFactor;
 
     /**
-     * Constructor to initialize the agent properties.
-     *
-     * @param posX      the agent's initial X (horizontal) position
-     * @param posY      the agent's initial Y (vertical) position
-     * @param height    the agent's height
-     * @param width     the agent's width
-     * @param speed     the agent's speed
-     * @param health    the agent's health
-     * @param pathImage the path to the agent's image
-     */
-    public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage) {
-        super(posX, posY, height, width, speed, health, pathImage);
-        this.energy = 1.0;
-        this.fullEnergy = 1.0;
-        this.recoveryFactor = 0.0002;
-    }
-    
-    /**
      * Constructor to initialize the agent properties including its direction.
      *
      * @param posX      the agent's initial X (horizontal) position
@@ -76,8 +58,8 @@ public class Agent extends Entity {
      * @param pathImage the path to the agent's image
      * @param flipped   the agent's direction (RIGHT=0 or LEFT=1)
      */
-    public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped) {
-        super(posX, posY, height, width, speed, health, pathImage, flipped);
+    public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped, boolean visibleBars) {
+        super(posX, posY, height, width, speed, health, pathImage, flipped, visibleBars);
         this.energy = 1.0;
         this.fullEnergy = 1.0;
         this.recoveryFactor = 0.0002;

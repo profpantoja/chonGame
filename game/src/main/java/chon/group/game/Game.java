@@ -6,13 +6,17 @@ import chon.group.game.core.agent.Agent;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.drawer.EnvironmentDrawer;
+import chon.group.game.menu.Menu;
+import chon.group.game.menu.MenuPause;
 
 public class Game {
-
+    private Menu mainMenu;
+    private MenuPause menuPause;
     private Environment environment;
     private EnvironmentDrawer mediator;
-    ArrayList<String> input;
+    private ArrayList<String> input;
     private GameStatus status = GameStatus.START;
+    private boolean debugMode = true;
 
     public Game(Environment environment, EnvironmentDrawer mediator, ArrayList<String> input) {
         this.environment = environment;
@@ -52,17 +56,42 @@ public class Game {
         this.status = status;
     }
 
+    public boolean isDebugMode() {
+        return debugMode;
+    }
+
+    public void setDebugMode(boolean debugMode) {
+        this.debugMode = debugMode;
+    }
+
+    public Menu getMainMenu() { 
+        return mainMenu;
+    }
+
+    public void setMainMenu(Menu mainMenu) {
+        this.mainMenu = mainMenu;
+    }
+
+    public MenuPause getMenuPause() { 
+        return menuPause;
+    }
+
+    public void setMenuPause(MenuPause menuPause) {
+        this.menuPause = menuPause;
+    }
+
     public void loop() {
         this.updateControls();
         switch (this.status) {
             case START:
-                this.init();
+                mediator.drawMainMenu(mainMenu);
                 break;
             case RUNNING:
                 this.running();
                 break;
             case PAUSED:
                 this.pause();
+                mediator.drawPauseMenu(menuPause);
                 break;
             case WIN:
                 this.win();
@@ -126,10 +155,12 @@ public class Game {
 
     public void init() {
         this.status = GameStatus.RUNNING;
+        mediator.renderGame();
     }
 
     public void win() {
         this.status = GameStatus.START;
+        mediator.renderGame();
     }
 
     private void updateControls() {

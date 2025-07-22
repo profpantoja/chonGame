@@ -1,5 +1,8 @@
 package chon.group.game.drawer;
 
+import chon.group.game.menu.Menu;
+import chon.group.game.menu.MenuPause;
+
 /**
  * The {@code EnvironmentDrawer} interface defines methods for rendering
  * various elements in the game environment. It provides essential drawing
@@ -34,17 +37,22 @@ public interface EnvironmentDrawer {
     /**
      * Draws the life bar for agents or players.
      */
-    void drawLifeBar();
+    void drawSingleLifeBar();
 
     /**
      * Draws the energy bar for agents or players.
      */
-    void drawEnergyBar();
+    void drawSingleEnergyBar();
 
     /**
-     * Draws the status panel displaying relevant game information.
+     * Draws the game panel.
      */
-    void drawStatusPanel();
+    void drawPanel();
+
+    /**
+     * Draws the status panel displaying relevant game information for debugging.
+     */
+    void drawDebugPanel();
 
     /**
      * Draws all the messages on the screen.
@@ -65,4 +73,14 @@ public interface EnvironmentDrawer {
      * Draws the pause screen when the game is paused.
      */
     void drawPauseScreen();
+
+    /**
+     * Draws the main menu of the game, typically shown at the start or when returning to the main menu. 
+     */
+    void drawMainMenu(Menu mainMenu);
+
+    /**
+     * Draws the pause menu with options to resume or exit the game.
+     */
+    void drawPauseMenu(MenuPause menuPause);
 }
