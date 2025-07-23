@@ -6,19 +6,21 @@ import chon.group.game.core.agent.Agent;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.drawer.EnvironmentDrawer;
-import chon.group.game.menu.Menu;
-import chon.group.game.menu.MenuOption;
-import chon.group.game.menu.MenuPause;
+import chon.group.game.menu.MainOption;
+import chon.group.game.menu.MainMenu;
+import chon.group.game.menu.PauseMenu;
+import chon.group.game.menu.PauseOption;
 import javafx.scene.input.KeyEvent;
 
 public class Game {
-    private Menu mainMenu;
-    private MenuPause menuPause;
+    private MainMenu mainMenu;
+    private PauseMenu menuPause;
     private Environment environment;
     private EnvironmentDrawer mediator;
     private ArrayList<String> input;
     private GameStatus status = GameStatus.START;
     private boolean debugMode = true;
+    private boolean wantsToStartGame = false;
 
     public Game(Environment environment, EnvironmentDrawer mediator, ArrayList<String> input) {
         this.environment = environment;
@@ -66,20 +68,28 @@ public class Game {
         this.debugMode = debugMode;
     }
 
-    public Menu getMainMenu() { 
+    public MainMenu getMainMenu() { 
         return mainMenu;
     }
 
-    public void setMainMenu(Menu mainMenu) {
+    public void setMainMenu(MainMenu mainMenu) {
         this.mainMenu = mainMenu;
     }
 
-    public MenuPause getMenuPause() { 
+    public PauseMenu getMenuPause() { 
         return menuPause;
     }
 
-    public void setMenuPause(MenuPause menuPause) {
+    public void setMenuPause(PauseMenu menuPause) {
         this.menuPause = menuPause;
+    }
+
+    public boolean wantsToStartGame() {
+        return wantsToStartGame;
+    }
+
+    public void setWantsToStartGame(boolean wantsToStartGame) {
+        this.wantsToStartGame = wantsToStartGame;
     }
 
     public void loop() {
@@ -180,21 +190,20 @@ public class Game {
     public void handleInput(KeyEvent e) {
         switch (status) {
             case START:
-                MenuOption.Main mainOpt = mainMenu.handleInput(e.getCode());
-                if (mainOpt == MenuOption.Main.START_GAME) {
-                    // reinicialização, etc.
+                MainOption mainOpt = mainMenu.handleInput(e.getCode());
+                if (mainOpt == MainOption.START_GAME) {
                     setStatus(GameStatus.RUNNING);
-                    mainMenu.reset();
-                } else if (mainOpt == MenuOption.Main.EXIT) {
+                    wantsToStartGame = true;
+                } else if (mainOpt == MainOption.EXIT) {
                     javafx.application.Platform.exit();
                 }
                 break;
             case PAUSED:
-                MenuOption.Pause pauseOpt = menuPause.handleInput(e.getCode());
-                if (pauseOpt == MenuOption.Pause.RESUME) {
+                PauseOption pauseOpt = menuPause.handleInput(e.getCode());
+                if (pauseOpt == PauseOption.RESUME) {
                     setStatus(GameStatus.RUNNING);
                     menuPause.reset();
-                } else if (pauseOpt == MenuOption.Pause.GO_BACK_TO_MENU) {
+                } else if (pauseOpt == PauseOption.GO_BACK_TO_MENU) {
                     setStatus(GameStatus.START);
                     menuPause.reset();
                     mainMenu.reset();

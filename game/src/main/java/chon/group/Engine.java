@@ -8,9 +8,8 @@ import chon.group.game.GameStatus;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.drawer.JavaFxDrawer;
 import chon.group.game.drawer.JavaFxMediator;
-import chon.group.game.menu.Menu;
-import chon.group.game.menu.MenuOption;
-import chon.group.game.menu.MenuPause;
+import chon.group.game.menu.MainMenu;
+import chon.group.game.menu.PauseMenu;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -44,8 +43,8 @@ public class Engine extends Application {
     */
     private GameSet gameSet;
     private JavaFxDrawer drawer;
-    private Menu mainMenu;
-    private MenuPause menuPause;
+    private MainMenu mainMenu;
+    private PauseMenu menuPause;
     private ArrayList<String> input;
     private EnvironmentDrawer mediator;
     private Game chonGame;
@@ -81,21 +80,16 @@ public class Engine extends Application {
             chonGame.setMenuPause(menuPause);
 
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-                public void handle(KeyEvent e) {
-                    if (chonGame.getStatus() == GameStatus.START) {
-                        MenuOption.Main mainOpt = mainMenu.handleInput(e.getCode());
-                        if (mainOpt == MenuOption.Main.START_GAME) {
-                            resetGame(gc); // <-- reinicia tudo!
-                            chonGame.setStatus(GameStatus.RUNNING);
-                            mainMenu.reset();
-                            return; // Evita processar o resto
-                        } else if (mainOpt == MenuOption.Main.EXIT) {
-                            javafx.application.Platform.exit();
-                            return;
-                        }
-                    }
+                public void handle(KeyEvent e) {                    
                     
                     chonGame.handleInput(e);
+
+                    if (chonGame.wantsToStartGame()) {
+                        chonGame.setWantsToStartGame(false); // consome a flag
+                        resetGame(gc);
+                        chonGame.setStatus(GameStatus.RUNNING);
+                        mainMenu.reset();
+                    }
                 }
         });
 
@@ -126,8 +120,8 @@ public class Engine extends Application {
     private void resetGame(GraphicsContext gc) {
         gameSet = new GameSet();
         drawer = new JavaFxDrawer(gc, null);
-        mainMenu = new Menu(drawer, new Image(getClass().getResourceAsStream("/images/environment/menu_background_new.png")));
-        menuPause = new MenuPause(drawer, gameSet.getEnvironment().getPauseImage());
+        mainMenu = new MainMenu(drawer, new Image(getClass().getResourceAsStream("/images/environment/menu_background_new.png")));
+        menuPause = new PauseMenu(drawer, gameSet.getEnvironment().getPauseImage());
         input = new ArrayList<>();
         mediator = new JavaFxMediator(gameSet.getEnvironment(), gc);
         chonGame = new Game(gameSet.getEnvironment(), mediator, input);

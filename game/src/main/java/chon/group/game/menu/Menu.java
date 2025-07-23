@@ -1,44 +1,41 @@
 package chon.group.game.menu;
+
 import chon.group.game.drawer.JavaFxDrawer;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 
-public class Menu {
+public abstract class Menu<T extends Enum<T>> {
+    protected int selectedOptionIndex = 0;
+    protected final T[] options;
+    protected final Image backgroundImage;
 
-    private int selectedOption = 0;
-    private final MenuOption.Main[] options = MenuOption.Main.values();
-    private Image backgroundImage;
-
-    public Menu(JavaFxDrawer drawer, Image backgroundImage) {
+    public Menu(JavaFxDrawer drawer, Image backgroundImage, T[] options) {
         this.backgroundImage = backgroundImage;
+        this.options = options;
     }
 
-    // Retorna a opção escolhida ao pressionar ENTER, ou null caso contrário
-    public MenuOption.Main handleInput(KeyCode code) {
-    if (code == KeyCode.UP) {
-        selectedOption = (selectedOption - 1 + options.length) % options.length;
-    } else if (code == KeyCode.DOWN) {
-        selectedOption = (selectedOption + 1) % options.length;
-    } else if (code == KeyCode.ENTER) {
-        return options[selectedOption];
+    public T handleInput(KeyCode code) {
+        if (code == KeyCode.UP) {
+            selectedOptionIndex = (selectedOptionIndex - 1 + options.length) % options.length;
+        } else if (code == KeyCode.DOWN) {
+            selectedOptionIndex = (selectedOptionIndex + 1) % options.length;
+        } else if (code == KeyCode.ENTER) {
+            return options[selectedOptionIndex];
+        }
+        return null;
     }
-    return null;
-}
 
     public void reset() {
-        this.selectedOption = 0;
+        this.selectedOptionIndex = 0;
     }
 
-    public int getSelectedOption() {
-        return selectedOption; 
+    public int getSelectedOptionIndex() {
+        return selectedOptionIndex;
     }
 
     public Image getBackgroundImage() {
-        return backgroundImage; 
+        return backgroundImage;
     }
 
-    public String[] getLabels() { 
-        return new String[]{"Start Game", "Exit"}; 
-    }
-
+    public abstract String[] getLabels();
 }

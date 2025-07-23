@@ -1,7 +1,7 @@
 package chon.group.game.drawer;
 
-import chon.group.game.menu.Menu;
-import chon.group.game.menu.MenuPause;
+import chon.group.game.menu.MainMenu;
+import chon.group.game.menu.PauseMenu;
 
 /**
  * The {@code EnvironmentDrawer} interface defines methods for rendering
@@ -77,10 +77,10 @@ public interface EnvironmentDrawer {
     /**
      * Draws the main menu of the game, typically shown at the start or when returning to the main menu. 
      */
-    void drawMainMenu(Menu mainMenu);
+    void drawMainMenu(MainMenu mainMenu);
 
     /**
      * Draws the pause menu with options to resume or exit the game.
      */
-    void drawPauseMenu(MenuPause menuPause);
+    void drawPauseMenu(PauseMenu menuPause);
 }
