@@ -63,7 +63,7 @@ public class Level extends Entity {
     }
 
     public boolean isCompleted(Environment env) {
-        if (!env.getProtagonist().isDead() && env.getProtagonist().getPosX() >= 0.9 * this.getWidth()) {
+        if (env.getProtagonist().getPosX() >= 0.95 * this.getWidth()) {
             for (Agent agent : this.agents) {
                 if (agent != env.getProtagonist() && !agent.isDead()) {
                     return false;

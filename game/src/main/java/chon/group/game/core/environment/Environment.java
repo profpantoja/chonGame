@@ -284,6 +284,11 @@ public class Environment {
             camera.update();
     }
 
+    public void updateLevel() {
+        if (this.currentLevel.isCompleted(this))
+            this.loadNextLevel();
+    }
+
     /**
      * Performs a full update cycle of the environment.
      * Includes updating objects, shots, messages, camera,
@@ -296,10 +301,20 @@ public class Environment {
         updateCamera();
         detectCollision();
         protagonist.recoverEnergy();
+        updateLevel();
     }
 
     public void loadNextLevel() {
         if (currentLevel == null)
             this.currentLevel = levels.get(0);
+        else {
+            int levelIndex = this.getLevels().indexOf(this.currentLevel);
+            if (levelIndex >= this.getLevels().size() - 1) {
+                levelIndex = this.getLevels().size() - 1;
+                this.currentLevel = this.getLevels().get(levelIndex);
+            } else
+                this.currentLevel = this.getLevels().get(levelIndex + 1);
+        }
+
     }
 }

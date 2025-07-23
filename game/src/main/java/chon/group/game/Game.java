@@ -17,7 +17,6 @@ public class Game {
 
     public Game(Environment environment, EnvironmentDrawer mediator, ArrayList<String> input) {
         this.environment = environment;
-        this.environment.loadNextLevel();
         this.mediator = mediator;
         this.input = input;
     }

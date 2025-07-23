@@ -66,16 +66,23 @@ public class GameSet {
                 110);
 
         /* Initialize the game environment, levels, agents and weapons */
-        Level level = new Level(
+        Level level1 = new Level(
                 0,
                 0,
                 canvasHeight,
                 8024,
                 "/images/environment/castleLong.png");
 
+        Level level2 = new Level(
+                0,
+                0,
+                canvasHeight,
+                8000,
+                "/images/environment/mountain.png");
+
         environment = new Environment(
                 this.canvasHeight,
-                level.getWidth(),
+                level1.getWidth(),
                 this.canvasWidth,
                 panel);
 
@@ -91,7 +98,7 @@ public class GameSet {
         environment.setPauseImage("/images/environment/pause.png");
         environment.setGameOverImage("/images/environment/gameover.png");
 
-        level.getAgents().add(chonBot);
+        level1.getAgents().add(chonBot);
 
         /* Set up some collectable objects */
         List<Object> objects = new ArrayList<>();
@@ -110,10 +117,11 @@ public class GameSet {
         objects.add(new Object(6200, 400, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false));
 
         // Register objects into the environment and count total collectibles
-        level.setObjects(objects);
-        level.countCollectibles();
-        environment.getLevels().add(level);
-        environment.setCurrentLevel(level);
+        level1.setObjects(objects);
+        level1.countCollectibles();
+        environment.getLevels().add(level1);
+        environment.getLevels().add(level2);
+        environment.setCurrentLevel(level1);
     }
 
 }
