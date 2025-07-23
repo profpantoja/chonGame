@@ -8,8 +8,8 @@ public class Camera {
     private double posX;
     /** The Screen width. */
     private final double screenWidth;
-    /** The environment full width. */
-    private final double environmentWidth;
+    /** The level full width. */
+    private final double levelWidth;
     /** The left boundary. */
     private double leftBoundary;
     /** The right boundary. */
@@ -17,10 +17,10 @@ public class Camera {
     /** The Entity which the camera is following. */
     private Entity target;
 
-    public Camera(double screenWidth, double environmentWidth, double leftBoundaryRate, double rightBoundaryRate) {
+    public Camera(double screenWidth, double levelWidth, double leftBoundaryRate, double rightBoundaryRate) {
         this.posX = 0;
         this.screenWidth = screenWidth;
-        this.environmentWidth = environmentWidth;
+        this.levelWidth = levelWidth;
         this.leftBoundary = screenWidth * leftBoundaryRate;
         this.rightBoundary = screenWidth * rightBoundaryRate;
     }
@@ -33,8 +33,8 @@ public class Camera {
         this.posX = posX;
     }
 
-    public double getEnvironmentWidth() {
-        return environmentWidth;
+    public double getLevelWidth() {
+        return levelWidth;
     }
 
     public double getScreenWidth() {
@@ -84,8 +84,8 @@ public class Camera {
              */
             if (this.posX < 0)
                 this.posX = 0;
-            if (this.posX > environmentWidth - screenWidth)
-                this.posX = environmentWidth - screenWidth;
+            if (this.posX > levelWidth - screenWidth)
+                this.posX = levelWidth - screenWidth;
         }
     }
 

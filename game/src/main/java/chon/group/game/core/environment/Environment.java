@@ -20,7 +20,7 @@ import javafx.scene.image.Image;
  * detecting collisions, and tracking game progress such as score and
  * collectible status.
  */
-public class Environment extends Entity {
+public class Environment {
 
     /** The background image for the pause screen. */
     private Image pauseImage;
@@ -31,17 +31,12 @@ public class Environment extends Entity {
     /** The protagonist of the environment. */
     private Agent protagonist;
 
-    /** List of agents present in the environment. */
-    private List<Agent> agents;
+    private List<Level> levels;
 
-    /** List of collectible/destructible objects in the environment. */
-    private List<Object> objects;
+    private Level currentLevel;
 
     /** List of messages currently being displayed. */
     private List<Message> messages;
-
-    /** List of shots in the environment. */
-    private List<Shot> shots;
 
     /** The camera used to follow the protagonist. */
     private Camera camera;
@@ -68,12 +63,9 @@ public class Environment extends Entity {
      * @param screenWidth the screen width used for camera calculations
      * @param pathImage   the path to the background image
      */
-    public Environment(int posX, int posY, int height, int width, double screenWidth, String pathImage, Panel panel) {
-        super(posX, posY, height, width, 0, 0, pathImage, false, false);
-        this.agents = new ArrayList<>();
-        this.objects = new ArrayList<>();
-        this.messages = new ArrayList<>();
-        this.shots = new ArrayList<>();
+    public Environment(int height, int width, double screenWidth, Panel panel) {
+        this.messages = new ArrayList<Message>();
+        this.levels = new ArrayList<Level>();
         this.camera = new Camera(screenWidth, width, 0.49, 0.51);
         this.panel = panel;
     }
@@ -119,20 +111,20 @@ public class Environment extends Entity {
             camera.setTarget(protagonist);
     }
 
-    public List<Agent> getAgents() {
-        return agents;
+    public List<Level> getLevels() {
+        return levels;
     }
 
-    public void setAgents(ArrayList<Agent> agents) {
-        this.agents = agents;
+    public void setLevels(List<Level> levels) {
+        this.levels = levels;
     }
 
-    public List<Object> getObjects() {
-        return objects;
+    public Level getCurrentLevel() {
+        return currentLevel;
     }
 
-    public void setObjects(List<Object> objects) {
-        this.objects = objects;
+    public void setCurrentLevel(Level currentLevel) {
+        this.currentLevel = currentLevel;
     }
 
     public List<Message> getMessages() {
@@ -141,14 +133,6 @@ public class Environment extends Entity {
 
     public void setMessages(List<Message> messages) {
         this.messages = messages;
-    }
-
-    public List<Shot> getShots() {
-        return shots;
-    }
-
-    public void setShots(List<Shot> shots) {
-        this.shots = shots;
     }
 
     public Camera getCamera() {
@@ -200,12 +184,12 @@ public class Environment extends Entity {
     public void checkBorders() {
         if (protagonist.getPosX() < 0)
             protagonist.setPosX(0);
-        if ((protagonist.getPosX() + protagonist.getWidth()) > width)
-            protagonist.setPosX(width - protagonist.getWidth());
+        if ((protagonist.getPosX() + protagonist.getWidth()) > this.currentLevel.getWidth())
+            protagonist.setPosX(this.currentLevel.getWidth() - protagonist.getWidth());
         if (protagonist.getPosY() < 0)
             protagonist.setPosY(0);
-        if ((protagonist.getPosY() + protagonist.getHeight()) > height)
-            protagonist.setPosY(height - protagonist.getHeight());
+        if ((protagonist.getPosY() + protagonist.getHeight()) > this.currentLevel.getHeight())
+            protagonist.setPosY(this.currentLevel.getHeight() - protagonist.getHeight());
     }
 
     /**
@@ -213,7 +197,7 @@ public class Environment extends Entity {
      * Applies damage if a collision is detected.
      */
     public void detectCollision() {
-        for (Agent agent : agents) {
+        for (Agent agent : this.currentLevel.getAgents()) {
             if (protagonist != null && intersect(protagonist, agent)) {
                 int damage = 100;
                 protagonist.takeDamage(damage, messages);
@@ -240,7 +224,7 @@ public class Environment extends Entity {
      * Makes them follow the protagonist and handles collection.
      */
     public void updateObjects() {
-        Iterator<Object> iterator = objects.iterator();
+        Iterator<Object> iterator = this.currentLevel.getObjects().iterator();
         while (iterator.hasNext()) {
             Object object = iterator.next();
             if (!object.isCollected() && object.isCollectible()) {
@@ -277,17 +261,17 @@ public class Environment extends Entity {
      * Handles movement, boundary removal, and collision with agents or protagonist.
      */
     public void updateShots() {
-        Iterator<Shot> itShot = shots.iterator();
+        Iterator<Shot> itShot = this.currentLevel.getShots().iterator();
         while (itShot.hasNext()) {
             Shot shot = itShot.next();
-            if ((shot.getPosX() > getWidth()) || ((shot.getPosX() + shot.getWidth()) < 0)) {
+            if ((shot.getPosX() > this.currentLevel.getWidth()) || ((shot.getPosX() + shot.getWidth()) < 0)) {
                 itShot.remove();
             } else {
                 if (intersect(protagonist, shot)) {
                     protagonist.takeDamage(shot.getDamage(), messages);
                     itShot.remove();
                 } else {
-                    Iterator<Agent> itAgent = agents.iterator();
+                    Iterator<Agent> itAgent = this.currentLevel.getAgents().iterator();
                     while (itAgent.hasNext()) {
                         Agent agent = itAgent.next();
                         if (intersect(agent, shot)) {
@@ -330,8 +314,13 @@ public class Environment extends Entity {
      * Counts how many collectible objects are currently in the environment.
      */
     public void countTotalCollectibles() {
-        totalCollectibleCount = (int) objects.stream()
+        totalCollectibleCount = (int) this.currentLevel.getObjects().stream()
                 .filter(Object::isCollectible)
                 .count();
+    }
+
+    public void loadNextLevel() {
+        if (currentLevel == null)
+            this.currentLevel = levels.get(0);
     }
 }
