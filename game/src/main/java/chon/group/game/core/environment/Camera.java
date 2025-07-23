@@ -9,7 +9,7 @@ public class Camera {
     /** The Screen width. */
     private double screenWidth;
     /** The level full width. */
-    private final double levelWidth;
+    private double levelWidth;
     /** The left boundary. */
     private double leftBoundary;
     /** The right boundary. */
@@ -35,6 +35,10 @@ public class Camera {
 
     public double getLevelWidth() {
         return levelWidth;
+    }
+
+    public void setLevelWidth(double levelWidth) {
+        this.levelWidth = levelWidth;
     }
 
     public double getScreenWidth() {
