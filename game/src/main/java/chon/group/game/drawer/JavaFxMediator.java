@@ -166,7 +166,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
     public void drawPanel() {
         Agent protagonist = this.environment.getProtagonist();
         int collected = environment.getCollectedCount();
-        int total = environment.getTotalCollectibleCount();
+        int total = environment.getCurrentLevel().getTotalCollectibleCount();
         int score = environment.getScore();
         int life = protagonist.getHealth();
         int maxLife = protagonist.getFullHealth();

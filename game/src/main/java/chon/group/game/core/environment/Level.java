@@ -18,6 +18,9 @@ public class Level extends Entity {
     /** List of shots in the environment. */
     private List<Shot> shots;
 
+    /** Total number of collectible objects in the environment. */
+    private int totalCollectibleCount = 0;
+
     public Level(int posX, int posY, int height, int width, String pathImage) {
         super(posX, posY, height, width, 0, 0, pathImage, false, false);
         this.agents = new ArrayList<Agent>();
@@ -50,6 +53,15 @@ public class Level extends Entity {
         this.shots = shots;
     }
 
+    /**
+     * Gets the total number of collectible objects in the environment.
+     *
+     * @return the total number of collectibles
+     */
+    public int getTotalCollectibleCount() {
+        return totalCollectibleCount;
+    }
+
     public boolean isCompleted(Environment env) {
         if (!env.getProtagonist().isDead() && env.getProtagonist().getPosX() >= 0.9 * this.getWidth()) {
             for (Agent agent : this.agents) {
@@ -60,6 +72,15 @@ public class Level extends Entity {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Counts how many collectible objects are currently in the environment.
+     */
+    public void countCollectibles() {
+        totalCollectibleCount = (int) this.objects.stream()
+                .filter(Object::isCollectible)
+                .count();
     }
 
 }

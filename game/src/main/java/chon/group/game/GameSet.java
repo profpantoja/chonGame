@@ -111,9 +111,9 @@ public class GameSet {
 
         // Register objects into the environment and count total collectibles
         level.setObjects(objects);
+        level.countCollectibles();
         environment.getLevels().add(level);
         environment.setCurrentLevel(level);
-        environment.countTotalCollectibles();
     }
 
 }

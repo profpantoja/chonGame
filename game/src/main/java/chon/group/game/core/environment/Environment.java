@@ -46,9 +46,6 @@ public class Environment {
     /** Number of objects collected so far. */
     private int collectedCount = 0;
 
-    /** Total number of collectible objects in the environment. */
-    private int totalCollectibleCount = 0;
-
     /** Current score of the player. */
     private int score = 0;
 
@@ -158,15 +155,6 @@ public class Environment {
      */
     public int getCollectedCount() {
         return collectedCount;
-    }
-
-    /**
-     * Gets the total number of collectible objects in the environment.
-     *
-     * @return the total number of collectibles
-     */
-    public int getTotalCollectibleCount() {
-        return totalCollectibleCount;
     }
 
     /**
@@ -308,15 +296,6 @@ public class Environment {
         updateCamera();
         detectCollision();
         protagonist.recoverEnergy();
-    }
-
-    /**
-     * Counts how many collectible objects are currently in the environment.
-     */
-    public void countTotalCollectibles() {
-        totalCollectibleCount = (int) this.currentLevel.getObjects().stream()
-                .filter(Object::isCollectible)
-                .count();
     }
 
     public void loadNextLevel() {
