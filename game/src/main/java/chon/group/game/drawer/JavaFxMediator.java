@@ -53,7 +53,8 @@ public class JavaFxMediator implements EnvironmentDrawer {
      */
     @Override
     public void clearEnvironment() {
-        drawer.clearScreen((int) this.environment.getCamera().getScreenWidth(), this.environment.getHeight());
+        drawer.clearScreen((int) this.environment.getCamera().getScreenWidth(),
+                this.environment.getCurrentLevel().getHeight());
     }
 
     /**
@@ -62,10 +63,10 @@ public class JavaFxMediator implements EnvironmentDrawer {
     @Override
     public void drawBackground() {
         int posX = (int) (this.environment.getCamera().getPosX() * -1);
-        drawer.drawImage(this.environment.getImage(),
-                posX, this.environment.getPosY(),
-                this.environment.getWidth(),
-                this.environment.getHeight());
+        drawer.drawImage(this.environment.getCurrentLevel().getImage(),
+                posX, this.environment.getCurrentLevel().getPosY(),
+                this.environment.getCurrentLevel().getWidth(),
+                this.environment.getCurrentLevel().getHeight());
     }
 
     /**
@@ -74,7 +75,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
      */
     @Override
     public void drawAgents() {
-        for (Agent agent : this.environment.getAgents()) {
+        for (Agent agent : this.environment.getCurrentLevel().getAgents()) {
             int newPosX = (int) this.environment.getCamera().updateEntity(agent);
             drawer.drawImage(agent.getImage(),
                     newPosX,
@@ -118,7 +119,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
      */
     @Override
     public void drawObjects() {
-        for (Object object : environment.getObjects()) {
+        for (Object object : environment.getCurrentLevel().getObjects()) {
             drawer.drawImage(object.getImage(),
                     (int) this.environment.getCamera().updateEntity(object),
                     object.getPosY(),
@@ -209,7 +210,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 (int) this.environment.getPauseImage().getWidth(),
                 (int) this.environment.getPauseImage().getHeight(),
                 (int) this.environment.getCamera().getScreenWidth(),
-                this.environment.getHeight());
+                this.environment.getCurrentLevel().getHeight());
     }
 
     /**
@@ -222,7 +223,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 (int) this.environment.getPauseImage().getWidth(),
                 (int) this.environment.getPauseImage().getHeight(),
                 (int) this.environment.getCamera().getScreenWidth(),
-                this.environment.getHeight());
+                this.environment.getCurrentLevel().getHeight());
     }
 
     /**
@@ -247,7 +248,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
      */
     @Override
     public void drawShots() {
-        Iterator<Shot> iterator = this.environment.getShots().iterator();
+        Iterator<Shot> iterator = this.environment.getCurrentLevel().getShots().iterator();
         while (iterator.hasNext()) {
             Shot shot = iterator.next();
             drawer.drawImage(shot.getImage(),

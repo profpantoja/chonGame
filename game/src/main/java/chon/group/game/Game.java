@@ -17,6 +17,7 @@ public class Game {
 
     public Game(Environment environment, EnvironmentDrawer mediator, ArrayList<String> input) {
         this.environment = environment;
+        this.environment.loadNextLevel();
         this.mediator = mediator;
         this.input = input;
     }
@@ -100,7 +101,7 @@ public class Game {
                 input.remove("SPACE");
                 Shot shot = environment.getProtagonist().useWeapon();
                 if (shot != null)
-                    environment.getShots().add(shot);
+                    environment.getCurrentLevel().getShots().add(shot);
             }
             /* ChonBota's Movements */
             environment.getProtagonist().move(input);
@@ -108,13 +109,13 @@ public class Game {
         }
         /* ChonBot's Automatic Movements */
         /* Update the other agents' movements */
-        for (Agent agent : environment.getAgents()) {
+        for (Agent agent : environment.getCurrentLevel().getAgents()) {
             agent.chase(environment.getProtagonist().getPosX(),
                     environment.getProtagonist().getPosY());
         }
         /* ChonBot's Automatic Movements */
         /* Update the other agents' movements */
-        for (Agent agent : environment.getAgents()) {
+        for (Agent agent : environment.getCurrentLevel().getAgents()) {
             agent.chase(environment.getProtagonist().getPosX(),
                     environment.getProtagonist().getPosY());
         }

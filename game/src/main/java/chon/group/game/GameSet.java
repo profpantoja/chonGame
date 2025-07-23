@@ -6,6 +6,7 @@ import java.util.List;
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.environment.Environment;
+import chon.group.game.core.environment.Level;
 import chon.group.game.core.weapon.Panel;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.domain.weapon.Cannon;
@@ -60,11 +61,24 @@ public class GameSet {
         this.canvasHeight = 780;
 
         /** Define a general panel for life, energy, points, and objects. */
-        panel = new Panel(240, 110);
+        panel = new Panel(
+                240,
+                110);
 
-        /* Initialize the game environment, agents and weapons */
-        environment = new Environment(0, 0, 780, 8024,
-                this.canvasWidth, "/images/environment/castleLong.png", panel);
+        /* Initialize the game environment, levels, agents and weapons */
+        Level level = new Level(
+                0,
+                0,
+                canvasHeight,
+                8024,
+                "/images/environment/castleLong.png");
+
+        environment = new Environment(
+                this.canvasHeight,
+                level.getWidth(),
+                this.canvasWidth,
+                panel);
+
         Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false, false);
         Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, 0.05, "", false);
         Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
@@ -74,9 +88,10 @@ public class GameSet {
 
         Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
         environment.setProtagonist(chonBota);
-        environment.getAgents().add(chonBot);
         environment.setPauseImage("/images/environment/pause.png");
         environment.setGameOverImage("/images/environment/gameover.png");
+
+        level.getAgents().add(chonBot);
 
         /* Set up some collectable objects */
         List<Object> objects = new ArrayList<>();
@@ -95,9 +110,10 @@ public class GameSet {
         objects.add(new Object(6200, 400, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false));
 
         // Register objects into the environment and count total collectibles
-        environment.setObjects(objects);
+        level.setObjects(objects);
+        environment.getLevels().add(level);
+        environment.setCurrentLevel(level);
         environment.countTotalCollectibles();
-
     }
 
 }

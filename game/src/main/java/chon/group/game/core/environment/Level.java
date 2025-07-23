@@ -1,43 +1,58 @@
 package chon.group.game.core.environment;
 
 import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.Entity;
 import chon.group.game.core.agent.Object;
-import javafx.scene.image.Image;
-import java.net.URL;
+import chon.group.game.core.weapon.Shot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Level {
+public class Level extends Entity {
 
-    private String backgroundPath;
-    private Image image;
-    private ArrayList<Agent> agents;
+    /** List of agents present in the environment. */
+    private List<Agent> agents;
+
+    /** List of collectible/destructible objects in the environment. */
     private List<Object> objects;
-    private Level nextLevel;
 
-    public Level(String backgroundPath, List<Agent> agents, List<Object> objects) {
-        this.backgroundPath = backgroundPath;
+    /** List of shots in the environment. */
+    private List<Shot> shots;
 
-        URL resource = getClass().getResource(backgroundPath);
-        if (resource == null) {
-            throw new RuntimeException("Imagem não encontrada: " + backgroundPath);
-        }
+    public Level(int posX, int posY, int height, int width, String pathImage) {
+        super(posX, posY, height, width, 0, 0, pathImage, false, false);
+        this.agents = new ArrayList<Agent>();
+        this.objects = new ArrayList<Object>();
+        this.shots = new ArrayList<Shot>();
 
-        this.image = new Image(resource.toExternalForm());
-        this.agents = new ArrayList<>(agents);
-        this.objects = new ArrayList<>(objects); 
     }
 
-    public void applyTo(Environment env, Agent protagonist) {
-        env.setImage(image);
-        env.setObjects(objects); 
-        env.setAgents(agents);   
-        env.setProtagonist(protagonist);
+    public List<Agent> getAgents() {
+        return agents;
+    }
+
+    public void setAgents(ArrayList<Agent> agents) {
+        this.agents = agents;
+    }
+
+    public List<Object> getObjects() {
+        return objects;
+    }
+
+    public void setObjects(List<Object> objects) {
+        this.objects = objects;
+    }
+
+    public List<Shot> getShots() {
+        return shots;
+    }
+
+    public void setShots(List<Shot> shots) {
+        this.shots = shots;
     }
 
     public boolean isCompleted(Environment env) {
-        if (!env.getProtagonist().isDead() && env.getProtagonist().getPosX() >= 0.9 * env.getWidth()) {
-            for (Agent agent : env.getAgents()) {
+        if (!env.getProtagonist().isDead() && env.getProtagonist().getPosX() >= 0.9 * this.getWidth()) {
+            for (Agent agent : this.agents) {
                 if (agent != env.getProtagonist() && !agent.isDead()) {
                     return false;
                 }
@@ -47,11 +62,4 @@ public class Level {
         return false;
     }
 
-    public Level getNextLevel() {
-        return nextLevel;
-    }
-
-    public void setNextLevel(Level nextLevel) {
-        this.nextLevel = nextLevel;
-    }
 }
