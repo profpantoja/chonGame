@@ -26,7 +26,6 @@ public class Level extends Entity {
         this.agents = new ArrayList<Agent>();
         this.objects = new ArrayList<Object>();
         this.shots = new ArrayList<Shot>();
-
     }
 
     public List<Agent> getAgents() {

@@ -7,7 +7,7 @@ public class Camera {
     /** X position (horizontal) of the camera considering the environment width. */
     private double posX;
     /** The Screen width. */
-    private final double screenWidth;
+    private double screenWidth;
     /** The level full width. */
     private final double levelWidth;
     /** The left boundary. */
@@ -39,6 +39,10 @@ public class Camera {
 
     public double getScreenWidth() {
         return screenWidth;
+    }
+
+    public void setScreenWidth(double screenWidth) {
+        this.screenWidth = screenWidth;
     }
 
     public double getLeftBoundary() {

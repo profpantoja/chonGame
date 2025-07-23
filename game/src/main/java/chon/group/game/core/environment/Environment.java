@@ -312,9 +312,15 @@ public class Environment {
             if (levelIndex >= this.getLevels().size() - 1) {
                 levelIndex = this.getLevels().size() - 1;
                 this.currentLevel = this.getLevels().get(levelIndex);
-            } else
+            } else {
                 this.currentLevel = this.getLevels().get(levelIndex + 1);
+                this.protagonist.setPosX(10);
+                this.protagonist.setPosY(600);
+                this.camera.setPosX(0);
+                //this.camera.setScreenWidth(this.currentLevel.getWidth());
+            }
         }
 
     }
+
 }
