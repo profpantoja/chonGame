@@ -9,7 +9,6 @@ public class MenuTextManager {
 
     private MenuTextManager() {
         customTexts = new HashMap<>();
-        loadDefaultTexts();
     }
 
     public static MenuTextManager getInstance() {
@@ -17,13 +16,6 @@ public class MenuTextManager {
             instance = new MenuTextManager();
         }
         return instance;
-    }
-    
-    private void loadDefaultTexts() {
-        setText(MainOption.START_GAME, "Start Game");
-        setText(MainOption.EXIT, "Exit");
-        setText(PauseOption.RESUME, "Resume");
-        setText(PauseOption.GO_BACK_TO_MENU, "Go back to Menu");
     }
 
     public void setText(Enum<?> option, String text) {

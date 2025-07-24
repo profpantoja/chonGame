@@ -10,6 +10,9 @@ import chon.group.game.core.weapon.Panel;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.domain.weapon.Cannon;
 import chon.group.game.domain.weapon.Lancer;
+import chon.group.game.menu.MainOption;
+import chon.group.game.menu.MenuTextManager;
+import chon.group.game.menu.PauseOption;
 
 public class GameSet {
 
@@ -98,6 +101,10 @@ public class GameSet {
         environment.setObjects(objects);
         environment.countTotalCollectibles();
 
+        MenuTextManager.getInstance().setText(MainOption.START_GAME, "Start game");
+        MenuTextManager.getInstance().setText(MainOption.EXIT, "Exit");
+        MenuTextManager.getInstance().setText(PauseOption.RESUME, "Resume");
+        MenuTextManager.getInstance().setText(PauseOption.GO_BACK_TO_MENU, "Go back to menu");
     }
 
 }
