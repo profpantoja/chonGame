@@ -1,5 +1,7 @@
 package chon.group.game.drawer;
 
+import chon.group.game.ui.Menu;
+
 /**
  * The {@code EnvironmentDrawer} interface defines methods for rendering
  * various elements in the game environment. It provides essential drawing
@@ -62,7 +64,7 @@ public interface EnvironmentDrawer {
     void drawMessages();
 
     /**
-     * Draws the Game Over screen when the protagonist is dead.
+     * Draws all the shots on the screen.
      */
     void drawShots();
 
@@ -71,4 +73,14 @@ public interface EnvironmentDrawer {
      */
     void drawGameOver();
 
+    /**
+     * Draws the main game menu.
+     * @param menu A instância do Menu com as opções e seleção.
+     */
+    void drawMainMenu(Menu menu);
+
+    /**
+     * Draws the Win screen when the player completes the game.
+     */
+    void drawWinScreen(); // MÉTODO QUE ESTAVA FALTANDO
 }
