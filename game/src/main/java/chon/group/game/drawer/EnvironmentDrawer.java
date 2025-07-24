@@ -1,5 +1,8 @@
 package chon.group.game.drawer;
 
+import chon.group.game.menu.MainMenu;
+import chon.group.game.menu.PauseMenu;
+
 /**
  * The {@code EnvironmentDrawer} interface defines methods for rendering
  * various elements in the game environment. It provides essential drawing
@@ -7,6 +10,9 @@ package chon.group.game.drawer;
  * displaying UI elements like life bars and status panels.
  */
 public interface EnvironmentDrawer {
+
+    /** Render the Game */
+    void renderGame();
 
     /**
      * Clears the environment, removing all elements.
@@ -24,19 +30,29 @@ public interface EnvironmentDrawer {
     void drawAgents();
 
     /**
+     * Draws all the objects on the screen.
+     */
+    void drawObjects();
+
+    /**
      * Draws the life bar for agents or players.
      */
-    void drawLifeBar();
+    void drawSingleLifeBar();
 
     /**
-     * Draws the status panel displaying relevant game information.
+     * Draws the energy bar for agents or players.
      */
-    void drawStatusPanel();
+    void drawSingleEnergyBar();
 
     /**
-     * Draws the pause screen when the game is paused.
+     * Draws the game panel.
      */
-    void drawPauseScreen();
+    void drawPanel();
+
+    /**
+     * Draws the status panel displaying relevant game information for debugging.
+     */
+    void drawDebugPanel();
 
     /**
      * Draws all the messages on the screen.
@@ -54,50 +70,17 @@ public interface EnvironmentDrawer {
     void drawGameOver();
 
     /**
-     * Draws the background for side-scrolling environments.
+     * Draws the pause screen when the game is paused.
      */
-
-     //method implemets for side-scrolling games
-    void drawBackgroundSideScrolling();
+    void drawPauseScreen();
 
     /**
-     * Draws the agents in a side-scrolling environment.
+     * Draws the main menu of the game, typically shown at the start or when returning to the main menu. 
      */
-
-     //method implemets for side-scrolling games
-    void drawAgentsSideScrolling();
+    void drawMainMenu(MainMenu mainMenu);
 
     /**
-     * Draws the shots for agents in a side-scrolling environment.
-    */
-
-    //method implemets for side-scrolling games
-    void drawShotsSideScrolling();
-
-    /**
-     * Draws the status panel displaying relevant game information.
+     * Draws the pause menu with options to resume or exit the game.
      */
-
-    //method implemets for side-scrolling games
-    void drawStatusPanelSideScrolling();
-
-    /**
-     * Draws the messages in a side-scrolling environment.
-     */
-    
-    //method implemets for side-scrolling games
-    void drawMessagesSideScrolling();
-    
-    /**
-     * Clears the environment for side-scrolling games.
-     */
-
-    //method implemets for side-scrolling games
-    void clearEnvironmentSideScrolling();
-
-    /**
-     * Draws the win screen when the player wins the game.
-     */
-    void drawWinScreen();
-    
+    void drawPauseMenu(PauseMenu menuPause);
 }
