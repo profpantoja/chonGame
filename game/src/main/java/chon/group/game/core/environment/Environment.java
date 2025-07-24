@@ -329,26 +329,39 @@ public class Environment extends Entity {
         Iterator<Shot> itShot = this.shots.iterator();
         while (itShot.hasNext()) {
             Shot shot = itShot.next();
+
             if ((shot.getPosX() > this.getWidth()) || ((shot.getPosX() + shot.getWidth()) < 0)) {
                 itShot.remove();
-            } else {
-                if (this.intersect(protagonist, shot)) {
+                continue;
+
+            }
+            Agent owner = shot.getOwner();
+            if (this.intersect(protagonist, shot)) {
+                if (owner != protagonist && owner.isEnemy() != protagonist.isEnemy()) {
                     protagonist.takeDamage(shot.getDamage(), this.messages);
                     itShot.remove();
-                } else {
-                    Iterator<Agent> itAgent = this.agents.iterator();
-                    while (itAgent.hasNext()) {
-                        Agent agent = itAgent.next();
-                        if (this.intersect(agent, shot)) {
-                            agent.takeDamage(shot.getDamage(), this.messages);
-                            if (agent.isDead())
-                                itAgent.remove();
-                            itShot.remove();
-                        }
-                    }
+                    continue;
                 }
-                shot.move(new ArrayList<>(List.of(shot.getDirection())));
             }
+            Iterator<Agent> itAgent = this.agents.iterator();
+            while (itAgent.hasNext()) {
+                Agent agent = itAgent.next();
+
+                if (owner == agent) continue;
+
+                if (owner.isEnemy() == agent.isEnemy()) continue;
+
+                if (this.intersect(agent, shot)) {
+                    agent.takeDamage(shot.getDamage(), this.messages);
+                    if (agent.isDead())
+                        itAgent.remove();
+                    itShot.remove();
+                    break; 
+                }
+            }
+
+            shot.move(new ArrayList<>(List.of(shot.getDirection())));
+
         }
     }
 
@@ -358,25 +371,36 @@ public class Environment extends Entity {
             Slash slash = itSlash.next();
 
             boolean hit = false;
+            Agent owner = slash.getOwner();
+
             Iterator<Agent> itAgent = this.agents.iterator();
             while (itAgent.hasNext()) {
                 Agent agent = itAgent.next();
+
+                if (owner == agent) continue;
+                if (owner.isEnemy() == agent.isEnemy()) continue;
+
                 if (this.intersect(agent, slash)) {
                     agent.takeDamage(slash.getDamage(), this.messages);
                     if (agent.isDead())
-                        itAgent.remove(); 
+                        itAgent.remove();
                     hit = true;
                     break;
                 }
-
+            }
+            
+            if (!hit && this.intersect(protagonist, slash)) {
+                if (owner != protagonist && owner.isEnemy() != protagonist.isEnemy()) {
+                    protagonist.takeDamage(slash.getDamage(), this.messages);
+                    hit = true;
+                }
             }
 
-            // Check if the slash intersects with the protagonist
             if (hit || slash.shouldRemove()) {
                 itSlash.remove();
             }
         }
-}
+    }
 
 
     public void updateCamera() {

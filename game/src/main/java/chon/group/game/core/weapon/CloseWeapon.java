@@ -1,5 +1,6 @@
 package chon.group.game.core.weapon;
 
+import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Entity;
 
 public abstract class CloseWeapon extends Entity {
@@ -11,7 +12,7 @@ public abstract class CloseWeapon extends Entity {
         this.energyCost = energyCost;
     
     }
-    protected abstract Slash createSlash(int posX, int posY, String direction);
+    protected abstract Slash createSlash(int posX, int posY, String direction, Agent owner);
     
     
     public double getEnergyCost() {
@@ -24,8 +25,8 @@ public abstract class CloseWeapon extends Entity {
 
 
 
-    public Slash slash(int posX, int posY, String direction) {
-        return createSlash(posX, posY, direction);
+    public Slash slash(int posX, int posY, String direction, Agent owner) {
+        return createSlash(posX, posY, direction, owner);
     }
 
 }

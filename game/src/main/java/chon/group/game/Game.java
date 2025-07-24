@@ -1,3 +1,4 @@
+
 package chon.group.game;
 
 import java.util.ArrayList;
@@ -149,6 +150,25 @@ public class Game {
         /* If the agent died in this loop */
         if (environment.getProtagonist().isDead())
             this.status = GameStatus.GAME_OVER;
+
+
+        /* Enemies Shooting */
+        long currentTime = System.currentTimeMillis();
+
+        for (Agent agent : environment.getAgents()) {
+
+                if (currentTime - agent.getLastShotTime() >= agent.getShotCooldown()) {
+                    Shot shot = agent.useWeapon();
+                    if (shot != null) {
+                        environment.getShots().add(shot);
+                        agent.setLastShotTime(currentTime);
+                    }
+                }
+
+        }
+
+
+
     }
 
     public void pause() {

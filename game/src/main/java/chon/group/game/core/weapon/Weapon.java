@@ -1,5 +1,6 @@
 package chon.group.game.core.weapon;
 
+import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Entity;
 
 public abstract class Weapon extends Entity {
@@ -19,10 +20,10 @@ public abstract class Weapon extends Entity {
         this.energyCost = energyCost;
     }
 
-    protected abstract Shot createShot(int posX, int posY, String direction);
+    protected abstract Shot createShot(int posX, int posY, String direction, Agent owner);
 
-    public Shot fire(int posX, int posY, String direction) {
-        return this.createShot(posX, posY, direction);
+    public Shot fire(int posX, int posY, String direction, Agent owner) {
+        return this.createShot(posX, posY, direction, owner);
     }
 
 }

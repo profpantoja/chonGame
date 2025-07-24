@@ -39,6 +39,13 @@ public class Agent extends Entity {
 
     /** The agent's energy recovery factor */
     private final double recoveryFactor;
+    /** The time of the last shot fired. */
+    private long lastShotTime = 0;
+    /** The cooldown time between shots in milliseconds. */
+    private long shotCooldown = 5000; // 5 segundos em milissegundos
+    /** The agent's energy cost for using the weapon. */
+    private boolean isEnemy;
+
 
     /**
      * Constructor to initialize the agent properties.
@@ -51,11 +58,15 @@ public class Agent extends Entity {
      * @param health    the agent's health
      * @param pathImage the path to the agent's image
      */
+
     public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage) {
         super(posX, posY, height, width, speed, health, pathImage);
         this.energy = 1.0;
         this.fullEnergy = 1.0;
         this.recoveryFactor = 0.0002;
+        this.lastShotTime = lastShotTime;
+        this.shotCooldown = shotCooldown;
+
     }
 
     /**
@@ -182,6 +193,21 @@ public class Agent extends Entity {
         return recoveryFactor;
     }
 
+    public long getLastShotTime() {
+        return lastShotTime;
+    }
+    public void setLastShotTime(long lastShotTime) {
+        this.lastShotTime = lastShotTime;
+    }
+
+    public long getShotCooldown() {
+        return shotCooldown;
+    }
+
+    public void setShotCooldown(long shotCooldown) {
+        this.shotCooldown = shotCooldown;
+    }
+
     /**
      * Consumes a specified amount of energy.
      *
@@ -249,7 +275,7 @@ public class Agent extends Entity {
         String direction = this.isFlipped() ? "LEFT" : "RIGHT";
         if (this.energy >= this.getWeapon().getEnergyCost()) {
             this.consumeEnergy(this.getWeapon().getEnergyCost());
-            return this.weapon.fire(this.getPosX(), this.getPosY(), direction);
+            return this.weapon.fire(this.getPosX(), this.getPosY(), direction, this);
         } else
             return null;
     }
@@ -258,10 +284,17 @@ public class Agent extends Entity {
         String direction = this.isFlipped() ? "LEFT" : "RIGHT";
         if (this.energy >= this.getCloseWeapon().getEnergyCost()) {
             this.consumeEnergy(this.getCloseWeapon().getEnergyCost());
-            return this.closeWeapon.slash(this.getPosX(), this.getPosY(), direction);
+            return this.closeWeapon.slash(this.getPosX(), this.getPosY(), direction, this);
         } else
             return null;
     }
 
 
+    public boolean isEnemy() {
+        return isEnemy;
+    }
+    
+    public void setEnemy(boolean isEnemy) {
+        this.isEnemy = isEnemy;
+    }
 }

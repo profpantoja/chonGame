@@ -2,6 +2,7 @@ package chon.group.game.domain.weapon;
 
 import java.util.List;
 
+import chon.group.game.core.agent.Agent;
 import chon.group.game.core.weapon.CloseWeapon;
 import chon.group.game.core.weapon.Slash;
 import chon.group.game.messaging.Message;
@@ -16,7 +17,7 @@ public class Sword extends CloseWeapon {
     @Override
     
 
-    protected Slash createSlash(int posX, int posY, String direction) {
+    protected Slash createSlash(int posX, int posY, String direction, Agent owner) {
         if (direction.equals("RIGHT"))
             posX += 75 + 10;
         else
@@ -30,7 +31,8 @@ public class Sword extends CloseWeapon {
                 "/images/weapons/slash/SlashTeste.png",
                 false,
                 100,
-                direction);
+                direction,
+                owner);
     }
 
     @Override

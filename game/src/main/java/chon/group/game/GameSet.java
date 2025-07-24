@@ -53,16 +53,21 @@ public class GameSet {
         /* Initialize the game environment, agents and weapons */
         environment = new Environment(0, 0, 780, 8024,
                 this.canvasWidth, "/images/environment/castleLong.png");
-        Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false);
+        Agent chonBota = new Agent(400, 390, 90, 65, 10, 1000, "/images/agents/chonBota.png", false);
         Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, 0.05, "", false);
         Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
-        CloseWeapon lightSaber = new Sword(400, 390, 0, 0, 3, 0, "", false);
+        CloseWeapon sword = new Sword(400, 390, 0, 0, 3, 0, "", false);
 
         chonBota.setWeapon(cannon);
         chonBota.setWeapon(lancer);
-        chonBota.setCloseWeapon(lightSaber);
+        chonBota.setCloseWeapon(sword);
 
         Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true);
+        Weapon lancerEnemy = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
+        chonBot.setWeapon(lancerEnemy);
+        chonBot.setEnemy(true);
+
+
         environment.setProtagonist(chonBota);
         environment.getAgents().add(chonBot);
         environment.setPauseImage("/images/environment/pause.png");
