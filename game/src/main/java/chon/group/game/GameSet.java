@@ -95,16 +95,24 @@ public class GameSet {
         chonBota.setCloseWeapon(sword);
 
 
-        chonBota.setWeapon(cannon);
+        
         chonBota.setWeapon(lancer);
 
-        Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
+        Agent chonBot = new Agent(420, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
+        Agent chonBot2 = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
+        CloseWeapon closeWeapon1 = new Sword(420, 440, 0, 0, 3, 0, "", false);
+        CloseWeapon closeWeapon2 = new Sword(920, 440, 0, 0, 3, 0, "", false);
         environment.setProtagonist(chonBota);
+        chonBot.setCloseWeapon(closeWeapon1);
+        chonBot2.setCloseWeapon(closeWeapon2);
+
         chonBot.setEnemy(true);
+        chonBot2.setEnemy(true);
         environment.setPauseImage("/images/environment/pause.png");
         environment.setGameOverImage("/images/environment/gameover.png");
 
         level1.getAgents().add(chonBot);
+        level1.getAgents().add(chonBot2);
 
         /* Set up some collectable objects */
         List<Object> objects = new ArrayList<>();

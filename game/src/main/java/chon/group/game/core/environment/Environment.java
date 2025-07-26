@@ -273,10 +273,9 @@ public class Environment {
             while (itAgent.hasNext()) {
                 Agent agent = itAgent.next();
 
-                // Ignora se o agente for o dono do tiro
+                
                 if (owner == agent) continue;
 
-                // Ignora se forem aliados
                 if (owner != null && owner.isEnemy() == agent.isEnemy()) continue;
 
                 if (intersect(agent, shot)) {
@@ -289,7 +288,7 @@ public class Environment {
                 }
             }
 
-            // Move o tiro
+            
             shot.move(new ArrayList<>(List.of(shot.getDirection())));
         }
     }

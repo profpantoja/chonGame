@@ -177,6 +177,18 @@ public class Game {
 
         }
 
+        for (Agent agent : environment.getCurrentLevel().getAgents()) {
+
+                if (currentTime - agent.getLastShotTime() >= agent.getShotCooldown()) {
+                    Slash slash = agent.useCloseWeapon();
+                    if (slash != null) {
+                        environment.getCurrentLevel().getSlashes().add(slash);
+                        agent.setLastShotTime(currentTime);
+                    }
+                }
+
+        }
+
 
 
     }
