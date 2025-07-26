@@ -22,7 +22,7 @@ public class Slash extends Entity {
     
     public Slash(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped,
             int damage, String direction, Agent owner) {
-        super(posX, posY, height, width, speed, health, pathImage, flipped);
+        super(posX, posY, height, width, speed, health, pathImage, flipped, false);
         this.damage = damage;
         this.direction = direction;
         this.owner = owner;

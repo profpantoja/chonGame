@@ -34,17 +34,22 @@ public interface EnvironmentDrawer {
     /**
      * Draws the life bar for agents or players.
      */
-    void drawLifeBar();
+    void drawSingleLifeBar();
 
     /**
      * Draws the energy bar for agents or players.
      */
-    void drawEnergyBar();
+    void drawSingleEnergyBar();
 
     /**
-     * Draws the status panel displaying relevant game information.
+     * Draws the game panel.
      */
-    void drawStatusPanel();
+    void drawPanel();
+
+    /**
+     * Draws the status panel displaying relevant game information for debugging.
+     */
+    void drawDebugPanel();
 
     /**
      * Draws the pause screen when the game is paused.
@@ -60,16 +65,17 @@ public interface EnvironmentDrawer {
      * Draws the Game Over screen when the protagonist is dead.
      */
     void drawShots();
-
+    
+    /**
+     * Draws all the slashes on the screen.
+     */
+    void drawSlashes();
+    
     /**
      * Draws the Game Over screen when the protagonist is dead.
      */
     void drawGameOver();
 
-    /**
-     * Draws all the slashes on the screen.
-     */
-    void drawSlashes();
 
 
 }

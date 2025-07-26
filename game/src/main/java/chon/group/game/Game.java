@@ -1,4 +1,3 @@
-
 package chon.group.game;
 
 import java.util.ArrayList;
@@ -20,7 +19,9 @@ public class Game {
     /* If the player can slash again or not. */
     private boolean canSlash = true;
     /* If the player has made a decision about the weapon to use. */
-    private int weaponDecision = 2; // 0  = both, 1 = fireball, 2 = sword
+    private int weaponDecision = 1; // 0  = both, 1 = fireball, 2 = sword
+    private boolean debugMode = true;
+
     
 
     public Game(Environment environment, EnvironmentDrawer mediator, ArrayList<String> input) {
@@ -61,6 +62,14 @@ public class Game {
         this.status = status;
     }
 
+    public boolean isDebugMode() {
+        return debugMode;
+    }
+
+    public void setDebugMode(boolean debugMode) {
+        this.debugMode = debugMode;
+    }
+
     public void loop() {
         this.updateControls();
         switch (this.status) {
@@ -93,12 +102,13 @@ public class Game {
         mediator.drawGameOver();
     }
 
-    public void running() {
+        public void running() {
         /** ChonBota Only Moves if the Player Press Something */
         /** Update the protagonist's movements if input exists */
         if (!input.isEmpty()) {
             /** ChonBota Shoots Somebody Who Outdrew You */
             /** But only if she has enough energy */
+
               /* chonbota Only Moves if the Player Press Something */
             /* Update the protagonist's movements if input exists */
                 if (!input.isEmpty()) {
@@ -108,7 +118,7 @@ public class Game {
                                 input.remove("SPACE");
                                 Shot shot = environment.getProtagonist().useWeapon();
                                 if (shot != null)
-                                    environment.getShots().add(shot);
+                                    environment.getCurrentLevel().getShots().add(shot);
                             }
                         break;
 
@@ -119,7 +129,7 @@ public class Game {
                                 Slash slash = environment.getProtagonist().useCloseWeapon();
                                 
                                 if (slash != null)
-                                environment.getSlashes().add(slash);
+                                environment.getCurrentLevel().getSlashes().add(slash);
                                 
                             }
 
@@ -134,13 +144,13 @@ public class Game {
         }
         /* ChonBot's Automatic Movements */
         /* Update the other agents' movements */
-        for (Agent agent : environment.getAgents()) {
+        for (Agent agent : environment.getCurrentLevel().getAgents()) {
             agent.chase(environment.getProtagonist().getPosX(),
                     environment.getProtagonist().getPosY());
         }
         /* ChonBot's Automatic Movements */
         /* Update the other agents' movements */
-        for (Agent agent : environment.getAgents()) {
+        for (Agent agent : environment.getCurrentLevel().getAgents()) {
             agent.chase(environment.getProtagonist().getPosX(),
                     environment.getProtagonist().getPosY());
         }
@@ -155,12 +165,12 @@ public class Game {
         /* Enemies Shooting */
         long currentTime = System.currentTimeMillis();
 
-        for (Agent agent : environment.getAgents()) {
+        for (Agent agent : environment.getCurrentLevel().getAgents()) {
 
                 if (currentTime - agent.getLastShotTime() >= agent.getShotCooldown()) {
                     Shot shot = agent.useWeapon();
                     if (shot != null) {
-                        environment.getShots().add(shot);
+                        environment.getCurrentLevel().getShots().add(shot);
                         agent.setLastShotTime(currentTime);
                     }
                 }
@@ -180,10 +190,12 @@ public class Game {
 
     public void init() {
         this.status = GameStatus.RUNNING;
+        mediator.renderGame();
     }
 
     public void win() {
         this.status = GameStatus.START;
+        mediator.renderGame();
     }
 
     private void updateControls() {

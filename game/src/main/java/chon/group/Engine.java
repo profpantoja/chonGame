@@ -67,15 +67,17 @@ public class Engine extends Application {
                 }
             });
 
+           
             EnvironmentDrawer mediator = new JavaFxMediator(gameSet.getEnvironment(), gc);
             Game chonGame = new Game(gameSet.getEnvironment(), mediator, input);
-            /* Start the game loop */
+
+            // Start the game loop
             new AnimationTimer() {
-                @Override
                 public void handle(long now) {
                     chonGame.loop();
                 }
             }.start();
+
             theStage.show();
         } catch (Exception e) {
             e.printStackTrace();
