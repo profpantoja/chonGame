@@ -2,14 +2,19 @@ package chon.group.game.core.agent;
 
 import java.util.List;
 
+import chon.group.game.core.weapon.Shot;
+import chon.group.game.messaging.Message;
+
 /**
  * Represents a generic game object that can be collectible and/or destructible.
  */
 public class Object extends Entity {
+    private boolean destroyed = false;
     private boolean collected = false;
     private boolean destructible;
     private boolean collectible;
     private boolean tangible;
+    private int damage;
 
     private List<Object> objects;
     private int totalObjects = 0;
@@ -39,11 +44,13 @@ public class Object extends Entity {
             boolean visibleBars,
             boolean collectible, 
             boolean destructible,
-            boolean tangible) {
+            boolean tangible,
+            int damage) {
         super(posX, posY, height, width, speed, health, pathImage, flipped, visibleBars);
         this.collectible = collectible;
         this.destructible = destructible;
         this.tangible = tangible;
+        this.damage = damage;
     }
 
     /** @return Whether the object has been collected. */
@@ -77,6 +84,11 @@ public class Object extends Entity {
     /** @return Whether the object is destructible. */
     public boolean isDestructible() {
         return destructible;
+    }
+
+    /** @return Whether the object is destroyed. */
+    public boolean isDestroyed() {
+        return destroyed;
     }
 
     /**
@@ -115,7 +127,7 @@ public class Object extends Entity {
      * Can be overridden in subclasses.
      */
     public void onDestroy() {
-        this.collected = true;
+        this.destroyed = true;
     }
 
     /**
@@ -139,9 +151,8 @@ public class Object extends Entity {
         }
     }
 
-    public void onCollide(Entity entity) {
+    public void onCollide(Entity entity, List<Message> messages) {
         if (this.isTangible()) {
-            // Bounding boxes
             int ax = this.getPosX();
             int ay = this.getPosY();
             int aw = this.getWidth();
@@ -156,26 +167,36 @@ public class Object extends Entity {
                 ax + aw > bx &&
                 ay < by + bh &&
                 ay + ah > by) {
-
-                // Calcula a sobreposição em cada eixo
+                
+                if (isCollectible()) {
+                    if (damage > 0 && entity instanceof Agent) {
+                        entity.takeDamage(damage, messages);
+                    }
+                    return;
+                }
                 int overlapX = Math.min(ax + aw, bx + bw) - Math.max(ax, bx);
                 int overlapY = Math.min(ay + ah, by + bh) - Math.max(ay, by);
 
-                // Resolve pelo menor eixo de sobreposição
                 if (overlapX < overlapY) {
-                    // Eixo X: empurra para a esquerda ou direita
                     if (bx + bw / 2 < ax + aw / 2) {
                         entity.setPosX(ax - bw);
                     } else {
                         entity.setPosX(ax + aw);
                     }
                 } else {
-                    // Eixo Y: empurra para cima ou para baixo
                     if (by + bh / 2 < ay + ah / 2) {
                         entity.setPosY(ay - bh);
                     } else {
                         entity.setPosY(ay + ah);
                     }
+                }
+
+                if (entity instanceof Shot) {
+                    onDestroy();
+                }
+                
+                if (damage > 0 && entity instanceof Agent) {
+                    entity.takeDamage(damage, messages);
                 }
             }
         }
