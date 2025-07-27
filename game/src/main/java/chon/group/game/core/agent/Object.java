@@ -152,31 +152,32 @@ public class Object extends Entity {
     }
 
     public void onCollide(Entity entity, List<Message> messages) {
-        if (this.isTangible()) {
-            int ax = this.getPosX();
-            int ay = this.getPosY();
-            int aw = this.getWidth();
-            int ah = this.getHeight();
+        int ax = this.getPosX();
+        int ay = this.getPosY();
+        int aw = this.getWidth();
+        int ah = this.getHeight();
 
-            int bx = entity.getPosX();
-            int by = entity.getPosY();
-            int bw = entity.getWidth();
-            int bh = entity.getHeight();
+        int bx = entity.getPosX();
+        int by = entity.getPosY();
+        int bw = entity.getWidth();
+        int bh = entity.getHeight();
 
-            if (ax < bx + bw &&
-                ax + aw > bx &&
-                ay < by + bh &&
-                ay + ah > by) {
-                
-                if (isCollectible()) {
-                    if (damage > 0 && entity instanceof Agent) {
-                        entity.takeDamage(damage, messages);
-                    }
-                    return;
+        if (ax < bx + bw &&
+            ax + aw > bx &&
+            ay < by + bh &&
+            ay + ah > by) {
+            
+            if (isCollectible()) {
+                if (damage > 0 && entity instanceof Agent) {
+                    entity.takeDamage(damage, messages);
                 }
-                int overlapX = Math.min(ax + aw, bx + bw) - Math.max(ax, bx);
-                int overlapY = Math.min(ay + ah, by + bh) - Math.max(ay, by);
+                return;
+            }
+            
+            int overlapX = Math.min(ax + aw, bx + bw) - Math.max(ax, bx);
+            int overlapY = Math.min(ay + ah, by + bh) - Math.max(ay, by);
 
+            if (isTangible()) {
                 if (overlapX < overlapY) {
                     if (bx + bw / 2 < ax + aw / 2) {
                         entity.setPosX(ax - bw);
@@ -190,14 +191,14 @@ public class Object extends Entity {
                         entity.setPosY(ay + ah);
                     }
                 }
+            }
 
-                if (entity instanceof Shot) {
-                    onDestroy();
-                }
-                
-                if (damage > 0 && entity instanceof Agent) {
-                    entity.takeDamage(damage, messages);
-                }
+            if (entity instanceof Shot) {
+                onDestroy();
+            }
+            
+            if (damage > 0 && entity instanceof Agent) {
+                entity.takeDamage(damage, messages);
             }
         }
     }
