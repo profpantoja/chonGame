@@ -118,6 +118,16 @@ public class Game {
             agent.chase(environment.getProtagonist().getPosX(),
                     environment.getProtagonist().getPosY());
         }
+        /* Update the collisions between agents and shots */
+        for (Object object : environment.getCurrentLevel().getObjects()) {
+            for (Agent agent : environment.getCurrentLevel().getAgents()) {
+                object.onCollide(agent);
+            }
+            for (Shot shot : environment.getCurrentLevel().getShots()) {
+                object.onCollide(shot);
+            }
+            object.onCollide(environment.getProtagonist());
+        }
         /* Render the game environment and agents */
         environment.update();
         mediator.renderGame();

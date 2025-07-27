@@ -9,6 +9,7 @@ public class Object extends Entity {
     private boolean collected = false;
     private boolean destructible;
     private boolean collectible;
+    private boolean tangible;
 
     private List<Object> objects;
     private int totalObjects = 0;
@@ -37,10 +38,12 @@ public class Object extends Entity {
             boolean flipped,
             boolean visibleBars,
             boolean collectible, 
-            boolean destructible) {
+            boolean destructible,
+            boolean tangible) {
         super(posX, posY, height, width, speed, health, pathImage, flipped, visibleBars);
         this.collectible = collectible;
         this.destructible = destructible;
+        this.tangible = tangible;
     }
 
     /** @return Whether the object has been collected. */
@@ -85,6 +88,20 @@ public class Object extends Entity {
         this.destructible = destructible;
     }
 
+    /** @return Whether the object is tangible. */
+    public boolean isTangible() {
+        return tangible;
+    }
+
+    /**
+     * Sets whether the object is tangible.
+     *
+     * @param tangible True if the object is tangible.
+     */
+    public void setTangible(boolean tangible) {
+        this.tangible = tangible;
+    }
+
     /**
      * Defines the behavior when the object is collected.
      * Can be overridden in subclasses.
@@ -119,6 +136,48 @@ public class Object extends Entity {
 
             this.setPosX((int) (this.getPosX() + directionX * speed));
             this.setPosY((int) (this.getPosY() + directionY * speed));
+        }
+    }
+
+    public void onCollide(Entity entity) {
+        if (this.isTangible()) {
+            // Bounding boxes
+            int ax = this.getPosX();
+            int ay = this.getPosY();
+            int aw = this.getWidth();
+            int ah = this.getHeight();
+
+            int bx = entity.getPosX();
+            int by = entity.getPosY();
+            int bw = entity.getWidth();
+            int bh = entity.getHeight();
+
+            if (ax < bx + bw &&
+                ax + aw > bx &&
+                ay < by + bh &&
+                ay + ah > by) {
+
+                // Calcula a sobreposição em cada eixo
+                int overlapX = Math.min(ax + aw, bx + bw) - Math.max(ax, bx);
+                int overlapY = Math.min(ay + ah, by + bh) - Math.max(ay, by);
+
+                // Resolve pelo menor eixo de sobreposição
+                if (overlapX < overlapY) {
+                    // Eixo X: empurra para a esquerda ou direita
+                    if (bx + bw / 2 < ax + aw / 2) {
+                        entity.setPosX(ax - bw);
+                    } else {
+                        entity.setPosX(ax + aw);
+                    }
+                } else {
+                    // Eixo Y: empurra para cima ou para baixo
+                    if (by + bh / 2 < ay + ah / 2) {
+                        entity.setPosY(ay - bh);
+                    } else {
+                        entity.setPosY(ay + ah);
+                    }
+                }
+            }
         }
     }
 
