@@ -7,10 +7,13 @@ import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.environment.Level;
+import chon.group.game.core.menu.MainOption;
+import chon.group.game.core.menu.PauseOption;
 import chon.group.game.core.weapon.Panel;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.domain.weapon.Cannon;
 import chon.group.game.domain.weapon.Lancer;
+import chon.group.game.core.menu.MenuTextManager;
 
 public class GameSet {
 
@@ -122,6 +125,11 @@ public class GameSet {
         environment.getLevels().add(level1);
         environment.getLevels().add(level2);
         environment.setCurrentLevel(level1);
+
+        MenuTextManager.getInstance().setText(MainOption.START_GAME, "Start game");
+        MenuTextManager.getInstance().setText(MainOption.EXIT, "Exit");
+        MenuTextManager.getInstance().setText(PauseOption.RESUME, "Resume");
+        MenuTextManager.getInstance().setText(PauseOption.GO_BACK_TO_MENU, "Go back to menu");
     }
 
 }

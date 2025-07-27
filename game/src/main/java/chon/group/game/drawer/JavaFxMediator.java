@@ -5,6 +5,8 @@ import java.util.Iterator;
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.environment.Environment;
+import chon.group.game.core.menu.MainMenu;
+import chon.group.game.core.menu.PauseMenu;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.messaging.Message;
 import javafx.scene.canvas.GraphicsContext;
@@ -257,5 +259,31 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     shot.getWidth(),
                     shot.getHeight());
         }
+    }
+
+     /**
+     * Draws the main menu with the specified background image, title, selected
+     */
+    @Override
+    public void drawMainMenu(MainMenu menu) {
+    drawer.drawMainMenu(
+        menu.getBackgroundImage(),
+        "Chon Game",
+        menu.getSelectedOptionIndex(),
+        menu.getLabels() // você pode criar um método getLabels() no Menu
+    );
+    }
+
+    /**
+     * Draws the pause menu with the specified background image, title, and
+     */
+    @Override
+    public void drawPauseMenu(PauseMenu menuPause) {
+    drawer.drawMenuPause(
+        "Paused",
+        menuPause.getSelectedOptionIndex(),
+        menuPause.getBackgroundImage(),
+        menuPause.getLabels() // idem
+    );
     }
 }
