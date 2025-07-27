@@ -74,6 +74,7 @@ public class Engine extends Application {
             theStage.setScene(scene);
 
             root.getChildren().add(canvas);
+            theStage.show();
 
             /* Set the main menu and pause menu for the game. */
             chonGame.setMainMenu(mainMenu);

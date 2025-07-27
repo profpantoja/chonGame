@@ -188,6 +188,7 @@ public class Agent extends Entity {
         if (!this.invulnerable) {
             super.takeDamage(damage, messages);
             this.lastHitTime = System.currentTimeMillis();
+            // SoundManager.playSound("sounds/hurt.wav"); não há som de quando o agente toma dano
         }
     }
 

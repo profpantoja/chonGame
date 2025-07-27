@@ -12,9 +12,10 @@ import chon.group.game.core.menu.PauseOption;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.drawer.EnvironmentDrawer;
 import javafx.scene.input.KeyEvent;
+import chon.group.game.sound.SoundManager;
 
 public class Game {
-
+    
     
     private MainMenu mainMenu;
     private PauseMenu menuPause;
@@ -25,89 +26,98 @@ public class Game {
     private boolean debugMode = true;
     private boolean wantsToStartGame = false;
 
+    private boolean gameOverMusicPlayed = false;
+    private boolean victoryMusicPlayed = false;
+    private boolean wasPaused = false;
+    
+    public static final String gameMusic = "/sounds/gameMusic.wav";
+    public static final String gameOverMusic = "/sounds/gameOverMusic.wav";
+    public static final String winSound = "/sounds/winSound.wav";
+    public static final String attack = "/sounds/attackFX.wav";
+    
     public Game(Environment environment, EnvironmentDrawer mediator, ArrayList<String> input) {
         this.environment = environment;
         this.mediator = mediator;
         this.input = input;
     }
-
+    
     public Environment getEnvironment() {
         return environment;
     }
-
+    
     public void setEnvironment(Environment environment) {
         this.environment = environment;
     }
-
+    
     public EnvironmentDrawer getMediator() {
         return mediator;
     }
-
+    
     public void setMediator(EnvironmentDrawer mediator) {
         this.mediator = mediator;
     }
-
+    
     public ArrayList<String> getInput() {
         return input;
     }
-
+    
     public void setInput(ArrayList<String> input) {
         this.input = input;
     }
-
+    
     public GameStatus getStatus() {
         return status;
     }
-
+    
     public void setStatus(GameStatus status) {
         this.status = status;
     }
-
+    
     public boolean isDebugMode() {
         return debugMode;
     }
-
+    
     public void setDebugMode(boolean debugMode) {
         this.debugMode = debugMode;
     }
-
+    
     public MainMenu getMainMenu() { 
         return mainMenu;
     }
-
+    
     public void setMainMenu(MainMenu mainMenu) {
         this.mainMenu = mainMenu;
     }
-
+    
     public PauseMenu getMenuPause() { 
         return menuPause;
     }
-
+    
     public void setMenuPause(PauseMenu menuPause) {
         this.menuPause = menuPause;
     }
-
+    
     public boolean wantsToStartGame() {
         return wantsToStartGame;
     }
-
+    
     public void setWantsToStartGame(boolean wantsToStartGame) {
         this.wantsToStartGame = wantsToStartGame;
-    }
+    }    
 
     public void loop() {
         this.updateControls();
         switch (this.status) {
             case START:
-                mediator.drawMainMenu(mainMenu);
-                break;
+            mediator.drawMainMenu(mainMenu);
+            break;
             case RUNNING:
-                this.running();
-                break;
+            this.running();
+            break;
             case PAUSED:
-                this.pause();
-                mediator.drawPauseMenu(menuPause);
-                break;
+            this.pause();
+            mediator.drawPauseMenu(menuPause);
+            break;
             case WIN:
                 this.win();
                 break;
@@ -118,6 +128,12 @@ public class Game {
     }
 
     public void gameOver() {
+        if (!gameOverMusicPlayed) {
+            SoundManager.update();
+            SoundManager.stopAll();
+            SoundManager.playMusic(Game.gameOverMusic);
+            gameOverMusicPlayed = true;
+        }
         environment.updateMessages();
         environment.updateShots();
         mediator.renderGame();
@@ -126,6 +142,14 @@ public class Game {
     }
 
     public void running() {
+        SoundManager.playMusic(Game.gameMusic); 
+         // If the game was paused, return the sounds and musics.
+        if (wasPaused) {
+            SoundManager.resumeMusic();
+            SoundManager.resumeAllSoundEffects();
+            wasPaused = false;
+        }
+        
         /** ChonBota Only Moves if the Player Press Something */
         /** Update the protagonist's movements if input exists */
         if (!input.isEmpty()) {
@@ -134,8 +158,11 @@ public class Game {
             if (input.contains("SPACE")) {
                 input.remove("SPACE");
                 Shot shot = environment.getProtagonist().useWeapon();
-                if (shot != null)
+                if (shot != null){
+                    // Play the attack sound effect while have stamina for shooting.
+                    SoundManager.playSound(attack); 
                     environment.getCurrentLevel().getShots().add(shot);
+                }
             }
             /* ChonBota's Movements */
             environment.getProtagonist().move(input);
@@ -172,6 +199,12 @@ public class Game {
     }
 
     public void pause() {
+        // Just pause the music when the game is paused.
+        if (!wasPaused) {
+            SoundManager.pauseMusic();
+            SoundManager.pauseAllSoundEffects();
+            wasPaused = true;
+        }
         this.environment.updateMessages();
         mediator.renderGame();
         /** Rendering the Pause Screen */
@@ -179,11 +212,18 @@ public class Game {
     }
 
     public void init() {
+        // Initialize the game environment and start the music.
+        SoundManager.playMusic(Game.gameMusic); 
         this.status = GameStatus.RUNNING;
         mediator.renderGame();
     }
 
     public void win() {
+        if (!victoryMusicPlayed) {
+            SoundManager.stopAll();
+            SoundManager.playMusic(Game.winSound); 
+            victoryMusicPlayed = true;
+        }
         this.status = GameStatus.START;
         mediator.renderGame();
     }
