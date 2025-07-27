@@ -3,7 +3,13 @@ package chon.group.game.core.weapon;
 import java.util.List;
 
 import chon.group.game.core.agent.Entity;
+import chon.group.game.core.animation.AnimationSpritesheet;
+import chon.group.game.core.animation.AnimationSystem;
 import chon.group.game.messaging.Message;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 
 public abstract class Shot extends Entity {
 
@@ -16,6 +22,16 @@ public abstract class Shot extends Entity {
         super(posX, posY, height, width, speed, health, pathImage, flipped, false);
         this.damage = damage;
         this.direction = direction;
+    }
+
+    public Shot(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped,
+                int damage, String direction, AnimationSpritesheet animationSpritesheet) {
+        super(posX, posY, height, width, speed, health, pathImage, flipped, false);
+        this.damage = damage;
+        this.direction = direction;
+        if (animationSpritesheet != null) {
+            setAnimationSystem(new AnimationSystem(animationSpritesheet));
+        }
     }
 
     public boolean isDestructible() {
