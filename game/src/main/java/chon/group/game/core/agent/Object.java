@@ -2,6 +2,13 @@ package chon.group.game.core.agent;
 
 import java.util.List;
 
+import chon.group.game.core.animation.AnimationSpritesheet;
+import chon.group.game.core.animation.AnimationSystem;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+
 /**
  * Represents a generic game object that can be collectible and/or destructible.
  */
@@ -41,6 +48,17 @@ public class Object extends Entity {
         super(posX, posY, height, width, speed, health, pathImage, flipped, visibleBars);
         this.collectible = collectible;
         this.destructible = destructible;
+    }
+
+    public Object(int posX, int posY, int height, int width, int speed, int health, String pathImage,
+                  boolean flipped, boolean visibleBars, boolean collectible, boolean destructible,
+                  AnimationSpritesheet animationSpritesheet) {
+        super(posX, posY, height, width, speed, health, pathImage, flipped, visibleBars);
+        this.collectible = collectible;
+        this.destructible = destructible;
+        if (animationSpritesheet != null) {
+            setAnimationSystem(new AnimationSystem(animationSpritesheet));
+        }
     }
 
     /** @return Whether the object has been collected. */

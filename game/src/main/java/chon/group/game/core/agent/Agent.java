@@ -2,9 +2,15 @@ package chon.group.game.core.agent;
 
 import java.util.List;
 
+import chon.group.game.core.animation.AnimationSystem;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.messaging.Message;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 
 /**
  * Represents an agent in the game, with properties such as position, size,
@@ -51,6 +57,26 @@ public class Agent extends Entity {
         this.energy = 1.0;
         this.fullEnergy = 1.0;
         this.recoveryFactor = 0.0002;
+    }
+
+    @Override
+    public Image getImage() {
+        Image baseImage;
+        if (getAnimationSystem() != null) {
+            baseImage = getAnimationSystem().getCurrentFrameImage();
+        } else {
+            baseImage = image;
+        }
+        if (isFlipped() && baseImage != null && getAnimationSystem() != null) {
+            ImageView view = new ImageView(baseImage);
+            view.setScaleX(-1);
+            view.setFitWidth(getWidth());
+            view.setFitHeight(getHeight());
+            SnapshotParameters params = new SnapshotParameters();
+            params.setFill(Color.TRANSPARENT);
+            return view.snapshot(params, null);
+        }
+        return baseImage;
     }
 
     /**
@@ -211,5 +237,4 @@ public class Agent extends Entity {
         } else
             return null;
     }
-
 }
