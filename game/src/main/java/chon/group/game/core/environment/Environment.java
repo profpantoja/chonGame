@@ -225,7 +225,8 @@ public class Environment {
                     collectedCount++;
                     score += 10;
                 }
-            } else if (object.isCollected() && object.isCollectible()) {
+            } else if ((object.isCollected() && object.isCollectible()) || 
+            (object.isDestroyed() && object.isDestructible())) {
                 iterator.remove();
             }
         }

@@ -3,6 +3,7 @@ package chon.group.game;
 import java.util.ArrayList;
 
 import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.Object;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.drawer.EnvironmentDrawer;
@@ -117,6 +118,16 @@ public class Game {
         for (Agent agent : environment.getCurrentLevel().getAgents()) {
             agent.chase(environment.getProtagonist().getPosX(),
                     environment.getProtagonist().getPosY());
+        }
+        /* Update the collisions between agents and shots */
+        for (Object object : environment.getCurrentLevel().getObjects()) {
+            for (Agent agent : environment.getCurrentLevel().getAgents()) {
+                object.onCollide(agent, environment.getMessages());
+            }
+            for (Shot shot : environment.getCurrentLevel().getShots()) {
+                object.onCollide(shot, environment.getMessages());
+            }
+            object.onCollide(environment.getProtagonist(), environment.getMessages());
         }
         /* Render the game environment and agents */
         environment.update();
