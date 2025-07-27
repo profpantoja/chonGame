@@ -63,33 +63,40 @@ public class SoundManager {
      * @param resourcePath the path to the music resource within the application's resources
      */
     public static void playMusic(String resourcePath) {
-        // Não tocar novamente se já estiver tocando a mesma música
-        if (backgroundMusicPlayer != null) {
-            Media media = backgroundMusicPlayer.getMedia();
-            if (media != null && media.getSource().equals(SoundManager.class.getResource(resourcePath).toString())) {
-                // Mesma música já tocando, não faz nada
+        try {
+            URL resourceUrl = SoundManager.class.getResource(resourcePath);
+            if (resourceUrl == null) {
+                System.err.println("Arquivo de música não encontrado: " + resourcePath);
                 return;
             }
-            backgroundMusicPlayer.stop();
-        }
 
-        try {
+            String requestedSource = resourceUrl.toString();
+
+            // Se já está tocando a mesma música, reinicia do zero
+            if (backgroundMusicPlayer != null) {
+                Media currentMedia = backgroundMusicPlayer.getMedia();
+                if (currentMedia != null && currentMedia.getSource().equals(requestedSource)) {
+                    backgroundMusicPlayer.stop();
+                    backgroundMusicPlayer.seek(javafx.util.Duration.ZERO);
+                    backgroundMusicPlayer.play();
+                    return;
+                } else {
+                    backgroundMusicPlayer.stop();
+                    backgroundMusicPlayer.dispose(); // Libera recursos
+                    backgroundMusicPlayer = null;
+                }
+            }
+
             Media media = mediaCache.get(resourcePath);
             if (media == null) {
-                URL resourceUrl = SoundManager.class.getResource(resourcePath);
-                if (resourceUrl == null) {
-                    System.err.println("Arquivo de música não encontrado: " + resourcePath);
-                    return;
-                }
-                media = new Media(resourceUrl.toString());
+                media = new Media(requestedSource);
                 mediaCache.put(resourcePath, media);
             }
 
-            if (media != null) {
-                backgroundMusicPlayer = new MediaPlayer(media);
-                backgroundMusicPlayer.setCycleCount(1); // Toca só uma vez
-                backgroundMusicPlayer.play();
-            }
+            backgroundMusicPlayer = new MediaPlayer(media);
+            backgroundMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+            backgroundMusicPlayer.play();
+
         } catch (Exception e) {
             System.err.println("Erro ao tocar a música: " + resourcePath);
             e.printStackTrace();

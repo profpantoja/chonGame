@@ -83,6 +83,10 @@ public class GameSet {
                 8000,
                 "/images/environment/mountain.png");
 
+        /* Set background music for each level */
+        level1.setBackgroundMusic(Game.gameMusic);
+        level2.setBackgroundMusic(Game.menuMusic);
+
         environment = new Environment(
                 this.canvasHeight,
                 level1.getWidth(),

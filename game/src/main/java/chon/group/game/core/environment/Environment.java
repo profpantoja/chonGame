@@ -10,6 +10,7 @@ import chon.group.game.core.agent.Object;
 import chon.group.game.core.weapon.Panel;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.messaging.Message;
+import chon.group.game.sound.SoundManager;
 import javafx.scene.image.Image;
 
 /**
@@ -321,7 +322,12 @@ public class Environment {
                 this.camera.setLevelWidth(this.currentLevel.getWidth());
             }
         }
-
+        if (this.currentLevel.getBackgroundMusic() != null) {
+            String musicPath = this.currentLevel.getBackgroundMusic();
+            if (!SoundManager.isCurrentMusic(musicPath)) {
+                SoundManager.playMusic(musicPath);
+            }
+        }
     }
 
 }

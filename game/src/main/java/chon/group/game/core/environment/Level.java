@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Level extends Entity {
-
+    
+    /** Background music for the level. */
+    private String backgroundMusic;
+    
     /** List of agents present in the environment. */
     private List<Agent> agents;
 
@@ -32,10 +35,19 @@ public class Level extends Entity {
         return agents;
     }
 
+    
     public void setAgents(ArrayList<Agent> agents) {
         this.agents = agents;
     }
+    
+    public String getBackgroundMusic() {
+        return backgroundMusic;
+    }
 
+    public void setBackgroundMusic(String backgroundMusic) {
+        this.backgroundMusic = backgroundMusic;
+    }
+    
     public List<Object> getObjects() {
         return objects;
     }

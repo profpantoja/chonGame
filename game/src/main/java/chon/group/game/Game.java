@@ -32,6 +32,7 @@ public class Game {
     
     public static final String gameMusic = "/sounds/gameMusic.wav";
     public static final String gameOverMusic = "/sounds/gameOverMusic.wav";
+    public static final String menuMusic = "/sounds/menuSound.wav";
     public static final String winSound = "/sounds/winSound.wav";
     public static final String attack = "/sounds/attackFX.wav";
     
@@ -71,6 +72,11 @@ public class Game {
     
     public void setStatus(GameStatus status) {
         this.status = status;
+        // Reset music flags when the game status changes to START.
+        if (status == GameStatus.START) {
+                gameOverMusicPlayed = false;
+                victoryMusicPlayed = false;
+            }
     }
     
     public boolean isDebugMode() {
@@ -109,6 +115,9 @@ public class Game {
         this.updateControls();
         switch (this.status) {
             case START:
+            if (!SoundManager.isCurrentMusic(menuMusic)) {
+                    SoundManager.playMusic(menuMusic);
+                }
             mediator.drawMainMenu(mainMenu);
             break;
             case RUNNING:
@@ -142,7 +151,14 @@ public class Game {
     }
 
     public void running() {
-        SoundManager.playMusic(Game.gameMusic); 
+        String musicToPlay = environment.getCurrentLevel().getBackgroundMusic();
+        if (musicToPlay == null || musicToPlay.isEmpty()) {
+            musicToPlay = Game.gameMusic; // fallback para música padrão
+        }
+
+        if (!SoundManager.isCurrentMusic(musicToPlay)) {
+            SoundManager.playMusic(musicToPlay);
+        }
          // If the game was paused, return the sounds and musics.
         if (wasPaused) {
             SoundManager.resumeMusic();
