@@ -306,6 +306,11 @@ public class Environment {
         updateLevel();
     }
 
+    public boolean hasNextLevel() {
+        int currentIndex = levels.indexOf(currentLevel);
+        return currentIndex < levels.size() - 1;
+    }
+
     public void loadNextLevel() {
         if (currentLevel == null)
             this.currentLevel = levels.get(0);

@@ -98,7 +98,7 @@ public class GameSet {
                 this.canvasWidth,
                 panel);
 
-        Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false, false);
+        Agent chonBota = new Agent(400, 390, 90, 65, 10, 1000, "/images/agents/chonBota.png", false, false);
         AnimationSpritesheet idleSheet = new SimpleAnimationSpritesheet(160, 223, 4, 200, "/images/agents/chonBotaAnimated.png");
         AnimationGraphics graphics = new AnimationGraphics();
         graphics.addSpritesheet(AnimationStatus.IDLE, idleSheet);
@@ -111,11 +111,13 @@ public class GameSet {
         chonBota.setWeapon(lancer);
 
         Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
+        Agent enemy = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
         environment.setProtagonist(chonBota);
         environment.setPauseImage("/images/environment/pause.png");
         environment.setGameOverImage("/images/environment/gameover.png");
 
         level1.getAgents().add(chonBot);
+        level2.getAgents().add(enemy);
 
         /* Set up some collectable objects */
         List<Object> objects = new ArrayList<>();
@@ -138,6 +140,8 @@ public class GameSet {
         level1.setObjects(objects);
         level1.countCollectibles();
         environment.getLevels().add(level1);
+        level2.setObjects(objects);
+        level2.countCollectibles();
         environment.getLevels().add(level2);
         environment.setCurrentLevel(level1);
 

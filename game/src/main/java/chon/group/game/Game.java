@@ -14,9 +14,13 @@ import chon.group.game.drawer.EnvironmentDrawer;
 import javafx.scene.input.KeyEvent;
 import chon.group.game.sound.SoundManager;
 
+
+
 public class Game {
     
-    
+
+    private long victoryStartTime = 0;
+    private final long VICTORY_DELAY = 3000; 
     private MainMenu mainMenu;
     private PauseMenu menuPause;
     private Environment environment;
@@ -210,8 +214,13 @@ public class Game {
         environment.update();
         mediator.renderGame();
         /* If the agent died in this loop */
-        if (environment.getProtagonist().isDead())
+        if (environment.getProtagonist().isDead()){
             this.status = GameStatus.GAME_OVER;
+        }
+
+        if (!environment.hasNextLevel() && environment.getCurrentLevel().isCompleted(environment)) {
+            this.status = GameStatus.WIN;
+        }
     }
 
     public void pause() {
@@ -239,10 +248,18 @@ public class Game {
             SoundManager.stopAll();
             SoundManager.playMusic(Game.winSound); 
             victoryMusicPlayed = true;
+            victoryStartTime = System.currentTimeMillis(); 
         }
-        this.status = GameStatus.START;
+
         mediator.renderGame();
+
+        if (System.currentTimeMillis() - victoryStartTime >= VICTORY_DELAY) {
+            this.status = GameStatus.START; 
+            victoryMusicPlayed = false; 
+            victoryStartTime = 0; 
+        }
     }
+
 
     private void updateControls() {
         if (this.input.contains("P")) {
