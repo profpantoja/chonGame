@@ -12,15 +12,15 @@ import chon.group.game.core.animation.AnimationSystem;
 import chon.group.game.core.animation.SimpleAnimationSpritesheet;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.environment.Level;
-import chon.group.game.core.weapon.CloseWeapon;
 import chon.group.game.core.menu.MainOption;
+import chon.group.game.core.menu.MenuTextManager;
 import chon.group.game.core.menu.PauseOption;
+import chon.group.game.core.weapon.CloseWeapon;
 import chon.group.game.core.weapon.Panel;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.domain.weapon.Cannon;
 import chon.group.game.domain.weapon.Lancer;
 import chon.group.game.domain.weapon.Sword;
-import chon.group.game.core.menu.MenuTextManager;
 
 public class GameSet {
 
@@ -100,10 +100,17 @@ public class GameSet {
                 this.canvasWidth,
                 panel);
 
-        Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false, false);
-        AnimationSpritesheet idleChonBota = new SimpleAnimationSpritesheet(42, 81, 2, 2000, "/images/agents/MarioIdle.png");
-        AnimationSpritesheet runChonBota = new SimpleAnimationSpritesheet(51, 81, 7, 500, "/images/agents/MarioRun.png");
-        AnimationSpritesheet attackChonBota = new SimpleAnimationSpritesheet(42, 81, 2, 100000000, "/images/agents/MarioAttack.png");
+        Agent chonBota = new Agent(400, 390, 90, 65, 5, 1000, "/images/agents/chonBota.png", false, false);
+        AnimationSpritesheet idleChonBota = new SimpleAnimationSpritesheet(36, 48, 5, 300, "/images/agents/mrman.png");
+        AnimationSpritesheet runChonBota = new SimpleAnimationSpritesheet(36, 48, 6, 300, "/images/agents/mrmanrun.png");
+        AnimationSpritesheet attackChonBota = new SimpleAnimationSpritesheet(42, 48, 5, 10000, "/images/agents/mrmanattack.png");
+
+        /*
+         * Agent chonBota = new Agent(400, 390, 16, 12, 3, 1000, "/images/agents/mrman.png", false, false);
+        AnimationSpritesheet idleChonBota = new SimpleAnimationSpritesheet(12, 16, 5, 500, "/images/agents/mrman.png");
+        AnimationSpritesheet runChonBota = new SimpleAnimationSpritesheet(12, 16, 6, 500, "/images/agents/mrmanrun.png");
+        AnimationSpritesheet attackChonBota = new SimpleAnimationSpritesheet(14, 16, 5, 500, "/images/agents/mrmanpunch.png");
+         */
 
         AnimationGraphics chonBotaGraphics = new AnimationGraphics();
         chonBotaGraphics.addSpritesheet(AnimationStatus.IDLE, idleChonBota);
@@ -118,28 +125,44 @@ public class GameSet {
         CloseWeapon sword = new Sword(400, 390, 0, 0, 3, 0,  "", false);
 
         
-        chonBota.setCloseWeapon(sword);
-        //chonBota.setWeapon(lancer);
+        //chonBota.setCloseWeapon(sword);
+        chonBota.setWeapon(lancer);
 
         Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
         AnimationSpritesheet idleChonBot = new SimpleAnimationSpritesheet(42, 81, 2, 1000, "/images/agents/MarioIdle.png");
+        Agent chonBot2 = new Agent(720, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
+        AnimationSpritesheet idleChonBot2 = new SimpleAnimationSpritesheet(42, 81, 2, 1000, "/images/agents/MarioIdle.png");
+        Agent chonBot3 = new Agent(520, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
+        AnimationSpritesheet idleChonBot3 = new SimpleAnimationSpritesheet(42, 81, 2, 1000, "/images/agents/MarioIdle.png");
 
         AnimationGraphics chonBotGraphics = new AnimationGraphics();
         chonBotGraphics.addSpritesheet(AnimationStatus.IDLE, idleChonBot);
+        AnimationGraphics chonBotGraphics2 = new AnimationGraphics();
+        chonBotGraphics.addSpritesheet(AnimationStatus.IDLE, idleChonBot2);
+        AnimationGraphics chonBotGraphics3 = new AnimationGraphics();
+        chonBotGraphics.addSpritesheet(AnimationStatus.IDLE, idleChonBot3);
 
         AnimationSystem chonBotSystem = new AnimationSystem(chonBotGraphics);
         chonBot.setAnimationSystem(chonBotSystem);
+        AnimationSystem chonBotSystem2 = new AnimationSystem(chonBotGraphics2);
+        chonBot.setAnimationSystem(chonBotSystem2);
+        AnimationSystem chonBotSystem3 = new AnimationSystem(chonBotGraphics3);
+        chonBot.setAnimationSystem(chonBotSystem3);
         
         environment.setProtagonist(chonBota);
         chonBot.setWeapon(lancer2);
 
         chonBot.setEnemy(true);
+        chonBot2.setEnemy(true);
+        chonBot3.setEnemy(true);
         //enemy.setEnemy(true) ;
         environment.setPauseImage("/images/environment/pause.png") ;
         environment.setGameOverImage("/images/environment/gameover.png");   
 
         level1.getAgents().add(chonBot);
-        //level2.getAgents().add(enemy);
+        level1.getAgents().add(chonBot2);
+        level1.getAgents().add(chonBot3);
+        level2.getAgents().add(chonBot);
 
 
         /* Set up some collectable objects */

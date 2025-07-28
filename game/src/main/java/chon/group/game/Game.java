@@ -14,7 +14,6 @@ import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Slash;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.sound.SoundManager;
-
 import javafx.scene.input.KeyEvent;
 
 public class Game {
@@ -30,7 +29,7 @@ public class Game {
 
     private GameStatus status = GameStatus.START;
     private boolean canSlash = true;
-    private int weaponDecision = 2;
+    private int weaponDecision = 1;
     private boolean debugMode = true;
     private boolean wantsToStartGame = false;
 
