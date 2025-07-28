@@ -101,7 +101,7 @@ public class GameSet {
                 panel);
 
 
-        Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false, false);
+        Agent chonBota = new Agent(400, 390, 90, 65, 10, 1000, "/images/agents/chonBota.png", false, false);
         AnimationSpritesheet idleSheet = new SimpleAnimationSpritesheet(64, 90, 4, 200, "/images/agents/chonBotaAnimated.png");
         AnimationGraphics graphics = new AnimationGraphics();
         graphics.addSpritesheet(AnimationStatus.IDLE, idleSheet);
@@ -110,33 +110,25 @@ public class GameSet {
 
         Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, 0.05, "", false);
         Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
+        Weapon lancer2 = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
         CloseWeapon sword = new Sword(400, 390, 0, 0, 3, 0,  "", false);
-        chonBota.setCloseWeapon(sword);
 
-
-        
         chonBota.setWeapon(lancer);
 
-
-        Agent chonBot = new Agent(420, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
+        Agent chonBot = new Agent(600, 600, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
      
-        CloseWeapon closeWeapon1 = new Sword(420, 440, 0, 0, 3, 0, "", false);
-        CloseWeapon closeWeapon2 = new Sword(920, 440, 0, 0, 3, 0, "", false);
 
-        Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
         Agent enemy = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
 
         environment.setProtagonist(chonBota);
-        chonBot.setCloseWeapon(closeWeapon1);
-        chonBot2.setCloseWeapon(closeWeapon2);
+        chonBot.setWeapon(lancer2);
 
         chonBot.setEnemy(true);
-        chonBot2.setEnemy(true);
+        enemy.setEnemy(true);
         environment.setPauseImage("/images/environment/pause.png");
         environment.setGameOverImage("/images/environment/gameover.png");
 
         level1.getAgents().add(chonBot);
-        level1.getAgents().add(chonBot2);
         level2.getAgents().add(enemy);
 
 

@@ -10,10 +10,10 @@ import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Slash;
 
 public class Level extends Entity {
-    
+
     /** Background music for the level. */
     private String backgroundMusic;
-    
+
     /** List of agents present in the environment. */
     private List<Agent> agents;
 
@@ -34,18 +34,17 @@ public class Level extends Entity {
         this.agents = new ArrayList<Agent>();
         this.objects = new ArrayList<Object>();
         this.shots = new ArrayList<Shot>();
-
         this.slashes = new ArrayList<Slash>();
+    }
 
     public List<Agent> getAgents() {
         return agents;
     }
 
-    
     public void setAgents(ArrayList<Agent> agents) {
         this.agents = agents;
     }
-    
+
     public String getBackgroundMusic() {
         return backgroundMusic;
     }
@@ -53,7 +52,7 @@ public class Level extends Entity {
     public void setBackgroundMusic(String backgroundMusic) {
         this.backgroundMusic = backgroundMusic;
     }
-    
+
     public List<Object> getObjects() {
         return objects;
     }
@@ -77,7 +76,6 @@ public class Level extends Entity {
     public void setSlashes(List<Slash> slashes) {
         this.slashes = slashes;
     }
-    
 
     /**
      * Gets the total number of collectible objects in the environment.
@@ -108,5 +106,4 @@ public class Level extends Entity {
                 .filter(Object::isCollectible)
                 .count();
     }
-
 }
