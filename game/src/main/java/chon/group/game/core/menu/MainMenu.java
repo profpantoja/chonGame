@@ -10,6 +10,6 @@ public class MainMenu extends Menu<MainOption> {
 
     @Override
     public String[] getLabels() {
-        return new String[]{"Start Game", "Exit"};
+        return new String[]{"Iniciar Aventura", "Sair"};
     }
 }

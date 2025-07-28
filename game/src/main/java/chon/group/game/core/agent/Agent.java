@@ -20,6 +20,12 @@ import javafx.scene.paint.Color;
  */
 public class Agent extends Entity {
 
+    /** The duration of the hit effect in milliseconds. */
+    private long attackEndTime = 0;
+
+    /** Flag to indicate if the agent is currently attacking. */
+    private boolean attacking = false;
+
     /** The time of the last hit taken. */
     private long lastHitTime = 0;
 
@@ -104,6 +110,26 @@ public class Agent extends Entity {
         }
     }
   
+    /**
+     * Gets the agent's attack end time.
+     *
+     * @return the attack end time in milliseconds
+     */
+    public boolean isAttacking() {
+        return System.currentTimeMillis() < attackEndTime;
+    }
+
+    public long getAttackEndTime() {
+        return attackEndTime;
+    }
+
+    public void setAttacking(boolean attacking) {
+        this.attacking = attacking;
+    }
+
+    public void setAttackEndTime(long attackEndTime) {
+        this.attackEndTime = attackEndTime;
+    }
 
     /**
      * Gets the last hit taken.

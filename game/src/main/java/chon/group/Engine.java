@@ -70,7 +70,7 @@ public class Engine extends Application {
             /* Set up the scene and stage */
             StackPane root = new StackPane();
             Scene scene = new Scene(root, gameSet.getCanvasWidth(), gameSet.getCanvasHeight());
-            theStage.setTitle("Chon: The Learning Game");
+            theStage.setTitle("Char Adventures(Academic Purposes Only)");
             theStage.setScene(scene);
 
             root.getChildren().add(canvas);
@@ -121,7 +121,7 @@ public class Engine extends Application {
     private void resetGame(GraphicsContext gc) {
         gameSet = new GameSet();
         drawer = new JavaFxDrawer(gc, null);
-        mainMenu = new MainMenu(drawer, new Image(getClass().getResourceAsStream("/images/environment/menu_background_new.png")));
+        mainMenu = new MainMenu(drawer, new Image(getClass().getResourceAsStream("/images/environment/CHAR ADVENTURES.png")));
         menuPause = new PauseMenu(drawer, gameSet.getEnvironment().getPauseImage());
         input = new ArrayList<>();
         mediator = new JavaFxMediator(gameSet.getEnvironment(), gc);

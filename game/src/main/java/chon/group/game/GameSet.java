@@ -20,6 +20,7 @@ import chon.group.game.core.weapon.Weapon;
 import chon.group.game.domain.weapon.Cannon;
 import chon.group.game.domain.weapon.Lancer;
 import chon.group.game.domain.weapon.Sword;
+import javafx.animation.Animation;
 import chon.group.game.core.menu.MenuTextManager;
 
 public class GameSet {
@@ -68,7 +69,7 @@ public class GameSet {
     private void load() {
         /* Define some size properties for both Canvas and Environment */
         this.canvasWidth = 1280;
-        this.canvasHeight = 780;
+        this.canvasHeight = 640;
 
         /** Define a general panel for life, energy, points, and objects. */
         panel = new Panel(
@@ -80,8 +81,8 @@ public class GameSet {
                 0,
                 0,
                 canvasHeight,
-                8024,
-                "/images/environment/castleLong.png");
+                2000,
+                "/images/environment/backgroundlvl1.png");
 
         Level level2 = new Level(
                 0,
@@ -100,15 +101,23 @@ public class GameSet {
                 this.canvasWidth,
                 panel);
 
-        Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false, false);
-        AnimationSpritesheet idleChonBota = new SimpleAnimationSpritesheet(42, 81, 2, 2000, "/images/agents/MarioIdle.png");
-        AnimationSpritesheet runChonBota = new SimpleAnimationSpritesheet(51, 81, 7, 500, "/images/agents/MarioRun.png");
-        AnimationSpritesheet attackChonBota = new SimpleAnimationSpritesheet(42, 81, 2, 100000000, "/images/agents/MarioAttack.png");
+        //CHARIZARD (LVL1)
+        Agent chonBota = new Agent(400, 390, 90, 65, 5, 1000, "/images/agents/chonBota.png", false, false);
+        AnimationSpritesheet idleChonBota = new SimpleAnimationSpritesheet(100, 100, 5, 2000, "/images/agents/charizard_idle.png");
+        AnimationSpritesheet runChonBota = new SimpleAnimationSpritesheet(130, 100, 4, 500, "/images/agents/charizard_walk.png");
+        AnimationSpritesheet jumpChonBota = new SimpleAnimationSpritesheet(100, 100, 2, 500, "/images/agents/charizard_idle.png");
+        AnimationSpritesheet attackChonBota = new SimpleAnimationSpritesheet(130, 100, 4, 360, "/images/agents/charizard_attack.png");
+        AnimationSpritesheet hitChonBota = new SimpleAnimationSpritesheet(130, 100, 3, 1000, "/images/agents/charizard_dmg.png");
+        AnimationSpritesheet dieChonBota = new SimpleAnimationSpritesheet(130, 100, 3, 1000, "/images/agents/charizard_death.png");
+
 
         AnimationGraphics chonBotaGraphics = new AnimationGraphics();
         chonBotaGraphics.addSpritesheet(AnimationStatus.IDLE, idleChonBota);
         chonBotaGraphics.addSpritesheet(AnimationStatus.RUNNING, runChonBota);
         chonBotaGraphics.addSpritesheet(AnimationStatus.ATTACKING, attackChonBota);
+        chonBotaGraphics.addSpritesheet(AnimationStatus.HIT, hitChonBota);
+        chonBotaGraphics.addSpritesheet(AnimationStatus.DYING, dieChonBota);
+        chonBotaGraphics.addSpritesheet(AnimationStatus.JUMPING, jumpChonBota);
         AnimationSystem chonBotaSystem = new AnimationSystem(chonBotaGraphics);
         chonBota.setAnimationSystem(chonBotaSystem);
 
@@ -116,22 +125,34 @@ public class GameSet {
         Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
         Weapon lancer2 = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
         CloseWeapon sword = new Sword(400, 390, 0, 0, 3, 0,  "", false);
+        CloseWeapon sword2 = new Sword(400, 390, 0, 0, 3, 0, "", false);
 
         
-        chonBota.setCloseWeapon(sword);
+        chonBota.setWeapon(lancer);  
         //chonBota.setWeapon(lancer);
 
+        // ENEMY LVL1 (SQUIRTLE)
         Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
-        AnimationSpritesheet idleChonBot = new SimpleAnimationSpritesheet(42, 81, 2, 1000, "/images/agents/MarioIdle.png");
+        AnimationSpritesheet idleChonBot = new SimpleAnimationSpritesheet(90, 90, 6, 1000, "/images/agents/venusaur_walk.png");
+        AnimationSpritesheet runChonBot = new SimpleAnimationSpritesheet(90, 90, 5, 500, "/images/agents/venusaur_walk.png");
+        AnimationSpritesheet jumpChonBot = new SimpleAnimationSpritesheet(90, 90, 2, 500, "/images/agents/venusaur_walk.png");
+        AnimationSpritesheet attackChonBot = new SimpleAnimationSpritesheet(90, 90  , 5, 360, "/images/agents/venusaur_attack.png");
+        AnimationSpritesheet hitChonBot = new SimpleAnimationSpritesheet(90, 90, 2, 100, "/images/agents/venusaur_dmg.png");
+        AnimationSpritesheet dieChonBot = new SimpleAnimationSpritesheet(45, 45, 2, 1000, "/images/agents/squirtle_death.png");
 
         AnimationGraphics chonBotGraphics = new AnimationGraphics();
         chonBotGraphics.addSpritesheet(AnimationStatus.IDLE, idleChonBot);
+        chonBotGraphics.addSpritesheet(AnimationStatus.RUNNING, runChonBot);
+        chonBotGraphics.addSpritesheet(AnimationStatus.ATTACKING, attackChonBot);
+        chonBotGraphics.addSpritesheet(AnimationStatus.HIT, hitChonBot);
+        chonBotGraphics.addSpritesheet(AnimationStatus.DYING, dieChonBot);
+        chonBotGraphics.addSpritesheet(AnimationStatus.JUMPING, jumpChonBot);
 
         AnimationSystem chonBotSystem = new AnimationSystem(chonBotGraphics);
         chonBot.setAnimationSystem(chonBotSystem);
         
+        chonBot.setCloseWeapon(sword2);
         environment.setProtagonist(chonBota);
-        chonBot.setWeapon(lancer2);
 
         chonBot.setEnemy(true);
         //enemy.setEnemy(true) ;
@@ -168,10 +189,10 @@ public class GameSet {
         environment.getLevels().add(level2);
         environment.setCurrentLevel(level1);
 
-        MenuTextManager.getInstance().setText(MainOption.START_GAME, "Start game");
-        MenuTextManager.getInstance().setText(MainOption.EXIT, "Exit");
-        MenuTextManager.getInstance().setText(PauseOption.RESUME, "Resume");
-        MenuTextManager.getInstance().setText(PauseOption.GO_BACK_TO_MENU, "Go back to menu");
+        MenuTextManager.getInstance().setText(MainOption.START_GAME, "Aventura");
+        MenuTextManager.getInstance().setText(MainOption.EXIT, "Sair");
+        MenuTextManager.getInstance().setText(PauseOption.RESUME, "Continuar");
+        MenuTextManager.getInstance().setText(PauseOption.GO_BACK_TO_MENU, "Voltar para o Menu");
     }
 
 }
