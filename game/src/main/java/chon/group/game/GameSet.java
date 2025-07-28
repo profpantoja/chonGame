@@ -240,6 +240,7 @@ public class GameSet {
 
 
         // Adiciona Inimigos ao level
+        // para commitar
         level1.getAgents().add(skeleton);
         level1.getAgents().add(skeletonWH);
         level1.getAgents().add(shooter);
