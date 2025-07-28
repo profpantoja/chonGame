@@ -3,6 +3,7 @@ package chon.group.game.core.agent;
 import java.util.ArrayList;
 import java.util.List;
 
+import chon.group.game.core.animation.AnimationStatus;
 import chon.group.game.core.animation.AnimationSystem;
 import chon.group.game.messaging.Message;
 import javafx.scene.SnapshotParameters;
@@ -44,6 +45,10 @@ import javafx.scene.paint.Color;
 
     private AnimationSystem animationSystem;
 
+        /** The entity's hitbox, if any. */
+    private Hitbox hitbox = null;
+
+
     /**
      * Constructor to initialize the entity properties.
      *
@@ -67,6 +72,7 @@ import javafx.scene.paint.Color;
         this.flipped = flipped;
         this.visibleBars = visibleBars;
     }
+
 
     /**
      * Gets the X (horizontal) position of the entity.
@@ -246,6 +252,28 @@ import javafx.scene.paint.Color;
     public void setAnimationSystem(AnimationSystem animationSystem) {
         this.animationSystem = animationSystem;
     }
+
+       /**
+     * Gets the entity's hitbox.
+     *
+     * @return the entity's hitbox
+     */
+    public Hitbox getHitbox() {
+        return hitbox;
+    }
+
+    /**
+     * Sets the entity's hitbox.
+     *
+     * @param hitbox the new hitbox
+     */
+    public void setHitbox(Hitbox hitbox) {
+        this.hitbox = hitbox;
+    }
+
+    public AnimationStatus getAnimationStatus() {
+    return (animationSystem != null) ? animationSystem.getCurrentStatus() : AnimationStatus.IDLE;
+}
     
     /**
      * Flips the Image horizontally.
@@ -339,5 +367,13 @@ import javafx.scene.paint.Color;
                 this.setHealth(0);
         }
     }
+
+        public void updateHitboxPosition() {
+        if (this.getHitbox() != null) {
+            this.getHitbox().setPosX(this.getPosX() + this.getHitbox().getOffsetX());
+            this.getHitbox().setPosY(this.getPosY() + this.getHitbox().getOffsetY());
+        }
+    }
+
 
 }

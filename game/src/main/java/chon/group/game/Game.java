@@ -206,6 +206,10 @@ public class Game {
             wasPaused = false;
         }
 
+        if (environment.getProtagonist().isGravityEffects()) {
+            environment.getProtagonist().gravityEffect();
+        }
+
         if (!input.isEmpty()) {
             switch (weaponDecision) {
                 case 1:

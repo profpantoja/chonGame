@@ -4,10 +4,13 @@ import java.util.List;
 
 import chon.group.game.core.weapon.CloseWeapon;
 import chon.group.game.core.animation.AnimationSpritesheet;
+import chon.group.game.core.animation.AnimationStatus;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Slash;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.messaging.Message;
+import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -51,6 +54,64 @@ public class Agent extends Entity {
     /** The agent's energy cost for using the weapon. */
     private boolean isEnemy;
 
+    private String pathImageIdle;
+
+    private String pathImageRun;
+    
+    private String pathImageAttack;
+
+    private String pathImageHit;
+    
+    private String pathImageDeath;
+
+    private String pathImageJump;
+
+    private boolean blinking = false;
+
+    private PauseTransition damageStatusTimer;
+
+    private PauseTransition attackStatusTimer;
+
+    private Timeline blinkTimeline;
+    
+    public void setPathImageDeath(String pathImageDeath) {
+        this.pathImageDeath = pathImageDeath;
+    }
+    
+    public void setPathImageHit(String pathImageHit) {
+        this.pathImageHit = pathImageHit;
+    }
+    
+
+    private boolean isJumping = false;
+
+    private boolean canJump = true;
+
+    private boolean isGrounded = false;
+
+    private boolean gravityEffects = true;
+
+    /* Velocidade inicial do pulo (negativo = sobe) */
+    private int jumpVelocity = -20;
+
+    private int currentVelocityY = 0;
+
+    private final double gravity = 1;
+
+    private final int groundY = 550;
+
+    private boolean isProtagonist;
+
+    private final int maxFallSpeed = 30;
+
+    
+    public boolean isProtagonist() {
+        return isProtagonist;
+    }
+
+    public void setProtagonist(boolean isProtagonist) {
+        this.isProtagonist = isProtagonist;
+    }
 
     /**
      * Constructor to initialize the agent properties.
@@ -73,7 +134,7 @@ public class Agent extends Entity {
         this.shotCooldown = shotCooldown;
     }
 
-
+    
     @Override
     public Image getImage() {
         Image baseImage;
@@ -261,6 +322,8 @@ public class Agent extends Entity {
         return (this.getHealth() <= 0);
     }
 
+    
+
     /**
      * Makes the agent take damage.
      * If health reaches 0, the game must end.
@@ -318,5 +381,194 @@ public class Agent extends Entity {
     public void setEnemy(boolean isEnemy) {
         this.isEnemy = isEnemy;
     }
+
+      /**
+     * Método move sobreescrito da classe Entity
+     */
+    
+    public void moveGravity(List<String> movements) {
+        int speed = this.getSpeed();
+
+        // Movimento lateral
+        if (movements.contains("LEFT")) {
+            if (!this.isFlipped()) this.flipImage();
+            this.setPosX(this.getPosX() - speed);
+        }
+
+        if (movements.contains("RIGHT")) {
+            if (this.isFlipped()) this.flipImage();
+            this.setPosX(this.getPosX() + speed);
+        }
+
+        /* PULO: apenas se for protagonista */
+if (isProtagonist) {
+    if (movements.contains("UP") && canJump && isGrounded) {
+        changeAnimation(AnimationStatus.JUMPING); 
+        isJumping = true;
+        isGrounded = false;
+        canJump = false;
+        currentVelocityY = jumpVelocity;
+    }
+
+            if (movements.contains("LEFT") || movements.contains("RIGHT")) {
+    changeAnimation(AnimationStatus.RUNNING);
+} else if (isGrounded && !isJumping) {
+    changeAnimation(AnimationStatus.IDLE);
+}
+        }
+        //}
+    }
+
+private void changeAnimation(AnimationStatus status) {
+    if (getAnimationSystem() != null) {
+        getAnimationSystem().setStatus(status);
+        syncDimensions(); // Atualiza largura/altura do agente com base no spritesheet atual
+    }
+}
+
+
+public void gravityEffect() {
+    if (posY < groundY || currentVelocityY < 0) {
+        posY += currentVelocityY;
+        currentVelocityY += gravity;
+
+        isJumping = true;
+        isGrounded = false;
+
+        if (currentVelocityY > maxFallSpeed) {
+            currentVelocityY = maxFallSpeed;
+        }
+
+        // Evita ultrapassar o chão
+        if (posY >= groundY) {
+            posY = groundY;
+            currentVelocityY = 0;
+            isJumping = false;
+            isGrounded = true;
+            canJump = true;
+
+            if (getAnimationStatus() == AnimationStatus.JUMPING) {
+                changeAnimation(AnimationStatus.IDLE);
+            }
+        }
+    }
+}
+
+
+     /**
+     * Moves the entity based on the movement commands provided.
+     *
+     * @param movements a list of movement directions ("RIGHT", "LEFT", "UP", "DOWN")
+     *
+     */
+
+    public void moveNonGravity(List<String> movements) {
+        if (movements.contains("RIGHT")) {
+            if (isFlipped()) {
+                flipImage();
+                setFlipped(false);
+            }
+            setPosX(getPosX() + getSpeed());
+            updateHitboxPosition();
+        } else if (movements.contains("LEFT")) {
+            if (!isFlipped()) {
+                flipImage();
+                setFlipped(true);
+            }
+            setPosX(getPosX() - getSpeed());
+            updateHitboxPosition();
+        } else if (movements.contains("UP")) {
+            setPosY(getPosY() - getSpeed());
+            updateHitboxPosition();
+        } else if (movements.contains("DOWN")) {
+            setPosY(getPosY() + getSpeed());
+            updateHitboxPosition();
+        }
+    }
+
+    @Override
+    public void move(List<String> gameInput) {
+AnimationStatus status = getAnimationStatus();
+if (status == AnimationStatus.HIT || status == AnimationStatus.ATTACKING) return;        if (this.isGravityEffects()) {
+            moveGravity(gameInput);
+            if (this.isProtagonist) gravityEffect();
+        }
+        else {
+            moveNonGravity(gameInput);
+        }
+    }
+
+    public String getPathImageIdle() {
+        return pathImageIdle;
+    }
+
+    public void setPathImageIdle(String pathImageIdle) {
+        this.pathImageIdle = pathImageIdle;
+    }
+
+    public String getPathImageRun() {
+        return pathImageRun;
+    }
+
+    public void setPathImageRun(String pathImageRun) {
+        this.pathImageRun = pathImageRun;
+    }
+
+    public String getPathImageAttack() {
+        return pathImageAttack;
+    }
+
+    public void setPathImageAttack(String pathImageAttack) {
+        this.pathImageAttack = pathImageAttack;
+    }
+
+    public String getPathImageHit() {
+        return pathImageHit;
+    }
+
+    public String getPathImageDeath() {
+        return pathImageDeath;
+    }
+
+    public boolean isIsJumping() {
+        return isJumping;
+    }
+
+    public void setIsJumping(boolean isJumping) {
+        this.isJumping = isJumping;
+    }
+
+    public String getPathImageJump() {
+        return pathImageJump;
+    }
+
+    public void setPathImageJump(String pathImageJump) {
+        this.pathImageJump = pathImageJump;
+    }
+
+    public boolean isIsGrounded() {
+        return isGrounded;
+    }
+
+    public void setIsGrounded(boolean isGrounded) {
+        this.isGrounded = isGrounded;
+    }
+
+    public boolean isGravityEffects() {
+        return gravityEffects;
+    }
+
+    public void setGravityEffects(boolean gravityEffects) {
+        this.gravityEffects = gravityEffects;
+    }
+
+    public int getJumpVelocity() {
+        return jumpVelocity;
+    }
+
+    public void setJumpVelocity(int jumpVelocity) {
+        this.jumpVelocity = jumpVelocity;
+    }
+
 
 }

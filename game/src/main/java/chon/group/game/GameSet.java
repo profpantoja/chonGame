@@ -101,12 +101,21 @@ public class GameSet {
                 panel);
 
 
-        Agent chonBota = new Agent(400, 390, 90, 65, 10, 1000, "/images/agents/chonBota.png", false, false);
+        Agent chonBota = new Agent(400, 540, 90, 65, 10, 1000, "/images/agents/chonBota.png", false, false);
         AnimationSpritesheet idleSheet = new SimpleAnimationSpritesheet(64, 90, 4, 200, "/images/agents/chonBotaAnimated.png");
+        AnimationSpritesheet runSheet = new SimpleAnimationSpritesheet(64, 90, 4, 200, "/images/agents/chonBotaAnimated.png");
+
         AnimationGraphics graphics = new AnimationGraphics();
+
         graphics.addSpritesheet(AnimationStatus.IDLE, idleSheet);
+                graphics.addSpritesheet(AnimationStatus.RUNNING, runSheet);
+
         AnimationSystem animationSystem = new AnimationSystem(graphics);
         chonBota.setAnimationSystem(animationSystem);
+
+chonBota.setGravityEffects(true);
+chonBota.setProtagonist(true);
+
 
         Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, 0.05, "", false);
         Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
@@ -115,7 +124,7 @@ public class GameSet {
 
         chonBota.setWeapon(lancer);
 
-        Agent chonBot = new Agent(600, 600, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
+        Agent chonBot = new Agent(600, 390, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
      
 
         Agent enemy = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
