@@ -113,19 +113,23 @@ public class Game {
     public void running() {
         /** ChonBota Only Moves if the Player Press Something */
         /** Update the protagonist's movements if input exists */
-        if (!input.isEmpty()) {
+        if (!input.isEmpty() && !isAttacking()) {
             /** ChonBota Shoots Somebody Who Outdrew You */
             /** But only if she has enough energy */
             if (input.contains("SPACE")) {
                 input.remove("SPACE");
                 Shot shot = environment.getProtagonist().useWeapon();
                 if (shot != null)
+                    environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.ATTACKING);
                     environment.getCurrentLevel().getShots().add(shot);
             }
-            /* ChonBota's Movements */
-            environment.getProtagonist().move(input);
-            environment.checkBorders();
-        } else {
+            else {
+                /* ChonBota's Movements */
+                environment.getProtagonist().move(input);
+                environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.RUNNING);
+                environment.checkBorders();
+            }
+        } else if (!isAttacking()) {
             /** If no input, ChonBota stops running */
             environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.IDLE);
         }
@@ -151,6 +155,18 @@ public class Game {
         /* If the agent died in this loop */
         if (environment.getProtagonist().isDead())
             this.status = GameStatus.GAME_OVER;
+    }
+
+    public boolean isAttacking() {
+        return environment.getProtagonist().getAnimationSystem().getStatus() == AnimationStatus.ATTACKING;
+    }
+
+    public boolean isRunning() {
+        return environment.getProtagonist().getAnimationSystem().getStatus() == AnimationStatus.RUNNING;
+    }
+
+    public boolean isIdle() {
+        return environment.getProtagonist().getAnimationSystem().getStatus() == AnimationStatus.IDLE;
     }
 
     public void pause() {

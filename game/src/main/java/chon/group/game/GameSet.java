@@ -92,11 +92,12 @@ public class GameSet {
                 panel);
 
         Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false, false);
-        AnimationSpritesheet idleSheet = new SimpleAnimationSpritesheet(64, 90, 4, 200, "/images/agents/chonBotaAnimated.png");
-        AnimationGraphics graphics = new AnimationGraphics();
-        graphics.addSpritesheet(AnimationStatus.IDLE, idleSheet);
-        AnimationSystem animationSystem = new AnimationSystem(graphics);
-        chonBota.setAnimationSystem(animationSystem);
+        AnimationSpritesheet idleChonBota = new SimpleAnimationSpritesheet(42, 81, 2, 1000, "/images/agents/MarioIdle.png");
+        AnimationGraphics chonBotaGraphics = new AnimationGraphics();
+        chonBotaGraphics.addSpritesheet(AnimationStatus.IDLE, idleChonBota);
+        AnimationSystem chonBotaSystem = new AnimationSystem(chonBotaGraphics);
+        chonBota.setAnimationSystem(chonBotaSystem);
+
         Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, 0.05, "", false);
         Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
 
@@ -104,6 +105,12 @@ public class GameSet {
         chonBota.setWeapon(lancer);
 
         Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
+        AnimationSpritesheet idleChonBot = new SimpleAnimationSpritesheet(42, 81, 2, 1000, "/images/agents/MarioIdle.png");
+        AnimationGraphics chonBotGraphics = new AnimationGraphics();
+        chonBotGraphics.addSpritesheet(AnimationStatus.IDLE, idleChonBot);
+        AnimationSystem chonBotSystem = new AnimationSystem(chonBotGraphics);
+        chonBot.setAnimationSystem(chonBotSystem);
+        
         environment.setProtagonist(chonBota);
         environment.setPauseImage("/images/environment/pause.png");
         environment.setGameOverImage("/images/environment/gameover.png");
