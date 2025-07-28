@@ -51,4 +51,20 @@ public class AnimationSystem {
         int x = currentFrame * sheet.getFrameWidth();
         return new WritableImage(sheet.getSpritesheetImage().getPixelReader(), x, 0, sheet.getFrameWidth(), sheet.getFrameHeight());
     }
+
+    public AnimationGraphics getGraphics() {
+        return graphics;
+    }
+
+    public void setGraphics(AnimationGraphics graphics) {
+        this.graphics = graphics;
+    }
+
+    public AnimationStatus getCurrentStatus() {
+        return currentStatus;
+    }
+
+    public void setCurrentStatus(AnimationStatus currentStatus) {
+        this.currentStatus = currentStatus;
+    }
 }
