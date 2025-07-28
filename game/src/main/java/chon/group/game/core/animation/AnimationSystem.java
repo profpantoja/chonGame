@@ -28,6 +28,10 @@ public class AnimationSystem {
         }
     }
 
+    public AnimationStatus getStatus() {
+        return currentStatus;
+    }
+
     public void setPaused(boolean paused) {
         this.paused = paused;
     }

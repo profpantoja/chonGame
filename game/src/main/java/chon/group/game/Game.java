@@ -29,9 +29,8 @@ public class Game {
     private ArrayList<String> input;
 
     private GameStatus status = GameStatus.START;
-    private boolean isPaused = false;
     private boolean canSlash = true;
-    private int weaponDecision = 1;
+    private int weaponDecision = 2;
     private boolean debugMode = true;
     private boolean wantsToStartGame = false;
 
@@ -214,9 +213,16 @@ public class Game {
                         Shot shot = environment.getProtagonist().useWeapon();
                         if (shot != null) {
                             SoundManager.playSound(attack);
+                            environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.ATTACKING);
                             environment.getCurrentLevel().getShots().add(shot);
                         }
                     }
+                    else {
+                        environment.getProtagonist().move(input);
+                        environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.RUNNING);
+                        environment.checkBorders();
+                    }
+
                     break;
 
                 case 2:
@@ -226,15 +232,19 @@ public class Game {
                         Slash slash = environment.getProtagonist().useCloseWeapon();
                         if (slash != null) {
                             SoundManager.playSound(attack);
+                            environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.ATTACKING);
                             environment.getCurrentLevel().getSlashes().add(slash);
                         }
                     }
+                     else {
+                        environment.getProtagonist().move(input);
+                        environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.RUNNING);
+                        environment.checkBorders();
+                    }
                     break;
-            }
-
-            environment.getProtagonist().move(input);
-            environment.checkBorders();
-        } else {
+            }   
+        }
+        else {
             environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.IDLE);
         }
 
@@ -289,6 +299,18 @@ public class Game {
                 }
             }
         }
+    }
+
+    public boolean isAttacking() {
+        return environment.getProtagonist().getAnimationSystem().getStatus() == AnimationStatus.ATTACKING;
+    }
+
+    public boolean isRunning() {
+        return environment.getProtagonist().getAnimationSystem().getStatus() == AnimationStatus.RUNNING;
+    }
+
+    public boolean isIdle() {
+        return environment.getProtagonist().getAnimationSystem().getStatus() == AnimationStatus.IDLE;
     }
 
     public void pause() {
