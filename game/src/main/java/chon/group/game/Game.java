@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Object;
+import chon.group.game.core.animation.AnimationStatus;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.menu.MainMenu;
 import chon.group.game.core.menu.MainOption;
@@ -119,25 +120,43 @@ public class Game {
         this.updateControls();
         switch (this.status) {
             case START:
+                this.pauseAnimations(false);
             if (!SoundManager.isCurrentMusic(menuMusic)) {
                     SoundManager.playMusic(menuMusic);
                 }
             mediator.drawMainMenu(mainMenu);
             break;
             case RUNNING:
+                this.pauseAnimations(false);
             this.running();
             break;
             case PAUSED:
+                this.pauseAnimations(true);
             this.pause();
             mediator.drawPauseMenu(menuPause);
             break;
             case WIN:
+                this.pauseAnimations(true);
                 this.win();
                 break;
             case GAME_OVER:
+                this.pauseAnimations(true);
                 this.gameOver();
                 break;
         }
+    }
+
+    public void pauseAnimations(boolean value) {
+        for (Agent agent : environment.getCurrentLevel().getAgents()) {
+            if (agent.getAnimationSystem() != null) agent.getAnimationSystem().setPaused(value);
+        }
+        for (Shot shot : environment.getCurrentLevel().getShots()) {
+            if (shot.getAnimationSystem() != null) shot.getAnimationSystem().setPaused(value);
+        }
+        for (Object object : environment.getCurrentLevel().getObjects()) {
+            if (object.getAnimationSystem() != null) object.getAnimationSystem().setPaused(value);
+        }
+        if (environment.getProtagonist().getAnimationSystem() != null) environment.getProtagonist().getAnimationSystem().setPaused(value);
     }
 
     public void gameOver() {
@@ -187,6 +206,9 @@ public class Game {
             /* ChonBota's Movements */
             environment.getProtagonist().move(input);
             environment.checkBorders();
+        } else {
+            /** If no input, ChonBota stops running */
+            environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.IDLE);
         }
         /* ChonBot's Automatic Movements */
         /* Update the other agents' movements */
@@ -210,6 +232,10 @@ public class Game {
             }
             object.onCollide(environment.getProtagonist(), environment.getMessages());
         }
+        for (Agent agent: environment.getCurrentLevel().getAgents()) {
+            agent.syncDimensions();
+        }
+        environment.getProtagonist().syncDimensions();
         /* Render the game environment and agents */
         environment.update();
         mediator.renderGame();

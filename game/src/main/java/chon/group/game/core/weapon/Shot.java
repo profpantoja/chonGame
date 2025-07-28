@@ -6,10 +6,6 @@ import chon.group.game.core.agent.Entity;
 import chon.group.game.core.animation.AnimationSpritesheet;
 import chon.group.game.core.animation.AnimationSystem;
 import chon.group.game.messaging.Message;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
 
 public abstract class Shot extends Entity {
 

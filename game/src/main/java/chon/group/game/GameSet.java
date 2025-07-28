@@ -98,8 +98,8 @@ public class GameSet {
                 this.canvasWidth,
                 panel);
 
-        Agent chonBota = new Agent(400, 390, 90, 65, 10, 1000, "/images/agents/chonBota.png", false, false);
-        AnimationSpritesheet idleSheet = new SimpleAnimationSpritesheet(160, 223, 4, 200, "/images/agents/chonBotaAnimated.png");
+        Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false, false);
+        AnimationSpritesheet idleSheet = new SimpleAnimationSpritesheet(64, 90, 4, 200, "/images/agents/chonBotaAnimated.png");
         AnimationGraphics graphics = new AnimationGraphics();
         graphics.addSpritesheet(AnimationStatus.IDLE, idleSheet);
         AnimationSystem animationSystem = new AnimationSystem(graphics);

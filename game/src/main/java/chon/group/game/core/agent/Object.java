@@ -7,10 +7,6 @@ import chon.group.game.messaging.Message;
 
 import chon.group.game.core.animation.AnimationSpritesheet;
 import chon.group.game.core.animation.AnimationSystem;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
 
 /**
  * Represents a generic game object that can be collectible and/or destructible.

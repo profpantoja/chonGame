@@ -2,11 +2,10 @@ package chon.group.game.core.agent;
 
 import java.util.List;
 
-import chon.group.game.core.animation.AnimationSystem;
+import chon.group.game.core.animation.AnimationSpritesheet;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.messaging.Message;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -77,6 +76,16 @@ public class Agent extends Entity {
             return view.snapshot(params, null);
         }
         return baseImage;
+    }
+
+    public void syncDimensions() {
+        if (getAnimationSystem() != null) {
+            AnimationSpritesheet sheet = getAnimationSystem().getGraphics().getSpritesheet(getAnimationSystem().getCurrentStatus());
+            if (sheet != null) {
+                setWidth(sheet.getFrameWidth());
+                setHeight(sheet.getFrameHeight());
+            }
+        }
     }
 
     /**
