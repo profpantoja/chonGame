@@ -3,6 +3,7 @@ package chon.group.game;
 import java.util.ArrayList;
 
 import chon.group.game.core.agent.Agent;
+import chon.group.game.core.animation.AnimationStatus;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.drawer.EnvironmentDrawer;
@@ -65,21 +66,36 @@ public class Game {
         this.updateControls();
         switch (this.status) {
             case START:
+                this.pauseAnimations(false);
                 this.init();
                 break;
             case RUNNING:
+                this.pauseAnimations(false);
                 this.running();
                 break;
             case PAUSED:
+                this.pauseAnimations(true);
                 this.pause();
                 break;
             case WIN:
+                this.pauseAnimations(true);
                 this.win();
                 break;
             case GAME_OVER:
+                this.pauseAnimations(true);
                 this.gameOver();
                 break;
         }
+    }
+
+    public void pauseAnimations(boolean value) {
+        for (Agent agent : environment.getCurrentLevel().getAgents()) {
+            if (agent.getAnimationSystem() != null) agent.getAnimationSystem().setPaused(value);
+        }
+        for (Shot shot : environment.getCurrentLevel().getShots()) {
+            if (shot.getAnimationSystem() != null) shot.getAnimationSystem().setPaused(value);
+        }
+        if (environment.getProtagonist().getAnimationSystem() != null) environment.getProtagonist().getAnimationSystem().setPaused(value);
     }
 
     public void gameOver() {
@@ -105,6 +121,9 @@ public class Game {
             /* ChonBota's Movements */
             environment.getProtagonist().move(input);
             environment.checkBorders();
+        } else {
+            /** If no input, ChonBota stops running */
+            environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.IDLE);
         }
         /* ChonBot's Automatic Movements */
         /* Update the other agents' movements */
