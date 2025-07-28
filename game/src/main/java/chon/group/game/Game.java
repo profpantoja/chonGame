@@ -34,6 +34,16 @@ public class Game {
     private boolean debugMode = true;
     private boolean wantsToStartGame = false;
 
+    private long protagonistAttackEndTime = 0;
+    private long protagonistHitEndTime = 0;
+    private static final long ATTACK_DURATION = 250; // ms, ajuste conforme o tempo do seu spritesheet
+    private static final long HIT_DURATION = 300;  
+    private final java.util.Map<Agent, Long> enemyAttackEndTimes = new java.util.HashMap<>();
+    private final java.util.Map<Agent, Long> enemyHitEndTimes = new java.util.HashMap<>();
+
+    private final long GAMEOVER_DELAY = 12000;
+    private long gameOverStartTime = 0;
+
     private boolean gameOverMusicPlayed = false;
     private boolean victoryMusicPlayed = false;
     private boolean wasPaused = false;
@@ -178,8 +188,9 @@ public class Game {
         if (!gameOverMusicPlayed) {
             SoundManager.update();
             SoundManager.stopAll();
-            SoundManager.playMusic(Game.gameOverMusic);
+            SoundManager.playMusic(Game.gameOverMusic); 
             gameOverMusicPlayed = true;
+            gameOverStartTime = System.currentTimeMillis(); 
         }
 
         environment.updateMessages();
@@ -187,119 +198,186 @@ public class Game {
         environment.updateSlashes();
         mediator.renderGame();
         mediator.drawGameOver();
+
+
+        if (System.currentTimeMillis() - gameOverStartTime >= GAMEOVER_DELAY) {
+            this.status = GameStatus.START; 
+            gameOverMusicPlayed = false;
+            gameOverStartTime = 0;
+        }
     }
 
-    public void running() {
-        String musicToPlay = environment.getCurrentLevel().getBackgroundMusic();
-        if (musicToPlay == null || musicToPlay.isEmpty()) {
-            musicToPlay = Game.gameMusic;
-        }
+    // ...existing code...
 
-        if (!SoundManager.isCurrentMusic(musicToPlay)) {
-            SoundManager.playMusic(musicToPlay);
-        }
+public void running() {
+    String musicToPlay = environment.getCurrentLevel().getBackgroundMusic();
+    if (musicToPlay == null || musicToPlay.isEmpty()) {
+        musicToPlay = Game.gameMusic;
+    }
 
-        if (wasPaused) {
-            SoundManager.resumeMusic();
-            SoundManager.resumeAllSoundEffects();
-            wasPaused = false;
-        }
+    if (!SoundManager.isCurrentMusic(musicToPlay)) {
+        SoundManager.playMusic(musicToPlay);
+    }
 
-        if (!input.isEmpty()) {
-            switch (weaponDecision) {
-                case 1:
-                    if (input.contains("SPACE")) {
-                        input.remove("SPACE");
-                        Shot shot = environment.getProtagonist().useWeapon();
-                        if (shot != null) {
-                            SoundManager.playSound(attack);
-                            environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.ATTACKING);
-                            environment.getCurrentLevel().getShots().add(shot);
-                        }
+    if (wasPaused) {
+        SoundManager.resumeMusic();
+        SoundManager.resumeAllSoundEffects();
+        wasPaused = false;
+    }
+
+    // --- Controle de ataque e movimento do protagonista ---
+    if (!input.isEmpty()) {
+        switch (weaponDecision) {
+            case 1:
+                if (input.contains("SPACE")) {
+                    input.remove("SPACE");
+                    Shot shot = environment.getProtagonist().useWeapon();
+                    if (shot != null) {
+                        SoundManager.playSound(attack);
+                        environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.ATTACKING);
+                        protagonistAttackEndTime = System.currentTimeMillis() + ATTACK_DURATION;
+                        environment.getCurrentLevel().getShots().add(shot);
                     }
-                    else {
-                        environment.getProtagonist().move(input);
-                        environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.RUNNING);
-                        environment.checkBorders();
-                    }
+                }
+                break;
 
-                    break;
-
-                case 2:
-                    if (input.contains("SPACE") && canSlash) {
-                        input.remove("SPACE");
-                        canSlash = true;
-                        Slash slash = environment.getProtagonist().useCloseWeapon();
-                        if (slash != null) {
-                            SoundManager.playSound(attack);
-                            environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.ATTACKING);
-                            environment.getCurrentLevel().getSlashes().add(slash);
-                        }
+            case 2:
+                if (weaponDecision == 2 && input.contains("SPACE") && canSlash) {
+                    input.remove("SPACE");
+                    canSlash = false;
+                    Slash slash = environment.getProtagonist().useCloseWeapon();
+                    if (slash != null) {
+                        SoundManager.playSound(attack);
+                        environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.ATTACKING);
+                        protagonistAttackEndTime = System.currentTimeMillis() + ATTACK_DURATION;
+                        environment.getCurrentLevel().getSlashes().add(slash);
                     }
-                     else {
-                        environment.getProtagonist().move(input);
-                        environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.RUNNING);
-                        environment.checkBorders();
-                    }
-                    break;
-            }   
+                }
+                break;
         }
-        else {
-            environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.IDLE);
+        if (!canSlash && System.currentTimeMillis() >= protagonistAttackEndTime) {
+            canSlash = true;
         }
+    }
 
+    // --- Controle de animação de HIT (dano) do protagonista ---
+    if (environment.getProtagonist().getLastHitTime() > 0 &&
+        System.currentTimeMillis() - environment.getProtagonist().getLastHitTime() < HIT_DURATION) {
+        environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.HIT);
+        protagonistHitEndTime = System.currentTimeMillis() + HIT_DURATION;
+    }
+
+    // --- Controle de status da animação do protagonista ---
+    long now = System.currentTimeMillis();
+    if (now < protagonistAttackEndTime) {
+        environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.ATTACKING);
+    } else if (now < protagonistHitEndTime) {
+        environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.HIT);
+    } else if (!input.isEmpty()) {
+        environment.getProtagonist().move(input);
+        environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.RUNNING);
+        environment.checkBorders();
+    } else {
+        environment.getProtagonist().move(input);
+        environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.IDLE);
+        environment.checkBorders();
+    }
+
+    // --- Controle de animações dos inimigos (exemplo para Zeca) ---
+    for (Agent agent : environment.getCurrentLevel().getAgents()) {
+        if (agent.isEnemy()) {
+            // Se o inimigo está morto, exibe sprite de morte e não move mais
+            if (agent.isDead()) {
+                agent.getAnimationSystem().setStatus(AnimationStatus.DYING);
+                continue;
+            }
+
+            // Ataque automático se perto do protagonista
+            double dx = Math.abs(agent.getPosX() - environment.getProtagonist().getPosX());
+            double dy = Math.abs(agent.getPosY() - environment.getProtagonist().getPosY());
+            if ((dx < 50 && dy < 50) && agent.canAttack) {
+                agent.getAnimationSystem().setStatus(AnimationStatus.ATTACKING);
+                enemyAttackEndTimes.put(agent, now + ATTACK_DURATION);
+                agent.canAttack = false;
+                // Adicione aqui a lógica de ataque real (ex: criar Slash, tirar vida do protagonista, etc)
+            }
+            // Resetar canAttack após o ataque terminar
+            if (!agent.canAttack && enemyAttackEndTimes.containsKey(agent) && now >= enemyAttackEndTimes.get(agent)) {
+                agent.canAttack = true;
+            }
+
+            // Controle de animação de HIT (dano)
+            if (agent.getLastHitTime() > 0 && now - agent.getLastHitTime() < HIT_DURATION) {
+                agent.getAnimationSystem().setStatus(AnimationStatus.HIT);
+                enemyHitEndTimes.put(agent, now + HIT_DURATION);
+            }
+
+            // Controle de status da animação do inimigo
+            Long attackEnd = enemyAttackEndTimes.getOrDefault(agent, 0L);
+            Long hitEnd = enemyHitEndTimes.getOrDefault(agent, 0L);
+
+            if (now < attackEnd) {
+                agent.getAnimationSystem().setStatus(AnimationStatus.ATTACKING);
+            } else if (now < hitEnd) {
+                agent.getAnimationSystem().setStatus(AnimationStatus.HIT);
+            } else {
+                agent.chase(environment.getProtagonist().getPosX(), environment.getProtagonist().getPosY());
+                agent.getAnimationSystem().setStatus(AnimationStatus.RUNNING);
+            }
+        }
+    }
+
+    // --- Atualizações e renderização ---
+    for (Object object : environment.getCurrentLevel().getObjects()) {
         for (Agent agent : environment.getCurrentLevel().getAgents()) {
-            agent.chase(environment.getProtagonist().getPosX(), environment.getProtagonist().getPosY());
-        }
-
-        for (Object object : environment.getCurrentLevel().getObjects()) {
-            for (Agent agent : environment.getCurrentLevel().getAgents()) {
+            if (!agent.isDead()) {
                 object.onCollide(agent, environment.getMessages());
             }
-            for (Shot shot : environment.getCurrentLevel().getShots()) {
-                object.onCollide(shot, environment.getMessages());
-            }
-            object.onCollide(environment.getProtagonist(), environment.getMessages());
         }
-
-        for (Agent agent : environment.getCurrentLevel().getAgents()) {
-            agent.syncDimensions();
+        for (Shot shot : environment.getCurrentLevel().getShots()) {
+            object.onCollide(shot, environment.getMessages());
         }
+        object.onCollide(environment.getProtagonist(), environment.getMessages());
+    }
 
-        environment.getProtagonist().syncDimensions();
-        environment.update();
-        mediator.renderGame();
+    for (Agent agent : environment.getCurrentLevel().getAgents()) {
+        agent.syncDimensions();
+    }
 
-        if (environment.getProtagonist().isDead()) {
-            this.status = GameStatus.GAME_OVER;
-        }
+    environment.getProtagonist().syncDimensions();
+    environment.update();
+    mediator.renderGame();
 
-        if (!environment.hasNextLevel() && environment.getCurrentLevel().isCompleted(environment)) {
-            this.status = GameStatus.WIN;
-        }
+    if (environment.getProtagonist().isDead()) {
+        this.status = GameStatus.GAME_OVER;
+    }
 
-        long currentTime = System.currentTimeMillis();
+    if (!environment.hasNextLevel() && environment.getCurrentLevel().isCompleted(environment)) {
+        this.status = GameStatus.WIN;
+    }
 
-        for (Agent agent : environment.getCurrentLevel().getAgents()) {
-            if (currentTime - agent.getLastShotTime() >= agent.getShotCooldown()) {
-                Shot shot = agent.useWeapon();
-                if (shot != null) {
-                    environment.getCurrentLevel().getShots().add(shot);
-                    agent.setLastShotTime(currentTime);
-                }
-            }
-        }
+    long currentTime = System.currentTimeMillis();
 
-        for (Agent agent : environment.getCurrentLevel().getAgents()) {
-            if (currentTime - agent.getLastShotTime() >= agent.getShotCooldown()) {
-                Slash slash = agent.useCloseWeapon();
-                if (slash != null) {
-                    environment.getCurrentLevel().getSlashes().add(slash);
-                    agent.setLastShotTime(currentTime);
-                }
+    for (Agent agent : environment.getCurrentLevel().getAgents()) {
+        if (!agent.isDead() && currentTime - agent.getLastShotTime() >= agent.getShotCooldown()) {
+            Shot shot = agent.useWeapon();
+            if (shot != null) {
+                environment.getCurrentLevel().getShots().add(shot);
+                agent.setLastShotTime(currentTime);
             }
         }
     }
+
+    for (Agent agent : environment.getCurrentLevel().getAgents()) {
+        if (!agent.isDead() && currentTime - agent.getLastShotTime() >= agent.getShotCooldown()) {
+            Slash slash = agent.useCloseWeapon();
+            if (slash != null) {
+                environment.getCurrentLevel().getSlashes().add(slash);
+                agent.setLastShotTime(currentTime);
+            }
+        }
+    }
+}
 
     public boolean isAttacking() {
         return environment.getProtagonist().getAnimationSystem().getStatus() == AnimationStatus.ATTACKING;

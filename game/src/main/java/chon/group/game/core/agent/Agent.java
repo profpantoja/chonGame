@@ -50,6 +50,8 @@ public class Agent extends Entity {
     private long shotCooldown = 5000; // 5 segundos em milissegundos
     /** The agent's energy cost for using the weapon. */
     private boolean isEnemy;
+    
+    public boolean canAttack = true;
 
 
     /**
@@ -301,6 +303,7 @@ public class Agent extends Entity {
     }
 
     public Slash useCloseWeapon() {
+        if (this.isDead()) return null;
         if (this.getCloseWeapon() == null) return null;
 
         String direction = this.isFlipped() ? "LEFT" : "RIGHT";

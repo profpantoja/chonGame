@@ -3,6 +3,7 @@ package chon.group.game.core.agent;
 import java.util.ArrayList;
 import java.util.List;
 
+import chon.group.game.core.animation.AnimationStatus;
 import chon.group.game.core.animation.AnimationSystem;
 import chon.group.game.messaging.Message;
 import javafx.scene.SnapshotParameters;
@@ -308,6 +309,9 @@ import javafx.scene.paint.Color;
      * @param targetY the target's Y (vertical) position
      */
     public void chase(int targetX, int targetY) {
+        if(this.getAnimationSystem() != null){
+            this.getAnimationSystem().setStatus(AnimationStatus.RUNNING);
+        }
         if (targetX > this.posX) {
             this.move(new ArrayList<String>(List.of("RIGHT")));
         } else if (targetX < this.posX) {

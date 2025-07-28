@@ -6,7 +6,7 @@ import java.util.Map;
 public class AnimationGraphics {
     private final Map<AnimationStatus, AnimationSpritesheet> spritesheets = new EnumMap<>(AnimationStatus.class);
 
-    public void addSpritesheet(AnimationStatus status, AnimationSpritesheet sheet) {
+    public void add(AnimationStatus status, AnimationSpritesheet sheet) {
         spritesheets.put(status, sheet);
     }
 

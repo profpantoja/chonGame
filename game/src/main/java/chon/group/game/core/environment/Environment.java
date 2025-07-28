@@ -392,6 +392,13 @@ public class Environment {
                 SoundManager.playMusic(musicPath);
             }
         }
+        for (Agent agent : this.currentLevel.getAgents()) {
+        if (agent.isEnemy()) {
+            agent.setHealth(agent.getFullHealth());
+            agent.setInvulnerable(false);
+            // Se necessário, resete energia, status, etc.
+        }
+    }
     }
 
 }
