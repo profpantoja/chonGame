@@ -1,5 +1,8 @@
 package chon.group.game.drawer;
 
+import chon.group.game.core.menu.MainMenu;
+import chon.group.game.core.menu.PauseMenu;
+
 /**
  * The {@code EnvironmentDrawer} interface defines methods for rendering
  * various elements in the game environment. It provides essential drawing
@@ -76,6 +79,15 @@ public interface EnvironmentDrawer {
      */
     void drawGameOver();
 
+    /**
+     * Draws the main menu of the game, typically shown at the start or when returning to the main menu. 
+     */
+    void drawMainMenu(MainMenu mainMenu);
+
+    /**
+     * Draws the pause menu with options to resume or exit the game.
+     */
+    void drawPauseMenu(PauseMenu menuPause);
 
 
 }

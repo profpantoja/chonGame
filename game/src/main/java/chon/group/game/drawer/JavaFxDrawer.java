@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 
 /**
  * The {@code JavaFxDrawer} class is responsible for rendering various elements
@@ -31,6 +32,24 @@ public class JavaFxDrawer {
     public JavaFxDrawer(GraphicsContext gc, EnvironmentDrawer mediator) {
         this.gc = gc;
         this.mediator = mediator;
+    }
+
+    /**
+     * Returns the width of the canvas used for rendering.
+     *
+     * @return The width of the canvas.
+     */
+    public double getCanvasWidth() {
+        return this.gc.getCanvas().getWidth();
+    }
+
+    /**
+     * Returns the height of the canvas used for rendering.
+     *
+     * @return The height of the canvas.
+     */
+    public double getCanvasHeight() {
+        return this.gc.getCanvas().getHeight();
     }
 
     /**
@@ -352,4 +371,89 @@ public class JavaFxDrawer {
 
         gc.setGlobalAlpha(1.0);
     }
+
+    /**
+     * Desenha um menu genérico e estilizado, com a opção de um fundo de imagem customizado.
+     *
+     * @param title O título a ser exibido no topo do menu.
+     * @param selectedIndex O índice da opção atualmente selecionada (para destaque).
+     * @param backgroundImageUrl A URL para uma imagem de fundo para o menu. Se for nula ou inválida, usa a cor padrão.
+     * @param options As opções de texto a serem listadas no menu.
+     */
+
+     public void drawMenuPause(String title, int selectedIndex, Image backgroundImage, String... options) {
+        double menuWidth = 350;
+        double menuHeight = 150 + (options.length * 50); 
+        
+        double menuX = (getCanvasWidth() - menuWidth) / 2;
+        double menuY = (getCanvasHeight() - menuHeight) / 2;
+
+        gc.setFill(Color.rgb(0, 0, 0, 0.7));
+        gc.fillRect(0, 0, getCanvasWidth(), getCanvasHeight());
+        
+        // draw the background image if available, otherwise use a solid color
+        if (backgroundImage != null && !backgroundImage.isError()) {
+            gc.drawImage(backgroundImage, menuX, menuY, menuWidth, menuHeight);
+        } else {
+            gc.setFill(Color.rgb(40, 40, 60, 0.9));
+            gc.fillRect(menuX, menuY, menuWidth, menuHeight); 
+        }
+
+        gc.setStroke(Color.rgb(150, 150, 180));
+        gc.setLineWidth(2);
+        gc.strokeRect(menuX, menuY, menuWidth, menuHeight); 
+        gc.setFont(Font.font("Verdana", FontWeight.BOLD, 32));
+        gc.setFill(Color.WHITE);
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.fillText(title, getCanvasWidth() / 2, menuY + 330);
+
+        gc.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        for (int i = 0; i < options.length; i++) {
+            gc.setFill((i == selectedIndex) ? Color.YELLOW : Color.WHITE);
+            double optionY = menuY + 380 + (i * 50);
+            gc.fillText(options[i], getCanvasWidth() / 2, optionY);
+        }
+        
+        gc.setTextAlign(TextAlignment.LEFT);
+    }
+
+    /**
+     * Desenha o menu principal do jogo, com um fundo que preenche a tela inteira.
+     *
+     * @param backgroundImage A imagem para preencher toda a tela. Se for nula, usa um fundo preto.
+     * @param title O título do menu central.
+     * @param selectedIndex O índice da opção atualmente selecionada.
+     * @param options As opções de texto para o menu central.
+     */
+    public void drawMainMenu(Image backgroundImage, String title, int selectedIndex, String... options) {
+    // 1. Fundo
+    if (backgroundImage != null && !backgroundImage.isError()) {
+        gc.drawImage(backgroundImage, 0, 0, getCanvasWidth(), getCanvasHeight());
+    } else {
+        gc.setFill(Color.BLACK);
+        gc.fillRect(0, 0, getCanvasWidth(), getCanvasHeight());
+    }
+
+    double centerX = getCanvasWidth() / 2;
+
+    // 2. Título "ENGINE" no topo
+    gc.setFont(Font.font("Verdana", FontWeight.BOLD, 28));
+    gc.setFill(Color.LIGHTGRAY);
+    gc.setTextAlign(TextAlignment.CENTER);
+    gc.fillText(title, centerX, getCanvasHeight() * 0.75); // pode ajustar essa altura conforme sua imagem
+
+    // 3. Opções do menu abaixo da palavra "ENGINE"
+    gc.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
+    double firstOptionY = getCanvasHeight() * 0.82;
+
+    for (int i = 0; i < options.length; i++) {
+        double optionY = firstOptionY + (i * 45); // espaço entre as opções
+        gc.setFill((i == selectedIndex) ? Color.YELLOW : Color.WHITE);
+        gc.fillText(options[i], centerX, optionY);
+    }
+
+    // Reset alinhamento
+    gc.setTextAlign(TextAlignment.LEFT);
+}
+
 }

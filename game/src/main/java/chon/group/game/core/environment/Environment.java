@@ -11,6 +11,7 @@ import chon.group.game.core.weapon.Panel;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Slash;
 import chon.group.game.messaging.Message;
+import chon.group.game.sound.SoundManager;
 import javafx.scene.image.Image;
 
 /**
@@ -226,7 +227,8 @@ public class Environment {
                     collectedCount++;
                     score += 10;
                 }
-            } else if (object.isCollected() && object.isCollectible()) {
+            } else if ((object.isCollected() && object.isCollectible()) || 
+            (object.isDestroyed() && object.isDestructible())) {
                 iterator.remove();
             }
         }
@@ -363,6 +365,11 @@ public class Environment {
         updateLevel();
     }
 
+    public boolean hasNextLevel() {
+        int currentIndex = levels.indexOf(currentLevel);
+        return currentIndex < levels.size() - 1;
+    }
+
     public void loadNextLevel() {
         if (currentLevel == null)
             this.currentLevel = levels.get(0);
@@ -371,9 +378,20 @@ public class Environment {
             if (levelIndex >= this.getLevels().size() - 1) {
                 levelIndex = this.getLevels().size() - 1;
                 this.currentLevel = this.getLevels().get(levelIndex);
-            } else
+            } else {
                 this.currentLevel = this.getLevels().get(levelIndex + 1);
+                this.protagonist.setPosX(10);
+                this.protagonist.setPosY(600);
+                this.camera.setPosX(0);
+                this.camera.setLevelWidth(this.currentLevel.getWidth());
+            }
         }
-
+        if (this.currentLevel.getBackgroundMusic() != null) {
+            String musicPath = this.currentLevel.getBackgroundMusic();
+            if (!SoundManager.isCurrentMusic(musicPath)) {
+                SoundManager.playMusic(musicPath);
+            }
+        }
     }
+
 }

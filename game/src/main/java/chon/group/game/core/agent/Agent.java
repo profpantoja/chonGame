@@ -3,10 +3,15 @@ package chon.group.game.core.agent;
 import java.util.List;
 
 import chon.group.game.core.weapon.CloseWeapon;
+import chon.group.game.core.animation.AnimationSpritesheet;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Slash;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.messaging.Message;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 
 /**
  * Represents an agent in the game, with properties such as position, size,
@@ -68,6 +73,37 @@ public class Agent extends Entity {
         this.shotCooldown = shotCooldown;
     }
 
+
+    @Override
+    public Image getImage() {
+        Image baseImage;
+        if (getAnimationSystem() != null) {
+            baseImage = getAnimationSystem().getCurrentFrameImage();
+        } else {
+            baseImage = image;
+        }
+        if (isFlipped() && baseImage != null && getAnimationSystem() != null) {
+            ImageView view = new ImageView(baseImage);
+            view.setScaleX(-1);
+            view.setFitWidth(getWidth());
+            view.setFitHeight(getHeight());
+            SnapshotParameters params = new SnapshotParameters();
+            params.setFill(Color.TRANSPARENT);
+            return view.snapshot(params, null);
+        }
+        return baseImage;
+    }
+
+    public void syncDimensions() {
+        if (getAnimationSystem() != null) {
+            AnimationSpritesheet sheet = getAnimationSystem().getGraphics().getSpritesheet(getAnimationSystem().getCurrentStatus());
+            if (sheet != null) {
+                setWidth(sheet.getFrameWidth());
+                setHeight(sheet.getFrameHeight());
+            }
+        }
+    }
+  
 
     /**
      * Gets the last hit taken.
@@ -237,6 +273,7 @@ public class Agent extends Entity {
         if (!this.invulnerable) {
             super.takeDamage(damage, messages);
             this.lastHitTime = System.currentTimeMillis();
+            // SoundManager.playSound("sounds/hurt.wav"); não há som de quando o agente toma dano
         }
     }
 
@@ -274,7 +311,6 @@ public class Agent extends Entity {
             return null;
     }
 
-
     public boolean isEnemy() {
         return isEnemy;
     }
@@ -282,4 +318,5 @@ public class Agent extends Entity {
     public void setEnemy(boolean isEnemy) {
         this.isEnemy = isEnemy;
     }
+
 }
