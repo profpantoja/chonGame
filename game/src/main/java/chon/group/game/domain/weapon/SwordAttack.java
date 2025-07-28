@@ -1,13 +1,13 @@
 package chon.group.game.domain.weapon;
 
 import chon.group.game.core.agent.Agent;
-import chon.group.game.core.weapon.Shot;
+import chon.group.game.core.weapon.Slash;
 
-public class Rocket extends Shot {
+public class SwordAttack extends Slash {
 
-    public Rocket(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped,
+    public SwordAttack(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped,
             int damage, String direction, Agent owner) {
         super(posX, posY, height, width, speed, health, pathImage, flipped, damage, direction, owner);
     }
-    
+
 }

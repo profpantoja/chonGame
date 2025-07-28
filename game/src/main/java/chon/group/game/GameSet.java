@@ -12,12 +12,14 @@ import chon.group.game.core.animation.AnimationSystem;
 import chon.group.game.core.animation.SimpleAnimationSpritesheet;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.environment.Level;
+import chon.group.game.core.weapon.CloseWeapon;
 import chon.group.game.core.menu.MainOption;
 import chon.group.game.core.menu.PauseOption;
 import chon.group.game.core.weapon.Panel;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.domain.weapon.Cannon;
 import chon.group.game.domain.weapon.Lancer;
+import chon.group.game.domain.weapon.Sword;
 import chon.group.game.core.menu.MenuTextManager;
 
 public class GameSet {
@@ -98,26 +100,45 @@ public class GameSet {
                 this.canvasWidth,
                 panel);
 
+
         Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false, false);
         AnimationSpritesheet idleSheet = new SimpleAnimationSpritesheet(64, 90, 4, 200, "/images/agents/chonBotaAnimated.png");
         AnimationGraphics graphics = new AnimationGraphics();
         graphics.addSpritesheet(AnimationStatus.IDLE, idleSheet);
         AnimationSystem animationSystem = new AnimationSystem(graphics);
         chonBota.setAnimationSystem(animationSystem);
+
         Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, 0.05, "", false);
         Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
+        CloseWeapon sword = new Sword(400, 390, 0, 0, 3, 0,  "", false);
+        chonBota.setCloseWeapon(sword);
 
-        chonBota.setWeapon(cannon);
+
+        
         chonBota.setWeapon(lancer);
+
+
+        Agent chonBot = new Agent(420, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
+     
+        CloseWeapon closeWeapon1 = new Sword(420, 440, 0, 0, 3, 0, "", false);
+        CloseWeapon closeWeapon2 = new Sword(920, 440, 0, 0, 3, 0, "", false);
 
         Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
         Agent enemy = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
+
         environment.setProtagonist(chonBota);
+        chonBot.setCloseWeapon(closeWeapon1);
+        chonBot2.setCloseWeapon(closeWeapon2);
+
+        chonBot.setEnemy(true);
+        chonBot2.setEnemy(true);
         environment.setPauseImage("/images/environment/pause.png");
         environment.setGameOverImage("/images/environment/gameover.png");
 
         level1.getAgents().add(chonBot);
+        level1.getAgents().add(chonBot2);
         level2.getAgents().add(enemy);
+
 
         /* Set up some collectable objects */
         List<Object> objects = new ArrayList<>();

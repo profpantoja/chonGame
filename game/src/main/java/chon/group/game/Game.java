@@ -11,6 +11,7 @@ import chon.group.game.core.menu.MainOption;
 import chon.group.game.core.menu.PauseMenu;
 import chon.group.game.core.menu.PauseOption;
 import chon.group.game.core.weapon.Shot;
+import chon.group.game.core.weapon.Slash;
 import chon.group.game.drawer.EnvironmentDrawer;
 import javafx.scene.input.KeyEvent;
 import chon.group.game.sound.SoundManager;
@@ -26,8 +27,14 @@ public class Game {
     private PauseMenu menuPause;
     private Environment environment;
     private EnvironmentDrawer mediator;
-    private ArrayList<String> input;
+    ArrayList<String> input;
     private GameStatus status = GameStatus.START;
+    /* If the game is paused or not. */
+    private boolean isPaused = false;
+    /* If the player can slash again or not. */
+    private boolean canSlash = true;
+    /* If the player has made a decision about the weapon to use. */
+    private int weaponDecision = 1; // 0  = both, 1 = fireball, 2 = sword
     private boolean debugMode = true;
     private boolean wantsToStartGame = false;
 
@@ -40,7 +47,7 @@ public class Game {
     public static final String menuMusic = "/sounds/menuSound.wav";
     public static final String winSound = "/sounds/winSound.wav";
     public static final String attack = "/sounds/attackFX.wav";
-    
+
     public Game(Environment environment, EnvironmentDrawer mediator, ArrayList<String> input) {
         this.environment = environment;
         this.mediator = mediator;
@@ -168,7 +175,10 @@ public class Game {
         }
         environment.updateMessages();
         environment.updateShots();
+        environment.updateSlashes();
         mediator.renderGame();
+        
+
         /** Rendering the Game Over Screen */
         mediator.drawGameOver();
     }
@@ -189,20 +199,48 @@ public class Game {
             wasPaused = false;
         }
         
+
         /** ChonBota Only Moves if the Player Press Something */
         /** Update the protagonist's movements if input exists */
         if (!input.isEmpty()) {
             /** ChonBota Shoots Somebody Who Outdrew You */
             /** But only if she has enough energy */
-            if (input.contains("SPACE")) {
-                input.remove("SPACE");
-                Shot shot = environment.getProtagonist().useWeapon();
-                if (shot != null){
-                    // Play the attack sound effect while have stamina for shooting.
-                    SoundManager.playSound(attack); 
-                    environment.getCurrentLevel().getShots().add(shot);
-                }
-            }
+
+
+              /* chonbota Only Moves if the Player Press Something */
+            /* Update the protagonist's movements if input exists */
+                if (!input.isEmpty()) {
+                    switch(weaponDecision){
+                        case 1:// Fireball weapon available
+                            if (input.contains("SPACE")) {
+                                input.remove("SPACE");
+                                Shot shot = environment.getProtagonist().useWeapon();
+                                if (shot != null){
+                                    SoundManager.playSound(attack); 
+                                    environment.getCurrentLevel().getShots().add(shot);
+                                }
+                            }
+                        break;
+
+                        case 2: // Sword weapon available
+                            if (input.contains("SPACE") && canSlash) {
+                                input.remove("SPACE");
+                                canSlash = true; // prevents multiple slashes in a row
+                                Slash slash = environment.getProtagonist().useCloseWeapon();
+                                
+                                if (slash != null){
+                                SoundManager.playSound(attack); 
+                                environment.getCurrentLevel().getSlashes().add(slash);
+                                }
+                                
+                            }
+
+                        break;
+
+                     }
+
+             }
+
             /* ChonBota's Movements */
             environment.getProtagonist().move(input);
             environment.checkBorders();
@@ -242,11 +280,40 @@ public class Game {
         /* If the agent died in this loop */
         if (environment.getProtagonist().isDead()){
             this.status = GameStatus.GAME_OVER;
-        }
-
+        
         if (!environment.hasNextLevel() && environment.getCurrentLevel().isCompleted(environment)) {
             this.status = GameStatus.WIN;
         }
+
+
+
+        /* Enemies Shooting */
+        long currentTime = System.currentTimeMillis();
+
+        for (Agent agent : environment.getCurrentLevel().getAgents()) {
+
+                if (currentTime - agent.getLastShotTime() >= agent.getShotCooldown()) {
+                    Shot shot = agent.useWeapon();
+                    if (shot != null) {
+                        environment.getCurrentLevel().getShots().add(shot);
+                        agent.setLastShotTime(currentTime);
+                    }
+                }
+
+        }
+
+        for (Agent agent : environment.getCurrentLevel().getAgents()) {
+
+                if (currentTime - agent.getLastShotTime() >= agent.getShotCooldown()) {
+                    Slash slash = agent.useCloseWeapon();
+                    if (slash != null) {
+                        environment.getCurrentLevel().getSlashes().add(slash);
+                        agent.setLastShotTime(currentTime);
+                    }
+                }
+
+        }
+
     }
 
     public void pause() {

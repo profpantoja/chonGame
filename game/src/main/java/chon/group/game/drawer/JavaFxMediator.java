@@ -8,10 +8,10 @@ import chon.group.game.core.environment.Environment;
 import chon.group.game.core.menu.MainMenu;
 import chon.group.game.core.menu.PauseMenu;
 import chon.group.game.core.weapon.Shot;
+import chon.group.game.core.weapon.Slash;
 import chon.group.game.messaging.Message;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-
 /**
  * The {@code JavaFxMediator} class serves as an intermediary for rendering the
  * game environment and its elements using JavaFX. It coordinates the
@@ -21,8 +21,8 @@ import javafx.scene.paint.Color;
  */
 public class JavaFxMediator implements EnvironmentDrawer {
 
-    private final Environment environment;
-    private final JavaFxDrawer drawer;
+        private final Environment environment;
+        private final JavaFxDrawer drawer;
 
     /**
      * Constructs a JavaFxMediator with the specified environment and graphics
@@ -47,6 +47,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
         this.drawAgents();
         this.drawObjects();
         this.drawShots();
+        this.drawSlashes();
         this.drawMessages();
     }
 
@@ -243,13 +244,13 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     message.getPosX() - this.environment.getCamera().getPosX(),
                     message.getPosY());
         }
-    }
 
+    } 
     /**
      * Renders all active shots (projectiles) currently in the environment.
      */
     @Override
-    public void drawShots() {
+    public void drawShots(){
         Iterator<Shot> iterator = this.environment.getCurrentLevel().getShots().iterator();
         while (iterator.hasNext()) {
             Shot shot = iterator.next();
@@ -260,6 +261,24 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     shot.getHeight());
         }
     }
+
+
+        /**
+         * Renders all slashes within the environment.
+         */
+        @Override
+        public void drawSlashes(){
+            Iterator<Slash> iterator = this.environment.getCurrentLevel().getSlashes().iterator();
+            while (iterator.hasNext()) {
+                Slash slash = iterator.next();
+                drawer.drawImage(slash.getImage(),
+                        (int) this.environment.getCamera().updateEntity(slash),
+                        slash.getPosY(),
+                        slash.getWidth(),
+                        slash.getHeight());
+            }
+        }
+
 
      /**
      * Draws the main menu with the specified background image, title, selected
@@ -286,4 +305,5 @@ public class JavaFxMediator implements EnvironmentDrawer {
         menuPause.getLabels() // idem
     );
     }
+
 }

@@ -68,7 +68,12 @@ public interface EnvironmentDrawer {
      * Draws the Game Over screen when the protagonist is dead.
      */
     void drawShots();
-
+    
+    /**
+     * Draws all the slashes on the screen.
+     */
+    void drawSlashes();
+    
     /**
      * Draws the Game Over screen when the protagonist is dead.
      */
@@ -83,5 +88,6 @@ public interface EnvironmentDrawer {
      * Draws the pause menu with options to resume or exit the game.
      */
     void drawPauseMenu(PauseMenu menuPause);
+
 
 }

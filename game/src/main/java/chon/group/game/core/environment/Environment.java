@@ -9,6 +9,7 @@ import chon.group.game.core.agent.Entity;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.weapon.Panel;
 import chon.group.game.core.weapon.Shot;
+import chon.group.game.core.weapon.Slash;
 import chon.group.game.messaging.Message;
 import chon.group.game.sound.SoundManager;
 import javafx.scene.image.Image;
@@ -254,29 +255,86 @@ public class Environment {
         Iterator<Shot> itShot = this.currentLevel.getShots().iterator();
         while (itShot.hasNext()) {
             Shot shot = itShot.next();
+
             if ((shot.getPosX() > this.currentLevel.getWidth()) || ((shot.getPosX() + shot.getWidth()) < 0)) {
                 itShot.remove();
-            } else {
-                if (intersect(protagonist, shot)) {
+                continue;
+            }
+
+            Agent owner = shot.getOwner(); 
+
+            if (intersect(protagonist, shot)) {
+                if (owner != protagonist && owner.isEnemy() != protagonist.isEnemy()) {
                     protagonist.takeDamage(shot.getDamage(), messages);
                     itShot.remove();
-                } else {
-                    Iterator<Agent> itAgent = this.currentLevel.getAgents().iterator();
-                    while (itAgent.hasNext()) {
-                        Agent agent = itAgent.next();
-                        if (intersect(agent, shot)) {
-                            agent.takeDamage(shot.getDamage(), messages);
-                            if (agent.isDead())
-                                itAgent.remove();
-                            itShot.remove();
-                            break;
-                        }
-                    }
+                    continue;
                 }
-                shot.move(new ArrayList<>(List.of(shot.getDirection())));
             }
+
+            Iterator<Agent> itAgent = this.currentLevel.getAgents().iterator();
+            while (itAgent.hasNext()) {
+                Agent agent = itAgent.next();
+
+                
+                if (owner == agent) continue;
+
+                if (owner != null && owner.isEnemy() == agent.isEnemy()) continue;
+
+                if (intersect(agent, shot)) {
+                    agent.takeDamage(shot.getDamage(), messages);
+                    if (agent.isDead()) {
+                        itAgent.remove();
+                    }
+                    itShot.remove();
+                    break;
+                }
+            }
+
+            
+            shot.move(new ArrayList<>(List.of(shot.getDirection())));
         }
     }
+
+
+    public void updateSlashes() {
+    Iterator<Slash> itSlash = this.currentLevel.getSlashes().iterator();
+    while (itSlash.hasNext()) {
+        Slash slash = itSlash.next();
+
+        boolean hit = false;
+        Agent owner = slash.getOwner();
+
+        Iterator<Agent> itAgent = this.currentLevel.getAgents().iterator();
+        while (itAgent.hasNext()) {
+            Agent agent = itAgent.next();
+
+            if (owner == agent) continue;
+            if (owner != null && owner.isEnemy() == agent.isEnemy()) continue;
+
+            if (intersect(agent, slash)) {
+                agent.takeDamage(slash.getDamage(), messages);
+                if (agent.isDead()) {
+                    itAgent.remove();
+                }
+                hit = true;
+                break;
+            }
+        }
+
+        if (!hit && intersect(protagonist, slash)) {
+            if (owner != protagonist && owner.isEnemy() != protagonist.isEnemy()) {
+                protagonist.takeDamage(slash.getDamage(), messages);
+                hit = true;
+            }
+        }
+
+        if (hit || slash.shouldRemove()) {
+            itSlash.remove();
+        }
+    }
+}
+
+
 
     /**
      * Updates the camera based on the protagonist’s current position.
@@ -299,6 +357,7 @@ public class Environment {
     public void update() {
         updateObjects();
         updateShots();
+        updateSlashes();
         updateMessages();
         updateCamera();
         detectCollision();
