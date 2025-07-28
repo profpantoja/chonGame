@@ -26,9 +26,9 @@ public class Lancer extends Weapon {
                 64,
                 4,
                 0,
-                "/images/weapons/fireball/fireball001.png",
+                "/images/weapons/shots/shot.png",
                 false,
-                500,
+                100,
                 direction,
                 owner);
     }

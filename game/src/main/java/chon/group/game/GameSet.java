@@ -81,18 +81,25 @@ public class GameSet {
                 0,
                 canvasHeight,
                 8024,
-                "/images/environment/castleLong.png");
+                "/images/environment/DungeonLong1.png");
 
         Level level2 = new Level(
                 0,
                 0,
                 canvasHeight,
-                8000,
-                "/images/environment/mountain.png");
+                8024,
+                "/images/environment/DungeonLong2.png");
 
+        Level level3 = new Level(
+                0,
+                0,
+                canvasHeight,
+                1280,
+                "/images/environment/BossMap.png");       
         /* Set background music for each level */
         level1.setBackgroundMusic(Game.gameMusic);
         level2.setBackgroundMusic(Game.menuMusic);
+        level3.setBackgroundMusic(Game.gameMusic);
 
         environment = new Environment(
                 this.canvasHeight,
@@ -100,64 +107,170 @@ public class GameSet {
                 this.canvasWidth,
                 panel);
 
-        Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false, false);
-        AnimationSpritesheet idleChonBota = new SimpleAnimationSpritesheet(42, 81, 2, 2000, "/images/agents/MarioIdle.png");
-        AnimationSpritesheet runChonBota = new SimpleAnimationSpritesheet(51, 81, 7, 500, "/images/agents/MarioRun.png");
-        AnimationSpritesheet attackChonBota = new SimpleAnimationSpritesheet(42, 81, 2, 100000000, "/images/agents/MarioAttack.png");
+        Agent protagonist = new Agent(200, 544, 88, 152, 3, 2000, "/images/agents/protagonist/protagonist.png", false, false);
+        AnimationSpritesheet idleProtagonist = new SimpleAnimationSpritesheet(152, 88, 10, 2000, "/images/agents/protagonist/idle_animation.png");
+        AnimationSpritesheet runProtagonist = new SimpleAnimationSpritesheet(152, 88, 6, 500, "/images/agents/protagonist/walk_animation.png");
+        AnimationSpritesheet attackProtagonist = new SimpleAnimationSpritesheet(152, 88, 6, 200, "/images/agents/protagonist/attack_animation.png");
+        AnimationSpritesheet hitProtagonist = new SimpleAnimationSpritesheet(152, 88, 1, 60, "/images/agents/protagonist/damage_animation.png");
+        AnimationSpritesheet jumpProtagonist = new SimpleAnimationSpritesheet(152, 88, 7, 1000, "/images/agents/protagonist/jump_animation.png");
+        AnimationSpritesheet deathProtagonist = new SimpleAnimationSpritesheet(152, 88, 5, 10000, "/images/agents/protagonist/death_animation.png");
 
-        AnimationGraphics chonBotaGraphics = new AnimationGraphics();
-        chonBotaGraphics.addSpritesheet(AnimationStatus.IDLE, idleChonBota);
-        chonBotaGraphics.addSpritesheet(AnimationStatus.RUNNING, runChonBota);
-        chonBotaGraphics.addSpritesheet(AnimationStatus.ATTACKING, attackChonBota);
-        AnimationSystem chonBotaSystem = new AnimationSystem(chonBotaGraphics);
-        chonBota.setAnimationSystem(chonBotaSystem);
+        AnimationGraphics protagonistGraphics = new AnimationGraphics();
+        protagonistGraphics.addSpritesheet(AnimationStatus.IDLE, idleProtagonist);
+        protagonistGraphics.addSpritesheet(AnimationStatus.RUNNING, runProtagonist);
+        protagonistGraphics.addSpritesheet(AnimationStatus.ATTACKING, attackProtagonist);
+        protagonistGraphics.addSpritesheet(AnimationStatus.HIT, hitProtagonist);
+        protagonistGraphics.addSpritesheet(AnimationStatus.JUMPING, jumpProtagonist);
+        protagonistGraphics.addSpritesheet(AnimationStatus.DYING, deathProtagonist);
+        AnimationSystem protagonistSystem = new AnimationSystem(protagonistGraphics);
+        
+        protagonist.setAnimationSystem(protagonistSystem);
 
         Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, 0.05, "", false);
         Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
         Weapon lancer2 = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
         CloseWeapon sword = new Sword(400, 390, 0, 0, 3, 0,  "", false);
+        CloseWeapon sword2 = new Sword(400, 390, 0, 0, 3, 0,  "", false);
+        CloseWeapon sword3 = new Sword(400, 390, 0, 0, 3, 0,  "", false);
+        CloseWeapon sword4 = new Sword(400, 390, 0, 0, 3, 0,  "", false);
 
         
-        chonBota.setCloseWeapon(sword);
-        //chonBota.setWeapon(lancer);
+        protagonist.setCloseWeapon(sword);
 
-        Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
-        AnimationSpritesheet idleChonBot = new SimpleAnimationSpritesheet(42, 81, 2, 1000, "/images/agents/MarioIdle.png");
+        // Sets for the enemy
 
-        AnimationGraphics chonBotGraphics = new AnimationGraphics();
-        chonBotGraphics.addSpritesheet(AnimationStatus.IDLE, idleChonBot);
+        Agent shooter = new Agent(5000, 435, 70, 80, 1, 500, "/images/agents/shooter/shooter.png", true, true);
 
-        AnimationSystem chonBotSystem = new AnimationSystem(chonBotGraphics);
-        chonBot.setAnimationSystem(chonBotSystem);
-        
-        environment.setProtagonist(chonBota);
-        chonBot.setWeapon(lancer2);
+        // Animações do ShooterEnemy
+        AnimationSpritesheet idleShooter = new SimpleAnimationSpritesheet(80, 70, 6, 1000, "/images/agents/shooter/Shooter_idle_animation.png");
+        AnimationSpritesheet walkShooter = new SimpleAnimationSpritesheet(80, 70, 6, 600, "/images/agents/shooter/Shooter_walk_animation.png");
+        AnimationSpritesheet attackShooter = new SimpleAnimationSpritesheet(80, 70, 6, 500, "/images/agents/shooter/Shooter_attack_animation.png");
+        AnimationSpritesheet hitShooter = new SimpleAnimationSpritesheet(80, 70, 1, 400, "/images/agents/shooter/Shooter_damage_animation.png");
+        AnimationSpritesheet deathShooter = new SimpleAnimationSpritesheet(80, 70, 3, 1000, "/images/agents/shooter/Shooter_death_animation.png");
+        AnimationSpritesheet jumpShooter = new SimpleAnimationSpritesheet(80, 70, 2, 1000, "/images/agents/shooter/Shooter_jump_animation.png");
 
-        chonBot.setEnemy(true);
-        //enemy.setEnemy(true) ;
+        AnimationGraphics shooterGraphics = new AnimationGraphics();
+        shooterGraphics.addSpritesheet(AnimationStatus.IDLE, idleShooter);
+        shooterGraphics.addSpritesheet(AnimationStatus.RUNNING, walkShooter);
+        shooterGraphics.addSpritesheet(AnimationStatus.ATTACKING, attackShooter);
+        shooterGraphics.addSpritesheet(AnimationStatus.HIT, hitShooter);
+        shooterGraphics.addSpritesheet(AnimationStatus.DYING, deathShooter);
+        shooterGraphics.addSpritesheet(AnimationStatus.JUMPING, jumpShooter);
+
+        AnimationSystem shooterSystem = new AnimationSystem(shooterGraphics);
+        shooter.setAnimationSystem(shooterSystem);
+        shooter.setEnemy(true);
+        shooter.setWeapon(lancer);
+
+
+        // Sets for the enemy
+
+        Agent skeleton = new Agent(1000, 440, 64, 64, 1, 500, "/images/agents/skeleton/sk_walk_animation.png", true, true);
+
+        // Animações do SkeletonEnemy
+        AnimationSpritesheet idleSkeleton = new SimpleAnimationSpritesheet(64, 64, 5, 1000, "/images/agents/skeleton/sk_walk_animation.png");
+        AnimationSpritesheet walkSkeleton = new SimpleAnimationSpritesheet(64, 64, 5, 1000, "/images/agents/skeleton/sk_walk_animation.png");
+        AnimationSpritesheet attackSkeleton = new SimpleAnimationSpritesheet(64, 64, 5, 1000, "/images/agents/skeleton/sk_walk_animation.png");
+        AnimationSpritesheet hitSkeleton = new SimpleAnimationSpritesheet(64, 64, 5, 1000, "/images/agents/skeleton/sk_walk_animation.png");
+        AnimationSpritesheet deathSkeleton = new SimpleAnimationSpritesheet(64, 64, 5, 1000, "/images/agents/skeleton/sk_walk_animation.png");
+        AnimationSpritesheet jumpSkeleton = new SimpleAnimationSpritesheet(64, 64, 5, 1000, "/images/agents/skeleton/sk_walk_animation.png");
+
+        AnimationGraphics skeletonGraphics = new AnimationGraphics();
+        skeletonGraphics.addSpritesheet(AnimationStatus.IDLE, idleSkeleton);
+        skeletonGraphics.addSpritesheet(AnimationStatus.RUNNING, walkSkeleton);
+        skeletonGraphics.addSpritesheet(AnimationStatus.ATTACKING, attackSkeleton);
+        skeletonGraphics.addSpritesheet(AnimationStatus.HIT, hitSkeleton);
+        skeletonGraphics.addSpritesheet(AnimationStatus.DYING, deathSkeleton);
+        skeletonGraphics.addSpritesheet(AnimationStatus.JUMPING, jumpSkeleton);
+
+        AnimationSystem skeletonSystem = new AnimationSystem(skeletonGraphics);
+        skeleton.setAnimationSystem(skeletonSystem);
+        skeleton.setEnemy(true);
+        skeleton.setCloseWeapon(sword2);
+
+        // Sets for the enemy
+
+        Agent skeletonWH = new Agent(2000, 440, 62, 70, 1, 500, "/images/agents/skeleton/skeleton_wh_animation.png", true, true);
+
+        // Animações do SkeletonEnemy Without
+        AnimationSpritesheet idleSkeletonWH = new SimpleAnimationSpritesheet(70, 62, 6, 1000, "/images/agents/skeleton/skeleton_wh_animation.png");
+        AnimationSpritesheet walkSkeletonWH = new SimpleAnimationSpritesheet(70, 62, 6, 1000, "/images/agents/skeleton/skeleton_wh_animation.png");
+        AnimationSpritesheet attackSkeletonWH = new SimpleAnimationSpritesheet(70, 62, 6, 1000, "/images/agents/skeleton/skeleton_wh_animation.png");
+        AnimationSpritesheet hitSkeletonWH = new SimpleAnimationSpritesheet(70, 62, 6, 1000, "/images/agents/skeleton/skeleton_wh_animation.png");
+        AnimationSpritesheet deathSkeletonWH = new SimpleAnimationSpritesheet(70, 62, 6, 1000, "/images/agents/skeleton/skeleton_wh_animation.png");
+        AnimationSpritesheet jumpSkeletonWH = new SimpleAnimationSpritesheet(70, 62, 6, 1000, "/images/agents/skeleton/skeleton_wh_animation.png");
+
+        AnimationGraphics skeletonWHGraphics = new AnimationGraphics();
+        skeletonWHGraphics.addSpritesheet(AnimationStatus.IDLE, idleSkeletonWH);
+        skeletonWHGraphics.addSpritesheet(AnimationStatus.RUNNING, walkSkeletonWH);
+        skeletonWHGraphics.addSpritesheet(AnimationStatus.ATTACKING, attackSkeletonWH);
+        skeletonWHGraphics.addSpritesheet(AnimationStatus.HIT, hitSkeletonWH);
+        skeletonWHGraphics.addSpritesheet(AnimationStatus.DYING, deathSkeletonWH);
+        skeletonWHGraphics.addSpritesheet(AnimationStatus.JUMPING, jumpSkeletonWH);
+
+        AnimationSystem skeletonWHSystem = new AnimationSystem(skeletonWHGraphics);
+        skeletonWH.setAnimationSystem(skeletonWHSystem);
+        skeletonWH.setEnemy(true);
+        skeletonWH.setCloseWeapon(sword3);
+
+        // Sets for the enemy
+
+        Agent boss = new Agent(700, 440, 70, 88, 1, 500, "/images/agents/boss/rico.png", true, true);
+
+        // Animações do Boss Without
+        AnimationSpritesheet bossIdle = new SimpleAnimationSpritesheet(88, 70, 6, 1000, "/images/agents/boss/Enrico_walk_animation.png");
+        AnimationSpritesheet bossWalk = new SimpleAnimationSpritesheet(88, 70, 6, 1000, "/images/agents/boss/Enrico_walk_animation.png");
+        AnimationSpritesheet bossAttack = new SimpleAnimationSpritesheet(88, 70, 8, 200, "/images/agents/boss/Enrico_attack_animation.png");
+        AnimationSpritesheet bossHit = new SimpleAnimationSpritesheet(88, 70, 1, 1000, "/images/agents/boss/enrico_damage.png");
+        AnimationSpritesheet bossDeath = new SimpleAnimationSpritesheet(88, 70, 4, 1000, "/images/agents/boss/Enrico_death_animation.png");
+        AnimationSpritesheet bossJump = new SimpleAnimationSpritesheet(88, 70, 3, 1000, "/images/agents/boss/Enrico_jump_animation.png");
+
+        AnimationGraphics bossGraphics = new AnimationGraphics();
+        bossGraphics.addSpritesheet(AnimationStatus.IDLE, bossIdle);
+        bossGraphics.addSpritesheet(AnimationStatus.RUNNING, bossWalk);
+        bossGraphics.addSpritesheet(AnimationStatus.ATTACKING, bossAttack);
+        bossGraphics.addSpritesheet(AnimationStatus.HIT, bossHit);
+        bossGraphics.addSpritesheet(AnimationStatus.DYING, bossDeath);
+        bossGraphics.addSpritesheet(AnimationStatus.JUMPING, bossJump);
+
+        AnimationSystem bossSystem = new AnimationSystem(bossGraphics);
+        boss.setAnimationSystem(bossSystem);
+        boss.setEnemy(true);
+        boss.setCloseWeapon(sword4);
+
+
+        // Adiciona Inimigos ao level
+        level1.getAgents().add(skeleton);
+        level1.getAgents().add(skeletonWH);
+        level1.getAgents().add(shooter);
+        level2.getAgents().add(skeletonWH);
+        level2.getAgents().add(shooter);
+        level3.getAgents().add(boss);
+
+
+
+        environment.setProtagonist(protagonist);
         environment.setPauseImage("/images/environment/pause.png") ;
         environment.setGameOverImage("/images/environment/gameover.png");   
 
-        level1.getAgents().add(chonBot);
-        //level2.getAgents().add(enemy);
 
 
         /* Set up some collectable objects */
         List<Object> objects = new ArrayList<>();
-        AnimationSpritesheet coinAnim = new SimpleAnimationSpritesheet(96, 96, 8, 200, "/images/agents/coinAnimated.png");
-        objects.add(new Object(200, 350, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
-        objects.add(new Object(400, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
-        objects.add(new Object(1000, 600, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
-        objects.add(new Object(1400, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
-        objects.add(new Object(1800, 650, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
-        objects.add(new Object(2000, 580, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false,coinAnim));
-        objects.add(new Object(2300, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
-        objects.add(new Object(2600, 500, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
-        objects.add(new Object(2900, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
-        objects.add(new Object(3200, 400, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
-        objects.add(new Object(4100, 500, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
-        objects.add(new Object(5000, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
-        objects.add(new Object(6200, 400, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
+        AnimationSpritesheet crownAnimated = new SimpleAnimationSpritesheet(17, 17, 6, 200, "/images/agents/crownAnimated.png");
+        objects.add(new Object(200, 540, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
+        objects.add(new Object(400, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
+        objects.add(new Object(1000, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
+        objects.add(new Object(1400, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
+        objects.add(new Object(1800, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
+        objects.add(new Object(2000, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false,crownAnimated));
+        objects.add(new Object(2300, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
+        objects.add(new Object(2600, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
+        objects.add(new Object(2900, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
+        objects.add(new Object(3200, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
+        objects.add(new Object(4100, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
+        objects.add(new Object(5000, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
+        objects.add(new Object(6200, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
 
         // Register objects into the environment and count total collectibles
         level1.setObjects(objects);
@@ -166,6 +279,9 @@ public class GameSet {
         level2.setObjects(objects);
         level2.countCollectibles();
         environment.getLevels().add(level2);
+        level3.setObjects(objects);
+        level3.countCollectibles();
+        environment.getLevels().add(level3);
         environment.setCurrentLevel(level1);
 
         MenuTextManager.getInstance().setText(MainOption.START_GAME, "Start game");

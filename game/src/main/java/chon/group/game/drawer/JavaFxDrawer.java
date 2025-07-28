@@ -202,16 +202,17 @@ public class JavaFxDrawer {
         drawEnergyBar(energy, maxEnergy, 65, energyY, 150, barHeight);
 
         int itemsY = 90;
-        int bigIconSize = 26;
+        int bigIconSize = 56;
+        int itemIconSize = 66;
 
-        gc.drawImage(itemIcon, 30, itemsY - (bigIconSize / 2), bigIconSize, bigIconSize);
+        gc.drawImage(itemIcon, 15, itemsY - (60 / 2), itemIconSize, itemIconSize);
         drawTextWithBorder(collected + "/" + total, 70, itemsY + 8, Color.WHITE, Color.BLACK, null);
 
         gc.setStroke(Color.rgb(100, 255, 100, 0.3));
         gc.setLineWidth(1.2);
         gc.strokeLine(130, itemsY - 8, 130, itemsY + 18);
 
-        gc.drawImage(scoreIcon, 150, itemsY - (bigIconSize / 2), bigIconSize, bigIconSize);
+        gc.drawImage(scoreIcon, 130, itemsY - (bigIconSize / 2), bigIconSize, bigIconSize);
         drawTextWithBorder(String.valueOf(score), 190, itemsY + 8, Color.WHITE, Color.BLACK, null);
     }
 
@@ -437,14 +438,14 @@ public class JavaFxDrawer {
     double centerX = getCanvasWidth() / 2;
 
     // 2. Título "ENGINE" no topo
-    gc.setFont(Font.font("Verdana", FontWeight.BOLD, 28));
+    gc.setFont(Font.font("Old English Text MT", FontWeight.BOLD, 28));
     gc.setFill(Color.LIGHTGRAY);
     gc.setTextAlign(TextAlignment.CENTER);
-    gc.fillText(title, centerX, getCanvasHeight() * 0.75); // pode ajustar essa altura conforme sua imagem
+    gc.fillText(title, centerX, 500 * 0.75); // pode ajustar essa altura conforme sua imagem
 
     // 3. Opções do menu abaixo da palavra "ENGINE"
-    gc.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
-    double firstOptionY = getCanvasHeight() * 0.82;
+    gc.setFont(Font.font("Old English Text MT", FontWeight.BOLD, 40));
+    double firstOptionY = 650 * 0.82;
 
     for (int i = 0; i < options.length; i++) {
         double optionY = firstOptionY + (i * 45); // espaço entre as opções

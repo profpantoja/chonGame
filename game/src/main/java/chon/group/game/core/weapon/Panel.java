@@ -35,7 +35,7 @@ public class Panel {
         this.panelHeight = panelHeight;
         this.lifeIcon = loadImage("/images/environment/heart.png");
         this.energyIcon = loadImage("/images/environment/energy.png");
-        this.itemIcon = loadImage("/images/agents/coin.png");
+        this.itemIcon = loadImage("/images/agents/crown.png");
         this.scoreIcon = loadImage("/images/environment/score.png");
     }
 
