@@ -16,7 +16,12 @@
             <artifactId>javafx-controls</artifactId>
             <version>16</version>
         </dependency>
-    </dependencies>  
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-media</artifactId>
+            <version>16</version> 
+        </dependency>
+    </dependencies>
     <repositories>
         <repository>
             <id>openjfx</id>
