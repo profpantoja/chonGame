@@ -24,15 +24,16 @@ public abstract class Shot extends Entity {
         this.owner = owner;
 
     }
-
     public Shot(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped,
-                int damage, String direction, AnimationSpritesheet animationSpritesheet) {
+        int damage, String direction, Agent owner, AnimationSpritesheet animationSpritesheet) {
         super(posX, posY, height, width, speed, health, pathImage, flipped, false);
         this.damage = damage;
         this.direction = direction;
+        this.owner = owner;
         if (animationSpritesheet != null) {
             setAnimationSystem(new AnimationSystem(animationSpritesheet));
         }
+
     }
 
     public boolean isDestructible() {

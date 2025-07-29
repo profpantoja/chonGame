@@ -164,8 +164,22 @@ import javafx.scene.paint.Color;
      * @return the entity image
      */
     public Image getImage() {
-        if (animationSystem != null) return animationSystem.getCurrentFrameImage(); 
-        return image;
+        Image baseImage;
+        if (getAnimationSystem() != null) {
+            baseImage = getAnimationSystem().getCurrentFrameImage();
+        } else {
+            baseImage = image;
+        }
+        if (isFlipped() && baseImage != null && getAnimationSystem() != null) {
+            ImageView view = new ImageView(baseImage);
+            view.setScaleX(-1);
+            view.setFitWidth(getWidth());
+            view.setFitHeight(getHeight());
+            SnapshotParameters params = new SnapshotParameters();
+            params.setFill(Color.TRANSPARENT);
+            return view.snapshot(params, null);
+        }
+        return baseImage;
     }
 
     /**

@@ -438,13 +438,13 @@ public class JavaFxDrawer {
     double centerX = getCanvasWidth() / 2;
 
     // 2. Título "ENGINE" no topo
-    gc.setFont(Font.font("Verdana", FontWeight.BOLD, 28));
+    gc.setFont(Font.font("Lucida Calligraphy", FontWeight.BOLD, 28));
     gc.setFill(Color.LIGHTGRAY);
     gc.setTextAlign(TextAlignment.CENTER);
-    gc.fillText(title, centerX, 500 * 0.75); // pode ajustar essa altura conforme sua imagem
+    gc.fillText(title, centerX, 600 * 0.75); // pode ajustar essa altura conforme sua imagem
 
     // 3. Opções do menu abaixo da palavra "ENGINE"
-    gc.setFont(Font.font("Verdana", FontWeight.BOLD, 40));
+    gc.setFont(Font.font("Lucida Calligraphy", FontWeight.BOLD, 40));
     double firstOptionY = 650 * 0.82;
 
     for (int i = 0; i < options.length; i++) {

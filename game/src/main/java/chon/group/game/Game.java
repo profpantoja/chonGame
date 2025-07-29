@@ -32,7 +32,7 @@ public class Game {
 
     private GameStatus status = GameStatus.START;
     private boolean canSlash = true;
-    private int weaponDecision = 2;
+    private int weaponDecision = GameSet.getWeaponDecision();
     private boolean debugMode = true;
     private boolean wantsToStartGame = false;
 

@@ -3,6 +3,8 @@ package chon.group.game.domain.weapon;
 import java.util.List;
 
 import chon.group.game.core.agent.Agent;
+import chon.group.game.core.animation.AnimationSpritesheet;
+import chon.group.game.core.animation.SimpleAnimationSpritesheet;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.messaging.Message;
@@ -14,24 +16,29 @@ public class Lancer extends Weapon {
         super(posX, posY, height, width, speed, health, energyCost, pathImage, flipped);
     }
 
+    
     @Override
     protected Shot createShot(int posX, int posY, String direction, Agent owner) {
         if (direction.equals("RIGHT"))
             posX += 84 + 1;
         else
             posX -= 84 + 1;
-        return new Fireball(posX,
+            AnimationSpritesheet shotAnimated = new SimpleAnimationSpritesheet(38, 18, 4, 200, "/images/weapons/shots/shotGreen.png");
+        Fireball shot = new Fireball(posX,
                 posY + 30,
                 42,
                 64,
                 4,
                 0,
-                "/images/weapons/shots/shot.png",
+                "/images/weapons/shots/shotGreen.png",
                 false,
-                100,
+                500,
                 direction,
-                owner);
+                owner,
+                shotAnimated);
+            return shot;
     }
+    
 
     @Override
     public void takeDamage(int damage, List<Message> messages) {

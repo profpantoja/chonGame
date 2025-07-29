@@ -3,6 +3,8 @@ package chon.group.game.domain.weapon;
 import java.util.List;
 
 import chon.group.game.core.agent.Agent;
+import chon.group.game.core.animation.AnimationSpritesheet;
+import chon.group.game.core.animation.SimpleAnimationSpritesheet;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.messaging.Message;
@@ -17,21 +19,25 @@ public class Cannon extends Weapon {
     @Override
     protected Shot createShot(int posX, int posY, String direction, Agent owner) {
         if (direction.equals("RIGHT"))
-            posX += 64 + 1;
+            posX += 84 + 1;
         else
-            posX -= 64 + 1;
-        return new Rocket(posX,
-                posY,
+            posX -= 84 + 1;
+            AnimationSpritesheet shotAnimated = new SimpleAnimationSpritesheet(38, 18, 4, 200, "/images/weapons/shots/shot.png");
+        Rocket shot = new Rocket(posX,
+                posY + 30,
                 42,
                 64,
-                3,
+                4,
                 0,
-                "/images/weapons/missile/missile001.png",
+                "/images/weapons/shots/shot.png",
                 false,
-                100,
+                2000,
                 direction,
-                owner);
+                owner,
+                shotAnimated);
+            return shot;
     }
+    
 
     @Override
     public void takeDamage(int damage, List<Message> messages) {

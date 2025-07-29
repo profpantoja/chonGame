@@ -3,10 +3,15 @@ package chon.group.game.core.agent;
 import java.util.List;
 
 import chon.group.game.core.weapon.CloseWeapon;
+import chon.group.game.core.animation.AnimationGraphics;
 import chon.group.game.core.animation.AnimationSpritesheet;
+import chon.group.game.core.animation.AnimationStatus;
+import chon.group.game.core.animation.AnimationSystem;
+import chon.group.game.core.animation.SimpleAnimationSpritesheet;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Slash;
 import chon.group.game.core.weapon.Weapon;
+import chon.group.game.domain.weapon.Lancer;
 import chon.group.game.messaging.Message;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;

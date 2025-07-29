@@ -11,6 +11,7 @@ import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Slash;
 import chon.group.game.messaging.Message;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 /**
  * The {@code JavaFxMediator} class serves as an intermediary for rendering the
@@ -222,12 +223,25 @@ public class JavaFxMediator implements EnvironmentDrawer {
      */
     @Override
     public void drawGameOver() {
-        drawer.drawScreen(this.environment.getGameOverImage(),
-                (int) this.environment.getPauseImage().getWidth(),
-                (int) this.environment.getPauseImage().getHeight(),
-                (int) this.environment.getCamera().getScreenWidth(),
-                this.environment.getCurrentLevel().getHeight());
+        double screenWidth = this.environment.getCamera().getScreenWidth();
+        double screenHeight = this.environment.getCurrentLevel().getHeight(); 
+
+        double imageWidth = this.environment.getGameOverImage().getWidth();
+        double imageHeight = this.environment.getGameOverImage().getHeight();
+
+        int x = (int) ((screenWidth - imageWidth) / 2);
+        int y = (int) ((screenHeight - imageHeight) / 2);
+
+        drawer.drawScreen(
+            this.environment.getGameOverImage(),
+            x,
+            y,
+            (int) screenWidth,
+            (int) screenHeight
+        );
     }
+
+
 
     /**
      * Draws damage messages that appear when agents take damage.
@@ -287,7 +301,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
     public void drawMainMenu(MainMenu menu) {
     drawer.drawMainMenu(
         menu.getBackgroundImage(),
-        "Chon Engine",
+        "",
         menu.getSelectedOptionIndex(),
         menu.getLabels() // você pode criar um método getLabels() no Menu
     );
