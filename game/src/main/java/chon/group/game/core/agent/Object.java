@@ -6,6 +6,7 @@ import java.util.List;
  * Represents a generic game object that can be collectible and/or destructible.
  */
 public class Object extends Entity {
+
     private boolean collected = false;
     private boolean destructible;
     private boolean collectible;
@@ -16,28 +17,31 @@ public class Object extends Entity {
     private int score = 0;
 
     /**
-     * Constructs a game object with specified position, size, image, and
-     * properties.
+     * Constructs a game object with specified position, size, image, and properties.
      *
      * @param posX         The x-coordinate of the object.
      * @param posY         The y-coordinate of the object.
      * @param height       The height of the object.
      * @param width        The width of the object.
+     * @param speed        The speed of the object.
+     * @param health       The health of the object.
      * @param pathImage    The image path of the object.
+     * @param flipped      Whether the image is flipped.
+     * @param visibleBars  Whether status bars are visible.
      * @param collectible  Whether the object is collectible.
      * @param destructible Whether the object is destructible.
      */
     public Object(int posX,
-            int posY,
-            int height,
-            int width,
-            int speed,
-            int health,
-            String pathImage,
-            boolean flipped,
-            boolean visibleBars,
-            boolean collectible, 
-            boolean destructible) {
+                  int posY,
+                  int height,
+                  int width,
+                  int speed,
+                  int health,
+                  String pathImage,
+                  boolean flipped,
+                  boolean visibleBars,
+                  boolean collectible,
+                  boolean destructible) {
         super(posX, posY, height, width, speed, health, pathImage, flipped, visibleBars);
         this.collectible = collectible;
         this.destructible = destructible;
