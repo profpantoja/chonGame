@@ -50,7 +50,7 @@ public class Game {
     public static final String gameOverMusic = "/sounds/gameOverMusic.wav";
     public static final String menuMusic = "/sounds/menupoke.mp3";
     public static final String winSound = "/sounds/winSound.wav";
-    public static final String attack = "/sounds/scratch.mp3";
+    public static final String attack = "/sounds/fireballsound.mp3";
 
     public Game(Environment environment, EnvironmentDrawer mediator, ArrayList<String> input) {
         this.environment = environment;

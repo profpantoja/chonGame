@@ -26,7 +26,7 @@ public class Cannon extends Weapon {
                 64,
                 3,
                 0,
-                "/images/weapons/missile/missile001.png",
+                "/images/weapons/missile/waterattack.png",
                 false,
                 100,
                 direction,
