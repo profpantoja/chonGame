@@ -5,11 +5,14 @@ import java.util.Iterator;
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.environment.Environment;
+import chon.group.game.core.menu.MainMenu;
+import chon.group.game.core.menu.PauseMenu;
 import chon.group.game.core.weapon.Shot;
+import chon.group.game.core.weapon.Slash;
 import chon.group.game.messaging.Message;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-
 /**
  * The {@code JavaFxMediator} class serves as an intermediary for rendering the
  * game environment and its elements using JavaFX. It coordinates the
@@ -19,8 +22,8 @@ import javafx.scene.paint.Color;
  */
 public class JavaFxMediator implements EnvironmentDrawer {
 
-    private final Environment environment;
-    private final JavaFxDrawer drawer;
+        private final Environment environment;
+        private final JavaFxDrawer drawer;
 
     /**
      * Constructs a JavaFxMediator with the specified environment and graphics
@@ -45,6 +48,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
         this.drawAgents();
         this.drawObjects();
         this.drawShots();
+        this.drawSlashes();
         this.drawMessages();
     }
 
@@ -219,12 +223,25 @@ public class JavaFxMediator implements EnvironmentDrawer {
      */
     @Override
     public void drawGameOver() {
-        drawer.drawScreen(this.environment.getGameOverImage(),
-                (int) this.environment.getPauseImage().getWidth(),
-                (int) this.environment.getPauseImage().getHeight(),
-                (int) this.environment.getCamera().getScreenWidth(),
-                this.environment.getCurrentLevel().getHeight());
+        double screenWidth = this.environment.getCamera().getScreenWidth();
+        double screenHeight = this.environment.getCurrentLevel().getHeight(); 
+
+        double imageWidth = this.environment.getGameOverImage().getWidth();
+        double imageHeight = this.environment.getGameOverImage().getHeight();
+
+        int x = (int) ((screenWidth - imageWidth) / 2);
+        int y = (int) ((screenHeight - imageHeight) / 2);
+
+        drawer.drawScreen(
+            this.environment.getGameOverImage(),
+            x,
+            y,
+            (int) screenWidth,
+            (int) screenHeight
+        );
     }
+
+
 
     /**
      * Draws damage messages that appear when agents take damage.
@@ -241,13 +258,13 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     message.getPosX() - this.environment.getCamera().getPosX(),
                     message.getPosY());
         }
-    }
 
+    } 
     /**
      * Renders all active shots (projectiles) currently in the environment.
      */
     @Override
-    public void drawShots() {
+    public void drawShots(){
         Iterator<Shot> iterator = this.environment.getCurrentLevel().getShots().iterator();
         while (iterator.hasNext()) {
             Shot shot = iterator.next();
@@ -258,4 +275,49 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     shot.getHeight());
         }
     }
+
+
+        /**
+         * Renders all slashes within the environment.
+         */
+        @Override
+        public void drawSlashes(){
+            Iterator<Slash> iterator = this.environment.getCurrentLevel().getSlashes().iterator();
+            while (iterator.hasNext()) {
+                Slash slash = iterator.next();
+                drawer.drawImage(slash.getImage(),
+                        (int) this.environment.getCamera().updateEntity(slash),
+                        slash.getPosY(),
+                        slash.getWidth(),
+                        slash.getHeight());
+            }
+        }
+
+
+     /**
+     * Draws the main menu with the specified background image, title, selected
+     */
+    @Override
+    public void drawMainMenu(MainMenu menu) {
+    drawer.drawMainMenu(
+        menu.getBackgroundImage(),
+        "",
+        menu.getSelectedOptionIndex(),
+        menu.getLabels() // você pode criar um método getLabels() no Menu
+    );
+    }
+
+    /**
+     * Draws the pause menu with the specified background image, title, and
+     */
+    @Override
+    public void drawPauseMenu(PauseMenu menuPause) {
+    drawer.drawMenuPause(
+        "Paused",
+        menuPause.getSelectedOptionIndex(),
+        menuPause.getBackgroundImage(),
+        menuPause.getLabels() // idem
+    );
+    }
+
 }

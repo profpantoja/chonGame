@@ -3,6 +3,7 @@ package chon.group.game.core.agent;
 import java.util.ArrayList;
 import java.util.List;
 
+import chon.group.game.core.animation.AnimationSystem;
 import chon.group.game.messaging.Message;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
@@ -40,6 +41,8 @@ import javafx.scene.paint.Color;
 
     /** Indicates if the existing bars of life or energy are visible or not. */
     private boolean visibleBars = false;    
+
+    private AnimationSystem animationSystem;
 
     /**
      * Constructor to initialize the entity properties.
@@ -161,7 +164,22 @@ import javafx.scene.paint.Color;
      * @return the entity image
      */
     public Image getImage() {
-        return image;
+        Image baseImage;
+        if (getAnimationSystem() != null) {
+            baseImage = getAnimationSystem().getCurrentFrameImage();
+        } else {
+            baseImage = image;
+        }
+        if (isFlipped() && baseImage != null && getAnimationSystem() != null) {
+            ImageView view = new ImageView(baseImage);
+            view.setScaleX(-1);
+            view.setFitWidth(getWidth());
+            view.setFitHeight(getHeight());
+            SnapshotParameters params = new SnapshotParameters();
+            params.setFill(Color.TRANSPARENT);
+            return view.snapshot(params, null);
+        }
+        return baseImage;
     }
 
     /**
@@ -233,6 +251,14 @@ import javafx.scene.paint.Color;
 
     public void setVisibleBars(boolean visible) {
         this.visibleBars = visible;
+    }
+
+    public AnimationSystem getAnimationSystem() {
+        return animationSystem;
+    }
+
+    public void setAnimationSystem(AnimationSystem animationSystem) {
+        this.animationSystem = animationSystem;
     }
     
     /**
