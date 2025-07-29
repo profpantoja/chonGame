@@ -130,14 +130,14 @@ public class JavaFxDrawer {
     public void drawPanel(int life, int maxLife, int collected, int total, int score, double energy, double maxEnergy,
             Font pixelFont, Image lifeIcon, Image energyIcon, Image itemIcon, Image scoreIcon, int panelWidth,
             int panelHeight) {
-        drawGlassPanel(panelWidth, panelHeight);
+        //drawGlassPanel(panelWidth - 40, panelHeight - 60);
         drawBarsAndIcons(life, maxLife, collected, total, score, energy, maxEnergy, pixelFont, lifeIcon, energyIcon,
                 itemIcon, scoreIcon);
     }
 
     /**
-     * Draws a semi-transparent glass-style background panel with lighting effects.
-     */
+    * Draws a semi-transparent glass-style background panel with lighting effects.
+    */
     private void drawGlassPanel(int panelWidth, int panelHeight) {
         gc.setFill(Color.rgb(0, 0, 0, 0.4));
         gc.fillRoundRect(10, 10, panelWidth, panelHeight, 15, 15);
@@ -175,25 +175,25 @@ public class JavaFxDrawer {
         int iconSize = 24;
 
         int lifeY = 25;
-        gc.drawImage(lifeIcon, 30, lifeY + (barHeight - iconSize) / 2, iconSize, iconSize);
-        drawLifeBar(life, maxLife, 65, lifeY, 150, barHeight);
+        //gc.drawImage(lifeIcon, 30, lifeY + (barHeight - iconSize) / 2, iconSize, iconSize);
+        //drawLifeBar(life, maxLife, 65, lifeY, 150, barHeight);
 
         int energyY = 50;
-        gc.drawImage(energyIcon, 30, energyY + (barHeight - iconSize) / 2, iconSize, iconSize);
-        drawEnergyBar(energy, maxEnergy, 65, energyY, 150, barHeight);
+        //gc.drawImage(energyIcon, 30, energyY + (barHeight - iconSize) / 2, iconSize, iconSize);
+        //drawEnergyBar(energy, maxEnergy, 65, energyY, 150, barHeight);
 
-        int itemsY = 90;
+        int itemsY = 28;
         int bigIconSize = 26;
 
-        gc.drawImage(itemIcon, 30, itemsY - (bigIconSize / 2), bigIconSize, bigIconSize);
-        drawTextWithBorder(collected + "/" + total, 70, itemsY + 8, Color.WHITE, Color.BLACK, null);
+        //gc.drawImage(itemIcon, 30, itemsY - (bigIconSize / 2), bigIconSize, bigIconSize);
+        drawTextWithBorder("SCORE: " + collected, 20, itemsY + 20, Color.WHITE, Color.BLACK, null);
 
-        gc.setStroke(Color.rgb(100, 255, 100, 0.3));
-        gc.setLineWidth(1.2);
-        gc.strokeLine(130, itemsY - 8, 130, itemsY + 18);
+        //gc.setStroke(Color.rgb(100, 255, 100, 0.3));
+        //gc.setLineWidth(1.2);
+        //gc.strokeLine(130, itemsY - 8, 130, itemsY + 18);
 
-        gc.drawImage(scoreIcon, 150, itemsY - (bigIconSize / 2), bigIconSize, bigIconSize);
-        drawTextWithBorder(String.valueOf(score), 190, itemsY + 8, Color.WHITE, Color.BLACK, null);
+        //gc.drawImage(scoreIcon, 150, itemsY - (bigIconSize / 2), bigIconSize, bigIconSize);
+        drawTextWithBorder("HIGH SCORE: " + score, 20, itemsY, Color.WHITE, Color.BLACK, null);
     }
 
     /**

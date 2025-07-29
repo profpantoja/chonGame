@@ -39,7 +39,8 @@ public class Engine extends Application {
             /* Set up the graphical canvas */
             Canvas canvas = new Canvas(gameSet.getCanvasWidth(), gameSet.getCanvasHeight());
             GraphicsContext gc = canvas.getGraphicsContext2D();
-
+            gc.setImageSmoothing(false);
+            
             /* Set up the scene and stage */
             StackPane root = new StackPane();
             Scene scene = new Scene(root, gameSet.getCanvasWidth(), gameSet.getCanvasHeight());

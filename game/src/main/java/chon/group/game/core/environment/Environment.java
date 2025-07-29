@@ -30,6 +30,8 @@ public class Environment {
 
     /** The protagonist of the environment. */
     private Agent protagonist;
+    private Agent keyAgent;
+    private Agent fishAgent;
 
     private List<Level> levels;
 
@@ -48,6 +50,8 @@ public class Environment {
 
     /** Current score of the player. */
     private int score = 0;
+
+    
 
     /**
      * Constructor to initialize the environment with dimensions, position, and a
@@ -97,6 +101,14 @@ public class Environment {
         return protagonist;
     }
 
+    public Agent getKeyAgent() {
+        return this.keyAgent;
+    }
+
+    public Agent getFishAgent() {
+        return this.fishAgent;
+    }
+
     /**
      * Sets the protagonist of the game and attaches the camera to it.
      *
@@ -106,6 +118,19 @@ public class Environment {
         this.protagonist = protagonist;
         if (camera != null)
             camera.setTarget(protagonist);
+    }
+
+    /**
+     * Sets the key agent of the game and attaches the camera to it.
+     *
+     * @param keyAgent the key agent
+     */
+    public void setKeyAgent(Agent keyAgent) {
+        this.keyAgent = keyAgent;
+    }
+
+    public void setFishAgent(Agent fishAgent) {
+        this.fishAgent = fishAgent;
     }
 
     public List<Level> getLevels() {
@@ -157,6 +182,10 @@ public class Environment {
         return collectedCount;
     }
 
+    public void setCollectedCount(int collectedCount) {
+        this.collectedCount = collectedCount;
+    }
+
     /**
      * Gets the current score of the player.
      *
@@ -164,6 +193,10 @@ public class Environment {
      */
     public int getScore() {
         return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 
     /**
@@ -174,10 +207,10 @@ public class Environment {
             protagonist.setPosX(0);
         if ((protagonist.getPosX() + protagonist.getWidth()) > this.currentLevel.getWidth())
             protagonist.setPosX(this.currentLevel.getWidth() - protagonist.getWidth());
-        if (protagonist.getPosY() < 0)
+        /*if (protagonist.getPosY() < 0)
             protagonist.setPosY(0);
         if ((protagonist.getPosY() + protagonist.getHeight()) > this.currentLevel.getHeight())
-            protagonist.setPosY(this.currentLevel.getHeight() - protagonist.getHeight());
+            protagonist.setPosY(this.currentLevel.getHeight() - protagonist.getHeight());*/
     }
 
     /**

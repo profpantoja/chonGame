@@ -4,8 +4,11 @@ import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Entity;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.weapon.Shot;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import javafx.scene.image.Image;
 
 public class Level extends Entity {
 
@@ -18,6 +21,8 @@ public class Level extends Entity {
     /** List of shots in the environment. */
     private List<Shot> shots;
 
+    private Image foreground;
+
     /** Total number of collectible objects in the environment. */
     private int totalCollectibleCount = 0;
 
@@ -26,6 +31,7 @@ public class Level extends Entity {
         this.agents = new ArrayList<Agent>();
         this.objects = new ArrayList<Object>();
         this.shots = new ArrayList<Shot>();
+        this.foreground = new Image(getClass().getResource("/images/environment/Sea.png").toExternalForm());
     }
 
     public List<Agent> getAgents() {
@@ -38,6 +44,10 @@ public class Level extends Entity {
 
     public List<Object> getObjects() {
         return objects;
+    }
+
+    public Image getForeground() {
+        return this.foreground;
     }
 
     public void setObjects(List<Object> objects) {
