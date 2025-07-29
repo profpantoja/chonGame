@@ -9,7 +9,9 @@ import chon.group.game.core.agent.Entity;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.weapon.Panel;
 import chon.group.game.core.weapon.Shot;
+import chon.group.game.core.weapon.Slash;
 import chon.group.game.messaging.Message;
+import chon.group.game.sound.SoundManager;
 import javafx.scene.image.Image;
 
 /**
@@ -187,8 +189,12 @@ public class Environment {
     public void detectCollision() {
         for (Agent agent : this.currentLevel.getAgents()) {
             if (protagonist != null && intersect(protagonist, agent)) {
-                int damage = 100;
-                protagonist.takeDamage(damage, messages);
+                //int damage = 100;
+                //protagonist.takeDamage(damage, messages);
+                if(agent.getCloseWeapon() != null) {
+                    // Apply damage to the protagonist
+
+                }
             }
         }
     }
@@ -200,7 +206,7 @@ public class Environment {
      * @param b the second entity
      * @return true if their areas overlap, false otherwise
      */
-    private boolean intersect(Entity a, Entity b) {
+    public boolean intersect(Entity a, Entity b) {
         return a.getPosX() < b.getPosX() + b.getWidth() &&
                 a.getPosX() + a.getWidth() > b.getPosX() &&
                 a.getPosY() < b.getPosY() + b.getHeight() &&
@@ -225,7 +231,8 @@ public class Environment {
                     collectedCount++;
                     score += 10;
                 }
-            } else if (object.isCollected() && object.isCollectible()) {
+            } else if ((object.isCollected() && object.isCollectible()) || 
+            (object.isDestroyed() && object.isDestructible())) {
                 iterator.remove();
             }
         }
@@ -252,29 +259,86 @@ public class Environment {
         Iterator<Shot> itShot = this.currentLevel.getShots().iterator();
         while (itShot.hasNext()) {
             Shot shot = itShot.next();
+
             if ((shot.getPosX() > this.currentLevel.getWidth()) || ((shot.getPosX() + shot.getWidth()) < 0)) {
                 itShot.remove();
-            } else {
-                if (intersect(protagonist, shot)) {
+                continue;
+            }
+
+            Agent owner = shot.getOwner(); 
+
+            if (intersect(protagonist, shot)) {
+                if (owner != protagonist && owner.isEnemy() != protagonist.isEnemy()) {
                     protagonist.takeDamage(shot.getDamage(), messages);
                     itShot.remove();
-                } else {
-                    Iterator<Agent> itAgent = this.currentLevel.getAgents().iterator();
-                    while (itAgent.hasNext()) {
-                        Agent agent = itAgent.next();
-                        if (intersect(agent, shot)) {
-                            agent.takeDamage(shot.getDamage(), messages);
-                            if (agent.isDead())
-                                itAgent.remove();
-                            itShot.remove();
-                            break;
-                        }
-                    }
+                    continue;
                 }
-                shot.move(new ArrayList<>(List.of(shot.getDirection())));
             }
+
+            Iterator<Agent> itAgent = this.currentLevel.getAgents().iterator();
+            while (itAgent.hasNext()) {
+                Agent agent = itAgent.next();
+
+                
+                if (owner == agent) continue;
+
+                if (owner != null && owner.isEnemy() == agent.isEnemy()) continue;
+
+                if (intersect(agent, shot)) {
+                    agent.takeDamage(shot.getDamage(), messages);
+                    if (agent.isDead()) {
+                        itAgent.remove();
+                    }
+                    itShot.remove();
+                    break;
+                }
+            }
+
+            
+            shot.move(new ArrayList<>(List.of(shot.getDirection())));
         }
     }
+
+
+    public void updateSlashes() {
+    Iterator<Slash> itSlash = this.currentLevel.getSlashes().iterator();
+    while (itSlash.hasNext()) {
+        Slash slash = itSlash.next();
+
+        boolean hit = false;
+        Agent owner = slash.getOwner();
+
+        Iterator<Agent> itAgent = this.currentLevel.getAgents().iterator();
+        while (itAgent.hasNext()) {
+            Agent agent = itAgent.next();
+
+            if (owner == agent) continue;
+            if (owner != null && owner.isEnemy() == agent.isEnemy()) continue;
+
+            if (intersect(agent, slash)) {
+                agent.takeDamage(slash.getDamage(), messages);
+                if (agent.isDead()) {
+                    itAgent.remove();
+                }
+                hit = true;
+                break;
+            }
+        }
+
+        if (!hit && intersect(protagonist, slash)) {
+            if (owner != protagonist && owner.isEnemy() != protagonist.isEnemy()) {
+                protagonist.takeDamage(slash.getDamage(), messages);
+                hit = true;
+            }
+        }
+
+        if (hit || slash.shouldRemove()) {
+            itSlash.remove();
+        }
+    }
+}
+
+
 
     /**
      * Updates the camera based on the protagonist’s current position.
@@ -297,11 +361,17 @@ public class Environment {
     public void update() {
         updateObjects();
         updateShots();
+        updateSlashes();
         updateMessages();
         updateCamera();
         detectCollision();
         protagonist.recoverEnergy();
         updateLevel();
+    }
+
+    public boolean hasNextLevel() {
+        int currentIndex = levels.indexOf(currentLevel);
+        return currentIndex < levels.size() - 1;
     }
 
     public void loadNextLevel() {
@@ -320,7 +390,12 @@ public class Environment {
                 this.camera.setLevelWidth(this.currentLevel.getWidth());
             }
         }
-
+        if (this.currentLevel.getBackgroundMusic() != null) {
+            String musicPath = this.currentLevel.getBackgroundMusic();
+            if (!SoundManager.isCurrentMusic(musicPath)) {
+                SoundManager.playMusic(musicPath);
+            }
+        }
     }
 
 }
