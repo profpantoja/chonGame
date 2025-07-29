@@ -2,6 +2,7 @@ package chon.group.game.domain.weapon;
 
 import java.util.List;
 
+import chon.group.game.core.agent.Agent;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.messaging.Message;
@@ -14,7 +15,7 @@ public class Cannon extends Weapon {
     }
 
     @Override
-    protected Shot createShot(int posX, int posY, String direction) {
+    protected Shot createShot(int posX, int posY, String direction, Agent owner) {
         if (direction.equals("RIGHT"))
             posX += 64 + 1;
         else
@@ -25,10 +26,11 @@ public class Cannon extends Weapon {
                 64,
                 3,
                 0,
-                "/images/weapons/missile/missile001.png",
+                "/images/weapons/missile/waterattack.png",
                 false,
-                100,
-                direction);
+                300,
+                direction,
+                owner);
     }
 
     @Override
