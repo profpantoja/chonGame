@@ -88,19 +88,19 @@ public class GameSet {
                 0,
                 canvasHeight,
                 1280,
-                "/images/environment/fase2.png");
+                "/images/environment/fase3.png");
 
         Level level3 = new Level(
         0,
         0,
         canvasHeight,
         1280,
-        "/images/environment/fase3.png");
+        "/images/environment/fasefinal.png");
 
         /* Set background music for each level */
-        level1.setBackgroundMusic(Game.gameMusic);
-        level2.setBackgroundMusic(Game.menuMusic);
-        level3.setBackgroundMusic(Game.menuMusic);
+        level1.setBackgroundMusic(Game.gameMusic1);
+        level2.setBackgroundMusic(Game.gameMusic2);
+        level3.setBackgroundMusic(Game.gameMusic3);
 
         environment = new Environment(
                 this.canvasHeight,

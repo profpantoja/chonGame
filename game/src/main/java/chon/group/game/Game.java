@@ -41,18 +41,20 @@ public class Game {
     private final java.util.Map<Agent, Long> enemyAttackEndTimes = new java.util.HashMap<>();
     private final java.util.Map<Agent, Long> enemyHitEndTimes = new java.util.HashMap<>();
 
-    private final long GAMEOVER_DELAY = 12000;
+    private final long GAMEOVER_DELAY = 5000;
     private long gameOverStartTime = 0;
 
     private boolean gameOverMusicPlayed = false;
     private boolean victoryMusicPlayed = false;
     private boolean wasPaused = false;
 
-    public static final String gameMusic = "/sounds/gameMusic.wav";
-    public static final String gameOverMusic = "/sounds/gameOverMusic.wav";
-    public static final String menuMusic = "/sounds/menuSound.wav";
-    public static final String winSound = "/sounds/winSound.wav";
-    public static final String attack = "/sounds/attackFX.wav";
+    public static final String gameMusic1 = "/sounds/fase1.mp3";
+    public static final String gameMusic2 = "/sounds/fase2.mp3";
+    public static final String gameMusic3 = "/sounds/fase3.mp3";
+    public static final String gameOverMusic = "/sounds/game_over.mp3";
+    public static final String menuMusic = "/sounds/Menu.mp3";
+    public static final String winSound = "/sounds/vitoria.mp3";
+    public static final String attack = "/sounds/attackFx.mp3";
 
     public Game(Environment environment, EnvironmentDrawer mediator, ArrayList<String> input) {
         this.environment = environment;
@@ -212,7 +214,7 @@ public class Game {
 public void running() {
     String musicToPlay = environment.getCurrentLevel().getBackgroundMusic();
     if (musicToPlay == null || musicToPlay.isEmpty()) {
-        musicToPlay = Game.gameMusic;
+        musicToPlay = Game.gameMusic1;
     }
 
     if (!SoundManager.isCurrentMusic(musicToPlay)) {
@@ -299,7 +301,6 @@ public void running() {
                 agent.getAnimationSystem().setStatus(AnimationStatus.ATTACKING);
                 enemyAttackEndTimes.put(agent, now + ATTACK_DURATION);
                 agent.canAttack = false;
-                // Adicione aqui a lógica de ataque real (ex: criar Slash, tirar vida do protagonista, etc)
             }
             // Resetar canAttack após o ataque terminar
             if (!agent.canAttack && enemyAttackEndTimes.containsKey(agent) && now >= enemyAttackEndTimes.get(agent)) {
@@ -349,6 +350,7 @@ public void running() {
     mediator.renderGame();
 
     if (environment.getProtagonist().isDead()) {
+        environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.DYING);
         this.status = GameStatus.GAME_OVER;
     }
 
@@ -403,7 +405,7 @@ public void running() {
     }
 
     public void init() {
-        SoundManager.playMusic(Game.gameMusic);
+        SoundManager.playMusic(Game.gameMusic1);
         this.status = GameStatus.RUNNING;
         mediator.renderGame();
     }

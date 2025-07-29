@@ -396,7 +396,6 @@ public class Environment {
         if (agent.isEnemy()) {
             agent.setHealth(agent.getFullHealth());
             agent.setInvulnerable(false);
-            // Se necessário, resete energia, status, etc.
         }
     }
     }
