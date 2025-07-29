@@ -20,7 +20,7 @@ import javafx.scene.input.KeyEvent;
 public class Game {
 
     private long victoryStartTime = 0;
-    private final long VICTORY_DELAY = 3000;
+    private final long VICTORY_DELAY = 4000;
 
     private MainMenu mainMenu;
     private PauseMenu menuPause;

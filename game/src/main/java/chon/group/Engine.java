@@ -70,7 +70,7 @@ public class Engine extends Application {
             /* Set up the scene and stage */
             StackPane root = new StackPane();
             Scene scene = new Scene(root, gameSet.getCanvasWidth(), gameSet.getCanvasHeight());
-            theStage.setTitle("Chon: The Learning Game");
+            theStage.setTitle("Pica X Zeca (Game for educational purposes)");
             theStage.setScene(scene);
 
             root.getChildren().add(canvas);

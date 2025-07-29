@@ -109,7 +109,7 @@ public class GameSet {
                 panel);
 
                 // --- WOODY (protagonista) ---
-            Agent woody = new Agent(400, 390, 90, 65, 10, 1000, "/images/agents/Woody_Idle.png", false, false);
+            Agent woody = new Agent(400, 390, 90, 65, 5, 1000, "/images/agents/Woody_Idle.png", false, false);
             AnimationGraphics woodyGraphics = new AnimationGraphics();
         
             // Idle
@@ -152,7 +152,7 @@ public class GameSet {
             zecaGraphics.add(AnimationStatus.ATTACKING, zecaAttack);
         
             // Hit
-            AnimationSpritesheet zecaHit = new SimpleAnimationSpritesheet(50, 65, 2, 1000, "/images/agents/zeca_damage.png");
+            AnimationSpritesheet zecaHit = new SimpleAnimationSpritesheet(50, 65, 2, 1500, "/images/agents/zeca_damage.png");
             zecaGraphics.add(AnimationStatus.HIT, zecaHit);
         
             // Death
@@ -191,30 +191,21 @@ public class GameSet {
 
         /* Set up some collectable objects */
         List<Object> objects = new ArrayList<>();
-        AnimationSpritesheet coinAnim = new SimpleAnimationSpritesheet(96, 96, 8, 200, "/images/agents/coinAnimated.png");
-        objects.add(new Object(200, 350, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
-        objects.add(new Object(400, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
-        objects.add(new Object(1000, 600, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
-        objects.add(new Object(1400, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
-        objects.add(new Object(1800, 650, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
-        objects.add(new Object(2000, 580, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false,coinAnim));
-        objects.add(new Object(2300, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
-        objects.add(new Object(2600, 500, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
-        objects.add(new Object(2900, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
-        objects.add(new Object(3200, 400, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
-        objects.add(new Object(4100, 500, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
-        objects.add(new Object(5000, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
-        objects.add(new Object(6200, 400, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
+        objects.add(new Object(0, 0, 250, 1280, 0, 0, "", false, false, false, false, true, 0));
+        List<Object> objects2 = new ArrayList<>();
+        objects2.add(new Object(0, 0, 590, 1280, 0, 0, "", false, false, false, false, true, 0));
+        List<Object> objects3 = new ArrayList<>();
+        objects3.add(new Object(0, 0, 600, 1280, 0, 0, "", false, false, false, false, true, 0));
 
         // Register objects into the environment and count total collectibles
         level1.setObjects(objects);
         level1.countCollectibles();
         environment.getLevels().add(level1);
-        level2.setObjects(objects);
+        level2.setObjects(objects2);
         level2.countCollectibles();
         environment.getLevels().add(level2);
         environment.setCurrentLevel(level1);
-        level3.setObjects(objects);
+        level3.setObjects(objects3);
         level3.countCollectibles();
         environment.getLevels().add(level3);
         
