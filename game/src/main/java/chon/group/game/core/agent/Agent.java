@@ -2,8 +2,8 @@ package chon.group.game.core.agent;
 
 import java.util.List;
 
-import chon.group.game.core.weapon.CloseWeapon;
 import chon.group.game.core.animation.AnimationSpritesheet;
+import chon.group.game.core.weapon.CloseWeapon;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Slash;
 import chon.group.game.core.weapon.Weapon;
@@ -19,6 +19,10 @@ import javafx.scene.paint.Color;
  * The agent can move in specific directions and chase a target.
  */
 public class Agent extends Entity {
+
+    /** The duration of the hit effect in milliseconds. */
+    private long attackEndTime;
+
 
     /** The time of the last hit taken. */
     private long lastHitTime = 0;
@@ -104,6 +108,22 @@ public class Agent extends Entity {
         }
     }
   
+    /**
+     * Gets the agent's attack end time.
+     *
+     * @return the attack end time in milliseconds
+     */
+    public boolean isAttacking() {
+        return System.currentTimeMillis() < attackEndTime;
+    }
+
+    public long getAttackEndTime() {
+        return attackEndTime;
+    }
+
+    public void setAttackEndTime(long time) {
+        this.attackEndTime = time;
+    }
 
     /**
      * Gets the last hit taken.

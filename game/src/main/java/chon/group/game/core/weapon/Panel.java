@@ -33,8 +33,8 @@ public class Panel {
     public Panel(int panelWidth, int panelHeight) {
         this.panelWidth = panelWidth;
         this.panelHeight = panelHeight;
-        this.lifeIcon = loadImage("/images/environment/heart.png");
-        this.energyIcon = loadImage("/images/environment/energy.png");
+        this.lifeIcon = loadImage("/images/environment/health.png");
+        this.energyIcon = loadImage("/images/environment/mana.png");
         this.itemIcon = loadImage("/images/agents/coin.png");
         this.scoreIcon = loadImage("/images/environment/score.png");
     }

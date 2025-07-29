@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import chon.group.game.Game;
 import chon.group.game.GameSet;
 import chon.group.game.GameStatus;
+import chon.group.game.core.menu.MainMenu;
+import chon.group.game.core.menu.PauseMenu;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.drawer.JavaFxDrawer;
 import chon.group.game.drawer.JavaFxMediator;
@@ -18,8 +20,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import chon.group.game.core.menu.MainMenu;
-import chon.group.game.core.menu.PauseMenu;
 
 
 /**
@@ -70,7 +70,7 @@ public class Engine extends Application {
             /* Set up the scene and stage */
             StackPane root = new StackPane();
             Scene scene = new Scene(root, gameSet.getCanvasWidth(), gameSet.getCanvasHeight());
-            theStage.setTitle("Chon: The Learning Game");
+            theStage.setTitle("Mr. Man Adventures");
             theStage.setScene(scene);
 
             root.getChildren().add(canvas);
@@ -121,7 +121,7 @@ public class Engine extends Application {
     private void resetGame(GraphicsContext gc) {
         gameSet = new GameSet();
         drawer = new JavaFxDrawer(gc, null);
-        mainMenu = new MainMenu(drawer, new Image(getClass().getResourceAsStream("/images/environment/menu_background_new.png")));
+        mainMenu = new MainMenu(drawer, new Image(getClass().getResourceAsStream("/images/environment/Menu_Background_MrMan.png")));
         menuPause = new PauseMenu(drawer, gameSet.getEnvironment().getPauseImage());
         input = new ArrayList<>();
         mediator = new JavaFxMediator(gameSet.getEnvironment(), gc);

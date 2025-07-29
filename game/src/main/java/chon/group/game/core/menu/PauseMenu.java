@@ -8,8 +8,4 @@ public class PauseMenu extends Menu<PauseOption> {
         super(drawer, backgroundImage, PauseOption.values());
     }
 
-    @Override
-    public String[] getLabels() {
-        return new String[]{"Resume", "Go back to Menu"};
-    }
 }
