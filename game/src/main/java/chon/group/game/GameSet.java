@@ -152,7 +152,7 @@ public class GameSet {
             zecaGraphics.add(AnimationStatus.ATTACKING, zecaAttack);
         
             // Hit
-            AnimationSpritesheet zecaHit = new SimpleAnimationSpritesheet(50, 65, 2, 1500, "/images/agents/zeca_damage.png");
+            AnimationSpritesheet zecaHit = new SimpleAnimationSpritesheet(56, 75, 2, 1500, "/images/agents/zeca_damage.png");
             zecaGraphics.add(AnimationStatus.HIT, zecaHit);
         
             // Death
