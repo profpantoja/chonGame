@@ -20,7 +20,6 @@ import chon.group.game.core.weapon.Weapon;
 import chon.group.game.domain.weapon.Cannon;
 import chon.group.game.domain.weapon.Lancer;
 import chon.group.game.domain.weapon.Sword;
-import javafx.animation.Animation;
 import chon.group.game.core.menu.MenuTextManager;
 
 public class GameSet {
@@ -69,7 +68,7 @@ public class GameSet {
     private void load() {
         /* Define some size properties for both Canvas and Environment */
         this.canvasWidth = 1280;
-        this.canvasHeight = 640;
+        this.canvasHeight = 853;
 
         /** Define a general panel for life, energy, points, and objects. */
         panel = new Panel(
@@ -95,12 +94,19 @@ public class GameSet {
                 0,
                 canvasHeight,
                 2000,
-                "/images/environment/backgroundlvl3.png");
+                "/images/environment/backgroundlvl3mod.png");
+        Level level4 = new Level(
+                0,
+                0,
+                canvasHeight,
+                2000,
+                "/images/environment/backgroundlvl4.png");
 
         /* Set background music for each level */
         level1.setBackgroundMusic(Game.gameMusic);
         level2.setBackgroundMusic(Game.gameMusic);
-        level3.setBackgroundMusic(Game.gameMusic);
+        level3.setBackgroundMusic(Game.lvl3music);
+        level4.setBackgroundMusic(Game.lvl4music);
 
         environment = new Environment(
                 this.canvasHeight,
@@ -109,7 +115,7 @@ public class GameSet {
                 panel);
 
         //CHARIZARD (LVL1)
-        Agent chonBota = new Agent(400, 390, 90, 65, 10, 2000, "/images/agents/chonBota.png", false, false);
+        Agent chonBota = new Agent(400, 390, 90, 65, 4, 2000, "/images/agents/chonBota.png", false, false);
         AnimationSpritesheet idleChonBota = new SimpleAnimationSpritesheet(100, 100, 5, 500, "/images/agents/charizard_idle.png");
         AnimationSpritesheet runChonBota = new SimpleAnimationSpritesheet(130, 100, 4, 500, "/images/agents/charizard_walk.png");
         AnimationSpritesheet jumpChonBota = new SimpleAnimationSpritesheet(100, 100, 2, 500, "/images/agents/charizard_idle.png");
@@ -129,10 +135,7 @@ public class GameSet {
         chonBota.setAnimationSystem(chonBotaSystem);
 
         Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, 0.05, "", false);
-        Weapon cannon2 = new Cannon(400, 390, 0, 0, 3, 0, 0.05, "", false);
         Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
-        Weapon lancer2 = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
-        CloseWeapon sword = new Sword(400, 390, 0, 0, 3, 0,  "", false);
         CloseWeapon sword2 = new Sword(400, 390, 0, 0, 3, 0, "", false);
 
         
@@ -159,7 +162,6 @@ public class GameSet {
         AnimationSystem chonBotSystem = new AnimationSystem(chonBotGraphics);
         chonBot.setAnimationSystem(chonBotSystem);
         
-        chonBot.setCloseWeapon(sword2);
         environment.setProtagonist(chonBota);
         
         chonBot.setEnemy(true);
@@ -192,7 +194,7 @@ public class GameSet {
         blastoise.setWeapon(cannon);
         
         //MEWTWO (LVL3)
-        Agent mewtwo = new Agent(500, 400, 100, 100, 1, 4500, "/images/agents/chonBot.png", true, true);
+        Agent mewtwo = new Agent(500, 400, 100, 100, 2, 4500, "/images/agents/chonBot.png", true, true);
 
         AnimationSpritesheet idleMewtwo = new SimpleAnimationSpritesheet(100, 80, 2, 1500, "/images/agents/mewtwo_walk.png");
         AnimationSpritesheet runMewtwo = new SimpleAnimationSpritesheet(100, 80, 2, 800, "/images/agents/mewtwo_walk.png");
@@ -214,7 +216,7 @@ public class GameSet {
         mewtwo.setEnemy(true);
 
         //arma
-        mewtwo.setWeapon(lancer2);
+        mewtwo.setCloseWeapon(sword2);
 
         // Adiciona enemys
         level1.getAgents().add(chonBot);
@@ -222,7 +224,7 @@ public class GameSet {
         level3.getAgents().add(mewtwo);
         
         
-        environment.setPauseImage("/images/environment/pause.png") ;
+        environment.setPauseImage("/images/environment/pausepoke.png") ;
         environment.setGameOverImage("/images/environment/gameover.png");   
         
         //level2.getAgents().add(enemy);
@@ -236,14 +238,6 @@ public class GameSet {
         objects.add(new Object(1000, 600, 20, 20, 0, 0, "/images/agents/collectablepoke.png", false, false, true, false, coinAnim));
         objects.add(new Object(1400, 380, 20, 20, 0, 0, "/images/agents/collectablepoke.png", false, false, true, false, coinAnim));
         objects.add(new Object(1800, 650, 20, 20, 0, 0, "/images/agents/collectablepoke.png", false, false, true, false, coinAnim));
-        objects.add(new Object(2000, 580, 20, 20, 0, 0, "/images/agents/collectablepoke.png", false, false, true, false,coinAnim));
-        objects.add(new Object(2300, 380, 20, 20, 0, 0, "/images/agents/collectablepoke.png", false, false, true, false, coinAnim));
-        objects.add(new Object(2600, 500, 20, 20, 0, 0, "/images/agents/collectablepoke.png", false, false, true, false, coinAnim));
-        objects.add(new Object(2900, 380, 20, 20, 0, 0, "/images/agents/collectablepoke.png", false, false, true, false, coinAnim));
-        objects.add(new Object(3200, 400, 20, 20, 0, 0, "/images/agents/collectablepoke.png", false, false, true, false, coinAnim));
-        objects.add(new Object(4100, 500, 20, 20, 0, 0, "/images/agents/collectablepoke.png", false, false, true, false, coinAnim));
-        objects.add(new Object(5000, 380, 20, 20, 0, 0, "/images/agents/collectablepoke.png", false, false, true, false, coinAnim));
-        objects.add(new Object(6200, 400, 20, 20, 0, 0, "/images/agents/collectablepoke.png", false, false, true, false, coinAnim));
 
         // Register objects into the environment and count total collectibles
         level1.setObjects(objects);
@@ -253,6 +247,7 @@ public class GameSet {
         level2.countCollectibles();
         environment.getLevels().add(level2);
         environment.getLevels().add(level3);
+        environment.getLevels().add(level4);
         environment.setCurrentLevel(level1);
 
         MenuTextManager.getInstance().setText(MainOption.START_GAME, "Aventura");

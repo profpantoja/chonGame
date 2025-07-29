@@ -28,9 +28,9 @@ public class Sword extends CloseWeapon {
                 80,
                 3,
                 0,
-                "/images/weapons/slash/vinewhip_attack.png",
+                "/images/weapons/slash/mewtwo-closeattack.png",
                 false,
-                100,
+                500,
                 direction,
                 owner);
     }

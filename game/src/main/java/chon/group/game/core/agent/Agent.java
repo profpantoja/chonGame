@@ -24,6 +24,7 @@ public class Agent extends Entity {
     private long attackEndTime = 0;
 
     /** Flag to indicate if the agent is currently attacking. */
+    @SuppressWarnings("unused")
     private boolean attacking = false;
 
     /** The time of the last hit taken. */
@@ -57,6 +58,8 @@ public class Agent extends Entity {
     /** The agent's energy cost for using the weapon. */
     private boolean isEnemy;
 
+    private String pathImage;
+
 
     /**
      * Constructor to initialize the agent properties.
@@ -75,8 +78,7 @@ public class Agent extends Entity {
         this.energy = 1.0;
         this.fullEnergy = 1.0;
         this.recoveryFactor = 0.0002;
-        this.lastShotTime = lastShotTime;
-        this.shotCooldown = shotCooldown;
+
     }
 
 
@@ -343,6 +345,14 @@ public class Agent extends Entity {
     
     public void setEnemy(boolean isEnemy) {
         this.isEnemy = isEnemy;
+    }
+
+    public String getPathImage() {
+        return pathImage;
+    }
+
+    public void setPathImage(String pathImage) {
+        this.pathImage = pathImage;
     }
 
 }

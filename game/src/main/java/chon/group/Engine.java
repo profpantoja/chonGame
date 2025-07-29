@@ -121,7 +121,7 @@ public class Engine extends Application {
     private void resetGame(GraphicsContext gc) {
         gameSet = new GameSet();
         drawer = new JavaFxDrawer(gc, null);
-        mainMenu = new MainMenu(drawer, new Image(getClass().getResourceAsStream("/images/environment/CHAR ADVENTURES.png")));
+        mainMenu = new MainMenu(drawer, new Image(getClass().getResourceAsStream("/images/environment/menubackground-poke.png")));
         menuPause = new PauseMenu(drawer, gameSet.getEnvironment().getPauseImage());
         input = new ArrayList<>();
         mediator = new JavaFxMediator(gameSet.getEnvironment(), gc);

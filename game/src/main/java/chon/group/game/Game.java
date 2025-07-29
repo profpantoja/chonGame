@@ -47,10 +47,12 @@ public class Game {
     private boolean wasPaused = false;
 
     public static final String gameMusic = "/sounds/battlepoke.mp3";
-    public static final String gameOverMusic = "/sounds/gameOverMusic.wav";
+    public static final String gameOverMusic = "/sounds/gameoverpoke.wav";
     public static final String menuMusic = "/sounds/menupoke.mp3";
-    public static final String winSound = "/sounds/winSound.wav";
+    public static final String winSound = "/sounds/victorypoke.mp3";
     public static final String attack = "/sounds/fireballsound.mp3";
+    public static final String lvl3music = "/sounds/finalbattlesound.mp3";
+    public static final String lvl4music = "/sounds/lvl4sound.mp3";
 
     public Game(Environment environment, EnvironmentDrawer mediator, ArrayList<String> input) {
         this.environment = environment;

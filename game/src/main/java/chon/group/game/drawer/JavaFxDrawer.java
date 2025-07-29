@@ -434,7 +434,7 @@ public class JavaFxDrawer {
         gc.fillRect(0, 0, getCanvasWidth(), getCanvasHeight());
     }
 
-    double centerX = getCanvasWidth() / 2;
+    double centerX = getCanvasWidth() / 2 - 40;
 
     // 2. Título "ENGINE" no topo
     gc.setFont(Font.font("Verdana", FontWeight.BOLD, 28));
