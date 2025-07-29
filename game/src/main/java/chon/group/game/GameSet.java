@@ -12,14 +12,11 @@ import chon.group.game.core.animation.AnimationSystem;
 import chon.group.game.core.animation.SimpleAnimationSpritesheet;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.environment.Level;
-import chon.group.game.core.weapon.CloseWeapon;
 import chon.group.game.core.menu.MainOption;
 import chon.group.game.core.menu.PauseOption;
 import chon.group.game.core.weapon.Panel;
 import chon.group.game.core.weapon.Weapon;
-import chon.group.game.domain.weapon.Cannon;
 import chon.group.game.domain.weapon.Lancer;
-import chon.group.game.domain.weapon.Sword;
 import chon.group.game.core.menu.MenuTextManager;
 
 public class GameSet {
@@ -80,19 +77,21 @@ public class GameSet {
                 0,
                 0,
                 canvasHeight,
-                8024,
-                "/images/environment/castleLong.png");
+                1918,
+                "/images/environment/bg_png.png");
 
         Level level2 = new Level(
                 0,
                 0,
                 canvasHeight,
-                8000,
-                "/images/environment/mountain.png");
+                1918,
+                "/images/environment/bg2_png.png");
+
 
         /* Set background music for each level */
         level1.setBackgroundMusic(Game.gameMusic);
         level2.setBackgroundMusic(Game.menuMusic);
+
 
         environment = new Environment(
                 this.canvasHeight,
@@ -101,9 +100,9 @@ public class GameSet {
                 panel);
 
 
-        Agent chonBota = new Agent(400, 540, 90, 65, 10, 1000, "/images/agents/chonBota.png", false, false);
-        AnimationSpritesheet idleSheet = new SimpleAnimationSpritesheet(64, 90, 4, 200, "/images/agents/chonBotaAnimated.png");
-        AnimationSpritesheet runSheet = new SimpleAnimationSpritesheet(64, 90, 4, 200, "/images/agents/chonBotaAnimated.png");
+        Agent Nick = new Agent(400, 540, 150, 90, 10, 1000, "/images/agents/standing4.png", false, false);
+        AnimationSpritesheet idleSheet = new SimpleAnimationSpritesheet(64, 90, 4, 200, "/images/agents/standing4.png");
+        AnimationSpritesheet runSheet = new SimpleAnimationSpritesheet(64, 90, 4, 200, "/images/agents/running2.png");
 
         AnimationGraphics graphics = new AnimationGraphics();
 
@@ -111,34 +110,48 @@ public class GameSet {
                 graphics.addSpritesheet(AnimationStatus.RUNNING, runSheet);
 
         AnimationSystem animationSystem = new AnimationSystem(graphics);
-        chonBota.setAnimationSystem(animationSystem);
+        Nick.setAnimationSystem(animationSystem);
 
-chonBota.setGravityEffects(true);
-chonBota.setProtagonist(true);
+        Nick.setGravityEffects(true);
+        Nick.setProtagonist(true);
 
-
-        Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, 0.05, "", false);
         Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
         Weapon lancer2 = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
-        CloseWeapon sword = new Sword(400, 390, 0, 0, 3, 0,  "", false);
+        Weapon lancer3 = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
 
-        chonBota.setWeapon(lancer);
 
-        Agent chonBot = new Agent(600, 390, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
-     
+        Nick.setWeapon(lancer);
 
-        Agent enemy = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
+        Agent enemy = new Agent(600, 540, 120, 95, 1, 500, "/images/agents/monstro1.png", true, true);
 
-        environment.setProtagonist(chonBota);
-        chonBot.setWeapon(lancer2);
 
-        chonBot.setEnemy(true);
+        Agent enemy1 = new Agent(5, 540, 90, 65, 1, 500, "/images/agents/monstro1.png", true, true);
+        Agent enemy2 = new Agent(50, 540, 90, 65, 1, 500, "/images/agents/monstro1.png", true, true);
+        Agent enemy3 = new Agent(110, 540, 90, 65, 1, 500, "/images/agents/monstro1.png", true, true);
+        Agent enemy4 = new Agent(160, 540, 90, 65, 1, 500, "/images/agents/monstro1.png", true, true);
+        Agent boss = new Agent(920, 570, 190, 165, 1, 500, "/images/agents/boss.png", true, true);
+
+        environment.setProtagonist(Nick);
+        enemy.setWeapon(lancer2);
+        boss.setWeapon(lancer3);
+
         enemy.setEnemy(true);
-        environment.setPauseImage("/images/environment/pause.png");
-        environment.setGameOverImage("/images/environment/gameover.png");
+        enemy1.setEnemy(true);
+        enemy2.setEnemy(true);
+        enemy3.setEnemy(true);
+        enemy4.setEnemy(true);
+        boss.setEnemy(true);
 
-        level1.getAgents().add(chonBot);
-        level2.getAgents().add(enemy);
+
+        environment.setPauseImage("/images/environment/pause.png");
+        environment.setGameOverImage("/images/environment/gameover_image.png");
+
+        level1.getAgents().add(enemy);
+        level2.getAgents().add(enemy1);
+        level2.getAgents().add(enemy2);
+        level2.getAgents().add(enemy3);
+        level2.getAgents().add(enemy4);
+        level2.getAgents().add(boss);
 
 
         /* Set up some collectable objects */

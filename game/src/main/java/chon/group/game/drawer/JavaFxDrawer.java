@@ -438,7 +438,7 @@ public class JavaFxDrawer {
 
     // 2. Título "ENGINE" no topo
     gc.setFont(Font.font("Verdana", FontWeight.BOLD, 28));
-    gc.setFill(Color.LIGHTGRAY);
+    gc.setFill(Color.GRAY);
     gc.setTextAlign(TextAlignment.CENTER);
     gc.fillText(title, centerX, getCanvasHeight() * 0.75); // pode ajustar essa altura conforme sua imagem
 
@@ -448,7 +448,7 @@ public class JavaFxDrawer {
 
     for (int i = 0; i < options.length; i++) {
         double optionY = firstOptionY + (i * 45); // espaço entre as opções
-        gc.setFill((i == selectedIndex) ? Color.YELLOW : Color.WHITE);
+        gc.setFill((i == selectedIndex) ? Color.DARKCYAN : Color.WHITE);
         gc.fillText(options[i], centerX, optionY);
     }
 

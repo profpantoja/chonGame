@@ -29,7 +29,6 @@ public class Game {
     private ArrayList<String> input;
 
     private GameStatus status = GameStatus.START;
-    private boolean isPaused = false;
     private boolean canSlash = true;
     private int weaponDecision = 1;
     private boolean debugMode = true;

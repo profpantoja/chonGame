@@ -29,6 +29,8 @@ public class Level extends Entity {
     /** Total number of collectible objects in the environment. */
     private int totalCollectibleCount = 0;
 
+
+
     public Level(int posX, int posY, int height, int width, String pathImage) {
         super(posX, posY, height, width, 0, 0, pathImage, false, false);
         this.agents = new ArrayList<Agent>();
@@ -86,17 +88,15 @@ public class Level extends Entity {
         return totalCollectibleCount;
     }
 
-    public boolean isCompleted(Environment env) {
-        if (env.getProtagonist().getPosX() >= 0.95 * this.getWidth()) {
-            for (Agent agent : this.agents) {
-                if (agent != env.getProtagonist() && !agent.isDead()) {
-                    return false;
-                }
-            }
-            return true;
+public boolean isCompleted(Environment env) {
+    for (Agent agent : this.agents) {
+        if (agent.isEnemy() && !agent.isDead()) {
+            return false;
         }
-        return false;
     }
+    return true;
+}
+
 
     /**
      * Counts how many collectible objects are currently in the environment.

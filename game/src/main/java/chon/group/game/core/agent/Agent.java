@@ -9,8 +9,6 @@ import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Slash;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.messaging.Message;
-import javafx.animation.PauseTransition;
-import javafx.animation.Timeline;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -66,14 +64,6 @@ public class Agent extends Entity {
 
     private String pathImageJump;
 
-    private boolean blinking = false;
-
-    private PauseTransition damageStatusTimer;
-
-    private PauseTransition attackStatusTimer;
-
-    private Timeline blinkTimeline;
-    
     public void setPathImageDeath(String pathImageDeath) {
         this.pathImageDeath = pathImageDeath;
     }
@@ -130,8 +120,6 @@ public class Agent extends Entity {
         this.energy = 1.0;
         this.fullEnergy = 1.0;
         this.recoveryFactor = 0.0002;
-        this.lastShotTime = lastShotTime;
-        this.shotCooldown = shotCooldown;
     }
 
     
