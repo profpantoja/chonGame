@@ -2,9 +2,16 @@ package chon.group.game.core.agent;
 
 import java.util.List;
 
+import chon.group.game.core.weapon.CloseWeapon;
+import chon.group.game.core.animation.AnimationSpritesheet;
 import chon.group.game.core.weapon.Shot;
+import chon.group.game.core.weapon.Slash;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.messaging.Message;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 
 /**
  * Represents an agent in the game, with properties such as position, size,
@@ -25,6 +32,10 @@ public class Agent extends Entity {
     /** The Agent's Weapon */
     private Weapon weapon;
 
+    
+    /* The Agent's Close Weapon */
+    private CloseWeapon closeWeapon;
+
     /** The initial agent's energy */
     private double energy;
 
@@ -33,9 +44,18 @@ public class Agent extends Entity {
 
     /** The agent's energy recovery factor */
     private final double recoveryFactor;
+    /** The time of the last shot fired. */
+    private long lastShotTime = 0;
+    /** The cooldown time between shots in milliseconds. */
+    private long shotCooldown = 5000; // 5 segundos em milissegundos
+    /** The agent's energy cost for using the weapon. */
+    private boolean isEnemy;
+    
+    public boolean canAttack = true;
+
 
     /**
-     * Constructor to initialize the agent properties including its direction.
+     * Constructor to initialize the agent properties.
      *
      * @param posX      the agent's initial X (horizontal) position
      * @param posY      the agent's initial Y (vertical) position
@@ -44,14 +64,48 @@ public class Agent extends Entity {
      * @param speed     the agent's speed
      * @param health    the agent's health
      * @param pathImage the path to the agent's image
-     * @param flipped   the agent's direction (RIGHT=0 or LEFT=1)
      */
+
     public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped, boolean visibleBars) {
         super(posX, posY, height, width, speed, health, pathImage, flipped, visibleBars);
         this.energy = 1.0;
         this.fullEnergy = 1.0;
         this.recoveryFactor = 0.0002;
+        this.lastShotTime = lastShotTime;
+        this.shotCooldown = shotCooldown;
     }
+
+
+    @Override
+    public Image getImage() {
+        Image baseImage;
+        if (getAnimationSystem() != null) {
+            baseImage = getAnimationSystem().getCurrentFrameImage();
+        } else {
+            baseImage = image;
+        }
+        if (isFlipped() && baseImage != null && getAnimationSystem() != null) {
+            ImageView view = new ImageView(baseImage);
+            view.setScaleX(-1);
+            view.setFitWidth(getWidth());
+            view.setFitHeight(getHeight());
+            SnapshotParameters params = new SnapshotParameters();
+            params.setFill(Color.TRANSPARENT);
+            return view.snapshot(params, null);
+        }
+        return baseImage;
+    }
+
+    public void syncDimensions() {
+        if (getAnimationSystem() != null) {
+            AnimationSpritesheet sheet = getAnimationSystem().getGraphics().getSpritesheet(getAnimationSystem().getCurrentStatus());
+            if (sheet != null) {
+                setWidth(sheet.getFrameWidth());
+                setHeight(sheet.getFrameHeight());
+            }
+        }
+    }
+  
 
     /**
      * Gets the last hit taken.
@@ -115,6 +169,24 @@ public class Agent extends Entity {
     }
 
     /**
+     * Gets the agent's close combat weapon.
+     *
+     * @return its close combat weapon.
+     */
+    public CloseWeapon getCloseWeapon() {
+        return closeWeapon;
+    }
+
+    /**
+     * Sets the agent new weapon.
+     *
+     * @param weapon the new weapon
+     */
+    public void setCloseWeapon(CloseWeapon closeWeapon) {
+        this.closeWeapon = closeWeapon;
+    }
+
+    /**
      * Gets the current energy level (0.0 to 1.0).
      *
      * @return current energy level
@@ -138,6 +210,21 @@ public class Agent extends Entity {
 
     public double getRecoveryFactor() {
         return recoveryFactor;
+    }
+
+    public long getLastShotTime() {
+        return lastShotTime;
+    }
+    public void setLastShotTime(long lastShotTime) {
+        this.lastShotTime = lastShotTime;
+    }
+
+    public long getShotCooldown() {
+        return shotCooldown;
+    }
+
+    public void setShotCooldown(long shotCooldown) {
+        this.shotCooldown = shotCooldown;
     }
 
     /**
@@ -188,6 +275,7 @@ public class Agent extends Entity {
         if (!this.invulnerable) {
             super.takeDamage(damage, messages);
             this.lastHitTime = System.currentTimeMillis();
+            // SoundManager.playSound("sounds/hurt.wav"); não há som de quando o agente toma dano
         }
     }
 
@@ -204,12 +292,34 @@ public class Agent extends Entity {
     }
 
     public Shot useWeapon() {
+        if (this.getWeapon() == null) return null; 
+
         String direction = this.isFlipped() ? "LEFT" : "RIGHT";
         if (this.energy >= this.getWeapon().getEnergyCost()) {
             this.consumeEnergy(this.getWeapon().getEnergyCost());
-            return this.weapon.fire(this.getPosX(), this.getPosY(), direction);
+            return this.weapon.fire(this.getPosX(), this.getPosY(), direction, this);
         } else
             return null;
+    }
+
+    public Slash useCloseWeapon() {
+        if (this.isDead()) return null;
+        if (this.getCloseWeapon() == null) return null;
+
+        String direction = this.isFlipped() ? "LEFT" : "RIGHT";
+        if (this.energy >= this.getCloseWeapon().getEnergyCost()) {
+            this.consumeEnergy(this.getCloseWeapon().getEnergyCost());
+            return this.closeWeapon.slash(this.getPosX(), this.getPosY(), direction, this);
+        } else
+            return null;
+    }
+
+    public boolean isEnemy() {
+        return isEnemy;
+    }
+    
+    public void setEnemy(boolean isEnemy) {
+        this.isEnemy = isEnemy;
     }
 
 }
