@@ -189,8 +189,12 @@ public class Environment {
     public void detectCollision() {
         for (Agent agent : this.currentLevel.getAgents()) {
             if (protagonist != null && intersect(protagonist, agent)) {
-                int damage = 100;
-                protagonist.takeDamage(damage, messages);
+                //int damage = 100;
+                //protagonist.takeDamage(damage, messages);
+                if(agent.getCloseWeapon() != null) {
+                    // Apply damage to the protagonist
+
+                }
             }
         }
     }
@@ -202,7 +206,7 @@ public class Environment {
      * @param b the second entity
      * @return true if their areas overlap, false otherwise
      */
-    private boolean intersect(Entity a, Entity b) {
+    public boolean intersect(Entity a, Entity b) {
         return a.getPosX() < b.getPosX() + b.getWidth() &&
                 a.getPosX() + a.getWidth() > b.getPosX() &&
                 a.getPosY() < b.getPosY() + b.getHeight() &&

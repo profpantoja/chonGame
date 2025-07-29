@@ -17,13 +17,13 @@ public class LightSaber extends CloseWeapon {
     @Override
     protected Slash createSlash(int posX, int posY, String direction, Agent owner) {
         if (direction.equals("RIGHT"))
-            posX += 65 + 10;
+            posX += 70 + 10;
         else
-            posX -= 65 + 10;
+            posX -= 70 + 10;
         return new SaberSlash(posX,
                 posY,
+                100,
                 150,
-                250,
                 6,
                 0,
                 "/images/weapons/lightsaber/saberAttackInv.png",

@@ -22,6 +22,7 @@ import chon.group.game.core.menu.MainMenu;
 import chon.group.game.core.menu.PauseMenu;
 
 
+
 /**
  * The {@code Engine} class represents the main entry point of the application
  * and serves as the game engine for "Chon: The Learning Game."
@@ -70,7 +71,7 @@ public class Engine extends Application {
             /* Set up the scene and stage */
             StackPane root = new StackPane();
             Scene scene = new Scene(root, gameSet.getCanvasWidth(), gameSet.getCanvasHeight());
-            theStage.setTitle("Chon: The Learning Game");
+            theStage.setTitle("Star Wars: Rogue Wars ");
             theStage.setScene(scene);
 
             root.getChildren().add(canvas);
@@ -90,9 +91,11 @@ public class Engine extends Application {
                         resetGame(gc);
                         chonGame.setStatus(GameStatus.RUNNING);
                         mainMenu.reset();
+                        
                     }
                 }
         });
+        
 
             scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {

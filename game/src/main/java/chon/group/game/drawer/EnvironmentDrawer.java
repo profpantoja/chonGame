@@ -2,6 +2,7 @@ package chon.group.game.drawer;
 
 import chon.group.game.core.menu.MainMenu;
 import chon.group.game.core.menu.PauseMenu;
+import chon.group.game.core.menu.SelectMenu;
 
 /**
  * The {@code EnvironmentDrawer} interface defines methods for rendering
@@ -89,5 +90,6 @@ public interface EnvironmentDrawer {
      */
     void drawPauseMenu(PauseMenu menuPause);
 
+    //void drawSelectMenu(SelectMenu selectMenu);
 
 }

@@ -434,6 +434,7 @@ public class JavaFxDrawer {
         gc.fillRect(0, 0, getCanvasWidth(), getCanvasHeight());
     }
 
+    
     double centerX = getCanvasWidth() / 2;
 
     // 2. Título "ENGINE" no topo
@@ -455,5 +456,38 @@ public class JavaFxDrawer {
     // Reset alinhamento
     gc.setTextAlign(TextAlignment.LEFT);
 }
+
+   public void drawSelectMenu(Image backgroundImage, String title, int selectedIndex, String... options) {
+    // 1. Fundo
+    if (backgroundImage != null && !backgroundImage.isError()) {
+        gc.drawImage(backgroundImage, 0, 0, getCanvasWidth(), getCanvasHeight());
+    } else {
+        gc.setFill(Color.BLACK);
+        gc.fillRect(0, 0, getCanvasWidth(), getCanvasHeight());
+    }
+
+    
+    double centerX = getCanvasWidth() / 2;
+
+    // 2. Título "ENGINE" no topo
+    gc.setFont(Font.font("Verdana", FontWeight.BOLD, 28));
+    gc.setFill(Color.LIGHTGRAY);
+    gc.setTextAlign(TextAlignment.CENTER);
+    gc.fillText(title, centerX, getCanvasHeight() * 0.75); // pode ajustar essa altura conforme sua imagem
+
+    // 3. Opções do menu abaixo da palavra "ENGINE"
+    gc.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
+    double firstOptionY = getCanvasHeight() * 0.82;
+
+    for (int i = 0; i < options.length; i++) {
+        double optionY = firstOptionY + (i * 45); // espaço entre as opções
+        gc.setFill((i == selectedIndex) ? Color.YELLOW : Color.WHITE);
+        gc.fillText(options[i], centerX, optionY);
+    }
+
+    // Reset alinhamento
+    gc.setTextAlign(TextAlignment.LEFT);
+}
+
 
 }

@@ -7,6 +7,7 @@ import chon.group.game.core.agent.Object;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.menu.MainMenu;
 import chon.group.game.core.menu.PauseMenu;
+import chon.group.game.core.menu.SelectMenu;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Slash;
 import chon.group.game.messaging.Message;
@@ -292,6 +293,22 @@ public class JavaFxMediator implements EnvironmentDrawer {
         menu.getLabels() // você pode criar um método getLabels() no Menu
     );
     }
+    
+    /*
+    @Override
+    public void drawSelectMenu(SelectMenu selectMenu) {
+    drawer.drawSelectMenu(
+        selectMenu.getBackgroundImage(),
+        "Select Your Character",
+        selectMenu.getSelectedOptionIndex(),
+        selectMenu.getLabels() // você pode criar um método getLabels() no Menu
+    );
+    }
+     * 
+    */
+
+
+
 
     /**
      * Draws the pause menu with the specified background image, title, and

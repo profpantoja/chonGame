@@ -12,7 +12,7 @@ public class Slash extends Entity {
     private boolean destructible = false;
     private String direction;
     private int damage;
-    private int lifeSpan = 90; 
+    private int lifeSpan = 40; 
     private int ticksAlive = 0;
     private Agent owner;
 

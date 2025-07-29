@@ -7,14 +7,14 @@ import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.messaging.Message;
 
-public class DL44 extends Weapon {
+public class Gunblaster extends Weapon {
 
-    public DL44(int posX, int posY, int height, int width, int speed, int health, double energyCost, String pathImage,
+    public Gunblaster(int posX, int posY, int height, int width, int speed, int health, double energyCost, String pathImage,
             boolean flipped) {
         super(posX, posY, height, width, speed, health, energyCost, pathImage, flipped);
     }
 
-    public DL44() {
+    public Gunblaster() {
         super(0, 0, 0, 0, 0, 0, 0, null, false);
     }
 
@@ -29,11 +29,11 @@ public class DL44 extends Weapon {
                 posY + 30,
                 20,
                 64,
-                8,
+                5,
                 0,
                 "/images/weapons/DL44/blasterShoot.png",
                 false,
-                500,
+                100,
                 direction,
                 owner);
 
