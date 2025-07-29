@@ -24,11 +24,11 @@ public class Cannon extends Weapon {
                 posY,
                 42,
                 64,
-                3,
+                6,
                 0,
                 "/images/weapons/missile/missile001.png",
                 false,
-                1500,
+                2500,
                 direction,
                 owner);
     }

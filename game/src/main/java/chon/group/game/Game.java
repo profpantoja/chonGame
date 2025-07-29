@@ -46,15 +46,14 @@ public class Game {
     private boolean victoryMusicPlayed = false;
     private boolean wasPaused = false;
 
-    public static final String gameMusic = "/sounds/gameMusic.wav";
-    public static final String gameMusicLevel1 = "/sounds/hitSound.wav";
-    public static final String gameMusicLevel2 = "/sounds/level2Music.wav";
-    public static final String gameMusicLevel3 = "/sounds/level3Music.wav";
-    public static final String gameMusicLevel4 = "/sounds/level4Music.wav";
+    public static final String gameMusic = "/sounds/gameMusic.mp3";
+    public static final String gameMusicLevel1 = "/sounds/gameMusicLevel1.mp3";
+    public static final String gameMusicLevel2 = "/sounds/gameMusicLevel2.mp3";
+    public static final String gameMusicLevel3 = "/sounds/gameMusicLevel3.mp3";
+    public static final String gameMusicLevel4 = "/sounds/gameMusicLevel4.mp3";
     public static final String gameOverMusic = "/sounds/gameOverMusic.wav";
-    public static final String menuMusic = "/sounds/menuSound.wav";
-    public static final String winSound = "/sounds/winSound.wav";
-    public static final String attack = "/sounds/attackFX.wav";
+    public static final String menuMusic = "/sounds/gameMusic.mp3";
+    public static final String winSound = "/sounds/gameFinish.wav";
 
     public Game(Environment environment, EnvironmentDrawer mediator, ArrayList<String> input) {
         this.environment = environment;
@@ -206,7 +205,6 @@ public class Game {
                             input.remove("SPACE");
                             Shot shot = environment.getProtagonist().useWeapon();
                             if (shot != null) {
-                                SoundManager.playSound(attack);
                                 environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.ATTACKING);
                                 protagonistAttackEndTime = now + ATTACK_DURATION;
                                 environment.getCurrentLevel().getShots().add(shot);
@@ -220,7 +218,6 @@ public class Game {
                             canSlash = false;
                             Slash slash = environment.getProtagonist().useCloseWeapon();
                             if (slash != null) {
-                                SoundManager.playSound(attack);
                                 environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.ATTACKING);
                                 protagonistAttackEndTime = now + ATTACK_DURATION;
                                 environment.getCurrentLevel().getSlashes().add(slash);

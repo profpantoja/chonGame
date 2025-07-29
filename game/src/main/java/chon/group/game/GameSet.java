@@ -105,8 +105,10 @@ public class GameSet {
                 "/images/environment/forest.png");
 
         /* Set background music for each level */
-        level1.setBackgroundMusic(Game.gameMusic);
-        level2.setBackgroundMusic(Game.menuMusic);
+        level1.setBackgroundMusic(Game.gameMusicLevel1);
+        level2.setBackgroundMusic(Game.gameMusicLevel2);
+        level3.setBackgroundMusic(Game.gameMusicLevel3);
+        level4.setBackgroundMusic(Game.gameMusicLevel4);
 
         environment = new Environment(
                 this.canvasHeight,
@@ -168,9 +170,9 @@ public class GameSet {
          * The goblins are positioned at different locations in the level.
          * * Each goblin has its own instance of the AnimationSystem with the same animations.
          */
-        Agent goblin1 = new Agent(200, 400, 90, 65, 2, 1, "/images/agents/chonBot.png", true, true);
-        Agent goblin2 = new Agent(920, 440, 90, 65, 3, 1, "/images/agents/chonBot.png", true, true);
-        Agent goblin3 = new Agent(500, 700, 90, 65, 2, 1, "/images/agents/chonBot.png", true, true);
+        Agent goblin1 = new Agent(200, 400, 90, 65, 2, 1500, "/images/agents/chonBot.png", true, true);
+        Agent goblin2 = new Agent(920, 440, 90, 65, 3, 2500, "/images/agents/chonBot.png", true, true);
+        Agent goblin3 = new Agent(500, 700, 90, 65, 2, 1500, "/images/agents/chonBot.png", true, true);
         AnimationSpritesheet idleGoblin = new SimpleAnimationSpritesheet(46, 52, 6, 1000, "/images/agents/goblin.png");
         AnimationSpritesheet runGoblin = new SimpleAnimationSpritesheet(46, 52, 6, 500, "/images/agents/goblin.png");
         AnimationSpritesheet jumpGoblin = new SimpleAnimationSpritesheet(46, 52, 6, 500, "/images/agents/goblin.png");
@@ -203,7 +205,7 @@ public class GameSet {
          * The golem is designed to be a challenging enemy for the player.
         */
         
-        Agent golem = new Agent(1000, 440, 90, 65, 1, 5000, "/images/agents/chonBot.png", true, true);
+        Agent golem = new Agent(1000, 440, 90, 65, 1, 10000, "/images/agents/chonBot.png", true, true);
         AnimationSpritesheet idleGolem = new SimpleAnimationSpritesheet(76, 118, 7, 1000, "/images/agents/golemRun.png");
         AnimationSpritesheet runGolem = new SimpleAnimationSpritesheet(76, 118, 7, 500, "/images/agents/golemRun.png");
         AnimationSpritesheet jumpGolem = new SimpleAnimationSpritesheet(76, 118, 7, 500, "/images/agents/golemRun.png");
@@ -243,7 +245,7 @@ public class GameSet {
         level3.getAgents().add(golem);
         
         
-        environment.setPauseImage("/images/environment/pause.png") ;
+        environment.setPauseImage("/images/environment/GamePaused.png") ;
         environment.setGameOverImage("/images/environment/gameover.png");   
 
         /* Set up some collectable objects */
