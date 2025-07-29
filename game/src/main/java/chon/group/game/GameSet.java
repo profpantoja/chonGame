@@ -79,27 +79,35 @@ public class GameSet {
         Level level1 = new Level(
                 0,
                 0,
-                canvasHeight,
-                8024,
-                "/images/environment/DungeonLong1.png");
+                900,
+                1600,
+                "/images/environment/dungeon.png");
 
         Level level2 = new Level(
                 0,
                 0,
                 canvasHeight,
-                8024,
-                "/images/environment/DungeonLong2.png");
-
+                1280,
+                "/images/environment/cave.png");
+        
         Level level3 = new Level(
                 0,
                 0,
                 canvasHeight,
                 1280,
-                "/images/environment/BossMap.png");       
+                "/images/environment/cave2.png");
+
+        Level level4 = new Level(
+                0,
+                0,
+                canvasHeight,
+                3500,
+                "/images/environment/abyss.png");       
         /* Set background music for each level */
-        level1.setBackgroundMusic(Game.gameMusic);
-        level2.setBackgroundMusic(Game.menuMusic);
-        level3.setBackgroundMusic(Game.gameMusic);
+        level1.setBackgroundMusic(Game.level1);
+        level2.setBackgroundMusic(Game.level2);
+        level3.setBackgroundMusic(Game.level3);
+        level4.setBackgroundMusic(Game.level4);
 
         environment = new Environment(
                 this.canvasHeight,
@@ -107,7 +115,7 @@ public class GameSet {
                 this.canvasWidth,
                 panel);
 
-        Agent protagonist = new Agent(200, 544, 88, 152, 3, 2000, "/images/agents/protagonist/protagonist.png", false, false);
+        Agent protagonist = new Agent(200, 544, 88, 152, 5, 2000, "/images/agents/protagonist/protagonist.png", false, false);
         AnimationSpritesheet idleProtagonist = new SimpleAnimationSpritesheet(152, 88, 10, 2000, "/images/agents/protagonist/idle_animation.png");
         AnimationSpritesheet runProtagonist = new SimpleAnimationSpritesheet(152, 88, 6, 500, "/images/agents/protagonist/walk_animation.png");
         AnimationSpritesheet attackProtagonist = new SimpleAnimationSpritesheet(152, 88, 6, 200, "/images/agents/protagonist/attack_animation.png");
@@ -126,20 +134,16 @@ public class GameSet {
         
         protagonist.setAnimationSystem(protagonistSystem);
 
-        Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, 0.05, "", false);
         Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
-        Weapon lancer2 = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
         CloseWeapon sword = new Sword(400, 390, 0, 0, 3, 0,  "", false);
-        CloseWeapon sword2 = new Sword(400, 390, 0, 0, 3, 0,  "", false);
-        CloseWeapon sword3 = new Sword(400, 390, 0, 0, 3, 0,  "", false);
-        CloseWeapon sword4 = new Sword(400, 390, 0, 0, 3, 0,  "", false);
+        CloseWeapon swordBoss = new Sword(400, 390, 0, 0, 3, 0,  "", false);
 
         
         protagonist.setCloseWeapon(sword);
 
         // Sets for the enemy
 
-        Agent shooter = new Agent(5000, 435, 70, 80, 1, 500, "/images/agents/shooter/shooter.png", true, true);
+        Agent shooter = new Agent(1000, 200, 70, 80, 1, 500, "/images/agents/shooter/shooter.png", true, true);
 
         // Animações do ShooterEnemy
         AnimationSpritesheet idleShooter = new SimpleAnimationSpritesheet(80, 70, 6, 1000, "/images/agents/shooter/Shooter_idle_animation.png");
@@ -165,7 +169,7 @@ public class GameSet {
 
         // Sets for the enemy
 
-        Agent skeleton = new Agent(1000, 440, 64, 64, 1, 500, "/images/agents/skeleton/sk_walk_animation.png", true, true);
+        Agent skeleton = new Agent(700, 440, 64, 64, 1, 500, "/images/agents/skeleton/sk_walk_animation.png", true, true);
 
         // Animações do SkeletonEnemy
         AnimationSpritesheet idleSkeleton = new SimpleAnimationSpritesheet(64, 64, 5, 1000, "/images/agents/skeleton/sk_walk_animation.png");
@@ -186,11 +190,10 @@ public class GameSet {
         AnimationSystem skeletonSystem = new AnimationSystem(skeletonGraphics);
         skeleton.setAnimationSystem(skeletonSystem);
         skeleton.setEnemy(true);
-        skeleton.setCloseWeapon(sword2);
 
         // Sets for the enemy
 
-        Agent skeletonWH = new Agent(2000, 440, 62, 70, 1, 500, "/images/agents/skeleton/skeleton_wh_animation.png", true, true);
+        Agent skeletonWH = new Agent(1010, 700, 62, 70, 1, 500, "/images/agents/skeleton/skeleton_wh_animation.png", true, true);
 
         // Animações do SkeletonEnemy Without
         AnimationSpritesheet idleSkeletonWH = new SimpleAnimationSpritesheet(70, 62, 6, 1000, "/images/agents/skeleton/skeleton_wh_animation.png");
@@ -211,11 +214,10 @@ public class GameSet {
         AnimationSystem skeletonWHSystem = new AnimationSystem(skeletonWHGraphics);
         skeletonWH.setAnimationSystem(skeletonWHSystem);
         skeletonWH.setEnemy(true);
-        skeletonWH.setCloseWeapon(sword3);
 
         // Sets for the enemy
 
-        Agent boss = new Agent(700, 440, 70, 88, 1, 500, "/images/agents/boss/rico.png", true, true);
+        Agent boss = new Agent(1500, 440, 70, 88, 1, 1000, "/images/agents/boss/rico.png", true, true);
 
         // Animações do Boss Without
         AnimationSpritesheet bossIdle = new SimpleAnimationSpritesheet(88, 70, 6, 1000, "/images/agents/boss/Enrico_walk_animation.png");
@@ -236,17 +238,19 @@ public class GameSet {
         AnimationSystem bossSystem = new AnimationSystem(bossGraphics);
         boss.setAnimationSystem(bossSystem);
         boss.setEnemy(true);
-        boss.setCloseWeapon(sword4);
+        boss.setCloseWeapon(swordBoss);
 
 
         // Adiciona Inimigos ao level
-        // para commitar
         level1.getAgents().add(skeleton);
         level1.getAgents().add(skeletonWH);
         level1.getAgents().add(shooter);
         level2.getAgents().add(skeletonWH);
         level2.getAgents().add(shooter);
-        level3.getAgents().add(boss);
+        level3.getAgents().add(skeletonWH);
+        level3.getAgents().add(shooter);
+        level3.getAgents().add(shooter);
+        level4.getAgents().add(boss);
 
 
 
@@ -259,19 +263,13 @@ public class GameSet {
         /* Set up some collectable objects */
         List<Object> objects = new ArrayList<>();
         AnimationSpritesheet crownAnimated = new SimpleAnimationSpritesheet(17, 17, 6, 200, "/images/agents/crownAnimated.png");
-        objects.add(new Object(200, 540, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
-        objects.add(new Object(400, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
+        objects.add(new Object(900, 540, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
         objects.add(new Object(1000, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
-        objects.add(new Object(1400, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
-        objects.add(new Object(1800, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
-        objects.add(new Object(2000, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false,crownAnimated));
-        objects.add(new Object(2300, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
-        objects.add(new Object(2600, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
-        objects.add(new Object(2900, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
-        objects.add(new Object(3200, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
-        objects.add(new Object(4100, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
-        objects.add(new Object(5000, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
-        objects.add(new Object(6200, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
+        objects.add(new Object(400, 305, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
+        objects.add(new Object(850, 545, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
+        objects.add(new Object(180, 295, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
+        objects.add(new Object(650, 395, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false,crownAnimated));
+        objects.add(new Object(730, 495, 32, 32, 0, 0, "/images/agents/crown.png", false, false, true, false, crownAnimated));
 
         // Register objects into the environment and count total collectibles
         level1.setObjects(objects);
@@ -283,6 +281,9 @@ public class GameSet {
         level3.setObjects(objects);
         level3.countCollectibles();
         environment.getLevels().add(level3);
+        level4.setObjects(objects);
+        level4.countCollectibles();
+        environment.getLevels().add(level4);
         environment.setCurrentLevel(level1);
 
         MenuTextManager.getInstance().setText(MainOption.START_GAME, "Start game");

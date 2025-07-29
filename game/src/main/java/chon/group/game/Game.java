@@ -21,7 +21,7 @@ public class Game {
 
     private long victoryStartTime = 0;
     private final long VICTORY_DELAY = 3000;
-    private final long GAMEOVER_DELAY = 12000;
+    private final long GAMEOVER_DELAY = 5000;
     private long gameOverStartTime = 0;
 
     private MainMenu mainMenu;
@@ -46,11 +46,14 @@ public class Game {
     private boolean victoryMusicPlayed = false;
     private boolean wasPaused = false;
 
-    public static final String gameMusic = "/sounds/gameMusic.wav";
-    public static final String gameOverMusic = "/sounds/gameOverMusic.wav";
+    public static final String level1 = "/sounds/dungeonlvl.wav";
+    public static final String level2 = "/sounds/cavelvl.wav";
+    public static final String level3 = "/sounds/cave2lvl.wav";
+    public static final String level4 = "/sounds/lvl4.wav";
+    public static final String gameOverMusic = "/sounds/gameOverSound.wav";
     public static final String menuMusic = "/sounds/menuSound.wav";
     public static final String winSound = "/sounds/winSound.wav";
-    public static final String attack = "/sounds/attackFX.wav";
+    public static final String attack = "/sounds/attack.wav";
 
     public Game(Environment environment, EnvironmentDrawer mediator, ArrayList<String> input) {
         this.environment = environment;
@@ -169,7 +172,7 @@ public class Game {
     public void running() {
         String musicToPlay = environment.getCurrentLevel().getBackgroundMusic();
         if (musicToPlay == null || musicToPlay.isEmpty()) {
-            musicToPlay = Game.gameMusic;
+            musicToPlay = Game.level1;
         }
 
         if (!SoundManager.isCurrentMusic(musicToPlay)) {
@@ -324,7 +327,7 @@ public class Game {
     }
 
     public void init() {
-        SoundManager.playMusic(Game.gameMusic);
+        SoundManager.playMusic(Game.level1);
         this.status = GameStatus.RUNNING;
         mediator.renderGame();
     }
