@@ -9,77 +9,46 @@ import java.util.List;
 
 public class Level extends Entity {
 
-    /** List of agents present in the environment. */
     private List<Agent> agents;
-
-    /** List of collectible/destructible objects in the environment. */
     private List<Object> objects;
-
-    /** List of shots in the environment. */
     private List<Shot> shots;
-
-    /** Total number of collectible objects in the environment. */
-    private int totalCollectibleCount = 0;
+    private int totalEnemiesToSpawn;
+    private int enemiesKilledCount;
+    private boolean bossFightActive = false;
 
     public Level(int posX, int posY, int height, int width, String pathImage) {
         super(posX, posY, height, width, 0, 0, pathImage, false, false);
-        this.agents = new ArrayList<Agent>();
-        this.objects = new ArrayList<Object>();
-        this.shots = new ArrayList<Shot>();
+        this.agents = new ArrayList<>();
+        this.objects = new ArrayList<>();
+        this.shots = new ArrayList<>();
+        this.enemiesKilledCount = 0;
+        this.totalEnemiesToSpawn = 0;
     }
-
-    public List<Agent> getAgents() {
-        return agents;
-    }
-
-    public void setAgents(ArrayList<Agent> agents) {
-        this.agents = agents;
-    }
-
-    public List<Object> getObjects() {
-        return objects;
-    }
-
-    public void setObjects(List<Object> objects) {
-        this.objects = objects;
-    }
-
-    public List<Shot> getShots() {
-        return shots;
-    }
-
-    public void setShots(List<Shot> shots) {
-        this.shots = shots;
-    }
-
-    /**
-     * Gets the total number of collectible objects in the environment.
-     *
-     * @return the total number of collectibles
-     */
-    public int getTotalCollectibleCount() {
-        return totalCollectibleCount;
-    }
-
+    
     public boolean isCompleted(Environment env) {
-        if (env.getProtagonist().getPosX() >= 0.95 * this.getWidth()) {
-            for (Agent agent : this.agents) {
-                if (agent != env.getProtagonist() && !agent.isDead()) {
-                    return false;
-                }
-            }
-            return true;
+        if (bossFightActive) {
+            return this.getAgents().isEmpty();
         }
-        return false;
+        return getEnemiesKilledCount() >= getTotalEnemiesToSpawn() && getTotalEnemiesToSpawn() > 0;
     }
 
-    /**
-     * Counts how many collectible objects are currently in the environment.
-     */
-    public void countCollectibles() {
-        totalCollectibleCount = (int) this.objects.stream()
-                .filter(Object::isCollectible)
-                .count();
+    public boolean isBossFightActive() {
+        return bossFightActive;
     }
 
+    public void setBossFightActive(boolean active) {
+        this.bossFightActive = active;
+    }
+    
+    public void setTotalEnemiesToSpawn(int total) { this.totalEnemiesToSpawn = total; }
+    public int getTotalEnemiesToSpawn() { return totalEnemiesToSpawn; }
+    public void incrementEnemiesKilled() { this.enemiesKilledCount++; }
+    public int getEnemiesKilledCount() { return this.enemiesKilledCount; }
+    public void reset() { this.agents.clear(); this.shots.clear(); this.enemiesKilledCount = 0; this.bossFightActive = false; }
+    public List<Agent> getAgents() { return agents; }
+    public void setAgents(List<Agent> agents) { this.agents = agents; }
+    public List<Object> getObjects() { return objects; }
+    public void setObjects(List<Object> objects) { this.objects = objects; }
+    public List<Shot> getShots() { return shots; }
+    public void setShots(List<Shot> shots) { this.shots = shots; }
 }

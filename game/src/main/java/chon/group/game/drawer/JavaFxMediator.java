@@ -1,261 +1,124 @@
 package chon.group.game.drawer;
 
-import java.util.Iterator;
-
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.environment.Environment;
+import chon.group.game.core.weapon.ExplosionEffect;
 import chon.group.game.core.weapon.Shot;
-import chon.group.game.messaging.Message;
+import chon.group.game.ui.Menu;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 
-/**
- * The {@code JavaFxMediator} class serves as an intermediary for rendering the
- * game environment and its elements using JavaFX. It coordinates the
- * interaction
- * between the {@link Environment} and the {@link JavaFxDrawer} to manage
- * graphical rendering.
- */
 public class JavaFxMediator implements EnvironmentDrawer {
 
-    private final Environment environment;
-    private final JavaFxDrawer drawer;
+    private GraphicsContext gc;
+    private Environment environment;
 
-    /**
-     * Constructs a JavaFxMediator with the specified environment and graphics
-     * context.
-     *
-     * @param environment The game environment containing agents and the
-     *                    protagonist.
-     * @param gc          The {@link GraphicsContext} used for rendering.
-     */
-    public JavaFxMediator(Environment environment, GraphicsContext gc) {
-        this.environment = environment;
-        this.drawer = new JavaFxDrawer(gc, this);
-    }
-
-    /**
-     * Renders the entire game environment, including background, agents, objects,
-     * projectiles, and messages.
-     */
+    public JavaFxMediator(Environment environment, GraphicsContext gc, Menu mainMenu) { this.environment = environment; this.gc = gc; }
+    public void setEnvironment(Environment e) { this.environment = e; }
+    public void setMenu(Menu m) { }
+    
     @Override
-    public void renderGame() {
-        this.drawBackground();
-        this.drawAgents();
-        this.drawObjects();
-        this.drawShots();
-        this.drawMessages();
-    }
-
-    /**
-     * Clears the environment by erasing all drawn elements on the screen.
-     */
+    public void renderGame() { clearEnvironment(); drawBackground(); drawObjects(); drawAgents(); drawShots(); drawAreaEffects(); drawPanel(); drawMessages(); }
+    
     @Override
-    public void clearEnvironment() {
-        drawer.clearScreen((int) this.environment.getCamera().getScreenWidth(),
-                this.environment.getCurrentLevel().getHeight());
+    public void drawBossWarningScreen() {
+        renderGame(); 
+        gc.setFill(new Color(0, 0, 0, 0.7));
+        gc.fillRect(0, 0, environment.getCanvasWidth(), environment.getCanvasHeight());
+        Image warningImage = environment.getBossWarningImage();
+        if (warningImage != null) {
+            double x = (environment.getCanvasWidth() - warningImage.getWidth()) / 2.0;
+            double y = (environment.getCanvasHeight() - warningImage.getHeight()) / 2.0;
+            gc.drawImage(warningImage, x, y);
+        }
     }
 
-    /**
-     * Draws the background image of the environment.
-     */
-    @Override
-    public void drawBackground() {
-        int posX = (int) (this.environment.getCamera().getPosX() * -1);
-        drawer.drawImage(this.environment.getCurrentLevel().getImage(),
-                posX, this.environment.getCurrentLevel().getPosY(),
-                this.environment.getCurrentLevel().getWidth(),
-                this.environment.getCurrentLevel().getHeight());
-    }
-
-    /**
-     * Renders all agents and the protagonist within the environment,
-     * including their health bars and status panels.
-     */
     @Override
     public void drawAgents() {
-        for (Agent agent : this.environment.getCurrentLevel().getAgents()) {
-            int newPosX = (int) this.environment.getCamera().updateEntity(agent);
-            drawer.drawImage(agent.getImage(),
-                    newPosX,
-                    agent.getPosY(),
-                    agent.getWidth(),
-                    agent.getHeight());
+        if (environment.getCurrentLevel() == null || environment.getProtagonist() == null) return;
+        double scrollX = environment.getScrollX();
+        
+        List<Agent> allAgents = new ArrayList<>(environment.getCurrentLevel().getAgents());
+        allAgents.add(environment.getProtagonist());
 
-            if (agent.isVisibleBars())
-                drawer.drawEnergyBar(agent.getEnergy(),
-                        agent.getFullEnergy(),
-                        agent.getWidth(),
-                        newPosX,
-                        agent.getPosY(),
-                        Color.BLUE);
-            if (agent.isVisibleBars())
-                drawer.drawLifeBar(agent.getHealth(),
-                        agent.getFullHealth(),
-                        agent.getWidth(),
-                        newPosX,
-                        agent.getPosY(),
-                        Color.GREEN);
-        }
+        for (Agent agent : allAgents) {
+            if (agent == null) continue;
+            Image frame = agent.getImage();
+            if (frame == null) continue;
 
-        Agent protagonist = this.environment.getProtagonist();
-        int newPosX = (int) this.environment.getCamera().updateEntity(protagonist);
-        drawer.drawImage(protagonist.getImage(),
-                newPosX,
-                protagonist.getPosY(),
-                protagonist.getWidth(),
-                protagonist.getHeight());
-        if (protagonist.isVisibleBars()) {
-            this.drawSingleLifeBar();
-            this.drawSingleEnergyBar();
-        }
-        this.drawDebugPanel();
-        this.drawPanel();
-    }
+            double x = agent.getX() - scrollX;
+            double y = agent.getY();
+            double w = agent.getWidth();
+            double h = agent.getHeight();
 
-    /**
-     * Renders all objects within the environment.
-     */
-    @Override
-    public void drawObjects() {
-        for (Object object : environment.getCurrentLevel().getObjects()) {
-            drawer.drawImage(object.getImage(),
-                    (int) this.environment.getCamera().updateEntity(object),
-                    object.getPosY(),
-                    object.getWidth(),
-                    object.getHeight());
+            if (agent.isFlipped()) {
+                gc.drawImage(frame, x + w, y, -w, h);
+            } else {
+                gc.drawImage(frame, x, y, w, h);
+            }
         }
     }
 
-    /**
-     * Draws the protagonist's life bar on the screen.
-     */
+    public void drawAreaEffects() { if (environment.getAreaEffects() == null) return; double scrollX = environment.getScrollX(); for (ExplosionEffect effect : environment.getAreaEffects()) { if (effect.getImage() != null) { gc.drawImage(effect.getImage(), effect.getX() - scrollX, effect.getY(), effect.getWidth(), effect.getHeight()); } } }
+    
     @Override
-    public void drawSingleLifeBar() {
-        Agent protagonist = this.environment.getProtagonist();
-        if (protagonist != null) {
-            drawer.drawLifeBar(
-                    protagonist.getHealth(),
-                    protagonist.getFullHealth(),
-                    protagonist.getWidth(),
-                    (int) this.environment.getCamera().updateEntity(protagonist),
-                    protagonist.getPosY(),
-                    Color.GREEN);
+    public void drawMainMenu(Menu menu) {
+        Image menuImage = menu.getCurrentImage();
+        
+        // --- INÍCIO DO DEBUG ---
+        gc.setFill(Color.BLUEVIOLET); // Uma cor bem distinta
+        gc.fillRect(0, 0, environment.getCanvasWidth(), environment.getCanvasHeight());
+
+        if (menuImage != null) {
+            // 2. Imprime as dimensões da imagem carregada. Se for 0.0, a imagem está com problema.
+            System.out.println("[DEBUG MEDIATOR] Desenhando imagem. Largura: " + menuImage.getWidth() + ", Altura: " + menuImage.getHeight());
+            
+            // 3. Tenta desenhar a imagem do menu.
+            gc.drawImage(menuImage, 0, 0, environment.getCanvasWidth(), environment.getCanvasHeight());
+        } else {
+            System.out.println("[DEBUG MEDIATOR] Imagem do menu é NULA.");
+            gc.setFill(Color.RED);
+            gc.fillRect(0, 0, environment.getCanvasWidth(), environment.getCanvasHeight());
+            gc.setFill(Color.WHITE);
+            gc.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
+            gc.setTextAlign(TextAlignment.CENTER);
+            gc.fillText("ERRO: IMAGEM DO MENU NULA", environment.getCanvasWidth() / 2.0, environment.getCanvasHeight() / 2.0);
         }
+        // --- FIM DO DEBUG ---
     }
-
-    /**
-     * Draws the protagonist's energy bar on the screen.
-     */
+    
     @Override
-    public void drawSingleEnergyBar() {
-        Agent protagonist = this.environment.getProtagonist();
-        if (protagonist != null) {
-            drawer.drawEnergyBar(
-                    protagonist.getEnergy(),
-                    protagonist.getFullEnergy(),
-                    protagonist.getWidth(),
-                    (int) this.environment.getCamera().updateEntity(protagonist),
-                    protagonist.getPosY(),
-                    Color.BLUE);
-        }
-    }
-
+    public void drawPauseScreen() { Image pauseImage = environment.getCurrentPauseImage(); if (pauseImage != null) { gc.drawImage(pauseImage, 0, 0, environment.getCanvasWidth(), environment.getCanvasHeight()); } else { gc.setFill(new Color(0, 0, 0, 0.7)); gc.fillRect(0, 0, environment.getCanvasWidth(), environment.getCanvasHeight()); gc.setFill(Color.WHITE); gc.setFont(Font.font("Verdana", FontWeight.BOLD, 48)); gc.setTextAlign(TextAlignment.CENTER); gc.fillText("PAUSED", environment.getCanvasWidth() / 2.0, environment.getCanvasHeight() / 2.0); } }
     @Override
-    public void drawPanel() {
-        Agent protagonist = this.environment.getProtagonist();
-        int collected = environment.getCollectedCount();
-        int total = environment.getCurrentLevel().getTotalCollectibleCount();
-        int score = environment.getScore();
-        int life = protagonist.getHealth();
-        int maxLife = protagonist.getFullHealth();
-        double energy = protagonist.getEnergy();
-        double maxEnergy = protagonist.getFullEnergy();
-        drawer.drawPanel(life,
-                maxLife,
-                collected,
-                total,
-                score,
-                energy,
-                maxEnergy,
-                null,
-                this.environment.getPanel().getLifeIcon(),
-                this.environment.getPanel().getEnergyIcon(),
-                this.environment.getPanel().getItemIcon(),
-                this.environment.getPanel().getScoreIcon(),
-                this.environment.getPanel().getPanelWidth(),
-                this.environment.getPanel().getPanelHeight());
-    }
-
-    /**
-     * Draws the protagonist's status panel with stats like score, life, energy, and
-     * collected items.
-     */
+    public void drawGameOver() { Image gameOverImage = environment.getGameOverMenu().getCurrentImage(); if (gameOverImage != null) { gc.drawImage(gameOverImage, 0, 0, environment.getCanvasWidth(), environment.getCanvasHeight()); } else { gc.setFill(Color.RED); gc.fillRect(0, 0, environment.getCanvasWidth(), environment.getCanvasHeight()); gc.setFill(Color.WHITE); gc.setFont(Font.font("Verdana", FontWeight.BOLD, 48)); gc.setTextAlign(TextAlignment.CENTER); gc.fillText("GAME OVER", environment.getCanvasWidth() / 2.0, environment.getCanvasHeight() / 2.0); } }
     @Override
-    public void drawDebugPanel() {
-        Agent protagonist = this.environment.getProtagonist();
-        drawer.drawDebugPanel(protagonist.getPosX(),
-                protagonist.getPosY(),
-                (int) this.environment.getCamera().getPosX());
-    }
-
-    /**
-     * Draws the pause screen overlay, displaying a pause image centered within the
-     * environment.
-     */
+    public void drawLevelClearScreen() { gc.setFill(new Color(0, 0, 0, 0.5)); gc.fillRect(0, 0, environment.getCanvasWidth(), environment.getCanvasHeight()); gc.setFill(Color.WHITE); gc.setFont(Font.font("Verdana", FontWeight.BOLD, 50)); gc.setTextAlign(TextAlignment.CENTER); gc.fillText("NÍVEL CONCLUÍDO!", environment.getCanvasWidth() / 2.0, environment.getCanvasHeight() / 2.0); }
     @Override
-    public void drawPauseScreen() {
-        drawer.drawScreen(this.environment.getPauseImage(),
-                (int) this.environment.getPauseImage().getWidth(),
-                (int) this.environment.getPauseImage().getHeight(),
-                (int) this.environment.getCamera().getScreenWidth(),
-                this.environment.getCurrentLevel().getHeight());
-    }
-
-    /**
-     * Draws the game over screen overlay, displaying a game over image centered
-     * within the environment.
-     */
+    public void drawWinScreen() { Image winImage = environment.getWinImage(); if (winImage != null) { gc.drawImage(winImage, 0, 0, environment.getCanvasWidth(), environment.getCanvasHeight()); } else { gc.setFill(new Color(0.1, 0.5, 0.1, 0.9)); gc.fillRect(0, 0, environment.getCanvasWidth(), environment.getCanvasHeight()); gc.setFill(Color.WHITE); gc.setFont(Font.font("Verdana", FontWeight.BOLD, 64)); gc.setTextAlign(TextAlignment.CENTER); gc.fillText("VOCÊ VENCEU!", environment.getCanvasWidth() / 2.0, environment.getCanvasHeight() / 2.0); } }
     @Override
-    public void drawGameOver() {
-        drawer.drawScreen(this.environment.getGameOverImage(),
-                (int) this.environment.getPauseImage().getWidth(),
-                (int) this.environment.getPauseImage().getHeight(),
-                (int) this.environment.getCamera().getScreenWidth(),
-                this.environment.getCurrentLevel().getHeight());
-    }
-
-    /**
-     * Draws damage messages that appear when agents take damage.
-     * The messages float upward and fade out over time.
-     */
+    public void clearEnvironment() { gc.clearRect(0, 0, environment.getCanvasWidth(), environment.getCanvasHeight()); }
     @Override
-    public void drawMessages() {
-        for (Message message : this.environment.getMessages()) {
-            drawer.drawMessages(message.getSize(),
-                    message.getOpacity(),
-                    Color.BLACK,
-                    Color.WHEAT,
-                    String.valueOf(message.getMessage()),
-                    message.getPosX() - this.environment.getCamera().getPosX(),
-                    message.getPosY());
-        }
-    }
-
-    /**
-     * Renders all active shots (projectiles) currently in the environment.
-     */
+    public void drawBackground() { if (environment.getCurrentLevel() == null) return; Image bgImage = environment.getCurrentLevel().getImage(); if (bgImage != null) { gc.drawImage(bgImage, -environment.getScrollX(), 0, environment.getCurrentLevel().getWidth(), environment.getCanvasHeight()); } }
     @Override
-    public void drawShots() {
-        Iterator<Shot> iterator = this.environment.getCurrentLevel().getShots().iterator();
-        while (iterator.hasNext()) {
-            Shot shot = iterator.next();
-            drawer.drawImage(shot.getImage(),
-                    (int) this.environment.getCamera().updateEntity(shot),
-                    shot.getPosY(),
-                    shot.getWidth(),
-                    shot.getHeight());
-        }
-    }
+    public void drawObjects() { if (environment.getCurrentLevel() == null) return; double scrollX = environment.getScrollX(); for (Object obj : environment.getCurrentLevel().getObjects()) { if (obj.getImage() != null && !obj.isCollectible()) { gc.drawImage(obj.getImage(), obj.getX() - scrollX, obj.getY(), obj.getWidth(), obj.getHeight()); } } }
+    @Override
+    public void drawShots() { if (environment.getCurrentLevel() == null) return; double scrollX = environment.getScrollX(); for (Shot shot : environment.getCurrentLevel().getShots()) { if (shot.getImage() != null) { gc.drawImage(shot.getImage(), shot.getX() - scrollX, shot.getY(), shot.getWidth(), shot.getHeight()); } } }
+    @Override
+    public void drawPanel() { if (environment.getProtagonist() == null) return; gc.setFill(Color.rgb(0, 0, 0, 0.5)); gc.fillRoundRect(10, 10, 250, 120, 15, 15); gc.setFill(Color.WHITE); gc.setFont(Font.font("Verdana", FontWeight.BOLD, 20)); gc.setEffect(new DropShadow(3, Color.BLACK)); gc.fillText("Life: " + environment.getProtagonist().getHealth(), 25, 40); gc.fillText("Energy: " + String.format("%.0f", environment.getProtagonist().getEnergy() * 100), 25, 70); gc.fillText("Score: " + environment.getScore(), 25, 100); if(environment.getCurrentLevel() != null) { gc.fillText("Kills: " + environment.getCurrentLevel().getEnemiesKilledCount() + "/" + environment.getCurrentLevel().getTotalEnemiesToSpawn(), 150, 40);} gc.setEffect(null); }
+    @Override
+    public void drawMessages() {}
+    @Override
+    public void drawSingleLifeBar() {}
+    @Override
+    public void drawSingleEnergyBar() {}
+    @Override
+    public void drawDebugPanel() {}
 }
