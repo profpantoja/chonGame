@@ -168,7 +168,7 @@ public class Game {
     }
 
     private void updateControls() {
-        if (this.input.contains("P")) {
+        /*if (this.input.contains("P")) {
             if (this.status.equals(GameStatus.RUNNING)) {
                 this.status = GameStatus.PAUSED;
             } else {
@@ -176,7 +176,7 @@ public class Game {
                     this.status = GameStatus.RUNNING;
             }
             this.input.remove("P");
-        }
+        }*/
     }
 
     private void throwRod() {
