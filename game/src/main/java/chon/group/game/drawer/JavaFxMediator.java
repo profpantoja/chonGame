@@ -9,6 +9,8 @@ import chon.group.game.core.weapon.Shot;
 import chon.group.game.messaging.Message;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 /**
  * The {@code JavaFxMediator} class serves as an intermediary for rendering the
@@ -45,6 +47,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
         this.drawAgents();
         this.drawObjects();
         this.drawShots();
+        this.drawForeground();
         this.drawMessages();
     }
 
@@ -67,6 +70,14 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 posX, this.environment.getCurrentLevel().getPosY(),
                 this.environment.getCurrentLevel().getWidth(),
                 this.environment.getCurrentLevel().getHeight());
+    }
+
+    public void drawForeground() {
+        int posX = (int) (this.environment.getCamera().getPosX() * -1);
+        drawer.drawImage(this.environment.getCurrentLevel().getForeground(),
+                posX, 384,
+                640,
+                176);
     }
 
     /**
@@ -100,12 +111,27 @@ public class JavaFxMediator implements EnvironmentDrawer {
         }
 
         Agent protagonist = this.environment.getProtagonist();
+        Agent keyAgent = this.environment.getKeyAgent();
+        Agent fishAgent = this.environment.getFishAgent();
         int newPosX = (int) this.environment.getCamera().updateEntity(protagonist);
+        int newKeyAgentPosX = (int) this.environment.getCamera().updateEntity(keyAgent);
+        int newFishAgentPosX = (int) this.environment.getCamera().updateEntity(fishAgent);
         drawer.drawImage(protagonist.getImage(),
                 newPosX,
                 protagonist.getPosY(),
                 protagonist.getWidth(),
                 protagonist.getHeight());
+        drawer.drawImage(keyAgent.getImage(),
+                newKeyAgentPosX,
+                keyAgent.getPosY(),
+                keyAgent.getWidth(),
+                keyAgent.getHeight());
+        drawer.drawImage(fishAgent.getImage(),
+                newFishAgentPosX,
+                fishAgent.getPosY(),
+                fishAgent.getWidth(),
+                fishAgent.getHeight());
+
         if (protagonist.isVisibleBars()) {
             this.drawSingleLifeBar();
             this.drawSingleEnergyBar();
@@ -172,6 +198,8 @@ public class JavaFxMediator implements EnvironmentDrawer {
         int maxLife = protagonist.getFullHealth();
         double energy = protagonist.getEnergy();
         double maxEnergy = protagonist.getFullEnergy();
+        Font.loadFont(getClass().getResourceAsStream("/fonts/Daydream.ttf"), 14);
+        Font theFont = Font.font("Daydream", FontWeight.NORMAL, 14);
         drawer.drawPanel(life,
                 maxLife,
                 collected,
@@ -179,7 +207,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 score,
                 energy,
                 maxEnergy,
-                null,
+                theFont,
                 this.environment.getPanel().getLifeIcon(),
                 this.environment.getPanel().getEnergyIcon(),
                 this.environment.getPanel().getItemIcon(),

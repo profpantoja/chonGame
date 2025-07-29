@@ -239,12 +239,12 @@ import javafx.scene.paint.Color;
      * Flips the Image horizontally.
      */
     public void flipImage() {
-        ImageView flippedImage = new ImageView(image);
+        /*ImageView flippedImage = new ImageView(image);
         flippedImage.setScaleX(-1);
         SnapshotParameters params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
         this.flipped = !this.flipped;
-        this.image = flippedImage.snapshot(params, null);
+        this.image = flippedImage.snapshot(params, null);*/
     }
 
     /**
@@ -255,8 +255,8 @@ import javafx.scene.paint.Color;
      */
     public void move(List<String> movements) {
         if (movements.contains("RIGHT")) {
-            if (flipped)
-                this.flipImage();
+            //if (flipped)
+            //    this.flipImage();
             if (movements.contains("RIGHT") && movements.contains("UP")) {
                 setPosY(posY  -= speed) ;
                 setPosX(posX += speed);
@@ -268,8 +268,8 @@ import javafx.scene.paint.Color;
                 setPosX(posX += speed);
             }
         } else if (movements.contains("LEFT")) {
-            if (!flipped)
-                this.flipImage();
+            //if (!flipped)
+            //    this.flipImage();
             if (movements.contains("LEFT") && movements.contains("UP")) {
                 setPosY(posY -= speed);
                 setPosX(posX -= speed);
