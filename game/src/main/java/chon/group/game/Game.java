@@ -3,7 +3,7 @@ package chon.group.game;
 import java.util.ArrayList;
 
 import chon.group.game.core.agent.Agent;
-import chon.group.game.core.agent.Object; // ⚠️ Renomear se possível para evitar conflito
+import chon.group.game.core.agent.Object; 
 import chon.group.game.core.animation.AnimationStatus;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.menu.MainMenu;

@@ -86,17 +86,22 @@ public class Level extends Entity {
         return totalCollectibleCount;
     }
 
-    public boolean isCompleted(Environment env) {
-        if (env.getProtagonist().getPosX() >= 0.95 * this.getWidth()) {
-            for (Agent agent : this.agents) {
-                if (agent != env.getProtagonist() && !agent.isDead()) {
-                    return false;
-                }
+ public boolean isCompleted(Environment env) {
+    int currentLevelIndex = env.getCurrentLevelIndex();
+
+    if (currentLevelIndex == 1) { // fase 2 (índice começa em 0)
+        // Vence se todos os inimigos morrerem
+        for (Agent agent : this.agents) {
+            if (agent != env.getProtagonist() && !agent.isDead()) {
+                return false;
             }
-            return true;
         }
-        return false;
+        return true;
+    } else {
+        // Fases normais: precisa andar até o final
+        return env.getProtagonist().getPosX() >= 0.95 * this.getWidth();
     }
+}
 
     /**
      * Counts how many collectible objects are currently in the environment.

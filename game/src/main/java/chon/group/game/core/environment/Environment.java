@@ -393,5 +393,8 @@ public class Environment {
             }
         }
     }
+    public int getCurrentLevelIndex() {
+    return levels.indexOf(currentLevel);
+}
 
 }

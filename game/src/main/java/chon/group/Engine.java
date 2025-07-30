@@ -21,16 +21,18 @@ import javafx.stage.Stage;
 import chon.group.game.core.menu.MainMenu;
 import chon.group.game.core.menu.PauseMenu;
 
-
 /**
  * The {@code Engine} class represents the main entry point of the application
  * and serves as the game engine for "Chon: The Learning Game."
+ * 
+ * It handles initialization of game components, graphical setup, input handling,
+ * and the main game loop.
  */
-
 public class Engine extends Application {
 
     /**
      * Main entry point of the application.
+     * Launches the JavaFX application.
      *
      * @param args command-line arguments passed to the application.
      */
@@ -38,62 +40,77 @@ public class Engine extends Application {
         launch(args);
     }
 
-    /*
-    * The following variables are used to manage the game state and graphical on the method resetGame
-    */
+    /** The current game setup including environment and entities */
     private GameSet gameSet;
+
+    /** Responsible for drawing game graphics on the canvas */
     private JavaFxDrawer drawer;
+
+    /** The main menu displayed at the start of the game */
     private MainMenu mainMenu;
+
+    /** The pause menu displayed during the game */
     private PauseMenu menuPause;
+
+    /** Stores the current active input keys */
     private ArrayList<String> input;
+
+    /** Mediator responsible for connecting environment and graphical context */
     private EnvironmentDrawer mediator;
+
+    /** The main game logic handler */
     private Game chonGame;
+
+    /** The animation timer that drives the game loop */
     private AnimationTimer gameLoop;
 
-
+    /**
+     * Initializes the JavaFX stage, scene, canvas, menus, input handlers, 
+     * and starts the game loop.
+     *
+     * @param theStage the primary stage for this application
+     */
     @Override
     public void start(Stage theStage) {
         try {
-
-            /* 
-             * Initialize the game set, which contains the environment and other game components.
-            */
+            // Initialize the game set with environment and agents
             gameSet = new GameSet();
 
-            /* Set up the graphical canvas */
+            // Create canvas and graphics context for rendering
             Canvas canvas = new Canvas(gameSet.getCanvasWidth(), gameSet.getCanvasHeight());
             GraphicsContext gc = canvas.getGraphicsContext2D();
-            
-            /*  Reset the game state and initialize the game components */
+
+            // Initialize game components and menus
             resetGame(gc);
 
-            /* Set up the scene and stage */
+            // Set up JavaFX scene graph
             StackPane root = new StackPane();
             Scene scene = new Scene(root, gameSet.getCanvasWidth(), gameSet.getCanvasHeight());
-            theStage.setTitle("Chon: The Learning Game");
+            theStage.setTitle("Hallowen");
             theStage.setScene(scene);
 
             root.getChildren().add(canvas);
             theStage.show();
 
-            /* Set the main menu and pause menu for the game. */
+            // Link menus to the game instance
             chonGame.setMainMenu(mainMenu);
             chonGame.setMenuPause(menuPause);
 
+            // Handle key press events
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-                public void handle(KeyEvent e) {                    
-                    
+                public void handle(KeyEvent e) {
                     chonGame.handleInput(e);
 
                     if (chonGame.wantsToStartGame()) {
-                        chonGame.setWantsToStartGame(false); // consome a flag
+                        chonGame.setWantsToStartGame(false); // consume the flag
                         resetGame(gc);
                         chonGame.setStatus(GameStatus.RUNNING);
                         mainMenu.reset();
                     }
                 }
-        });
+            });
 
+            // Handle key release events
             scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent e) {
                     String code = e.getCode().toString();
@@ -102,22 +119,26 @@ public class Engine extends Application {
                 }
             });
 
-            // Start the game loop
+            // Initialize and start the game loop using AnimationTimer
             gameLoop = new AnimationTimer() {
                 public void handle(long now) {
                     chonGame.loop();
                 }
             };
-        gameLoop.start();
+            gameLoop.start();
 
             theStage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        
-        
     }
+
+    /**
+     * Resets the game state, including environment, drawer, menus, input,
+     * and mediator.
+     *
+     * @param gc the GraphicsContext to draw on
+     */
     private void resetGame(GraphicsContext gc) {
         gameSet = new GameSet();
         drawer = new JavaFxDrawer(gc, null);
@@ -129,5 +150,4 @@ public class Engine extends Application {
         chonGame.setMainMenu(mainMenu);
         chonGame.setMenuPause(menuPause);
     }
-
 }

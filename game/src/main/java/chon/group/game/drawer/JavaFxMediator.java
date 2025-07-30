@@ -287,7 +287,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
     public void drawMainMenu(MainMenu menu) {
     drawer.drawMainMenu(
         menu.getBackgroundImage(),
-        "Chon Game",
+        "Haunted by Shadows",
         menu.getSelectedOptionIndex(),
         menu.getLabels() // você pode criar um método getLabels() no Menu
     );

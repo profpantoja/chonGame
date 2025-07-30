@@ -92,17 +92,17 @@ public class Agent extends Entity {
     private boolean gravityEffects = true;
 
     /* Velocidade inicial do pulo (negativo = sobe) */
-    private int jumpVelocity = -20;
+    private int jumpVelocity = -15;
 
     private int currentVelocityY = 0;
 
     private final double gravity = 1;
 
-    private final int groundY = 550;
+    private final int groundY = 628;
 
     private boolean isProtagonist;
 
-    private final int maxFallSpeed = 30;
+    private final int maxFallSpeed = 20;
 
     
     public boolean isProtagonist() {
