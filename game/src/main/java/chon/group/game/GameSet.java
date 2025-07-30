@@ -100,7 +100,7 @@ public class GameSet {
         /* Set background music for each level */
         level1.setBackgroundMusic(Game.gameMusic);
         level2.setBackgroundMusic(Game.gameMusic);
-        level3.setBackgroundMusic(Game.cellTheme);
+        level3.setBackgroundMusic(Game.gameMusic);
 
         environment = new Environment(this.canvasHeight, level1.getWidth(), this.canvasWidth, panel);
 
