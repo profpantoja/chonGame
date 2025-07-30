@@ -42,7 +42,7 @@ import javafx.scene.paint.Color;
     /** Indicates if the existing bars of life or energy are visible or not. */
     private boolean visibleBars = false;    
 
-    private AnimationSystem animationSystem;
+    protected AnimationSystem animationSystem;
 
     /**
      * Constructor to initialize the entity properties.

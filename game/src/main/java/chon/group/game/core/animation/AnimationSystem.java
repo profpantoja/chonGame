@@ -44,14 +44,35 @@ public class AnimationSystem {
         AnimationSpritesheet sheet = (graphics != null)
             ? graphics.getSpritesheet(currentStatus)
             : singleSpritesheet;
-        if (sheet == null) return null;
+            
+        // Fallback to IDLE if the current status has no animation
+        if (sheet == null) {
+            sheet = (graphics != null) ? graphics.getSpritesheet(AnimationStatus.IDLE) : singleSpritesheet;
+            if (sheet == null) {
+                return null;
+            }
+        }
+
         long now = System.currentTimeMillis();
         int duration = sheet.getDurationMs();
         int frameCount = sheet.getFrameCount();
+
         if (!isPaused() && (now - lastUpdate > duration / frameCount)) {
-            currentFrame = (currentFrame + 1) % frameCount;
+            
+            // MODIFICATION: Check if the current animation is DYING
+            if (currentStatus == AnimationStatus.DYING) {
+                // Non-looping logic: only increments the frame if it's not the last one.
+                if (currentFrame < frameCount - 1) {
+                    currentFrame++;
+                }
+            } else {
+                // Original looping logic for all other animations.
+                currentFrame = (currentFrame + 1) % frameCount;
+            }
+            
             lastUpdate = now;
         }
+        
         int x = currentFrame * sheet.getFrameWidth();
         return new WritableImage(sheet.getSpritesheetImage().getPixelReader(), x, 0, sheet.getFrameWidth(), sheet.getFrameHeight());
     }

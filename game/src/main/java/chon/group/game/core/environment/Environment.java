@@ -14,54 +14,19 @@ import chon.group.game.messaging.Message;
 import chon.group.game.sound.SoundManager;
 import javafx.scene.image.Image;
 
-/**
- * Represents the game environment, including properties such as dimensions,
- * position, background image, agents, protagonist, objects, shots, messages,
- * and camera.
- * The environment is responsible for updating the state of all elements,
- * detecting collisions, and tracking game progress such as score and
- * collectible status.
- */
 public class Environment {
 
-    /** The background image for the pause screen. */
     private Image pauseImage;
-
-    /** The background image for the game over screen. */
     private Image gameOverImage;
-
-    /** The protagonist of the environment. */
     private Agent protagonist;
-
     private List<Level> levels;
-
     private Level currentLevel;
-
-    /** List of messages currently being displayed. */
     private List<Message> messages;
-
-    /** The camera used to follow the protagonist. */
     private Camera camera;
-
     private Panel panel;
-
-    /** Number of objects collected so far. */
     private int collectedCount = 0;
-
-    /** Current score of the player. */
     private int score = 0;
 
-    /**
-     * Constructor to initialize the environment with dimensions, position, and a
-     * background image.
-     *
-     * @param posX        the initial X position of the environment
-     * @param posY        the initial Y position of the environment
-     * @param height      the height of the environment
-     * @param width       the width of the environment
-     * @param screenWidth the screen width used for camera calculations
-     * @param pathImage   the path to the background image
-     */
     public Environment(int height, int width, double screenWidth, Panel panel) {
         this.messages = new ArrayList<Message>();
         this.levels = new ArrayList<Level>();
@@ -69,108 +34,27 @@ public class Environment {
         this.panel = panel;
     }
 
-    public Image getPauseImage() {
-        return pauseImage;
-    }
+    // ... todos os seus getters e setters continuam iguais ...
+    public Image getPauseImage() { return pauseImage; }
+    public void setPauseImage(String pathImage) { this.pauseImage = new Image(getClass().getResource(pathImage).toExternalForm()); }
+    public Image getGameOverImage() { return gameOverImage; }
+    public void setGameOverImage(String pathImage) { this.gameOverImage = new Image(getClass().getResource(pathImage).toExternalForm()); }
+    public Agent getProtagonist() { return protagonist; }
+    public void setProtagonist(Agent protagonist) { this.protagonist = protagonist; if (camera != null) camera.setTarget(protagonist); }
+    public List<Level> getLevels() { return levels; }
+    public void setLevels(List<Level> levels) { this.levels = levels; }
+    public Level getCurrentLevel() { return currentLevel; }
+    public void setCurrentLevel(Level currentLevel) { this.currentLevel = currentLevel; }
+    public List<Message> getMessages() { return messages; }
+    public void setMessages(List<Message> messages) { this.messages = messages; }
+    public Camera getCamera() { return camera; }
+    public void setCamera(Camera camera) { this.camera = camera; }
+    public Panel getPanel() { return panel; }
+    public void setPanel(Panel panel) { this.panel = panel; }
+    public int getCollectedCount() { return collectedCount; }
+    public int getScore() { return score; }
 
-    /**
-     * Sets the background image for the pause screen.
-     *
-     * @param pathImage the path to the image
-     */
-    public void setPauseImage(String pathImage) {
-        this.pauseImage = new Image(getClass().getResource(pathImage).toExternalForm());
-    }
 
-    public Image getGameOverImage() {
-        return gameOverImage;
-    }
-
-    /**
-     * Sets the background image for the game over screen.
-     *
-     * @param pathImage the path to the image
-     */
-    public void setGameOverImage(String pathImage) {
-        this.gameOverImage = new Image(getClass().getResource(pathImage).toExternalForm());
-    }
-
-    public Agent getProtagonist() {
-        return protagonist;
-    }
-
-    /**
-     * Sets the protagonist of the game and attaches the camera to it.
-     *
-     * @param protagonist the protagonist agent
-     */
-    public void setProtagonist(Agent protagonist) {
-        this.protagonist = protagonist;
-        if (camera != null)
-            camera.setTarget(protagonist);
-    }
-
-    public List<Level> getLevels() {
-        return levels;
-    }
-
-    public void setLevels(List<Level> levels) {
-        this.levels = levels;
-    }
-
-    public Level getCurrentLevel() {
-        return currentLevel;
-    }
-
-    public void setCurrentLevel(Level currentLevel) {
-        this.currentLevel = currentLevel;
-    }
-
-    public List<Message> getMessages() {
-        return messages;
-    }
-
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
-    }
-
-    public Camera getCamera() {
-        return camera;
-    }
-
-    public void setCamera(Camera camera) {
-        this.camera = camera;
-    }
-
-    public Panel getPanel() {
-        return panel;
-    }
-
-    public void setPanel(Panel panel) {
-        this.panel = panel;
-    }
-
-    /**
-     * Gets the number of objects collected by the protagonist.
-     *
-     * @return the number of collected objects
-     */
-    public int getCollectedCount() {
-        return collectedCount;
-    }
-
-    /**
-     * Gets the current score of the player.
-     *
-     * @return the current score
-     */
-    public int getScore() {
-        return score;
-    }
-
-    /**
-     * Ensures the protagonist stays within the boundaries of the environment.
-     */
     public void checkBorders() {
         if (protagonist.getPosX() < 0)
             protagonist.setPosX(0);
@@ -182,12 +66,12 @@ public class Environment {
             protagonist.setPosY(this.currentLevel.getHeight() - protagonist.getHeight());
     }
 
-    /**
-     * Detects collisions between the protagonist and agents.
-     * Applies damage if a collision is detected.
-     */
     public void detectCollision() {
         for (Agent agent : this.currentLevel.getAgents()) {
+            // Se o agente estiver morrendo, ele não causa dano por contato
+            if (agent.isDying()) {
+                continue;
+            }
             if (protagonist != null && intersect(protagonist, agent)) {
                 int damage = 100;
                 protagonist.takeDamage(damage, messages);
@@ -195,13 +79,6 @@ public class Environment {
         }
     }
 
-    /**
-     * Checks if two entities intersect (collide).
-     *
-     * @param a the first entity
-     * @param b the second entity
-     * @return true if their areas overlap, false otherwise
-     */
     private boolean intersect(Entity a, Entity b) {
         return a.getPosX() < b.getPosX() + b.getWidth() &&
                 a.getPosX() + a.getWidth() > b.getPosX() &&
@@ -209,10 +86,6 @@ public class Environment {
                 a.getPosY() + a.getHeight() > b.getPosY();
     }
 
-    /**
-     * Updates all collectible objects in the environment.
-     * Makes them follow the protagonist and handles collection.
-     */
     public void updateObjects() {
         Iterator<Object> iterator = this.currentLevel.getObjects().iterator();
         while (iterator.hasNext()) {
@@ -234,9 +107,6 @@ public class Environment {
         }
     }
 
-    /**
-     * Updates and removes expired messages from the environment.
-     */
     public void updateMessages() {
         Iterator<Message> iterator = messages.iterator();
         while (iterator.hasNext()) {
@@ -247,10 +117,6 @@ public class Environment {
         }
     }
 
-    /**
-     * Updates the state of all shots in the environment.
-     * Handles movement, boundary removal, and collision with agents or protagonist.
-     */
     public void updateShots() {
         Iterator<Shot> itShot = this.currentLevel.getShots().iterator();
         while (itShot.hasNext()) {
@@ -274,71 +140,63 @@ public class Environment {
             Iterator<Agent> itAgent = this.currentLevel.getAgents().iterator();
             while (itAgent.hasNext()) {
                 Agent agent = itAgent.next();
-
                 
                 if (owner == agent) continue;
-
                 if (owner != null && owner.isEnemy() == agent.isEnemy()) continue;
 
                 if (intersect(agent, shot)) {
                     agent.takeDamage(shot.getDamage(), messages);
-                    if (agent.isDead()) {
-                        itAgent.remove();
-                    }
+                    // <<< LINHAS PROBLEMÁTICAS REMOVIDAS DAQUI >>>
+                    // if (agent.isDead()) {
+                    //     itAgent.remove();
+                    // }
                     itShot.remove();
                     break;
                 }
             }
-
-            
             shot.move(new ArrayList<>(List.of(shot.getDirection())));
         }
     }
 
-
     public void updateSlashes() {
-    Iterator<Slash> itSlash = this.currentLevel.getSlashes().iterator();
-    while (itSlash.hasNext()) {
-        Slash slash = itSlash.next();
+        Iterator<Slash> itSlash = this.currentLevel.getSlashes().iterator();
+        while (itSlash.hasNext()) {
+            Slash slash = itSlash.next();
+            boolean hit = false;
+            Agent owner = slash.getOwner();
 
-        boolean hit = false;
-        Agent owner = slash.getOwner();
+            Iterator<Agent> itAgent = this.currentLevel.getAgents().iterator();
+            while (itAgent.hasNext()) {
+                Agent agent = itAgent.next();
 
-        Iterator<Agent> itAgent = this.currentLevel.getAgents().iterator();
-        while (itAgent.hasNext()) {
-            Agent agent = itAgent.next();
+                if (owner == agent) continue;
+                if (owner != null && owner.isEnemy() == agent.isEnemy()) continue;
 
-            if (owner == agent) continue;
-            if (owner != null && owner.isEnemy() == agent.isEnemy()) continue;
-
-            if (intersect(agent, slash)) {
-                agent.takeDamage(slash.getDamage(), messages);
-                if (agent.isDead()) {
-                    itAgent.remove();
+                if (intersect(agent, slash)) {
+                    agent.takeDamage(slash.getDamage(), messages);
+                    // <<< LINHAS PROBLEMÁTICAS REMOVIDAS DAQUI >>>
+                    // if (agent.isDead()) {
+                    //     itAgent.remove();
+                    // }
+                    hit = true;
+                    // O 'break' aqui faria com que o golpe acertasse apenas um inimigo.
+                    // Removi para que um golpe possa acertar múltiplos inimigos se eles estiverem juntos.
                 }
-                hit = true;
-                break;
             }
-        }
 
-        if (!hit && intersect(protagonist, slash)) {
-            if (owner != protagonist && owner.isEnemy() != protagonist.isEnemy()) {
-                protagonist.takeDamage(slash.getDamage(), messages);
-                hit = true;
+            if (!hit && intersect(protagonist, slash)) {
+                if (owner != protagonist && (owner == null || owner.isEnemy() != protagonist.isEnemy())) {
+                    protagonist.takeDamage(slash.getDamage(), messages);
+                    hit = true;
+                }
             }
-        }
 
-        if (hit || slash.shouldRemove()) {
-            itSlash.remove();
+            if (slash.shouldRemove()) { // A própria animação do slash define quando ele deve sumir
+                itSlash.remove();
+            }
         }
     }
-}
 
-
-
-    /**
-     * Updates the camera based on the protagonist’s current position.
-     */
     public void updateCamera() {
         if (camera != null)
             camera.update();
@@ -349,11 +207,6 @@ public class Environment {
             this.loadNextLevel();
     }
 
-    /**
-     * Performs a full update cycle of the environment.
-     * Includes updating objects, shots, messages, camera,
-     * checking collisions, and recovering protagonist energy.
-     */
     public void update() {
         updateObjects();
         updateShots();
@@ -393,5 +246,4 @@ public class Environment {
             }
         }
     }
-
 }

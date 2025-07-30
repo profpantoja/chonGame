@@ -12,6 +12,7 @@ import chon.group.game.core.animation.AnimationSystem;
  * Represents a generic game object that can be collectible and/or destructible.
  */
 public class Object extends Entity {
+    Agent agent;
     private boolean destroyed = false;
     private boolean collected = false;
     private boolean destructible;

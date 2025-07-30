@@ -4,6 +4,7 @@ import java.util.List;
 
 import chon.group.game.core.weapon.CloseWeapon;
 import chon.group.game.core.animation.AnimationSpritesheet;
+import chon.group.game.core.animation.AnimationStatus;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Slash;
 import chon.group.game.core.weapon.Weapon;
@@ -19,6 +20,14 @@ import javafx.scene.paint.Color;
  * The agent can move in specific directions and chase a target.
  */
 public class Agent extends Entity {
+
+    private long stateStartTime = 0;
+    private boolean isDying = false;
+    private boolean isReadyForRemoval = false;
+
+    /** The duration of the hit effect in milliseconds. */
+    private long attackEndTime;
+
 
     /** The time of the last hit taken. */
     private long lastHitTime = 0;
@@ -104,6 +113,42 @@ public class Agent extends Entity {
         }
     }
   
+    /**
+     * Gets the agent's attack end time.
+     *
+     * @return the attack end time in milliseconds
+     */
+    public boolean isAttacking() {
+        return System.currentTimeMillis() < attackEndTime;
+    }
+
+    public long getAttackEndTime() {
+        return attackEndTime;
+    }
+
+    public void setAttackEndTime(long time) {
+        this.attackEndTime = time;
+    }
+
+    public boolean isDying() {
+        return this.isDying;
+    }
+
+    public void setDying(boolean dying) {
+        this.isDying = dying;
+    }
+
+    public boolean isReadyForRemoval() {
+        return this.isReadyForRemoval;
+    }
+
+    public long getStateStartTime() {
+        return stateStartTime;
+    }
+    public void setStateStartTime(long stateStartTime) {
+        this.stateStartTime = stateStartTime;
+    }
+
 
     /**
      * Gets the last hit taken.
@@ -263,19 +308,37 @@ public class Agent extends Entity {
 
     /**
      * Makes the agent take damage.
-     * If health reaches 0, the game must end.
+     * If health reaches 0, the agent enters the dying state.
      *
      * @param damage the amount of damage to be applied
      */
     @Override
     public void takeDamage(int damage, List<Message> messages) {
+        if (this.isDying) {
+            return; 
+        }
+
         this.invulnerable = this.updateInvulnerability();
-        if (!this.invulnerable) {
-            super.takeDamage(damage, messages);
-            this.lastHitTime = System.currentTimeMillis();
-            // SoundManager.playSound("sounds/hurt.wav"); não há som de quando o agente toma dano
+        if (this.invulnerable) {
+            return;
+        }
+        
+        super.takeDamage(damage, messages);
+        this.lastHitTime = System.currentTimeMillis();
+
+        if (this.isDead() && !this.isDying) {
+            this.isDying = true;
+            this.stateStartTime = System.currentTimeMillis();
+            
+            if (getAnimationSystem() != null) {
+                // CORREÇÃO: Verifica se a spritesheet para DYING existe antes de definir o status.
+                if (getAnimationSystem().getGraphics().getSpritesheet(AnimationStatus.DYING) != null) {
+                    getAnimationSystem().setStatus(AnimationStatus.DYING);
+                }
+            }
         }
     }
+
 
     /**
      * Method to update the invulnerable status.
@@ -319,4 +382,7 @@ public class Agent extends Entity {
         this.isEnemy = isEnemy;
     }
 
+    public void setLife(int i) {
+        this.setHealth(i);
+    }
 }
