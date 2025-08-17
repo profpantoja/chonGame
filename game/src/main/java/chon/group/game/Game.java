@@ -3,6 +3,8 @@ package chon.group.game;
 import java.util.ArrayList;
 
 import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.Object;
+import chon.group.game.core.animation.AnimationStatus;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.drawer.EnvironmentDrawer;
@@ -65,21 +67,39 @@ public class Game {
         this.updateControls();
         switch (this.status) {
             case START:
+                this.pauseAnimations(false);
                 this.init();
                 break;
             case RUNNING:
+                this.pauseAnimations(false);
                 this.running();
                 break;
             case PAUSED:
+                this.pauseAnimations(true);
                 this.pause();
                 break;
             case WIN:
+                this.pauseAnimations(true);
                 this.win();
                 break;
             case GAME_OVER:
+                this.pauseAnimations(true);
                 this.gameOver();
                 break;
         }
+    }
+
+    public void pauseAnimations(boolean value) {
+        for (Agent agent : environment.getCurrentLevel().getAgents()) {
+            if (agent.getAnimationSystem() != null) agent.getAnimationSystem().setPaused(value);
+        }
+        for (Shot shot : environment.getCurrentLevel().getShots()) {
+            if (shot.getAnimationSystem() != null) shot.getAnimationSystem().setPaused(value);
+        }
+        for (Object object : environment.getCurrentLevel().getObjects()) {
+            if (object.getAnimationSystem() != null) object.getAnimationSystem().setPaused(value);
+        }
+        if (environment.getProtagonist().getAnimationSystem() != null) environment.getProtagonist().getAnimationSystem().setPaused(value);
     }
 
     public void gameOver() {
@@ -93,18 +113,25 @@ public class Game {
     public void running() {
         /** ChonBota Only Moves if the Player Press Something */
         /** Update the protagonist's movements if input exists */
-        if (!input.isEmpty()) {
+        if (!input.isEmpty() && !isAttacking()) {
             /** ChonBota Shoots Somebody Who Outdrew You */
             /** But only if she has enough energy */
             if (input.contains("SPACE")) {
                 input.remove("SPACE");
                 Shot shot = environment.getProtagonist().useWeapon();
                 if (shot != null)
+                    environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.ATTACKING);
                     environment.getCurrentLevel().getShots().add(shot);
             }
-            /* ChonBota's Movements */
-            environment.getProtagonist().move(input);
-            environment.checkBorders();
+            else {
+                /* ChonBota's Movements */
+                environment.getProtagonist().move(input);
+                environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.RUNNING);
+                environment.checkBorders();
+            }
+        } else if (!isAttacking()) {
+            /** If no input, ChonBota stops running */
+            environment.getProtagonist().getAnimationSystem().setStatus(AnimationStatus.IDLE);
         }
         /* ChonBot's Automatic Movements */
         /* Update the other agents' movements */
@@ -118,12 +145,28 @@ public class Game {
             agent.chase(environment.getProtagonist().getPosX(),
                     environment.getProtagonist().getPosY());
         }
+        for (Agent agent: environment.getCurrentLevel().getAgents()) {
+            agent.syncDimensions();
+        }
+        environment.getProtagonist().syncDimensions();
         /* Render the game environment and agents */
         environment.update();
         mediator.renderGame();
         /* If the agent died in this loop */
         if (environment.getProtagonist().isDead())
             this.status = GameStatus.GAME_OVER;
+    }
+
+    public boolean isAttacking() {
+        return environment.getProtagonist().getAnimationSystem().getStatus() == AnimationStatus.ATTACKING;
+    }
+
+    public boolean isRunning() {
+        return environment.getProtagonist().getAnimationSystem().getStatus() == AnimationStatus.RUNNING;
+    }
+
+    public boolean isIdle() {
+        return environment.getProtagonist().getAnimationSystem().getStatus() == AnimationStatus.IDLE;
     }
 
     public void pause() {

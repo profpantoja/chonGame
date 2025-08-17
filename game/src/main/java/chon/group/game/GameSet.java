@@ -5,6 +5,11 @@ import java.util.List;
 
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Object;
+import chon.group.game.core.animation.AnimationGraphics;
+import chon.group.game.core.animation.AnimationSpritesheet;
+import chon.group.game.core.animation.AnimationStatus;
+import chon.group.game.core.animation.AnimationSystem;
+import chon.group.game.core.animation.SimpleAnimationSpritesheet;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.environment.Level;
 import chon.group.game.core.weapon.Panel;
@@ -87,6 +92,12 @@ public class GameSet {
                 panel);
 
         Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, "/images/agents/chonBota.png", false, false);
+        AnimationSpritesheet idleChonBota = new SimpleAnimationSpritesheet(42, 81, 2, 1000, "/images/agents/MarioIdle.png");
+        AnimationGraphics chonBotaGraphics = new AnimationGraphics();
+        chonBotaGraphics.addSpritesheet(AnimationStatus.IDLE, idleChonBota);
+        AnimationSystem chonBotaSystem = new AnimationSystem(chonBotaGraphics);
+        chonBota.setAnimationSystem(chonBotaSystem);
+
         Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, 0.05, "", false);
         Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
 
@@ -94,6 +105,12 @@ public class GameSet {
         chonBota.setWeapon(lancer);
 
         Agent chonBot = new Agent(920, 440, 90, 65, 1, 500, "/images/agents/chonBot.png", true, true);
+        AnimationSpritesheet idleChonBot = new SimpleAnimationSpritesheet(42, 81, 2, 1000, "/images/agents/MarioIdle.png");
+        AnimationGraphics chonBotGraphics = new AnimationGraphics();
+        chonBotGraphics.addSpritesheet(AnimationStatus.IDLE, idleChonBot);
+        AnimationSystem chonBotSystem = new AnimationSystem(chonBotGraphics);
+        chonBot.setAnimationSystem(chonBotSystem);
+        
         environment.setProtagonist(chonBota);
         environment.setPauseImage("/images/environment/pause.png");
         environment.setGameOverImage("/images/environment/gameover.png");
@@ -102,19 +119,20 @@ public class GameSet {
 
         /* Set up some collectable objects */
         List<Object> objects = new ArrayList<>();
-        objects.add(new Object(200, 350, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false));
-        objects.add(new Object(400, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false));
-        objects.add(new Object(1000, 600, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false));
-        objects.add(new Object(1400, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false));
-        objects.add(new Object(1800, 650, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false));
-        objects.add(new Object(2000, 580, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false));
-        objects.add(new Object(2300, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false));
-        objects.add(new Object(2600, 500, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false));
-        objects.add(new Object(2900, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false));
-        objects.add(new Object(3200, 400, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false));
-        objects.add(new Object(4100, 500, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false));
-        objects.add(new Object(5000, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false));
-        objects.add(new Object(6200, 400, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false));
+        AnimationSpritesheet coinAnim = new SimpleAnimationSpritesheet(96, 96, 8, 200, "/images/agents/coinAnimated.png");
+        objects.add(new Object(200, 350, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
+        objects.add(new Object(400, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
+        objects.add(new Object(1000, 600, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
+        objects.add(new Object(1400, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
+        objects.add(new Object(1800, 650, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
+        objects.add(new Object(2000, 580, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false,coinAnim));
+        objects.add(new Object(2300, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
+        objects.add(new Object(2600, 500, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
+        objects.add(new Object(2900, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
+        objects.add(new Object(3200, 400, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
+        objects.add(new Object(4100, 500, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
+        objects.add(new Object(5000, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
+        objects.add(new Object(6200, 400, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, coinAnim));
 
         // Register objects into the environment and count total collectibles
         level1.setObjects(objects);
