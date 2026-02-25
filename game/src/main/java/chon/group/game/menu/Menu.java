@@ -47,13 +47,17 @@ public class Menu {
         this.type = type;
     }
 
-    // Retorna a opção escolhida ao pressionar ENTER, ou null caso contrário
-    public void handleInput(List<String> input) {
+    public boolean handleInput(List<String> input) {
+        if (input.contains("ENTER")) {
+            input.clear();
+            return true;
+        }
         if (input.contains("UP"))
             this.index = (this.index - 1 + items.size()) % items.size();
         if (input.contains("DOWN"))
             this.index = (this.index + 1) % items.size();
         input.clear();
+        return false;
     }
 
     public void reset() {

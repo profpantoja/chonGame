@@ -93,12 +93,13 @@ public class Game {
         }
     }
 
-    public void gameOver() {
-        environment.updateMessages();
-        environment.updateShots();
-        mediator.renderGame();
-        /** Rendering the Game Over Screen */
-        mediator.drawGameOver();
+    public void init() {
+        this.environment.setCurrentMenu(menu.getStart());
+        if (this.environment.getCurrentMenu().handleInput(input)) {
+            this.environment.loadNextLevel();
+            this.status = GameStatus.RUNNING;
+        }
+        mediator.drawMenu();
     }
 
     public void running() {
@@ -142,19 +143,20 @@ public class Game {
         mediator.renderGame();
         /** Rendering the Pause Screen */
         mediator.drawPauseScreen();
-    }
-
-    public void init() {
-        this.environment.setCurrentMenu(menu.getStart());
-        //this.status = GameStatus.RUNNING;
-        this.environment.getCurrentMenu().handleInput(input);
         mediator.drawMenu();
-        //mediator.renderGame();
     }
 
     public void win() {
         this.status = GameStatus.START;
         mediator.renderGame();
+    }
+
+    public void gameOver() {
+        environment.updateMessages();
+        environment.updateShots();
+        mediator.renderGame();
+        /** Rendering the Game Over Screen */
+        mediator.drawGameOver();
     }
 
     private void updateControls() {
