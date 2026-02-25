@@ -96,6 +96,13 @@ public class GameSet {
         this.menu = new MenuHandler(startMenu, pauseMenu, null, gaveOverMenu);
 
         /* Initialize the game environment, levels, agents and weapons */
+        Level level0 = new Level(
+                0,
+                0,
+                canvasHeight,
+                1280,
+                "/images/environment/chonGame.png");
+
         Level level1 = new Level(
                 0,
                 0,
@@ -149,9 +156,10 @@ public class GameSet {
         // Register objects into the environment and count total collectibles
         level1.setObjects(objects);
         level1.countCollectibles();
+        environment.getLevels().add(level0);
         environment.getLevels().add(level1);
         environment.getLevels().add(level2);
-        environment.setCurrentLevel(level1);
+        environment.setCurrentLevel(level0);
     }
 
 }
