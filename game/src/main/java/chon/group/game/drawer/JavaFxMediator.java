@@ -6,6 +6,7 @@ import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.weapon.Shot;
+import chon.group.game.menu.Menu;
 import chon.group.game.messaging.Message;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -258,4 +259,20 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     shot.getHeight());
         }
     }
+
+    /**
+     * Renders the current Menu.
+     */
+    @Override
+    public void drawMenu() {
+        Menu currentMenu = this.environment.getCurrentMenu();
+        this.drawBackground();
+        drawer.drawMenu(
+                currentMenu.getTitle(),
+                currentMenu.getIndex(),
+                20,
+                20,
+                currentMenu.getItems());
+    }
+
 }

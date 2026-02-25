@@ -9,6 +9,7 @@ import chon.group.game.core.agent.Entity;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.weapon.Panel;
 import chon.group.game.core.weapon.Shot;
+import chon.group.game.menu.Menu;
 import chon.group.game.messaging.Message;
 import javafx.scene.image.Image;
 
@@ -34,6 +35,8 @@ public class Environment {
     private List<Level> levels;
 
     private Level currentLevel;
+
+    private Menu currentMenu;
 
     /** List of messages currently being displayed. */
     private List<Message> messages;
@@ -121,7 +124,15 @@ public class Environment {
     }
 
     public void setCurrentLevel(Level currentLevel) {
-        this.currentLevel = currentLevel;
+      this.currentLevel = currentLevel;
+    }
+
+    public Menu getCurrentMenu() {
+        return currentMenu;
+    }
+
+    public void setCurrentMenu(Menu currentMenu) {
+        this.currentMenu = currentMenu;
     }
 
     public List<Message> getMessages() {

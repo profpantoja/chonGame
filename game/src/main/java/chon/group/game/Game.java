@@ -145,8 +145,10 @@ public class Game {
     }
 
     public void init() {
-        this.status = GameStatus.RUNNING;
-        mediator.renderGame();
+        this.environment.setCurrentMenu(menu.getStart());
+        //this.status = GameStatus.RUNNING;
+        mediator.drawMenu();
+        //mediator.renderGame();
     }
 
     public void win() {

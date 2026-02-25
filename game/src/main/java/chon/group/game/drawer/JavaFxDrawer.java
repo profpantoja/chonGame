@@ -1,5 +1,7 @@
 package chon.group.game.drawer;
 
+import java.util.List;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
@@ -8,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 
 /**
  * The {@code JavaFxDrawer} class is responsible for rendering various elements
@@ -351,6 +354,57 @@ public class JavaFxDrawer {
                 posY);
 
         gc.setGlobalAlpha(1.0);
+    }
+
+    /**
+     * Desenha um highlight (retângulo ou borda) para destacar a seleção atual em
+     * menus.
+     *
+     * @param x      Posição X do highlight.
+     * @param y      Posição Y do highlight.
+     * @param width  Largura do highlight.
+     * @param height Altura do highlight.
+     */
+    public void drawHighlight(double x, double y, double width, double height) {
+        gc.setStroke(Color.YELLOW);
+        gc.setLineWidth(3);
+        gc.strokeRect(x, y, width, height);
+    }
+
+    /**
+     * Desenha o menu principal do jogo, com um fundo que preenche a tela inteira.
+     *
+     * @param backgroundImage A imagem para preencher toda a tela. Se for nula, usa
+     *                        um fundo preto.
+     * @param title           O título do menu central.
+     * @param selectedIndex   O índice da opção atualmente selecionada.
+     * @param options         As opções de texto para o menu central.
+     */
+    public void drawMenu(String title, int selectedIndex, double width, double height, List<String> options) {
+        // 1. Fundo
+        gc.setFill(Color.BLACK);
+        gc.fillRect(0, 0, width, height);
+
+        double centerX = width / 2;
+
+        // 2. Título "ENGINE" no topo
+        gc.setFont(Font.font("Verdana", FontWeight.BOLD, 28));
+        gc.setFill(Color.LIGHTGRAY);
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.fillText(title, centerX, height * 0.75); // pode ajustar essa altura conforme sua imagem
+
+        // 3. Opções do menu abaixo da palavra "ENGINE"
+        gc.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
+        double firstOptionY = height * 0.82;
+
+        for (int i = 0; i < options.size(); i++) {
+            double optionY = firstOptionY + (i * 45); // espaço entre as opções
+            gc.setFill((i == selectedIndex) ? Color.YELLOW : Color.WHITE);
+            gc.fillText(options.get(i), centerX, optionY);
+        }
+
+        // Reset alinhamento
+        gc.setTextAlign(TextAlignment.LEFT);
     }
 
 }

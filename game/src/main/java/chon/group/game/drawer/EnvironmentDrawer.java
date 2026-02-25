@@ -71,4 +71,9 @@ public interface EnvironmentDrawer {
      */
     void drawGameOver();
 
+    /**
+     * Draws the current Menu.
+     */
+    void drawMenu();
+
 }
