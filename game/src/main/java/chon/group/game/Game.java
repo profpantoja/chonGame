@@ -6,18 +6,21 @@ import chon.group.game.core.agent.Agent;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.drawer.EnvironmentDrawer;
+import chon.group.game.menu.MenuHandler;
 
 public class Game {
 
     private Environment environment;
     private EnvironmentDrawer mediator;
+    private MenuHandler menu;
     private ArrayList<String> input;
     private GameStatus status = GameStatus.START;
     private boolean debugMode = true;
 
-    public Game(Environment environment, EnvironmentDrawer mediator, ArrayList<String> input) {
+    public Game(Environment environment, EnvironmentDrawer mediator, MenuHandler menu, ArrayList<String> input) {
         this.environment = environment;
         this.mediator = mediator;
+        this.menu = menu;
         this.input = input;
     }
 
@@ -35,6 +38,14 @@ public class Game {
 
     public void setMediator(EnvironmentDrawer mediator) {
         this.mediator = mediator;
+    }
+
+    public MenuHandler getMenu() {
+        return menu;
+    }
+
+    public void setMenu(MenuHandler menu) {
+        this.menu = menu;
     }
 
     public ArrayList<String> getInput() {

@@ -11,12 +11,16 @@ import chon.group.game.core.weapon.Panel;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.domain.weapon.Cannon;
 import chon.group.game.domain.weapon.Lancer;
+import chon.group.game.menu.Menu;
+import chon.group.game.menu.MenuHandler;
+import chon.group.game.menu.MenuType;
 
 public class GameSet {
 
     private int canvasWidth;
     private int canvasHeight;
     private Environment environment;
+    private MenuHandler menu;
     private Panel panel;
 
     public GameSet() {
@@ -47,6 +51,14 @@ public class GameSet {
         this.environment = environment;
     }
 
+    public MenuHandler getMenu() {
+        return menu;
+    }
+
+    public void setMenu(MenuHandler menu) {
+        this.menu = menu;
+    }
+
     public Panel getPanel() {
         return panel;
     }
@@ -64,6 +76,24 @@ public class GameSet {
         panel = new Panel(
                 240,
                 110);
+
+        /** Define the game's menus. */
+        Menu startMenu = new Menu(
+                "CHON GAME",
+                List.of("Start", "About"),
+                MenuType.START);
+
+        Menu pauseMenu = new Menu(
+                "PAUSED",
+                List.of("Continue", "Exit"),
+                MenuType.PAUSE);
+
+        Menu gaveOverMenu = new Menu(
+                "GAME OVER",
+                List.of("Continue", "Exit"),
+                MenuType.GAME_OVER);
+
+        this.menu = new MenuHandler(startMenu, pauseMenu, null, gaveOverMenu);
 
         /* Initialize the game environment, levels, agents and weapons */
         Level level1 = new Level(
