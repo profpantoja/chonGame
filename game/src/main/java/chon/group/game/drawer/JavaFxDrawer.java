@@ -382,8 +382,8 @@ public class JavaFxDrawer {
      */
     public void drawMenu(String title, int selectedIndex, double width, double height, List<String> options) {
         // 1. Fundo
-        gc.setFill(Color.BLACK);
-        gc.fillRect(0, 0, width, height);
+        //gc.setFill(Color.BLACK);
+        //gc.fillRect(0, 0, width, height);
 
         double centerX = width / 2;
 

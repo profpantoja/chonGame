@@ -147,6 +147,7 @@ public class Game {
     public void init() {
         this.environment.setCurrentMenu(menu.getStart());
         //this.status = GameStatus.RUNNING;
+        this.environment.getCurrentMenu().handleInput(input);
         mediator.drawMenu();
         //mediator.renderGame();
     }

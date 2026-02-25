@@ -48,17 +48,12 @@ public class Menu {
     }
 
     // Retorna a opção escolhida ao pressionar ENTER, ou null caso contrário
-    public void handleInput(String code) {
-        switch (code) {
-            case "UP":
-                this.index = (this.index - 1 + items.size()) % items.size();
-                break;
-            case "DOWN":
-                this.index = (this.index + 1) % items.size();
-                break;
-            case "ENTER":
-                break;
-        }
+    public void handleInput(List<String> input) {
+        if (input.contains("UP"))
+            this.index = (this.index - 1 + items.size()) % items.size();
+        if (input.contains("DOWN"))
+            this.index = (this.index + 1) % items.size();
+        input.clear();
     }
 
     public void reset() {
