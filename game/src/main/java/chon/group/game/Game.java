@@ -95,11 +95,12 @@ public class Game {
 
     public void init() {
         this.environment.setCurrentMenu(menu.getStart());
+        mediator.drawMenu();
         if (this.environment.getCurrentMenu().handleInput(input)) {
             this.environment.loadNextLevel();
+            this.environment.setCurrentMenu(this.menu.getPause());
             this.status = GameStatus.RUNNING;
         }
-        mediator.drawMenu();
     }
 
     public void running() {
@@ -134,8 +135,10 @@ public class Game {
         environment.update();
         mediator.renderGame();
         /* If the agent died in this loop */
-        if (environment.getProtagonist().isDead())
+        if (environment.getProtagonist().isDead()) {
+            this.environment.setCurrentMenu(this.menu.getGameOver());
             this.status = GameStatus.GAME_OVER;
+        }
     }
 
     public void pause() {
@@ -144,6 +147,8 @@ public class Game {
         /** Rendering the Pause Screen */
         mediator.drawPauseScreen();
         mediator.drawMenu();
+        if (this.environment.getCurrentMenu().handleInput(input))
+            this.reset();
     }
 
     public void win() {
@@ -157,6 +162,16 @@ public class Game {
         mediator.renderGame();
         /** Rendering the Game Over Screen */
         mediator.drawGameOver();
+        mediator.drawMenu();
+        if (this.environment.getCurrentMenu().handleInput(input))
+            this.reset();
+    }
+
+    public void reset() {
+        this.environment = new GameSet().getEnvironment();
+        this.mediator.setEnvironment(this.environment);
+        this.input.clear();
+        this.status = GameStatus.START;
     }
 
     private void updateControls() {

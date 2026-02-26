@@ -20,7 +20,7 @@ import javafx.scene.paint.Color;
  */
 public class JavaFxMediator implements EnvironmentDrawer {
 
-    private final Environment environment;
+    private Environment environment;
     private final JavaFxDrawer drawer;
 
     /**
@@ -35,6 +35,10 @@ public class JavaFxMediator implements EnvironmentDrawer {
         this.environment = environment;
         this.drawer = new JavaFxDrawer(gc, this);
     }
+  
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
 
     /**
      * Renders the entire game environment, including background, agents, objects,
@@ -48,7 +52,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
         this.drawShots();
         this.drawMessages();
     }
-
+   
     /**
      * Clears the environment by erasing all drawn elements on the screen.
      */
@@ -270,7 +274,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
         drawer.drawMenu(
                 currentMenu.getTitle(),
                 currentMenu.getIndex(),
-                this.environment.getCurrentLevel().getWidth(),
+                this.environment.getCamera().getScreenWidth(),
                 this.environment.getCurrentLevel().getHeight(),
                 currentMenu.getItems());
     }

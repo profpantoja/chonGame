@@ -124,7 +124,7 @@ public class Environment {
     }
 
     public void setCurrentLevel(Level currentLevel) {
-      this.currentLevel = currentLevel;
+        this.currentLevel = currentLevel;
     }
 
     public Menu getCurrentMenu() {
@@ -332,6 +332,11 @@ public class Environment {
             }
         }
 
+    }
+
+    public void reset() {
+        this.currentLevel = this.levels.get(0);
+        this.getCamera().setPosX(0);
     }
 
 }
