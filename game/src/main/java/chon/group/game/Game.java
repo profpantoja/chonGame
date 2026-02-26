@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.environment.Environment;
+import chon.group.game.core.environment.Level;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.drawer.EnvironmentDrawer;
+import chon.group.game.menu.Action;
 import chon.group.game.menu.MenuHandler;
 
 public class Game {
@@ -96,7 +98,7 @@ public class Game {
     public void init() {
         this.environment.setCurrentMenu(menu.getStart());
         mediator.drawMenu();
-        if (this.environment.getCurrentMenu().handleInput(input)) {
+        if (this.environment.getCurrentMenu().handleInput(input).equals(Action.START)) {
             this.environment.loadNextLevel();
             this.environment.setCurrentMenu(this.menu.getPause());
             this.status = GameStatus.RUNNING;
@@ -147,8 +149,13 @@ public class Game {
         /** Rendering the Pause Screen */
         mediator.drawPauseScreen();
         mediator.drawMenu();
-        if (this.environment.getCurrentMenu().handleInput(input))
+        Action action = this.environment.getCurrentMenu().handleInput(input);
+        if (action.equals(Action.RESET))
             this.reset();
+        else if (action.equals(Action.CONTINUE)) {
+            this.input.remove("P");
+            this.status = GameStatus.RUNNING;
+        }
     }
 
     public void win() {
@@ -163,8 +170,11 @@ public class Game {
         /** Rendering the Game Over Screen */
         mediator.drawGameOver();
         mediator.drawMenu();
-        if (this.environment.getCurrentMenu().handleInput(input))
+        Action action = this.environment.getCurrentMenu().handleInput(input);
+        if (action.equals(Action.RESET))
             this.reset();
+        else if (action.equals(Action.CONTINUE))
+            this.resetLevel();
     }
 
     public void reset() {
@@ -172,6 +182,18 @@ public class Game {
         this.mediator.setEnvironment(this.environment);
         this.input.clear();
         this.status = GameStatus.START;
+    }
+
+    public void resetLevel() {
+        GameSet gameSet = new GameSet();
+        int myLevelIndex = this.environment.getLevels().indexOf(this.environment.getCurrentLevel());
+        Level newLevel = gameSet.getEnvironment().getLevels().get(myLevelIndex);
+        this.environment.getLevels().set(myLevelIndex, newLevel);
+        this.environment.setCurrentLevel(newLevel);
+        this.environment.setProtagonist(gameSet.getEnvironment().getProtagonist());
+        this.input.clear();
+        this.status = GameStatus.START;
+
     }
 
     private void updateControls() {

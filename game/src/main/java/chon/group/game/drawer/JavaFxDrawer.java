@@ -1,7 +1,5 @@
 package chon.group.game.drawer;
 
-import java.util.List;
-
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
@@ -380,10 +378,10 @@ public class JavaFxDrawer {
      * @param selectedIndex   O índice da opção atualmente selecionada.
      * @param options         As opções de texto para o menu central.
      */
-    public void drawMenu(String title, int selectedIndex, double width, double height, List<String> options) {
+    public void drawMenu(String title, int selectedIndex, double width, double height, String[] options) {
         // 1. Fundo
-        //gc.setFill(Color.BLACK);
-        //gc.fillRect(0, 0, width, height);
+        // gc.setFill(Color.BLACK);
+        // gc.fillRect(0, 0, width, height);
 
         double centerX = width / 2;
 
@@ -397,10 +395,10 @@ public class JavaFxDrawer {
         gc.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
         double firstOptionY = height * 0.82;
 
-        for (int i = 0; i < options.size(); i++) {
+        for (int i = 0; i < options.length; i++) {
             double optionY = firstOptionY + (i * 45); // espaço entre as opções
             gc.setFill((i == selectedIndex) ? Color.YELLOW : Color.WHITE);
-            gc.fillText(options.get(i), centerX, optionY);
+            gc.fillText(options[i], centerX, optionY);
         }
 
         // Reset alinhamento

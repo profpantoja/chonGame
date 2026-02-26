@@ -11,9 +11,10 @@ import chon.group.game.core.weapon.Panel;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.domain.weapon.Cannon;
 import chon.group.game.domain.weapon.Lancer;
+import chon.group.game.menu.Action;
+import chon.group.game.menu.Item;
 import chon.group.game.menu.Menu;
 import chon.group.game.menu.MenuHandler;
-import chon.group.game.menu.MenuType;
 
 public class GameSet {
 
@@ -78,20 +79,23 @@ public class GameSet {
                 110);
 
         /** Define the game's menus. */
+        Item startMenu1 = new Item("Start", Action.START);
+        Item startMenu2 = new Item("About", Action.ENTER);
         Menu startMenu = new Menu(
                 "CHON GAME",
-                List.of("Start", "About"),
-                MenuType.START);
+                List.of(startMenu1, startMenu2));
 
+        Item pauseMenu1 = new Item("Back", Action.CONTINUE);
+        Item pauseMenu2 = new Item("Exit", Action.RESET);
         Menu pauseMenu = new Menu(
                 "PAUSED",
-                List.of("Continue", "Exit"),
-                MenuType.PAUSE);
+                List.of(pauseMenu1, pauseMenu2));
 
+        Item gameOverMenu1 = new Item("Continue", Action.CONTINUE);
+        Item gameOverMenu2 = new Item("Exit", Action.RESET);
         Menu gaveOverMenu = new Menu(
                 "GAME OVER",
-                List.of("Continue", "Exit"),
-                MenuType.GAME_OVER);
+                List.of(gameOverMenu1, gameOverMenu2));
 
         this.menu = new MenuHandler(startMenu, pauseMenu, null, gaveOverMenu);
 

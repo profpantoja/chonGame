@@ -6,6 +6,7 @@ import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.weapon.Shot;
+import chon.group.game.menu.Item;
 import chon.group.game.menu.Menu;
 import chon.group.game.messaging.Message;
 import javafx.scene.canvas.GraphicsContext;
@@ -35,7 +36,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
         this.environment = environment;
         this.drawer = new JavaFxDrawer(gc, this);
     }
-  
+
     public void setEnvironment(Environment environment) {
         this.environment = environment;
     }
@@ -52,7 +53,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
         this.drawShots();
         this.drawMessages();
     }
-   
+
     /**
      * Clears the environment by erasing all drawn elements on the screen.
      */
@@ -276,7 +277,10 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 currentMenu.getIndex(),
                 this.environment.getCamera().getScreenWidth(),
                 this.environment.getCurrentLevel().getHeight(),
-                currentMenu.getItems());
+                currentMenu.getItems().stream()
+                        .map(Item::getTitle)
+                        .toArray(String[]::new));
+
     }
 
 }

@@ -6,13 +6,11 @@ public class Menu {
 
     private int index = 0;
     private String title;
-    private List<String> items;
-    private MenuType type;
+    private List<Item> items;
 
-    public Menu(String title, List<String> items, MenuType type) {
+    public Menu(String title, List<Item> items) {
         this.title = title;
         this.items = items;
-        this.type = type;
     }
 
     public int getIndex() {
@@ -31,33 +29,25 @@ public class Menu {
         this.title = title;
     }
 
-    public List<String> getItems() {
+    public List<Item> getItems() {
         return items;
     }
 
-    public void setItems(List<String> items) {
+    public void setItems(List<Item> items) {
         this.items = items;
     }
 
-    public MenuType getType() {
-        return type;
-    }
-
-    public void setType(MenuType type) {
-        this.type = type;
-    }
-
-    public boolean handleInput(List<String> input) {
+    public Action handleInput(List<String> input) {
         if (input.contains("ENTER")) {
             input.clear();
-            return true;
+            return items.get(this.index).getAction();
         }
         if (input.contains("UP"))
             this.index = (this.index - 1 + items.size()) % items.size();
         if (input.contains("DOWN"))
             this.index = (this.index + 1) % items.size();
         input.clear();
-        return false;
+        return Action.NONE;
     }
 
     public void reset() {
