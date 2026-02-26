@@ -97,6 +97,7 @@ public class Game {
 
     public void init() {
         this.environment.setCurrentMenu(menu.getStart());
+        mediator.drawBackground();
         mediator.drawMenu();
         if (this.environment.getCurrentMenu().handleInput(input).equals(Action.START)) {
             this.environment.loadNextLevel();
@@ -196,7 +197,6 @@ public class Game {
         this.environment.setScore(0);
         this.input.clear();
         this.status = GameStatus.RUNNING;
-
     }
 
     private void updateControls() {

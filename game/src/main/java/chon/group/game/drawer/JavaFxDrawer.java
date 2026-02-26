@@ -131,7 +131,7 @@ public class JavaFxDrawer {
     public void drawPanel(int life, int maxLife, int collected, int total, int score, double energy, double maxEnergy,
             Font pixelFont, Image lifeIcon, Image energyIcon, Image itemIcon, Image scoreIcon, int panelWidth,
             int panelHeight) {
-        drawGlassPanel(panelWidth, panelHeight);
+        drawGlassPanel(panelWidth, panelHeight, 10, 10);
         drawBarsAndIcons(life, maxLife, collected, total, score, energy, maxEnergy, pixelFont, lifeIcon, energyIcon,
                 itemIcon, scoreIcon);
     }
@@ -139,20 +139,20 @@ public class JavaFxDrawer {
     /**
      * Draws a semi-transparent glass-style background panel with lighting effects.
      */
-    private void drawGlassPanel(int panelWidth, int panelHeight) {
+    private void drawGlassPanel(int panelWidth, int panelHeight, int posX, int posY) {
         gc.setFill(Color.rgb(0, 0, 0, 0.4));
-        gc.fillRoundRect(10, 10, panelWidth, panelHeight, 15, 15);
+        gc.fillRoundRect(posX, posY, panelWidth, panelHeight, 15, 15);
 
         gc.setStroke(Color.rgb(150, 255, 150, 0.3));
         gc.setLineWidth(1.5);
-        gc.strokeRoundRect(10, 10, panelWidth, panelHeight, 15, 15);
+        gc.strokeRoundRect(posX, posY, panelWidth, panelHeight, 15, 15);
 
         InnerShadow innerShadow = new InnerShadow();
         innerShadow.setColor(Color.rgb(0, 100, 0, 0.4));
         innerShadow.setBlurType(BlurType.GAUSSIAN);
         innerShadow.setRadius(10);
         gc.setEffect(innerShadow);
-        gc.fillRoundRect(10, 10, panelWidth, panelHeight, 15, 15);
+        gc.fillRoundRect(posX, posY, panelWidth, panelHeight, 15, 15);
         gc.setEffect(null);
 
         DropShadow glow = new DropShadow();
@@ -160,7 +160,7 @@ public class JavaFxDrawer {
         glow.setBlurType(BlurType.GAUSSIAN);
         glow.setRadius(15);
         gc.setEffect(glow);
-        gc.strokeRoundRect(10, 10, panelWidth, panelHeight, 15, 15);
+        gc.strokeRoundRect(posX, posY, panelWidth, panelHeight, 15, 15);
         gc.setEffect(null);
     }
 
@@ -378,31 +378,38 @@ public class JavaFxDrawer {
      * @param selectedIndex   O índice da opção atualmente selecionada.
      * @param options         As opções de texto para o menu central.
      */
-    public void drawMenu(String title, int selectedIndex, double width, double height, String[] options) {
+    public void drawMenu(String title, int selectedIndex, double screenWidth, double levelHeight, String[] options) {
         // 1. Fundo
         // gc.setFill(Color.BLACK);
         // gc.fillRect(0, 0, width, height);
 
-        double centerX = width / 2;
+        double posX = screenWidth / 2;
+        double posY = levelHeight * 0.82;
+
+        this.drawGlassPanel(
+                (int) 400,
+                (int) 200,
+                (int) posX - 200,
+                (int) posY - 90);
 
         // 2. Título "ENGINE" no topo
         gc.setFont(Font.font("Verdana", FontWeight.BOLD, 28));
         gc.setFill(Color.LIGHTGRAY);
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText(title, centerX, height * 0.75); // pode ajustar essa altura conforme sua imagem
+        gc.fillText(title, posX, levelHeight * 0.75); // pode ajustar essa altura conforme sua imagem
 
         // 3. Opções do menu abaixo da palavra "ENGINE"
         gc.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
-        double firstOptionY = height * 0.82;
 
         for (int i = 0; i < options.length; i++) {
-            double optionY = firstOptionY + (i * 45); // espaço entre as opções
+            double optionY = posY + (i * 45); // espaço entre as opções
             gc.setFill((i == selectedIndex) ? Color.YELLOW : Color.WHITE);
-            gc.fillText(options[i], centerX, optionY);
+            gc.fillText(options[i], posX, optionY);
         }
 
         // Reset alinhamento
         gc.setTextAlign(TextAlignment.LEFT);
+
     }
 
 }

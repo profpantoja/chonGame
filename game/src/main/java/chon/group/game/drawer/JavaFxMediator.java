@@ -271,7 +271,6 @@ public class JavaFxMediator implements EnvironmentDrawer {
     @Override
     public void drawMenu() {
         Menu currentMenu = this.environment.getCurrentMenu();
-        this.drawBackground();
         drawer.drawMenu(
                 currentMenu.getTitle(),
                 currentMenu.getIndex(),
