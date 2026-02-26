@@ -168,6 +168,10 @@ public class Environment {
         return collectedCount;
     }
 
+    public void setCollectedCount(int collectedCount) {
+        this.collectedCount = collectedCount;
+    }
+
     /**
      * Gets the current score of the player.
      *
@@ -175,6 +179,10 @@ public class Environment {
      */
     public int getScore() {
         return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 
     /**

@@ -191,8 +191,11 @@ public class Game {
         this.environment.getLevels().set(myLevelIndex, newLevel);
         this.environment.setCurrentLevel(newLevel);
         this.environment.setProtagonist(gameSet.getEnvironment().getProtagonist());
+        this.environment.setCamera(gameSet.getEnvironment().getCamera());
+        this.environment.setCollectedCount(0);
+        this.environment.setScore(0);
         this.input.clear();
-        this.status = GameStatus.START;
+        this.status = GameStatus.RUNNING;
 
     }
 
