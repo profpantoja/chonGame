@@ -275,6 +275,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 currentMenu.getTitle(),
                 currentMenu.getIndex(),
                 currentMenu.getWidth(),
+                currentMenu.getSpan(),
                 this.environment.getCamera().getScreenWidth(),
                 this.environment.getCurrentLevel().getHeight(),
                 currentMenu.getItems().stream()

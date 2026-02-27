@@ -378,14 +378,15 @@ public class JavaFxDrawer {
      * @param selectedIndex   The index of the currently selected option.
      * @param options         The text options for the central menu.
      */
-    public void drawMenu(String title, int selectedIndex, double width, double screenWidth, double levelHeight,
+    public void drawMenu(String title, int selectedIndex, double width, double span, double screenWidth,
+            double levelHeight,
             String[] options) {
         /* Sets the middle of the screen. */
         double posX = screenWidth / 2;
         /* Sets the Y position considering a percentage of the level height. */
         double posY = levelHeight * 0.70;
         /* Sets the final Y position considering the space sum between options. */
-        double finalPosY = posY + (options.length * 45);
+        double finalPosY = posY + (options.length * span);
         this.drawGlassPanel(
                 (int) width,
                 /*
@@ -396,7 +397,7 @@ public class JavaFxDrawer {
                  * option.
                  * 
                  */
-                (int) (finalPosY - posY) + 45 + 45,
+                (int) (finalPosY - posY + span + span),
                 (int) (posX - (width / 2)),
                 (int) posY);
         /* It prints the Menu title considering its font, style, and color. */
@@ -404,13 +405,13 @@ public class JavaFxDrawer {
         gc.setFill(Color.LIGHTGRAY);
         gc.setTextAlign(TextAlignment.CENTER);
         /* It adds a span between the title and the options. */
-        posY += 45;
+        posY += span;
         gc.fillText(title, posX, posY);
         /* It sets the font for printing the Menu options. */
         gc.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
         /* It prints each option considering a span (45px) between each one. */
         for (int i = 1; i <= options.length; i++) {
-            double optionY = posY + (i * 45);
+            double optionY = posY + (i * span);
             /* It makes the selected option Yellow. */
             gc.setFill((i - 1 == selectedIndex) ? Color.YELLOW : Color.WHITE);
             gc.fillText(options[i - 1], posX, optionY);

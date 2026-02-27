@@ -8,11 +8,21 @@ public class Menu {
     private String title;
     private List<Item> items;
     private double width = 400;
+    private double span = 45;
 
     public Menu(String title, List<Item> items, double width) {
         this.title = title;
         this.items = items;
     }
+   
+    public Menu(int index, String title, List<Item> items, double width, double span) {
+        this.index = index;
+        this.title = title;
+        this.items = items;
+        this.width = width;
+        this.span = span;
+    }
+
 
     public int getIndex() {
         return index;
@@ -46,6 +56,14 @@ public class Menu {
         this.width = width;
     }
 
+    public double getSpan() {
+        return span;
+    }
+
+    public void setSpan(double span) {
+        this.span = span;
+    }
+    
     public Action handleInput(List<String> input) {
         if (input.contains("ENTER")) {
             input.clear();
