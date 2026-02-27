@@ -191,8 +191,10 @@ public class Game {
         Level newLevel = gameSet.getEnvironment().getLevels().get(myLevelIndex);
         this.environment.getLevels().set(myLevelIndex, newLevel);
         this.environment.setCurrentLevel(newLevel);
+        this.environment.setCurrentMenu(this.menu.getPause());
         this.environment.setProtagonist(gameSet.getEnvironment().getProtagonist());
-        this.environment.setCamera(gameSet.getEnvironment().getCamera());
+        this.environment.getCamera().setPosX(0);
+        this.environment.getCamera().setLevelWidth(newLevel.getWidth());
         this.environment.setCollectedCount(0);
         this.environment.setScore(0);
         this.input.clear();
