@@ -274,12 +274,12 @@ public class JavaFxMediator implements EnvironmentDrawer {
         drawer.drawMenu(
                 currentMenu.getTitle(),
                 currentMenu.getIndex(),
+                currentMenu.getWidth(),
                 this.environment.getCamera().getScreenWidth(),
                 this.environment.getCurrentLevel().getHeight(),
                 currentMenu.getItems().stream()
                         .map(Item::getTitle)
                         .toArray(String[]::new));
-
     }
 
 }

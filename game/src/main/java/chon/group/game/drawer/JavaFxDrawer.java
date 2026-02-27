@@ -370,46 +370,56 @@ public class JavaFxDrawer {
     }
 
     /**
-     * Desenha o menu principal do jogo, com um fundo que preenche a tela inteira.
+     * Design the game's main menu, with a background that fills the entire screen.
      *
-     * @param backgroundImage A imagem para preencher toda a tela. Se for nula, usa
-     *                        um fundo preto.
-     * @param title           O título do menu central.
-     * @param selectedIndex   O índice da opção atualmente selecionada.
-     * @param options         As opções de texto para o menu central.
+     * @param backgroundImage The image to fill the entire screen. If it is null,
+     *                        use a black background.
+     * @param title           The center menu title.
+     * @param selectedIndex   The index of the currently selected option.
+     * @param options         The text options for the central menu.
      */
-    public void drawMenu(String title, int selectedIndex, double screenWidth, double levelHeight, String[] options) {
-        // 1. Fundo
-        // gc.setFill(Color.BLACK);
-        // gc.fillRect(0, 0, width, height);
-
+    public void drawMenu(String title, int selectedIndex, double width, double screenWidth, double levelHeight,
+            String[] options) {
+        /* Sets the middle of the screen. */
         double posX = screenWidth / 2;
-        double posY = levelHeight * 0.82;
-
+        /* Sets the Y position considering a percentage of the level height. */
+        double posY = levelHeight * 0.70;
+        /* Sets the final Y position considering the space sum between options. */
+        double finalPosY = posY + (options.length * 45);
         this.drawGlassPanel(
-                (int) 400,
-                (int) 200,
-                (int) posX - 200,
-                (int) posY - 90);
-
-        // 2. Título "ENGINE" no topo
+                (int) width,
+                /*
+                 * This parameter considers the Y position plus 2 spans:
+                 * 
+                 * - where the first one considers the space between the line and the title;
+                 * - and the second considers the space between the end line and the last
+                 * option.
+                 * 
+                 */
+                (int) (finalPosY - posY) + 45 + 45,
+                (int) (posX - (width / 2)),
+                (int) posY);
+        /* It prints the Menu title considering its font, style, and color. */
         gc.setFont(Font.font("Verdana", FontWeight.BOLD, 28));
         gc.setFill(Color.LIGHTGRAY);
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText(title, posX, levelHeight * 0.75); // pode ajustar essa altura conforme sua imagem
-
-        // 3. Opções do menu abaixo da palavra "ENGINE"
+        /* It adds a span between the title and the options. */
+        posY += 45;
+        gc.fillText(title, posX, posY);
+        /* It sets the font for printing the Menu options. */
         gc.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
-
-        for (int i = 0; i < options.length; i++) {
-            double optionY = posY + (i * 45); // espaço entre as opções
-            gc.setFill((i == selectedIndex) ? Color.YELLOW : Color.WHITE);
-            gc.fillText(options[i], posX, optionY);
+        /* It prints each option considering a span (45px) between each one. */
+        for (int i = 1; i <= options.length; i++) {
+            double optionY = posY + (i * 45);
+            /* It makes the selected option Yellow. */
+            gc.setFill((i - 1 == selectedIndex) ? Color.YELLOW : Color.WHITE);
+            gc.fillText(options[i - 1], posX, optionY);
         }
-
-        // Reset alinhamento
+        /*
+         * It resets the text alignment. It can causes bugs in other panels if isn't
+         * reset.
+         */
         gc.setTextAlign(TextAlignment.LEFT);
-
     }
 
 }

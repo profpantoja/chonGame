@@ -7,8 +7,9 @@ public class Menu {
     private int index = 0;
     private String title;
     private List<Item> items;
+    private double width = 400;
 
-    public Menu(String title, List<Item> items) {
+    public Menu(String title, List<Item> items, double width) {
         this.title = title;
         this.items = items;
     }
@@ -37,6 +38,14 @@ public class Menu {
         this.items = items;
     }
 
+    public double getWidth() {
+        return width;
+    }
+
+    public void setWidth(double width) {
+        this.width = width;
+    }
+
     public Action handleInput(List<String> input) {
         if (input.contains("ENTER")) {
             input.clear();
@@ -53,4 +62,5 @@ public class Menu {
     public void reset() {
         this.index = 0;
     }
+
 }
