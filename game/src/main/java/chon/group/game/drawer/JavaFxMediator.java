@@ -226,8 +226,8 @@ public class JavaFxMediator implements EnvironmentDrawer {
     @Override
     public void drawGameOver() {
         drawer.drawScreen(this.environment.getGameOverImage(),
-                (int) this.environment.getPauseImage().getWidth(),
-                (int) this.environment.getPauseImage().getHeight(),
+                (int) this.environment.getGameOverImage().getWidth(),
+                (int) this.environment.getGameOverImage().getHeight(),
                 (int) this.environment.getCamera().getScreenWidth(),
                 this.environment.getCurrentLevel().getHeight());
     }
