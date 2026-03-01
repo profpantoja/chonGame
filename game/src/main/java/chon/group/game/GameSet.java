@@ -100,7 +100,7 @@ public class GameSet {
                 0,
                 canvasHeight,
                 1920,
-                "/images/environment/insideOfTheDeathStar2.png");
+                "/images/environment/insideOfTheDeathStar.png");
 
         Level level3 = new Level(
                 0,
