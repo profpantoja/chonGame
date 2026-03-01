@@ -118,10 +118,10 @@ public class GameSet {
 
         
         /* Set the Mr Man */
-        Agent mrMan = new Agent(400, 390, 90, 65, 5, 5000, "/images/agents/MrMan.png", false, false);
-        AnimationSpritesheet idleMrMan = new SimpleAnimationSpritesheet(36, 48, 5, 500, "/images/agents/MrMan.png");
-        AnimationSpritesheet runMrMan = new SimpleAnimationSpritesheet(36, 48, 6, 500, "/images/agents/MrManRun.png");
-        AnimationSpritesheet attackMrMan = new SimpleAnimationSpritesheet(42, 48, 5, 15000, "/images/agents/MrManAttack.png");
+        Agent mrMan = new Agent(400, 390, 90, 65, 5, 5000, "/images/agents/mrman.png", false, false);
+        AnimationSpritesheet idleMrMan = new SimpleAnimationSpritesheet(36, 48, 5, 500, "/images/agents/mrman.png");
+        AnimationSpritesheet runMrMan = new SimpleAnimationSpritesheet(36, 48, 6, 500, "/images/agents/mrmanrun.png");
+        AnimationSpritesheet attackMrMan = new SimpleAnimationSpritesheet(42, 48, 5, 15000, "/images/agents/mrmanattack.png");
 
         AnimationGraphics MrManGraphics = new AnimationGraphics();
         MrManGraphics.addSpritesheet(AnimationStatus.IDLE, idleMrMan);
