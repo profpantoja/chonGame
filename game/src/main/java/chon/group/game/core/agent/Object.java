@@ -1,7 +1,5 @@
 package chon.group.game.core.agent;
 
-import java.util.List;
-
 /**
  * Represents a generic game object that can be collectible and/or destructible.
  */
@@ -9,11 +7,6 @@ public class Object extends Entity {
     private boolean collected = false;
     private boolean destructible;
     private boolean collectible;
-
-    private List<Object> objects;
-    private int totalObjects = 0;
-    private int collectedObjects = 0;
-    private int score = 0;
 
     /**
      * Constructs a game object with specified position, size, image, and
@@ -36,7 +29,7 @@ public class Object extends Entity {
             String pathImage,
             boolean flipped,
             boolean visibleBars,
-            boolean collectible, 
+            boolean collectible,
             boolean destructible) {
         super(posX, posY, height, width, speed, health, pathImage, flipped, visibleBars);
         this.collectible = collectible;
@@ -122,47 +115,4 @@ public class Object extends Entity {
         }
     }
 
-    /**
-     * Registers a new object in the object list.
-     *
-     * @param obj The object to register.
-     */
-    public void registerObject(Object obj) {
-        objects.add(obj);
-        totalObjects++;
-    }
-
-    /**
-     * Notifies that an object has been collected.
-     *
-     * @param obj The collected object.
-     */
-    public void notifyCollected(Object obj) {
-        collectedObjects++;
-        objects.remove(obj);
-    }
-
-    /** @return The total number of registered objects. */
-    public int getObjectTotal() {
-        return totalObjects;
-    }
-
-    /** @return The total number of collected objects. */
-    public int getObjectCollected() {
-        return collectedObjects;
-    }
-
-    /** @return The current score. */
-    public int getScore() {
-        return score;
-    }
-
-    /**
-     * Adds a specified amount to the current score.
-     *
-     * @param amount The amount to add.
-     */
-    public void addScore(int amount) {
-        score += amount;
-    }
 }
