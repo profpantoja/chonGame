@@ -150,15 +150,31 @@ public class GameSet {
         objects.add(new Object(200, 350, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, 200));
         objects.add(new Object(400, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, 200));
         objects.add(new Object(1000, 600, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, 200));
+        objects.add(new Object(1200, 650, 64, 64, 0, 1000, "/images/objects/box.png", false, false, false, true, 0));
         objects.add(new Object(1400, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, 200));
         objects.add(new Object(1800, 650, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, 200));
+        objects.add(new Object(1900, 350, 64, 64, 0, 1000, "/images/objects/box.png", false, false, false, true, 0));
         objects.add(new Object(2000, 580, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, 200));
+        objects.add(new Object(2150, 550, 64, 64, 0, 1000, "/images/objects/box.png", false, false, false, true, 0));
         objects.add(new Object(2300, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, 200));
+        objects.add(new Object(2500, 680, 64, 64, 0, 1000, "/images/objects/box.png", false, false, false, true, 0));
         objects.add(new Object(2600, 500, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, 200));
+        objects.add(new Object(2700, 450, 64, 64, 0, 1000, "/images/objects/box.png", false, false, false, true, 0));
+        objects.add(new Object(2850, 650, 64, 64, 0, 1000, "/images/objects/box.png", false, false, false, true, 0));
         objects.add(new Object(2900, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, 200));
+        objects.add(new Object(3150, 450, 64, 64, 0, 1000, "/images/objects/box.png", false, false, false, true, 0));
         objects.add(new Object(3200, 400, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, 200));
+        objects.add(new Object(3500, 350, 64, 64, 0, 1000, "/images/objects/box.png", false, false, false, true, 0));
+        objects.add(new Object(3850, 550, 64, 64, 0, 1000, "/images/objects/box.png", false, false, false, true, 0));
         objects.add(new Object(4100, 500, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, 200));
+        objects.add(new Object(4350, 550, 64, 64, 0, 1000, "/images/objects/box.png", false, false, false, true, 0));
+        objects.add(new Object(4550, 550, 64, 64, 0, 1000, "/images/objects/box.png", false, false, false, true, 0));
+        objects.add(new Object(4650, 350, 64, 64, 0, 1000, "/images/objects/box.png", false, false, false, true, 0));
+        objects.add(new Object(4850, 600, 64, 64, 0, 1000, "/images/objects/box.png", false, false, false, true, 0));
         objects.add(new Object(5000, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, 200));
+        objects.add(new Object(5150, 650, 64, 64, 0, 1000, "/images/objects/box.png", false, false, false, true, 0));
+        objects.add(new Object(5300, 300, 64, 64, 0, 1000, "/images/objects/box.png", false, false, false, true, 0));
+        objects.add(new Object(5600, 550, 64, 64, 0, 1000, "/images/objects/box.png", false, false, false, true, 0));
         objects.add(new Object(6200, 400, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, 200));
 
         // Register objects into the environment and count total collectibles

@@ -173,7 +173,7 @@ public class Agent extends Entity {
      * @return if the agent is dead
      */
     public boolean isDead() {
-        return (this.getHealth() <= 0);
+        return (this.isTerminated());
     }
 
     /**

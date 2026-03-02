@@ -9,7 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
-    public abstract class Entity {
+public abstract class Entity {
 
     /** X position (horizontal) of the entity. */
     protected int posX;
@@ -39,7 +39,7 @@ import javafx.scene.paint.Color;
     private int fullHealth;
 
     /** Indicates if the existing bars of life or energy are visible or not. */
-    private boolean visibleBars = false;    
+    private boolean visibleBars = false;
 
     /**
      * Constructor to initialize the entity properties.
@@ -52,7 +52,8 @@ import javafx.scene.paint.Color;
      * @param health    the entity's health
      * @param pathImage the path to the entity's image
      */
-    public Entity(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped, boolean visibleBars) {
+    public Entity(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped,
+            boolean visibleBars) {
         this.posX = posX;
         this.posY = posY;
         this.height = height;
@@ -234,7 +235,7 @@ import javafx.scene.paint.Color;
     public void setVisibleBars(boolean visible) {
         this.visibleBars = visible;
     }
-    
+
     /**
      * Flips the Image horizontally.
      */
@@ -258,13 +259,12 @@ import javafx.scene.paint.Color;
             if (flipped)
                 this.flipImage();
             if (movements.contains("RIGHT") && movements.contains("UP")) {
-                setPosY(posY  -= speed) ;
+                setPosY(posY -= speed);
                 setPosX(posX += speed);
-            }
-            else if (movements.contains("RIGHT") && movements.contains("DOWN")) {
+            } else if (movements.contains("RIGHT") && movements.contains("DOWN")) {
                 setPosY(posY += speed);
                 setPosX(posX += speed);
-            }else{
+            } else {
                 setPosX(posX += speed);
             }
         } else if (movements.contains("LEFT")) {
@@ -273,12 +273,10 @@ import javafx.scene.paint.Color;
             if (movements.contains("LEFT") && movements.contains("UP")) {
                 setPosY(posY -= speed);
                 setPosX(posX -= speed);
-            }
-            else if (movements.contains("LEFT") && movements.contains("DOWN")) {
+            } else if (movements.contains("LEFT") && movements.contains("DOWN")) {
                 setPosY(posY += speed);
                 setPosX(posX -= speed);
-            }
-            else{
+            } else {
                 setPosX(posX -= speed);
             }
         } else if (movements.contains("UP")) {
@@ -326,6 +324,10 @@ import javafx.scene.paint.Color;
             if (this.getHealth() < 0)
                 this.setHealth(0);
         }
+    }
+
+    public boolean isTerminated() {
+        return (this.getHealth() <= 0);
     }
 
 }

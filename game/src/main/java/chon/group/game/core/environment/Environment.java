@@ -3,6 +3,7 @@ package chon.group.game.core.environment;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Entity;
@@ -277,13 +278,20 @@ public class Environment {
         Iterator<Shot> itShot = this.currentLevel.getShots().iterator();
         while (itShot.hasNext()) {
             Shot shot = itShot.next();
+            /* if the shot's position went off the level width, it is removed. */
             if ((shot.getPosX() > this.currentLevel.getWidth()) || ((shot.getPosX() + shot.getWidth()) < 0)) {
                 itShot.remove();
             } else {
+                /**
+                 * If any shot intersected the protagonist, the damage is taken, the message
+                 * system is informed, and the shot is removed.
+                 */
                 if (intersect(protagonist, shot)) {
                     protagonist.takeDamage(shot.getDamage(), messages);
                     itShot.remove();
+                    // Verify if it needs a break here.
                 } else {
+                    /* The same as before but now with all other agents. */
                     Iterator<Agent> itAgent = this.currentLevel.getAgents().iterator();
                     while (itAgent.hasNext()) {
                         Agent agent = itAgent.next();
@@ -296,6 +304,24 @@ public class Environment {
                         }
                     }
                 }
+                /* If the remaining shots hit (in)destructible and no collectible objects. */
+                Iterator<Object> itObject = this.currentLevel.getObjects()
+                        .stream()
+                        .filter(Object::isDestructible)
+                        .collect(Collectors.toList())
+                        .iterator();
+                while (itObject.hasNext()) {
+                    Object object = itObject.next();
+                    if (intersect(object, shot)) {
+                        object.takeDamage(shot.getDamage(), messages);
+                        if (object.isDestroyed())
+                            this.currentLevel.getObjects().remove(object);
+                        itShot.remove();
+                        break;
+                    }
+                }
+
+                /* The remaining shots move. */
                 shot.move(new ArrayList<>(List.of(shot.getDirection())));
             }
         }
