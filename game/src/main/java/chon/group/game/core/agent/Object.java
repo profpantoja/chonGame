@@ -4,21 +4,24 @@ package chon.group.game.core.agent;
  * Represents a generic game object that can be collectible and/or destructible.
  */
 public class Object extends Entity {
-    private boolean collected = false;
+
+    private boolean collected;
     private boolean destructible;
     private boolean collectible;
+    private double attractionRadius = 0.0;
 
     /**
      * Constructs a game object with specified position, size, image, and
      * properties.
      *
-     * @param posX         The x-coordinate of the object.
-     * @param posY         The y-coordinate of the object.
-     * @param height       The height of the object.
-     * @param width        The width of the object.
-     * @param pathImage    The image path of the object.
-     * @param collectible  Whether the object is collectible.
-     * @param destructible Whether the object is destructible.
+     * @param posX             The x-coordinate of the object.
+     * @param posY             The y-coordinate of the object.
+     * @param height           The height of the object.
+     * @param width            The width of the object.
+     * @param pathImage        The image path of the object.
+     * @param collectible      Whether the object is collectible.
+     * @param destructible     Whether the object is destructible.
+     * @param attractionRadius The attraction radius in pixels.
      */
     public Object(int posX,
             int posY,
@@ -30,10 +33,12 @@ public class Object extends Entity {
             boolean flipped,
             boolean visibleBars,
             boolean collectible,
-            boolean destructible) {
+            boolean destructible,
+            double attractionRadius) {
         super(posX, posY, height, width, speed, health, pathImage, flipped, visibleBars);
         this.collectible = collectible;
         this.destructible = destructible;
+        this.attractionRadius = attractionRadius;
     }
 
     /** @return Whether the object has been collected. */
@@ -78,6 +83,14 @@ public class Object extends Entity {
         this.destructible = destructible;
     }
 
+    public double getAttractionRadius() {
+        return attractionRadius;
+    }
+
+    public void setAttractionRadius(double attractionRadius) {
+        this.attractionRadius = attractionRadius;
+    }
+
     /**
      * Defines the behavior when the object is collected.
      * Can be overridden in subclasses.
@@ -99,19 +112,23 @@ public class Object extends Entity {
      *
      * @param target           The target entity to follow.
      * @param attractionRadius The radius within which the object starts following.
-     * @param speed            The speed of movement towards the target.
      */
-    public void follow(Entity target, double attractionRadius, double speed) {
+    public void follow(Entity target) {
         double dx = target.getPosX() - this.getPosX();
         double dy = target.getPosY() - this.getPosY();
         double distance = Math.sqrt(dx * dx + dy * dy);
-
-        if (distance < attractionRadius) {
+        /**
+         * If the radius is inside the attraction value, then the object moves toward
+         * the agent.
+         */
+        if (distance < this.attractionRadius) {
             double directionX = dx / distance;
             double directionY = dy / distance;
-
-            this.setPosX((int) (this.getPosX() + directionX * speed));
-            this.setPosY((int) (this.getPosY() + directionY * speed));
+            /* It avoids the agent to runaway from the object. */
+            if (this.speed <= target.speed)
+                this.speed = target.speed + 2;
+            this.setPosX((int) (this.getPosX() + directionX * this.speed));
+            this.setPosY((int) (this.getPosY() + directionY * this.speed));
         }
     }
 
