@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 .~lock.*
 *.lock
+*.log
 
 ### STS ###
 .apt_generated
