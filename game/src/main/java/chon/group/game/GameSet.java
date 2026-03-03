@@ -148,9 +148,9 @@ public class GameSet {
         /* Set up some collectable objects */
         List<Object> objects = new ArrayList<>();
         objects.add(new Object(200, 350, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, 200));
-        objects.add(new Object(400, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, 200));
+        objects.add(new Object(400, 380, 32, 32, 0, 1, "/images/agents/coin.png", false, false, true, false, 200));
         objects.add(new Object(1000, 600, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, 200));
-        objects.add(new Object(1200, 650, 64, 64, 0, 1000, "/images/objects/box.png", false, false, false, true, 0));
+        objects.add(new Object(1200, 650, 64, 64, 0, 1000, "/images/objects/box.png", false, false, false, true, 200));
         objects.add(new Object(1400, 380, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, 200));
         objects.add(new Object(1800, 650, 32, 32, 0, 0, "/images/agents/coin.png", false, false, true, false, 200));
         objects.add(new Object(1900, 350, 64, 64, 0, 1000, "/images/objects/box.png", false, false, false, true, 0));

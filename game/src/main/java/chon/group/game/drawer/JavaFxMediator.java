@@ -131,6 +131,14 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     object.getPosY(),
                     object.getWidth(),
                     object.getHeight());
+            if (object.isVisibleBars())
+                drawer.drawLifeBar(
+                        object.getHealth(),
+                        object.getFullHealth(),
+                        object.getWidth(),
+                        (int) this.environment.getCamera().updateEntity(object),
+                        object.getPosY(),
+                        Color.GREEN);
         }
     }
 
