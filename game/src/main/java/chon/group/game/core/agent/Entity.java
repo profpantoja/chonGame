@@ -279,6 +279,7 @@ public abstract class Entity {
                 setPosX(posX += speed);
             } else {
                 setPosX(posX += speed);
+                setDirection(Direction.RIGHT);
             }
         } else if (movements.contains(Direction.LEFT)) {
             if (!flipped)
@@ -291,11 +292,14 @@ public abstract class Entity {
                 setPosX(posX -= speed);
             } else {
                 setPosX(posX -= speed);
+                setDirection(Direction.LEFT);
             }
         } else if (movements.contains(Direction.UP)) {
             setPosY(posY -= speed);
+            setDirection(Direction.UP);
         } else if (movements.contains(Direction.DOWN)) {
             setPosY(posY += speed);
+            setDirection(Direction.DOWN);
         }
 
     }

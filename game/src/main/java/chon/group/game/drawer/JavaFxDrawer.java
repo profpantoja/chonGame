@@ -1,6 +1,5 @@
 package chon.group.game.drawer;
 
-import chon.group.game.core.agent.Direction;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
@@ -288,8 +287,8 @@ public class JavaFxDrawer {
         this.gc.setFill(Color.BLACK);
         this.gc.fillText("X: " + posX, (posX - camX) + 5, posY - 70);
         this.gc.fillText("Y: " + posY, (posX - camX) + 5, posY - 55);
-        this.gc.fillText("Dir.: " + direction, (posX - camX) + 5, 40);
-        this.gc.fillText("CamX: " + camX, (posX - camX) + 5, posY - 25);
+        this.gc.fillText("Dir.: " + direction, (posX - camX) + 5, posY - 40);
+         this.gc.fillText("CamX: " + camX, (posX - camX) + 5, posY - 25);
     }
 
     /**

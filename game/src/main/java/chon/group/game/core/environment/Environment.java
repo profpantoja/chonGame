@@ -216,20 +216,23 @@ public class Environment {
         for (Object object : this.currentLevel.getObjects().stream()
                 .filter(Object::isDestructible)
                 .collect(Collectors.toList())) {
-            Direction myDirection = Direction.UP;
             if (intersect(protagonist, object)) {
-                switch (myDirection) {
+                switch (protagonist.getDirection()) {
                     case RIGHT:
                         protagonist.setPosX(object.getPosX() - protagonist.getWidth());
+                        //protagonist.setDirection(Direction.IDLE);
                         break;
                     case LEFT:
                         protagonist.setPosX(object.getPosX() + object.getWidth());
+                        //protagonist.setDirection(Direction.IDLE);
                         break;
                     case DOWN:
                         protagonist.setPosY(object.getPosY() - protagonist.getHeight());
+                        //protagonist.setDirection(Direction.IDLE);
                         break;
                     case UP:
                         protagonist.setPosY(object.getPosY() + object.getHeight());
+                        //protagonist.setDirection(Direction.IDLE);
                         break;
                     case IDLE:
                         break;
