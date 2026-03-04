@@ -46,8 +46,9 @@ public class Agent extends Entity {
      * @param pathImage the path to the agent's image
      * @param flipped   the agent's direction (RIGHT=0 or LEFT=1)
      */
-    public Agent(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped, boolean visibleBars) {
-        super(posX, posY, height, width, speed, health, pathImage, flipped, visibleBars);
+    public Agent(int posX, int posY, int height, int width, int speed, int health, Direction direction,
+            String pathImage, boolean flipped, boolean visibleBars) {
+        super(posX, posY, height, width, speed, health, direction, pathImage, flipped, visibleBars);
         this.energy = 1.0;
         this.fullEnergy = 1.0;
         this.recoveryFactor = 0.0002;
@@ -204,7 +205,7 @@ public class Agent extends Entity {
     }
 
     public Shot useWeapon() {
-        String direction = this.isFlipped() ? "LEFT" : "RIGHT";
+        Direction direction = this.isFlipped() ? Direction.LEFT : Direction.RIGHT;
         if (this.energy >= this.getWeapon().getEnergyCost()) {
             this.consumeEnergy(this.getWeapon().getEnergyCost());
             return this.weapon.fire(this.getPosX(), this.getPosY(), direction);

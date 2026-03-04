@@ -1,8 +1,10 @@
 package chon.group.game;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.Direction;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.environment.Level;
 import chon.group.game.core.weapon.Shot;
@@ -119,7 +121,7 @@ public class Game {
                     environment.getCurrentLevel().getShots().add(shot);
             }
             /* ChonBota's Movements */
-            environment.getProtagonist().move(input);
+            environment.getProtagonist().move(this.getDirections(input));
             environment.checkBorders();
         }
         /* ChonBot's Automatic Movements */
@@ -213,4 +215,24 @@ public class Game {
         }
     }
 
+    private List<Direction> getDirections(List<String> input) {
+        ArrayList<Direction> directions = new ArrayList<Direction>();
+        for (String command : input) {
+            switch (command) {
+                case "RIGHT":
+                    directions.add(Direction.RIGHT);
+                    break;
+                case "LEFT":
+                    directions.add(Direction.LEFT);
+                    break;
+                case "DOWN":
+                    directions.add(Direction.DOWN);
+                    break;
+                case "UP":
+                    directions.add(Direction.UP);
+                    break;
+            }
+        }
+        return directions;
+    }
 }

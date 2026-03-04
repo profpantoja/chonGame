@@ -1,6 +1,7 @@
 package chon.group.game.core.environment;
 
 import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.Direction;
 import chon.group.game.core.agent.Entity;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.weapon.Shot;
@@ -22,7 +23,7 @@ public class Level extends Entity {
     private int totalCollectibleCount = 0;
 
     public Level(int posX, int posY, int height, int width, String pathImage) {
-        super(posX, posY, height, width, 0, 0, pathImage, false, false);
+        super(posX, posY, height, width, 0, 0, Direction.IDLE, pathImage, false, false);
         this.agents = new ArrayList<Agent>();
         this.objects = new ArrayList<Object>();
         this.shots = new ArrayList<Shot>();

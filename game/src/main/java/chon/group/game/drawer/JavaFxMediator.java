@@ -209,9 +209,11 @@ public class JavaFxMediator implements EnvironmentDrawer {
     @Override
     public void drawDebugPanel() {
         Agent protagonist = this.environment.getProtagonist();
-        drawer.drawDebugPanel(protagonist.getPosX(),
+        drawer.drawDebugPanel(
+                protagonist.getPosX(),
                 protagonist.getPosY(),
-                (int) this.environment.getCamera().getPosX());
+                (int) this.environment.getCamera().getPosX(),
+                protagonist.getDirection().toString());
     }
 
     /**

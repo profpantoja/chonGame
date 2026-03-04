@@ -29,13 +29,14 @@ public class Object extends Entity {
             int width,
             int speed,
             int health,
+            Direction direction,
             String pathImage,
             boolean flipped,
             boolean visibleBars,
             boolean collectible,
             boolean destructible,
             double attractionRadius) {
-        super(posX, posY, height, width, speed, health, pathImage, flipped, visibleBars);
+        super(posX, posY, height, width, speed, health, direction, pathImage, flipped, visibleBars);
         this.collectible = collectible;
         this.destructible = destructible;
         this.attractionRadius = attractionRadius;

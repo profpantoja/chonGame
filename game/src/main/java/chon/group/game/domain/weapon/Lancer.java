@@ -2,6 +2,7 @@ package chon.group.game.domain.weapon;
 
 import java.util.List;
 
+import chon.group.game.core.agent.Direction;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.messaging.Message;
@@ -14,8 +15,8 @@ public class Lancer extends Weapon {
     }
 
     @Override
-    protected Shot createShot(int posX, int posY, String direction) {
-        if (direction.equals("RIGHT"))
+    protected Shot createShot(int posX, int posY, Direction direction) {
+        if (direction.equals(Direction.RIGHT))
             posX += 64 + 1;
         else
             posX -= 64 + 1;
@@ -25,10 +26,10 @@ public class Lancer extends Weapon {
                 64,
                 4,
                 0,
+                direction,
                 "/images/weapons/fireball/fireball001.png",
                 false,
-                500,
-                direction);
+                500);
     }
 
     @Override

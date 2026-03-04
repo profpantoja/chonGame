@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.Direction;
 import chon.group.game.core.agent.Entity;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.weapon.Panel;
@@ -209,6 +210,30 @@ public class Environment {
             if (protagonist != null && intersect(protagonist, agent)) {
                 int damage = 100;
                 protagonist.takeDamage(damage, messages);
+
+            }
+        }
+        for (Object object : this.currentLevel.getObjects().stream()
+                .filter(Object::isDestructible)
+                .collect(Collectors.toList())) {
+            Direction myDirection = Direction.UP;
+            if (intersect(protagonist, object)) {
+                switch (myDirection) {
+                    case RIGHT:
+                        protagonist.setPosX(object.getPosX() - protagonist.getWidth());
+                        break;
+                    case LEFT:
+                        protagonist.setPosX(object.getPosX() + object.getWidth());
+                        break;
+                    case DOWN:
+                        protagonist.setPosY(object.getPosY() - protagonist.getHeight());
+                        break;
+                    case UP:
+                        protagonist.setPosY(object.getPosY() + object.getHeight());
+                        break;
+                    case IDLE:
+                        break;
+                }
             }
         }
     }

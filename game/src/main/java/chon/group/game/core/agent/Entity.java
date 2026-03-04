@@ -38,6 +38,9 @@ public abstract class Entity {
     /** The maximum entity's health. */
     private int fullHealth;
 
+    /** The Entity's movement direction. */
+    private Direction direction = Direction.IDLE;
+
     /** Indicates if the existing bars of life or energy are visible or not. */
     private boolean visibleBars = false;
 
@@ -52,7 +55,8 @@ public abstract class Entity {
      * @param health    the entity's health
      * @param pathImage the path to the entity's image
      */
-    public Entity(int posX, int posY, int height, int width, int speed, int health, String pathImage, boolean flipped,
+    public Entity(int posX, int posY, int height, int width, int speed, int health, Direction direction,
+            String pathImage, boolean flipped,
             boolean visibleBars) {
         this.posX = posX;
         this.posY = posY;
@@ -61,6 +65,7 @@ public abstract class Entity {
         this.speed = speed;
         this.health = health;
         this.fullHealth = health;
+        this.direction = direction;
         this.image = new Image(getClass().getResource(pathImage).toExternalForm());
         this.flipped = flipped;
         this.visibleBars = visibleBars;
@@ -228,6 +233,14 @@ public abstract class Entity {
         this.fullHealth = fullHealth;
     }
 
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
+
     public boolean isVisibleBars() {
         return visibleBars;
     }
@@ -254,34 +267,34 @@ public abstract class Entity {
      * @param movements a list of movement directions ("RIGHT", "LEFT", "UP",
      *                  "DOWN")
      */
-    public void move(List<String> movements) {
-        if (movements.contains("RIGHT")) {
+    public void move(List<Direction> movements) {
+        if (movements.contains(Direction.RIGHT)) {
             if (flipped)
                 this.flipImage();
-            if (movements.contains("RIGHT") && movements.contains("UP")) {
+            if (movements.contains(Direction.RIGHT) && movements.contains(Direction.UP)) {
                 setPosY(posY -= speed);
                 setPosX(posX += speed);
-            } else if (movements.contains("RIGHT") && movements.contains("DOWN")) {
+            } else if (movements.contains(Direction.RIGHT) && movements.contains(Direction.DOWN)) {
                 setPosY(posY += speed);
                 setPosX(posX += speed);
             } else {
                 setPosX(posX += speed);
             }
-        } else if (movements.contains("LEFT")) {
+        } else if (movements.contains(Direction.LEFT)) {
             if (!flipped)
                 this.flipImage();
-            if (movements.contains("LEFT") && movements.contains("UP")) {
+            if (movements.contains(Direction.LEFT) && movements.contains(Direction.UP)) {
                 setPosY(posY -= speed);
                 setPosX(posX -= speed);
-            } else if (movements.contains("LEFT") && movements.contains("DOWN")) {
+            } else if (movements.contains(Direction.LEFT) && movements.contains(Direction.DOWN)) {
                 setPosY(posY += speed);
                 setPosX(posX -= speed);
             } else {
                 setPosX(posX -= speed);
             }
-        } else if (movements.contains("UP")) {
+        } else if (movements.contains(Direction.UP)) {
             setPosY(posY -= speed);
-        } else if (movements.contains("DOWN")) {
+        } else if (movements.contains(Direction.DOWN)) {
             setPosY(posY += speed);
         }
 
@@ -295,14 +308,14 @@ public abstract class Entity {
      */
     public void chase(int targetX, int targetY) {
         if (targetX > this.posX) {
-            this.move(new ArrayList<String>(List.of("RIGHT")));
+            this.move(new ArrayList<Direction>(List.of(Direction.RIGHT)));
         } else if (targetX < this.posX) {
-            this.move(new ArrayList<String>(List.of("LEFT")));
+            this.move(new ArrayList<Direction>(List.of(Direction.LEFT)));
         }
         if (targetY > this.posY) {
-            this.move(new ArrayList<String>(List.of("DOWN")));
+            this.move(new ArrayList<Direction>(List.of(Direction.DOWN)));
         } else if (targetY < this.posY) {
-            this.move(new ArrayList<String>(List.of("UP")));
+            this.move(new ArrayList<Direction>(List.of(Direction.UP)));
         }
     }
 
