@@ -205,13 +205,44 @@ public class Environment {
      * Applies damage if a collision is detected.
      */
     public void detectCollision() {
+        /**
+         * It detects if other agents have collided with the protagonist. It also
+         * verifies if any agents has collided with non-collectible obstacles.
+         */
         for (Agent agent : this.currentLevel.getAgents()) {
+            /* It verifies agents vs. protagonist. */
             if (protagonist != null && intersect(protagonist, agent)) {
                 int damage = 100;
                 protagonist.takeDamage(damage, messages);
-
             }
+            /* It verifies agents vs. obstacles. */
+            for (Object object : this.currentLevel.getObjects().stream()
+                    .filter(Object::isDestructible)
+                    .collect(Collectors.toList())) {
+                if (intersect(agent, object)) {
+                    switch (agent.getDirection()) {
+                        case RIGHT:
+                            agent.setPosX(object.getPosX() - agent.getWidth());
+                            break;
+                        case LEFT:
+                            agent.setPosX(object.getPosX() + object.getWidth());
+                            break;
+                        case DOWN:
+                            agent.setPosY(object.getPosY() - agent.getHeight());
+                            break;
+                        case UP:
+                            agent.setPosY(object.getPosY() + object.getHeight());
+                            break;
+                        case IDLE:
+                            break;
+                    }
+                }
+            }
+
         }
+        /**
+         * It verifies if the protagonist has collided with non-collectible obstacles.
+         */
         for (Object object : this.currentLevel.getObjects().stream()
                 .filter(Object::isDestructible)
                 .collect(Collectors.toList())) {
@@ -219,19 +250,15 @@ public class Environment {
                 switch (protagonist.getDirection()) {
                     case RIGHT:
                         protagonist.setPosX(object.getPosX() - protagonist.getWidth());
-                        // protagonist.setDirection(Direction.IDLE);
                         break;
                     case LEFT:
                         protagonist.setPosX(object.getPosX() + object.getWidth());
-                        // protagonist.setDirection(Direction.IDLE);
                         break;
                     case DOWN:
                         protagonist.setPosY(object.getPosY() - protagonist.getHeight());
-                        // protagonist.setDirection(Direction.IDLE);
                         break;
                     case UP:
                         protagonist.setPosY(object.getPosY() + object.getHeight());
-                        // protagonist.setDirection(Direction.IDLE);
                         break;
                     case IDLE:
                         break;
