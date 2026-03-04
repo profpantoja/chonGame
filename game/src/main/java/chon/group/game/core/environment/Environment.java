@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import chon.group.game.core.agent.Agent;
-import chon.group.game.core.agent.Direction;
 import chon.group.game.core.agent.Entity;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.weapon.Panel;
@@ -220,19 +219,19 @@ public class Environment {
                 switch (protagonist.getDirection()) {
                     case RIGHT:
                         protagonist.setPosX(object.getPosX() - protagonist.getWidth());
-                        //protagonist.setDirection(Direction.IDLE);
+                        // protagonist.setDirection(Direction.IDLE);
                         break;
                     case LEFT:
                         protagonist.setPosX(object.getPosX() + object.getWidth());
-                        //protagonist.setDirection(Direction.IDLE);
+                        // protagonist.setDirection(Direction.IDLE);
                         break;
                     case DOWN:
                         protagonist.setPosY(object.getPosY() - protagonist.getHeight());
-                        //protagonist.setDirection(Direction.IDLE);
+                        // protagonist.setDirection(Direction.IDLE);
                         break;
                     case UP:
                         protagonist.setPosY(object.getPosY() + object.getHeight());
-                        //protagonist.setDirection(Direction.IDLE);
+                        // protagonist.setDirection(Direction.IDLE);
                         break;
                     case IDLE:
                         break;
