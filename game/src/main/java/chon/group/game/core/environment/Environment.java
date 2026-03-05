@@ -424,7 +424,6 @@ public class Environment {
                 this.camera.setLevelWidth(this.currentLevel.getWidth());
             }
         }
-
     }
 
     public void reset() {

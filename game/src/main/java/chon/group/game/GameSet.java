@@ -123,8 +123,8 @@ public class GameSet {
                                 0,
                                 0,
                                 canvasHeight,
-                                8000,
-                                "/images/environment/mountain.png");
+                                8024,
+                                "/images/environment/insideCastle.png");
 
                 environment = new Environment(
                                 this.canvasHeight,
