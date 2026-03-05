@@ -301,7 +301,6 @@ public abstract class Entity {
             setPosY(posY += speed);
             setDirection(Direction.DOWN);
         }
-
     }
 
     /**
