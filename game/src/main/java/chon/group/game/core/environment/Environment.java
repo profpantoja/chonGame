@@ -215,54 +215,53 @@ public class Environment {
                 int damage = 100;
                 protagonist.takeDamage(damage, messages);
             }
-            /* It verifies agents vs. obstacles. */
+            /*
+             * It verifies agents vs. obstacles. The collision can only happens with non
+             * collectible objects.
+             */
             for (Object object : this.currentLevel.getObjects().stream()
-                    .filter(Object::isDestructible)
+                    .filter(o -> !o.isCollectible())
                     .collect(Collectors.toList())) {
-                if (intersect(agent, object)) {
-                    switch (agent.getDirection()) {
-                        case RIGHT:
-                            agent.setPosX(object.getPosX() - agent.getWidth());
-                            break;
-                        case LEFT:
-                            agent.setPosX(object.getPosX() + object.getWidth());
-                            break;
-                        case DOWN:
-                            agent.setPosY(object.getPosY() - agent.getHeight());
-                            break;
-                        case UP:
-                            agent.setPosY(object.getPosY() + object.getHeight());
-                            break;
-                        case IDLE:
-                            break;
-                    }
-                }
+                this.onCollision(agent, object);
             }
-
         }
         /**
          * It verifies if the protagonist has collided with non-collectible obstacles.
+         * The collision can only happens with non
+         * collectible objects.
          */
         for (Object object : this.currentLevel.getObjects().stream()
-                .filter(Object::isDestructible)
+                .filter(o -> !o.isCollectible())
                 .collect(Collectors.toList())) {
-            if (intersect(protagonist, object)) {
-                switch (protagonist.getDirection()) {
-                    case RIGHT:
-                        protagonist.setPosX(object.getPosX() - protagonist.getWidth());
-                        break;
-                    case LEFT:
-                        protagonist.setPosX(object.getPosX() + object.getWidth());
-                        break;
-                    case DOWN:
-                        protagonist.setPosY(object.getPosY() - protagonist.getHeight());
-                        break;
-                    case UP:
-                        protagonist.setPosY(object.getPosY() + object.getHeight());
-                        break;
-                    case IDLE:
-                        break;
-                }
+            this.onCollision(protagonist, object);
+        }
+    }
+
+    /**
+     * Checks if an agent and an object intersect (collide) based on a direction. If
+     * so, it adjusts its position.
+     *
+     * @param a the agent
+     * @param b the object
+     *
+     */
+    public void onCollision(Agent agent, Object object) {
+        if (intersect(agent, object)) {
+            switch (agent.getDirection()) {
+                case RIGHT:
+                    agent.setPosX(object.getPosX() - agent.getWidth());
+                    break;
+                case LEFT:
+                    agent.setPosX(object.getPosX() + object.getWidth());
+                    break;
+                case DOWN:
+                    agent.setPosY(object.getPosY() - agent.getHeight());
+                    break;
+                case UP:
+                    agent.setPosY(object.getPosY() + object.getHeight());
+                    break;
+                case IDLE:
+                    break;
             }
         }
     }
@@ -329,55 +328,55 @@ public class Environment {
      * Handles movement, boundary removal, and collision with agents or protagonist.
      */
     public void updateShots() {
+        /* It gets the list of shots. */
         Iterator<Shot> itShot = this.currentLevel.getShots().iterator();
-        while (itShot.hasNext()) {
+        /*
+         * While there is a next available shot. The position of each conditional block
+         * defines the collision priority.
+         */
+        currentShot: while (itShot.hasNext()) {
             Shot shot = itShot.next();
             /* if the shot's position went off the level width, it is removed. */
             if ((shot.getPosX() > this.currentLevel.getWidth()) || ((shot.getPosX() + shot.getWidth()) < 0)) {
                 itShot.remove();
-            } else {
-                /**
-                 * If any shot intersected the protagonist, the damage is taken, the message
-                 * system is informed, and the shot is removed.
-                 */
-                if (intersect(protagonist, shot)) {
-                    protagonist.takeDamage(shot.getDamage(), messages);
-                    itShot.remove();
-                    // Verify if it needs a break here.
-                } else {
-                    /* The same as before but now with all other agents. */
-                    Iterator<Agent> itAgent = this.currentLevel.getAgents().iterator();
-                    while (itAgent.hasNext()) {
-                        Agent agent = itAgent.next();
-                        if (intersect(agent, shot)) {
-                            agent.takeDamage(shot.getDamage(), messages);
-                            if (agent.isDead())
-                                itAgent.remove();
-                            itShot.remove();
-                            break;
-                        }
-                    }
-                }
-                /* If the remaining shots hit (in)destructible and no collectible objects. */
-                Iterator<Object> itObject = this.currentLevel.getObjects()
-                        .stream()
-                        .filter(Object::isDestructible)
-                        .collect(Collectors.toList())
-                        .iterator();
-                while (itObject.hasNext()) {
-                    Object object = itObject.next();
-                    if (intersect(object, shot)) {
-                        object.takeDamage(shot.getDamage(), messages);
-                        if (object.isDestroyed())
-                            this.currentLevel.getObjects().remove(object);
-                        itShot.remove();
-                        break;
-                    }
-                }
-
-                /* The remaining shots move. */
-                shot.move(new ArrayList<>(List.of(shot.getDirection())));
+                break currentShot;
             }
+            /* If the remaining shots hit (in)destructible and no collectible objects. */
+            Iterator<Object> itObject = this.currentLevel.getObjects().iterator();
+            while (itObject.hasNext()) {
+                Object object = itObject.next();
+                if (intersect(object, shot)) {
+                    if (object.isDestructible())
+                        object.takeDamage(shot.getDamage(), messages);
+                    if (object.isDestroyed())
+                        this.currentLevel.getObjects().remove(object);
+                    itShot.remove();
+                    break currentShot;
+                }
+            }
+            /* The same as before but now with all other agents. */
+            Iterator<Agent> itAgent = this.currentLevel.getAgents().iterator();
+            while (itAgent.hasNext()) {
+                Agent agent = itAgent.next();
+                if (intersect(agent, shot)) {
+                    agent.takeDamage(shot.getDamage(), messages);
+                    if (agent.isDead())
+                        itAgent.remove();
+                    itShot.remove();
+                    break currentShot;
+                }
+            }
+            /**
+             * If any shot intersected the protagonist, the damage is taken, the message
+             * system is informed, and the shot is removed.
+             */
+            if (intersect(protagonist, shot)) {
+                protagonist.takeDamage(shot.getDamage(), messages);
+                itShot.remove();
+                break currentShot;
+            }
+            /* The remaining shots move. */
+            shot.move(new ArrayList<>(List.of(shot.getDirection())));
         }
     }
 

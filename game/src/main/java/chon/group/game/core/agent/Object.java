@@ -134,7 +134,7 @@ public class Object extends Entity {
     }
 
     /**
-     * Gets if the object is destroyed.
+     * It returns if the object is destroyed.
      *
      * @return if the object is destroyed
      */
