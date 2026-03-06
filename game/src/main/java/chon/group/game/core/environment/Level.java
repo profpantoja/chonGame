@@ -10,6 +10,12 @@ import java.util.List;
 
 public class Level extends Entity {
 
+    /** It defines the top boundary of the level. */
+    private int topY;
+
+    /** It defines the bottom boundary of the level. */
+    private int bottomY;
+
     /** List of agents present in the environment. */
     private List<Agent> agents;
 
@@ -22,11 +28,29 @@ public class Level extends Entity {
     /** Total number of collectible objects in the environment. */
     private int totalCollectibleCount = 0;
 
-    public Level(int posX, int posY, int height, int width, String pathImage) {
+    public Level(int posX, int posY, int height, int width, int topY, int bottomY, String pathImage) {
         super(posX, posY, height, width, 0, 0, Direction.IDLE, pathImage, false, false);
+        this.topY = topY;
+        this.bottomY = bottomY;
         this.agents = new ArrayList<Agent>();
         this.objects = new ArrayList<Object>();
         this.shots = new ArrayList<Shot>();
+    }
+
+    public int getTopY() {
+        return topY;
+    }
+
+    public void setTopY(int topY) {
+        this.topY = topY;
+    }
+
+    public int getBottomY() {
+        return bottomY;
+    }
+
+    public void setBottomY(int bottomY) {
+        this.bottomY = bottomY;
     }
 
     public List<Agent> getAgents() {

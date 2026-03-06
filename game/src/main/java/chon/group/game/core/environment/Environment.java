@@ -190,14 +190,16 @@ public class Environment {
      * Ensures the protagonist stays within the boundaries of the environment.
      */
     public void checkBorders() {
+        int bottomY = currentLevel.getBottomY();
+        int topY = currentLevel.getTopY();
         if (protagonist.getPosX() < 0)
             protagonist.setPosX(0);
         if ((protagonist.getPosX() + protagonist.getWidth()) > this.currentLevel.getWidth())
             protagonist.setPosX(this.currentLevel.getWidth() - protagonist.getWidth());
-        if (protagonist.getPosY() < 0)
-            protagonist.setPosY(0);
-        if ((protagonist.getPosY() + protagonist.getHeight()) > this.currentLevel.getHeight())
-            protagonist.setPosY(this.currentLevel.getHeight() - protagonist.getHeight());
+        if (protagonist.getPosY() < topY)
+            protagonist.setPosY(topY);
+        if (protagonist.getPosY() + protagonist.getHeight() > bottomY)
+            protagonist.setPosY(bottomY - protagonist.getHeight());
     }
 
     /**

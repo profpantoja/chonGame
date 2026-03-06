@@ -110,6 +110,8 @@ public class GameSet {
                                 0,
                                 canvasHeight,
                                 1280,
+                                0,
+                                0,
                                 "/images/environment/chonGame.png");
 
                 Level level1 = new Level(
@@ -117,6 +119,8 @@ public class GameSet {
                                 0,
                                 canvasHeight,
                                 8024,
+                                260,
+                                canvasHeight,
                                 "/images/environment/castleLong.png");
 
                 Level level2 = new Level(
@@ -124,6 +128,8 @@ public class GameSet {
                                 0,
                                 canvasHeight,
                                 8024,
+                                380,
+                                590,
                                 "/images/environment/insideCastle.png");
 
                 environment = new Environment(
