@@ -58,6 +58,12 @@ public abstract class Entity {
     public Entity(int posX, int posY, int height, int width, int speed, int health, Direction direction,
             String pathImage, boolean flipped,
             boolean visibleBars) {
+        /*
+         * Every entity needs at least 1 point of health. Otherwise, it will be
+         * considered destroyed and will be removed by the engine.
+         */
+        if (health <= 0)
+            health = 1;
         this.posX = posX;
         this.posY = posY;
         this.height = height;

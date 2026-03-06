@@ -345,12 +345,32 @@ public class Environment {
             Iterator<Object> itObject = this.currentLevel.getObjects().iterator();
             while (itObject.hasNext()) {
                 Object object = itObject.next();
+                /* The shot hit an object. */
                 if (intersect(object, shot)) {
-                    if (object.isDestructible())
+                    /* If the object is destructible, it must take some damage. */
+                    if (object.isDestructible()) {
                         object.takeDamage(shot.getDamage(), messages);
+                        /* Then the shot is removed. */
+                        itShot.remove();
+                    } else {
+                        /*
+                         * If the object is indestructible, it is necessary to verify if it collectible
+                         * or not. If it is collectible, the shot must go on. Otherwise it should be
+                         * removed.
+                         */
+                        if (!object.isCollectible()) {
+                            itShot.remove();
+                        } else {
+                            /*
+                             * The shot must goes on. So, it leaves the object iterator and searches other
+                             * conditions.
+                             */
+                            break;
+                        }
+                    }
+                    /* Finally, the object is removed if destroyed. */
                     if (object.isDestroyed())
                         this.currentLevel.getObjects().remove(object);
-                    itShot.remove();
                     break currentShot;
                 }
             }
