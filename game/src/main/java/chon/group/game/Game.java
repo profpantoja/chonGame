@@ -11,6 +11,10 @@ import chon.group.game.core.weapon.Shot;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.menu.Action;
 import chon.group.game.menu.MenuHandler;
+import chon.group.game.states.GameState;
+import chon.group.game.states.PauseState;
+import chon.group.game.states.RunningState;
+import chon.group.game.states.StartState;
 
 public class Game {
 
@@ -19,6 +23,7 @@ public class Game {
     private MenuHandler menu;
     private ArrayList<String> input;
     private GameStatus status = GameStatus.START;
+    private GameState currentState = new StartState();
     private boolean debugMode = true;
 
     public Game(Environment environment, EnvironmentDrawer mediator, MenuHandler menu, ArrayList<String> input) {
@@ -68,6 +73,14 @@ public class Game {
         this.status = status;
     }
 
+    public GameState getCurrentState() {
+        return currentState;
+    }
+
+    public void setCurrentState(GameState currentState) {
+        this.currentState = currentState;
+    }
+
     public boolean isDebugMode() {
         return debugMode;
     }
@@ -78,6 +91,15 @@ public class Game {
 
     public void loop() {
         this.updateControls();
+        this.currentState.update(this);
+    }
+
+    public void oldLoop() {
+        this.updateControls();
+        // It needs to change the pattern considering the status.
+        // In this case, I have 5 states: I'm not considering player selection and skip
+        // states so far.
+        // I need a class for each case bellow.
         switch (this.status) {
             case START:
                 this.init();
@@ -207,15 +229,17 @@ public class Game {
         if (this.input.contains("P")) {
             if (this.status.equals(GameStatus.RUNNING)) {
                 this.status = GameStatus.PAUSED;
+                this.currentState = new PauseState();
             } else {
                 if (this.status.equals(GameStatus.PAUSED))
                     this.status = GameStatus.RUNNING;
+                this.currentState = new RunningState();
             }
             this.input.remove("P");
         }
     }
 
-    private List<Direction> getDirections(List<String> input) {
+    public List<Direction> getDirections(List<String> input) {
         ArrayList<Direction> directions = new ArrayList<Direction>();
         for (String command : input) {
             switch (command) {
@@ -235,4 +259,5 @@ public class Game {
         }
         return directions;
     }
+
 }
