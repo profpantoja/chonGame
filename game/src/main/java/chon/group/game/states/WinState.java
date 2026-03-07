@@ -14,4 +14,9 @@ public class WinState implements GameState {
 
     }
 
+    @Override
+    public void render(Game game) {
+
+    }
+
 }

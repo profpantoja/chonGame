@@ -8,10 +8,6 @@ public class PauseState implements GameState {
     @Override
     public void update(Game game) {
         game.getEnvironment().updateMessages();
-        game.getMediator().renderGame();
-        /** Rendering the Pause Screen */
-        game.getMediator().drawPauseScreen();
-        game.getMediator().drawMenu();
     }
 
     @Override
@@ -29,6 +25,14 @@ public class PauseState implements GameState {
             game.getInput().remove("P");
             game.setCurrentState(new RunningState());
         }
+    }
+
+    @Override
+    public void render(Game game) {
+        game.getMediator().renderGame();
+        /** Rendering the Pause Screen */
+        game.getMediator().drawPauseScreen();
+        game.getMediator().drawMenu();
     }
 
 }

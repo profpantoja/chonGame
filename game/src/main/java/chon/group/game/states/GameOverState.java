@@ -9,10 +9,6 @@ public class GameOverState implements GameState {
     public void update(Game game) {
         game.getEnvironment().updateMessages();
         game.getEnvironment().updateShots();
-        game.getMediator().renderGame();
-        /** Rendering the Game Over Screen */
-        game.getMediator().drawGameOver();
-        game.getMediator().drawMenu();
     }
 
     @Override
@@ -26,6 +22,14 @@ public class GameOverState implements GameState {
             game.resetLevel();
             game.setCurrentState(new RunningState());
         }
+    }
+
+    @Override
+    public void render(Game game) {
+        game.getMediator().renderGame();
+        /** Rendering the Game Over Screen */
+        game.getMediator().drawGameOver();
+        game.getMediator().drawMenu();
     }
 
 }

@@ -8,4 +8,6 @@ public interface GameState {
 
     public void handleInput(Game game);
 
+    public void render(Game game);
+
 }

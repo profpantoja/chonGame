@@ -7,8 +7,7 @@ public class StartState implements GameState {
 
     @Override
     public void update(Game game) {
-        game.getMediator().drawBackground();
-        game.getMediator().drawMenu();
+
     }
 
     @Override
@@ -19,5 +18,11 @@ public class StartState implements GameState {
             game.getEnvironment().setCurrentMenu(game.getMenu().getPause());
             game.setCurrentState(new RunningState());
         }
+    }
+
+    @Override
+    public void render(Game game) {
+        game.getMediator().drawBackground();
+        game.getMediator().drawMenu();
     }
 }
