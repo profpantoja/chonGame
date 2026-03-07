@@ -1,7 +1,6 @@
 package chon.group.game.states;
 
 import chon.group.game.Game;
-import chon.group.game.GameStatus;
 import chon.group.game.menu.Action;
 
 public class PauseState implements GameState {
@@ -19,7 +18,6 @@ public class PauseState implements GameState {
             game.setCurrentState(new StartState());
         } else if (action.equals(Action.CONTINUE)) {
             game.getInput().remove("P");
-            game.setStatus(GameStatus.RUNNING);
             game.setCurrentState(new RunningState());
         }
     }

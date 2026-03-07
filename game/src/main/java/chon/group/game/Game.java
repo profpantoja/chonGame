@@ -227,11 +227,11 @@ public class Game {
 
     private void updateControls() {
         if (this.input.contains("P")) {
-            if (this.status.equals(GameStatus.RUNNING)) {
+            if (this.currentState instanceof RunningState) {
                 this.status = GameStatus.PAUSED;
                 this.currentState = new PauseState();
             } else {
-                if (this.status.equals(GameStatus.PAUSED))
+                if (this.currentState instanceof PauseState)
                     this.status = GameStatus.RUNNING;
                 this.currentState = new RunningState();
             }

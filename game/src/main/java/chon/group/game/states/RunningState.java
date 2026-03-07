@@ -1,7 +1,6 @@
 package chon.group.game.states;
 
 import chon.group.game.Game;
-import chon.group.game.GameStatus;
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.weapon.Shot;
 
@@ -42,7 +41,6 @@ public class RunningState implements GameState {
         /* If the agent died in this loop */
         if (game.getEnvironment().getProtagonist().isDead()) {
             game.getEnvironment().setCurrentMenu(game.getMenu().getGameOver());
-            game.setStatus(GameStatus.GAME_OVER);
             game.setCurrentState(new GameOverState());
         }
     }
