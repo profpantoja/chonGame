@@ -31,6 +31,7 @@ public class Game {
         this.mediator = mediator;
         this.menu = menu;
         this.input = input;
+        this.start();
     }
 
     public Environment getEnvironment() {
@@ -90,7 +91,8 @@ public class Game {
     }
 
     public void loop() {
-        this.updateControls();
+        // this.updateControls();
+        this.currentState.handleInput(this);
         this.currentState.update(this);
     }
 
@@ -123,7 +125,7 @@ public class Game {
         this.environment.setCurrentMenu(menu.getStart());
         mediator.drawBackground();
         mediator.drawMenu();
-        if (this.environment.getCurrentMenu().handleInput(input).equals(Action.START)) {
+        if (this.environment.getCurrentMenu().handleAction(input).equals(Action.START)) {
             this.environment.loadNextLevel();
             this.environment.setCurrentMenu(this.menu.getPause());
             this.status = GameStatus.RUNNING;
@@ -174,13 +176,17 @@ public class Game {
         /** Rendering the Pause Screen */
         mediator.drawPauseScreen();
         mediator.drawMenu();
-        Action action = this.environment.getCurrentMenu().handleInput(input);
+        Action action = this.environment.getCurrentMenu().handleAction(input);
         if (action.equals(Action.RESET))
             this.reset();
         else if (action.equals(Action.CONTINUE)) {
             this.input.remove("P");
             this.status = GameStatus.RUNNING;
         }
+    }
+
+    public void start() {
+        this.environment.setCurrentMenu(this.menu.getStart());
     }
 
     public void win() {
@@ -195,7 +201,7 @@ public class Game {
         /** Rendering the Game Over Screen */
         mediator.drawGameOver();
         mediator.drawMenu();
-        Action action = this.environment.getCurrentMenu().handleInput(input);
+        Action action = this.environment.getCurrentMenu().handleAction(input);
         if (action.equals(Action.RESET))
             this.reset();
         else if (action.equals(Action.CONTINUE))

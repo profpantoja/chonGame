@@ -64,7 +64,7 @@ public class Menu {
         this.span = span;
     }
     
-    public Action handleInput(List<String> input) {
+    public Action handleAction(List<String> input) {
         if (input.contains("ENTER")) {
             input.clear();
             return items.get(this.index).getAction();

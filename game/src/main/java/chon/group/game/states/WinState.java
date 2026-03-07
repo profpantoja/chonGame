@@ -9,4 +9,9 @@ public class WinState implements GameState {
 
     }
 
+    @Override
+    public void handleInput(Game game) {
+
+    }
+
 }

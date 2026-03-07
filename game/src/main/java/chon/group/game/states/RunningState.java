@@ -44,4 +44,13 @@ public class RunningState implements GameState {
             game.setCurrentState(new GameOverState());
         }
     }
+
+    @Override
+    public void handleInput(Game game) {
+        if (game.getInput().contains("P")) {
+            game.setCurrentState(new PauseState());
+            game.getEnvironment().setCurrentMenu(game.getMenu().getPause());
+            game.getInput().remove("P");
+        }
+    }
 }

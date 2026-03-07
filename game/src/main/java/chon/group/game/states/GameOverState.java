@@ -13,10 +13,15 @@ public class GameOverState implements GameState {
         /** Rendering the Game Over Screen */
         game.getMediator().drawGameOver();
         game.getMediator().drawMenu();
-        Action action = game.getEnvironment().getCurrentMenu().handleInput(game.getInput());
+    }
+
+    @Override
+    public void handleInput(Game game) {
+        Action action = game.getEnvironment().getCurrentMenu().handleAction(game.getInput());
         if (action.equals(Action.RESET)) {
             game.reset();
             game.setCurrentState(new StartState());
+            game.getEnvironment().setCurrentMenu(game.getMenu().getStart());
         } else if (action.equals(Action.CONTINUE)) {
             game.resetLevel();
             game.setCurrentState(new RunningState());

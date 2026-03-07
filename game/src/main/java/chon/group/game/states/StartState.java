@@ -7,10 +7,14 @@ public class StartState implements GameState {
 
     @Override
     public void update(Game game) {
-        game.getEnvironment().setCurrentMenu(game.getMenu().getStart());
         game.getMediator().drawBackground();
         game.getMediator().drawMenu();
-        if (game.getEnvironment().getCurrentMenu().handleInput(game.getInput()).equals(Action.START)) {
+    }
+
+    @Override
+    public void handleInput(Game game) {
+        game.getEnvironment().setCurrentMenu(game.getMenu().getStart());
+        if (game.getEnvironment().getCurrentMenu().handleAction(game.getInput()).equals(Action.START)) {
             game.getEnvironment().loadNextLevel();
             game.getEnvironment().setCurrentMenu(game.getMenu().getPause());
             game.setCurrentState(new RunningState());

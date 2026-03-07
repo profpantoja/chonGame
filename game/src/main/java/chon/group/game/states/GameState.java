@@ -6,4 +6,6 @@ public interface GameState {
 
     public void update(Game game);
 
+    public void handleInput(Game game);
+
 }
