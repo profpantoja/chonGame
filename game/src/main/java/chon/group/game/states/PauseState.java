@@ -18,6 +18,8 @@ public class PauseState implements GameState {
         }
         /* It gets which action the player has chosen in the menu. */
         Action action = game.getEnvironment().getCurrentMenu().handleAction(game.getInput());
+        if (action.equals(Action.DEBUG))
+            game.getEnvironment().setDebugMode(!game.getEnvironment().isDebugMode());
         if (action.equals(Action.RESET)) {
             /* The Game is reset to the Start State. */
             game.reset();

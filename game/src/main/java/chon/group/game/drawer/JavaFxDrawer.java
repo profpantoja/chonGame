@@ -136,6 +136,21 @@ public class JavaFxDrawer {
                 itemIcon, scoreIcon);
     }
 
+    public void drawDebugPanel(int panelWidth, int panelHeight, double camX, int messages, int shots) {
+        int span = 20;
+        drawGlassPanel(panelWidth, panelHeight, 10, 130);
+        drawTextWithBorder("CamX: " + camX, 20, 155, Color.WHITE, Color.BLACK, null);
+        drawTextWithBorder("Messages: " + messages, 20, 155 + span, Color.WHITE, Color.BLACK, null);
+        drawTextWithBorder("Shots: " + shots, 20, 155 + (2 * span), Color.WHITE, Color.BLACK, null);
+
+        // gc.setStroke(Color.rgb(100, 255, 100, 0.3));
+        // gc.setLineWidth(1.2);
+        // gc.strokeLine(130, itemsY - 8, 130, itemsY + 18);
+
+        // drawTextWithBorder(String.valueOf(score), 190, itemsY + 8, Color.WHITE,
+        // Color.BLACK, null);
+    }
+
     /**
      * Draws a semi-transparent glass-style background panel with lighting effects.
      */
@@ -281,14 +296,18 @@ public class JavaFxDrawer {
      * @param posX The x-coordinate of the protagonist.
      * @param posY The y-coordinate of the protagonist.
      */
-    public void drawDebugPanel(int posX, int posY, int camX, String direction) {
+    public void drawEntityPanel(int posX, int posY, int camX, int height, String direction, String status) {
         Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
+        int span = 15;
+        int barSpan = 10;
         this.gc.setFont(theFont);
         this.gc.setFill(Color.BLACK);
-        this.gc.fillText("X: " + posX, (posX - camX) + 5, posY - 70);
-        this.gc.fillText("Y: " + posY, (posX - camX) + 5, posY - 55);
-        this.gc.fillText("Dir.: " + direction, (posX - camX) + 5, posY - 40);
-         this.gc.fillText("CamX: " + camX, (posX - camX) + 5, posY - 25);
+        /* Info above the Entity. */
+        this.gc.fillText("X: " + posX, (posX - camX), posY - (barSpan + (2 * span)));
+        this.gc.fillText("Y: " + posY, (posX - camX), posY - (barSpan + (span)));
+        /* Info bellow the Entity. */
+        this.gc.fillText("St.: " + status, (posX - camX), posY + height + span);
+        this.gc.fillText("Dir.: " + direction, (posX - camX), posY + height + (2 * span));
     }
 
     /**

@@ -11,6 +11,8 @@ import chon.group.game.menu.Menu;
 import chon.group.game.messaging.Message;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 /**
  * The {@code JavaFxMediator} class serves as an intermediary for rendering the
@@ -103,8 +105,16 @@ public class JavaFxMediator implements EnvironmentDrawer {
                         newPosX,
                         agent.getPosY(),
                         Color.GREEN);
+            if (this.environment.isDebugMode()) {
+                drawer.drawEntityPanel(
+                        agent.getPosX(),
+                        agent.getPosY(),
+                        (int) this.environment.getCamera().getPosX(),
+                        agent.getHeight(),
+                        agent.getDirection().toString(),
+                        agent.getStatus().toString());
+            }
         }
-
         Agent protagonist = this.environment.getProtagonist();
         int newPosX = (int) this.environment.getCamera().updateEntity(protagonist);
         drawer.drawImage(protagonist.getImage(),
@@ -116,7 +126,16 @@ public class JavaFxMediator implements EnvironmentDrawer {
             this.drawSingleLifeBar();
             this.drawSingleEnergyBar();
         }
-        this.drawDebugPanel();
+        if (this.environment.isDebugMode()) {
+            drawer.drawEntityPanel(
+                    protagonist.getPosX(),
+                    protagonist.getPosY(),
+                    (int) this.environment.getCamera().getPosX(),
+                    protagonist.getHeight(),
+                    protagonist.getDirection().toString(),
+                    protagonist.getStatus().toString());
+            this.drawDebugPanel();
+        }
         this.drawPanel();
     }
 
@@ -139,7 +158,29 @@ public class JavaFxMediator implements EnvironmentDrawer {
                         (int) this.environment.getCamera().updateEntity(object),
                         object.getPosY(),
                         Color.GREEN);
+            if (this.environment.isDebugMode())
+                drawer.drawEntityPanel(
+                        object.getPosX(),
+                        object.getPosY(),
+                        (int) this.environment.getCamera().getPosX(),
+                        object.getHeight(),
+                        object.getDirection().toString(),
+                        object.getStatus().toString());
         }
+    }
+
+    /**
+     * Draws the protagonist's status panel with stats like score, life, energy, and
+     * collected items.
+     */
+    @Override
+    public void drawDebugPanel() {
+        drawer.drawDebugPanel(
+                240,
+                110,
+                this.environment.getCamera().getPosX(),
+                this.environment.getMessages().size(),
+                this.environment.getCurrentLevel().getShots().size());
     }
 
     /**
@@ -193,27 +234,13 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 score,
                 energy,
                 maxEnergy,
-                null,
+                Font.font("Verdana", FontWeight.BOLD, 18),
                 this.environment.getPanel().getLifeIcon(),
                 this.environment.getPanel().getEnergyIcon(),
                 this.environment.getPanel().getItemIcon(),
                 this.environment.getPanel().getScoreIcon(),
                 this.environment.getPanel().getPanelWidth(),
                 this.environment.getPanel().getPanelHeight());
-    }
-
-    /**
-     * Draws the protagonist's status panel with stats like score, life, energy, and
-     * collected items.
-     */
-    @Override
-    public void drawDebugPanel() {
-        Agent protagonist = this.environment.getProtagonist();
-        drawer.drawDebugPanel(
-                protagonist.getPosX(),
-                protagonist.getPosY(),
-                (int) this.environment.getCamera().getPosX(),
-                protagonist.getDirection().toString());
     }
 
     /**

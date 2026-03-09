@@ -2,6 +2,7 @@ package chon.group.game.states;
 
 import chon.group.game.Game;
 import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.EntityStatus;
 import chon.group.game.core.weapon.Shot;
 
 public class RunningState implements GameState {
@@ -19,20 +20,26 @@ public class RunningState implements GameState {
                 game.getEnvironment().setCurrentMenu(game.getMenu().getPause());
                 /* The Pause needs to be removed. Otherwise, it will stay forever paused. */
                 game.getInput().remove("P");
+            } else {
+                /** The protagonist Shoots Somebody Who Outdrew You */
+                /** But only if it has enough energy */
+                if (game.getInput().contains("SPACE")) {
+                    /* The Shoot button is removed for not shooting forever. */
+                    game.getInput().remove("SPACE");
+                    Shot shot = game.getEnvironment().getProtagonist().useWeapon();
+                    game.getEnvironment().getProtagonist().setStatus(EntityStatus.ATTACK);
+                    /* If there is an associate shot with the weapon. Some weapons don't shoot. */
+                    if (shot != null)
+                        /* The shot is added to the environment's current level. */
+                        game.getEnvironment().getCurrentLevel().getShots().add(shot);
+                } else {
+                    /* Protagonist's Moves based on Joystick inputs. */
+                    game.getEnvironment().getProtagonist().move(game.getDirections(game.getInput()));
+                    game.getEnvironment().getProtagonist().setStatus(EntityStatus.WALK);
+                }
             }
-            /** The protagonist Shoots Somebody Who Outdrew You */
-            /** But only if it has enough energy */
-            if (game.getInput().contains("SPACE")) {
-                /* The Shoot button is removed for not shooting forever. */
-                game.getInput().remove("SPACE");
-                Shot shot = game.getEnvironment().getProtagonist().useWeapon();
-                /* If there is an associate shot with the weapon. Some weapons don't shoot. */
-                if (shot != null)
-                    /* The shot is added to the environment's current level. */
-                    game.getEnvironment().getCurrentLevel().getShots().add(shot);
-            }
-            /* Protagonist's Moves based on Joystick inputs. */
-            game.getEnvironment().getProtagonist().move(game.getDirections(game.getInput()));
+        } else {
+            game.getEnvironment().getProtagonist().setStatus(EntityStatus.IDLE);
         }
     }
 
@@ -47,13 +54,14 @@ public class RunningState implements GameState {
             agent.chase(game.getEnvironment().getProtagonist().getPosX(),
                     game.getEnvironment().getProtagonist().getPosY());
         }
+        game.getEnvironment().update();
         /* If the agent died in this loop, the state changes. */
         if (game.getEnvironment().getProtagonist().isDead()) {
             /* If the agent dies, the game moves to the Game Over state. */
+            game.getEnvironment().getProtagonist().setStatus(EntityStatus.TERMINATE);
             game.getEnvironment().setCurrentMenu(game.getMenu().getGameOver());
             game.setCurrentState(new GameOverState());
         }
-        game.getEnvironment().update();
     }
 
     @Override

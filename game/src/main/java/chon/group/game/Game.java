@@ -18,7 +18,7 @@ public class Game {
     private MenuHandler menu;
     private ArrayList<String> input;
     private GameState currentState = new StartState();
-    private boolean debugMode = true;
+    
 
     public Game(Environment environment, EnvironmentDrawer mediator, MenuHandler menu, ArrayList<String> input) {
         this.environment = environment;
@@ -66,14 +66,6 @@ public class Game {
 
     public void setCurrentState(GameState currentState) {
         this.currentState = currentState;
-    }
-
-    public boolean isDebugMode() {
-        return debugMode;
-    }
-
-    public void setDebugMode(boolean debugMode) {
-        this.debugMode = debugMode;
     }
 
     public void loop() {

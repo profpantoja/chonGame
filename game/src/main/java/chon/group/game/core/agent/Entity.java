@@ -41,6 +41,9 @@ public abstract class Entity {
     /** The Entity's movement direction. */
     private Direction direction = Direction.IDLE;
 
+    /** The Entity's status. */
+    private EntityStatus status = EntityStatus.IDLE;
+
     /** Indicates if the existing bars of life or energy are visible or not. */
     private boolean visibleBars = false;
 
@@ -245,6 +248,14 @@ public abstract class Entity {
 
     public void setDirection(Direction direction) {
         this.direction = direction;
+    }
+
+    public EntityStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(EntityStatus status) {
+        this.status = status;
     }
 
     public boolean isVisibleBars() {

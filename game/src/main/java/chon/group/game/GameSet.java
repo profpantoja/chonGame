@@ -88,8 +88,8 @@ public class GameSet {
                                 400);
 
                 Item pauseMenu1 = new Item("Back", Action.CONTINUE);
-                Item pauseMenu2 = new Item("Exit", Action.RESET);
-                Item pauseMenu3 = new Item("About", Action.NONE);
+                Item pauseMenu2 = new Item("Debug", Action.DEBUG);
+                Item pauseMenu3 = new Item("Exit", Action.RESET);
                 Menu pauseMenu = new Menu(
                                 "PAUSED",
                                 List.of(pauseMenu1, pauseMenu2, pauseMenu3),

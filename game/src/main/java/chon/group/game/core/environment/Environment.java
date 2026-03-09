@@ -53,6 +53,8 @@ public class Environment {
     /** Current score of the player. */
     private int score = 0;
 
+    private boolean debugMode = false;
+
     /**
      * Constructor to initialize the environment with dimensions, position, and a
      * background image.
@@ -186,6 +188,14 @@ public class Environment {
         this.score = score;
     }
 
+    public boolean isDebugMode() {
+        return debugMode;
+    }
+
+    public void setDebugMode(boolean debugMode) {
+        this.debugMode = debugMode;
+    }
+
     /**
      * Ensures the protagonist stays within the boundaries of the environment.
      */
@@ -215,7 +225,7 @@ public class Environment {
         for (Agent agent : this.currentLevel.getAgents()) {
             /* It verifies agents vs. protagonist. */
             if (protagonist != null && intersect(protagonist, agent)) {
-                int damage = 100;
+                int damage = 900;
                 protagonist.takeDamage(damage, messages);
             }
             /*

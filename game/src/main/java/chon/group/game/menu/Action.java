@@ -9,11 +9,13 @@ public enum Action {
     /* It skips a Story or Screen. */
     SKIP,
     /* It restarts the Game. */
-    RESET,    
+    RESET,
     /* It starts the Game. */
     START,
     /* It goes back to the beginning of the Level. */
     CONTINUE,
+    /* It activates the debug mode. */
+    DEBUG,
     /* An empty state. */
     NONE
 
