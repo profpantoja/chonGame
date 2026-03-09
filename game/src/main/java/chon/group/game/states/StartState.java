@@ -6,22 +6,24 @@ import chon.group.game.menu.Action;
 public class StartState implements GameState {
 
     @Override
-    public void update(Game game) {
-
-    }
-
-    @Override
     public void handleInput(Game game) {
-        game.getEnvironment().setCurrentMenu(game.getMenu().getStart());
+        /* If the player has selected an option, an action is executed. */
         if (game.getEnvironment().getCurrentMenu().handleAction(game.getInput()).equals(Action.START)) {
+            /* It moves to next level. In this version, the Start State is the level 0. */
             game.getEnvironment().loadNextLevel();
-            game.getEnvironment().setCurrentMenu(game.getMenu().getPause());
+            /* The game moves to the running state. */
             game.setCurrentState(new RunningState());
         }
     }
 
     @Override
+    public void update(Game game) {
+        /* Nothing happens when the game starts. Only the initial menu is available. */
+    }
+
+    @Override
     public void render(Game game) {
+        /* The Background and Menus are redered. */
         game.getMediator().drawBackground();
         game.getMediator().drawMenu();
     }

@@ -196,6 +196,7 @@ public class Environment {
             protagonist.setPosX(0);
         if ((protagonist.getPosX() + protagonist.getWidth()) > this.currentLevel.getWidth())
             protagonist.setPosX(this.currentLevel.getWidth() - protagonist.getWidth());
+        /* It ensures an internal pre-defined boundary in Y. */
         if (protagonist.getPosY() < topY)
             protagonist.setPosY(topY);
         if (protagonist.getPosY() + protagonist.getHeight() > bottomY)

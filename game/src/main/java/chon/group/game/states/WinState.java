@@ -5,12 +5,12 @@ import chon.group.game.Game;
 public class WinState implements GameState {
 
     @Override
-    public void update(Game game) {
+    public void handleInput(Game game) {
 
     }
 
     @Override
-    public void handleInput(Game game) {
+    public void update(Game game) {
 
     }
 

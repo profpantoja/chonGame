@@ -7,48 +7,58 @@ import chon.group.game.core.weapon.Shot;
 public class RunningState implements GameState {
 
     @Override
-    public void update(Game game) {
-        game.getEnvironment().checkBorders();
-        /* ChonBot's Automatic Movements */
-        /* Update the other agents' movements */
-        for (Agent agent : game.getEnvironment().getCurrentLevel().getAgents()) {
-            agent.chase(game.getEnvironment().getProtagonist().getPosX(),
-                    game.getEnvironment().getProtagonist().getPosY());
-        }
-        /* If the agent died in this loop */
-        if (game.getEnvironment().getProtagonist().isDead()) {
-            game.getEnvironment().setCurrentMenu(game.getMenu().getGameOver());
-            game.setCurrentState(new GameOverState());
-        }
-    }
-
-    @Override
     public void handleInput(Game game) {
         /** ChonBota Only Moves if the Player Press Something */
         /** Update the protagonist's movements if game.getInput() exists */
         if (!game.getInput().isEmpty()) {
+            /**
+             * If the player pressed the Pause buttom, the game moves to the pause state.
+             */
             if (game.getInput().contains("P")) {
                 game.setCurrentState(new PauseState());
                 game.getEnvironment().setCurrentMenu(game.getMenu().getPause());
+                /* The Pause needs to be removed. Otherwise, it will stay forever paused. */
                 game.getInput().remove("P");
             }
-            /** ChonBota Shoots Somebody Who Outdrew You */
-            /** But only if she has enough energy */
+            /** The protagonist Shoots Somebody Who Outdrew You */
+            /** But only if it has enough energy */
             if (game.getInput().contains("SPACE")) {
+                /* The Shoot button is removed for not shooting forever. */
                 game.getInput().remove("SPACE");
                 Shot shot = game.getEnvironment().getProtagonist().useWeapon();
+                /* If there is an associate shot with the weapon. Some weapons don't shoot. */
                 if (shot != null)
+                    /* The shot is added to the environment's current level. */
                     game.getEnvironment().getCurrentLevel().getShots().add(shot);
             }
-            /* ChonBota's Movements */
+            /* Protagonist's Moves based on Joystick inputs. */
             game.getEnvironment().getProtagonist().move(game.getDirections(game.getInput()));
         }
     }
 
     @Override
-    public void render(Game game) {
-        /* Render the game game.getEnvironment() and agents */
+    public void update(Game game) {
+        /* It checks if the protagonist is outside boundaries. */
+        game.getEnvironment().checkBorders();
+        /* ChonBot's Automatic Movements */
+        /* Update the other agents' movements */
+        for (Agent agent : game.getEnvironment().getCurrentLevel().getAgents()) {
+            /* Every agent chases the protagonist. */
+            agent.chase(game.getEnvironment().getProtagonist().getPosX(),
+                    game.getEnvironment().getProtagonist().getPosY());
+        }
+        /* If the agent died in this loop, the state changes. */
+        if (game.getEnvironment().getProtagonist().isDead()) {
+            /* If the agent dies, the game moves to the Game Over state. */
+            game.getEnvironment().setCurrentMenu(game.getMenu().getGameOver());
+            game.setCurrentState(new GameOverState());
+        }
         game.getEnvironment().update();
+    }
+
+    @Override
+    public void render(Game game) {
+        /* Render the game and agents */
         game.getMediator().renderGame();
     }
 
