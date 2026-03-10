@@ -1,5 +1,6 @@
 package chon.group.game.animation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.scene.image.Image;
@@ -10,7 +11,7 @@ import javafx.scene.image.Image;
  */
 public class Animation {
 
-    private List<Image> frames;
+    private List<Image> frames = new ArrayList<Image>();
     private long duration;
     private boolean inLoop;
 

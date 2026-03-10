@@ -3,6 +3,8 @@ package chon.group.game;
 import java.util.ArrayList;
 import java.util.List;
 
+import chon.group.game.animation.Animation;
+import chon.group.game.animation.AnimationType;
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Direction;
 import chon.group.game.core.agent.Object;
@@ -16,6 +18,7 @@ import chon.group.game.menu.Action;
 import chon.group.game.menu.Item;
 import chon.group.game.menu.Menu;
 import chon.group.game.menu.MenuHandler;
+import javafx.scene.image.Image;
 
 public class GameSet {
 
@@ -138,9 +141,27 @@ public class GameSet {
                                 this.canvasWidth,
                                 panel);
 
-                Agent chonBota = new Agent(400, 390, 90, 65, 3, 1000, Direction.IDLE, "/images/agents/chonBota.png",
+                Agent chonBota = new Agent(
+                                400,
+                                390,
+                                90,
+                                65,
+                                3,
+                                1000,
+                                Direction.IDLE,
+                                "/images/agents/chonBota/chonBota_002.png",
                                 false,
                                 false);
+                Animation idle = new Animation();
+                idle.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBota/chonBota_001.png").toExternalForm()));
+                idle.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBota/chonBota_002.png").toExternalForm()));
+                idle.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBota/chonBota_003.png").toExternalForm()));
+                idle.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBota/chonBota_004.png").toExternalForm()));
+                chonBota.getAnimationSet().add(AnimationType.IDLE, idle);
                 Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, 0.05, "", false);
                 Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
 

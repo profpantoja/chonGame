@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import chon.group.game.animation.AnimationSet;
+import chon.group.game.animation.AnimationState;
 import chon.group.game.messaging.Message;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
@@ -47,6 +48,9 @@ public abstract class Entity {
 
     /** Holds all the Frames for each available movement. */
     private AnimationSet animationSet = new AnimationSet();
+
+    /** Holds the current Animation State of the entity. */
+    private AnimationState animationState = new AnimationState();
 
     /** Indicates if the existing bars of life or energy are visible or not. */
     private boolean visibleBars = false;
@@ -276,6 +280,14 @@ public abstract class Entity {
 
     public void setAnimationSet(AnimationSet animationSet) {
         this.animationSet = animationSet;
+    }
+
+    public AnimationState getAnimationState() {
+        return animationState;
+    }
+
+    public void setAnimationState(AnimationState animationState) {
+        this.animationState = animationState;
     }
 
     /**
