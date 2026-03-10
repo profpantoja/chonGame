@@ -4,6 +4,10 @@ import java.util.List;
 
 import javafx.scene.image.Image;
 
+/**
+ * Represents a single Animation with all its frames, duration, and if it has to
+ * end or it is in loop.
+ */
 public class Animation {
 
     private List<Image> frames;

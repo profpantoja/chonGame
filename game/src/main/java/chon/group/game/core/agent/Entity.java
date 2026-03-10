@@ -3,6 +3,7 @@ package chon.group.game.core.agent;
 import java.util.ArrayList;
 import java.util.List;
 
+import chon.group.game.animation.AnimationSet;
 import chon.group.game.messaging.Message;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
@@ -43,6 +44,9 @@ public abstract class Entity {
 
     /** The Entity's status. */
     private EntityStatus status = EntityStatus.IDLE;
+
+    /** Holds all the Frames for each available movement. */
+    private AnimationSet animationSet = new AnimationSet();
 
     /** Indicates if the existing bars of life or energy are visible or not. */
     private boolean visibleBars = false;
@@ -264,6 +268,14 @@ public abstract class Entity {
 
     public void setVisibleBars(boolean visible) {
         this.visibleBars = visible;
+    }
+
+    public AnimationSet getAnimationSet() {
+        return animationSet;
+    }
+
+    public void setAnimationSet(AnimationSet animationSet) {
+        this.animationSet = animationSet;
     }
 
     /**

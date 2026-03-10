@@ -177,7 +177,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
     public void drawDebugPanel() {
         drawer.drawDebugPanel(
                 240,
-                110,
+                85,
                 this.environment.getCamera().getPosX(),
                 this.environment.getMessages().size(),
                 this.environment.getCurrentLevel().getShots().size());
@@ -299,6 +299,14 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     shot.getPosY(),
                     shot.getWidth(),
                     shot.getHeight());
+            if (this.environment.isDebugMode())
+                this.drawer.drawEntityPanel(
+                        shot.getPosX(),
+                        shot.getPosY(),
+                        (int) this.environment.getCamera().getPosX(),
+                        shot.getHeight(),
+                        shot.getDirection().toString(),
+                        shot.getStatus().toString());
         }
     }
 

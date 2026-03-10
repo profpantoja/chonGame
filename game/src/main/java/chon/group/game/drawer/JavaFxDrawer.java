@@ -142,13 +142,6 @@ public class JavaFxDrawer {
         drawTextWithBorder("CamX: " + camX, 20, 155, Color.WHITE, Color.BLACK, null);
         drawTextWithBorder("Messages: " + messages, 20, 155 + span, Color.WHITE, Color.BLACK, null);
         drawTextWithBorder("Shots: " + shots, 20, 155 + (2 * span), Color.WHITE, Color.BLACK, null);
-
-        // gc.setStroke(Color.rgb(100, 255, 100, 0.3));
-        // gc.setLineWidth(1.2);
-        // gc.strokeLine(130, itemsY - 8, 130, itemsY + 18);
-
-        // drawTextWithBorder(String.valueOf(score), 190, itemsY + 8, Color.WHITE,
-        // Color.BLACK, null);
     }
 
     /**
