@@ -151,7 +151,7 @@ public class GameSet {
                                 Direction.IDLE,
                                 "/images/agents/chonBota/chonBota_002.png",
                                 false,
-                                false);
+                                true);
                 /* Animation frames for chonBota. It is just used for the protagonitst. */
                 Animation idleChonBota = new Animation();
                 idleChonBota.getFrames().add(new Image(
@@ -218,7 +218,7 @@ public class GameSet {
                                 90,
                                 65,
                                 1,
-                                500,
+                                1500,
                                 Direction.IDLE,
                                 "/images/agents/chonBot.png",
                                 true,
@@ -490,11 +490,11 @@ public class GameSet {
                                 64,
                                 64,
                                 0,
-                                1000,
+                                5000,
                                 Direction.IDLE,
                                 "/images/objects/box.png",
-                                false,
-                                false,
+                                true,
+                                true,
                                 false,
                                 true,
                                 0);

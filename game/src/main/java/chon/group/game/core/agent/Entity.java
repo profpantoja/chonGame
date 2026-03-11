@@ -252,6 +252,7 @@ public abstract class Entity {
     public void move(List<Direction> movements) {
         /* Removes contradictory movements: RIGHT+LEFT and UP+DOWN. */
         if (movements.contains(Direction.RIGHT) && movements.contains(Direction.LEFT)) {
+            movements.remove(Direction.RIGHT);
             movements.remove(Direction.LEFT);
         }
         if (movements.contains(Direction.UP) && movements.contains(Direction.DOWN)) {
@@ -352,6 +353,28 @@ public abstract class Entity {
 
     public boolean isTerminated() {
         return (this.getHealth() <= 0);
+    }
+
+    /**
+     * Gets the width of the entity.
+     *
+     * @return the width of the entity
+     */
+    public int getFlippedWidth() {
+        if (this.animationState.isFlipped())
+            return width * (-1);
+        return width;
+    }
+
+    /**
+     * Gets the X (horizontal) position of the entity.
+     *
+     * @return the X (horizontal) position of the entity
+     */
+    public int getFlippedPosX() {
+        if (this.animationState.isFlipped())
+            return posX + width;
+        return posX;
     }
 
 }

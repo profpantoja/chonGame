@@ -74,6 +74,7 @@ public class Camera {
     }
 
     public void update() {
+
         if (target != null) {
             /* It calculates the relative target X position considering the screen size. */
             double targetRelativePosX = target.getPosX() - this.posX;
@@ -98,7 +99,13 @@ public class Camera {
     }
 
     public double updateEntity(Entity entity) {
-        return entity.getPosX() - this.posX;
+        return entity.getFlippedPosX() - this.posX;
+    }
+
+    public double updateBar(Entity entity) {
+        if (entity.getAnimationState().isFlipped())
+            return this.updateEntity(entity) - entity.getWidth();
+        return this.updateEntity(entity);
     }
 
 }

@@ -85,25 +85,28 @@ public class JavaFxMediator implements EnvironmentDrawer {
     public void drawAgents() {
         for (Agent agent : this.environment.getCurrentLevel().getAgents()) {
             int newPosX = (int) this.environment.getCamera().updateEntity(agent);
-            drawer.drawImage(agent.getAnimationState().getCurrentImage(),
+            drawer.drawImage(
+                    agent.getAnimationState().getCurrentImage(),
                     newPosX,
                     agent.getPosY(),
-                    agent.getWidth(),
+                    agent.getFlippedWidth(),
                     agent.getHeight());
-            if (agent.isVisibleBars())
-                drawer.drawEnergyBar(agent.getEnergy(),
+            if (agent.isVisibleBars()) {
+                drawer.drawEnergyBar(
+                        agent.getEnergy(),
                         agent.getFullEnergy(),
                         agent.getWidth(),
-                        newPosX,
+                        (int) this.environment.getCamera().updateBar(agent),
                         agent.getPosY(),
                         Color.BLUE);
-            if (agent.isVisibleBars())
-                drawer.drawLifeBar(agent.getHealth(),
+                drawer.drawLifeBar(
+                        agent.getHealth(),
                         agent.getFullHealth(),
                         agent.getWidth(),
-                        newPosX,
+                        (int) this.environment.getCamera().updateBar(agent),
                         agent.getPosY(),
                         Color.GREEN);
+            }
             if (this.environment.isDebugMode()) {
                 drawer.drawEntityPanel(
                         agent.getPosX(),
@@ -120,7 +123,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
                 protagonist.getAnimationState().getCurrentImage(),
                 newPosX,
                 protagonist.getPosY(),
-                protagonist.getWidth(),
+                protagonist.getFlippedWidth(),
                 protagonist.getHeight());
         if (protagonist.isVisibleBars()) {
             this.drawSingleLifeBar();
@@ -148,14 +151,14 @@ public class JavaFxMediator implements EnvironmentDrawer {
             drawer.drawImage(object.getAnimationState().getCurrentImage(),
                     (int) this.environment.getCamera().updateEntity(object),
                     object.getPosY(),
-                    object.getWidth(),
+                    object.getFlippedWidth(),
                     object.getHeight());
             if (object.isVisibleBars())
                 drawer.drawLifeBar(
                         object.getHealth(),
                         object.getFullHealth(),
                         object.getWidth(),
-                        (int) this.environment.getCamera().updateEntity(object),
+                        (int) this.environment.getCamera().updateBar(object),
                         object.getPosY(),
                         Color.GREEN);
             if (this.environment.isDebugMode())
@@ -194,7 +197,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     protagonist.getHealth(),
                     protagonist.getFullHealth(),
                     protagonist.getWidth(),
-                    (int) this.environment.getCamera().updateEntity(protagonist),
+                    (int) this.environment.getCamera().updateBar(protagonist),
                     protagonist.getPosY(),
                     Color.GREEN);
         }
@@ -211,7 +214,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     protagonist.getEnergy(),
                     protagonist.getFullEnergy(),
                     protagonist.getWidth(),
-                    (int) this.environment.getCamera().updateEntity(protagonist),
+                    (int) this.environment.getCamera().updateBar(protagonist),
                     protagonist.getPosY(),
                     Color.BLUE);
         }
@@ -297,7 +300,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
             drawer.drawImage(shot.getAnimationState().getCurrentImage(),
                     (int) this.environment.getCamera().updateEntity(shot),
                     shot.getPosY(),
-                    shot.getWidth(),
+                    shot.getFlippedWidth(),
                     shot.getHeight());
             if (this.environment.isDebugMode())
                 this.drawer.drawEntityPanel(
