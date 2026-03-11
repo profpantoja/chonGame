@@ -16,20 +16,15 @@ public class Animator {
     /**
      * Updates one specific agent.
      */
-    public void update(Agent agent, long deltaTime) {
+    public void update(Agent agent, long elapsedTime) {
         if (agent.getStatus().equals(EntityStatus.IDLE)) {
             agent.getAnimationState().setCurrentAnimation(agent.getAnimationSet().get(AnimationType.IDLE));
-            agent.getAnimationState().setCurrentFrameIndex(this.nextFrame(agent));
+            if (agent.getAnimationState().tick() >= agent.getAnimationState().getCurrentAnimation().getDuration()) {
+                int frameIndex = agent.getAnimationState().nextFrame();
+                agent.getAnimationState().setCurrentFrameIndex(frameIndex);
+                agent.setImage(agent.getAnimationState().getCurrentAnimation().getFrames().get(frameIndex));
+            }
         }
-    }
-
-    /**
-     * Gets the next current frame.
-     */
-    public int nextFrame(Agent agent) {
-        int index = agent.getAnimationState().getCurrentFrameIndex();
-        int size = agent.getAnimationState().getCurrentAnimation().getFrames().size();
-        return (index + 1) % size;
     }
 
 }

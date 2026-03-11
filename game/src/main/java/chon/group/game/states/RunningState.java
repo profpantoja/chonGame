@@ -62,6 +62,9 @@ public class RunningState implements GameState {
             game.getEnvironment().setCurrentMenu(game.getMenu().getGameOver());
             game.setCurrentState(new GameOverState());
         }
+        game.getAnimator().update(
+                game.getEnvironment().getProtagonist(),
+                game.getElapsedTime());
     }
 
     @Override

@@ -4,7 +4,7 @@ public class AnimationState {
 
     private Animation currentAnimation;
     private int currentFrameIndex = 0;
-    private long elapsedTime;
+    private long lastTime = 0;
     private boolean finished = false;
 
     public Animation getCurrentAnimation() {
@@ -23,12 +23,12 @@ public class AnimationState {
         this.currentFrameIndex = currentFrameIndex;
     }
 
-    public long getElapsedTime() {
-        return elapsedTime;
+    public long getLastTime() {
+        return lastTime;
     }
 
-    public void setElapsedTime(long elapsedTime) {
-        this.elapsedTime = elapsedTime;
+    public void setLastTime(long lastTime) {
+        this.lastTime = lastTime;
     }
 
     public boolean isFinished() {
@@ -37,6 +37,20 @@ public class AnimationState {
 
     public void setFinished(boolean finished) {
         this.finished = finished;
+    }
+
+    /**
+     * Gets the next current frame.
+     */
+    public int nextFrame() {
+        this.lastTime = System.currentTimeMillis();
+        return (this.currentFrameIndex + 1) % this.currentAnimation.getFrames().size();
+    }
+
+    public long tick() {
+        long now = System.currentTimeMillis();
+        long elapsedTime = now - lastTime;
+        return elapsedTime;
     }
 
 }
