@@ -294,7 +294,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
         Iterator<Shot> iterator = this.environment.getCurrentLevel().getShots().iterator();
         while (iterator.hasNext()) {
             Shot shot = iterator.next();
-            drawer.drawImage(shot.getImage(),
+            drawer.drawImage(shot.getAnimationState().getCurrentImage(),
                     (int) this.environment.getCamera().updateEntity(shot),
                     shot.getPosY(),
                     shot.getWidth(),

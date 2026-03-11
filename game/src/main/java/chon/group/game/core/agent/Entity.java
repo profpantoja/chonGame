@@ -6,10 +6,6 @@ import java.util.List;
 import chon.group.game.animation.AnimationSet;
 import chon.group.game.animation.AnimationState;
 import chon.group.game.messaging.Message;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
 
 public abstract class Entity {
 
@@ -27,12 +23,6 @@ public abstract class Entity {
 
     /** entity speed. */
     protected int speed;
-
-    /** Image representing the entity. */
-    protected Image image;
-
-    /** Indicates if the entity is facing left. */
-    private boolean flipped = false;
 
     /** The initial entity's health. */
     private int health;
@@ -67,7 +57,7 @@ public abstract class Entity {
      * @param pathImage the path to the entity's image
      */
     public Entity(int posX, int posY, int height, int width, int speed, int health, Direction direction,
-            String pathImage, boolean flipped,
+            boolean flipped,
             boolean visibleBars) {
         /*
          * Every entity needs at least 1 point of health. Otherwise, it will be
@@ -83,8 +73,7 @@ public abstract class Entity {
         this.health = health;
         this.fullHealth = health;
         this.direction = direction;
-        this.image = new Image(getClass().getResource(pathImage).toExternalForm());
-        this.flipped = flipped;
+        this.getAnimationState().setFlipped(flipped);
         this.visibleBars = visibleBars;
     }
 
@@ -179,42 +168,6 @@ public abstract class Entity {
     }
 
     /**
-     * Gets the entity image.
-     *
-     * @return the entity image
-     */
-    public Image getImage() {
-        return image;
-    }
-
-    /**
-     * Gets the entity flipped status.
-     *
-     * @param image the new image
-     */
-    public void setImage(Image image) {
-        this.image = image;
-    }
-
-    /**
-     * Gets if the entity is flipped.
-     *
-     * @return if the entity is flipped
-     */
-    public boolean isFlipped() {
-        return flipped;
-    }
-
-    /**
-     * Sets the entity flipped status.
-     *
-     * @param flipped the new flipped status
-     */
-    public void setFlipped(boolean flipped) {
-        this.flipped = flipped;
-    }
-
-    /**
      * Gets the entity's health.
      *
      * @return the entity's health
@@ -291,58 +244,68 @@ public abstract class Entity {
     }
 
     /**
-     * Flips the Image horizontally.
-     */
-    public void flipImage() {
-        ImageView flippedImage = new ImageView(image);
-        flippedImage.setScaleX(-1);
-        SnapshotParameters params = new SnapshotParameters();
-        params.setFill(Color.TRANSPARENT);
-        this.flipped = !this.flipped;
-        this.image = flippedImage.snapshot(params, null);
-    }
-
-    /**
      * Moves the entity based on the movement commands provided.
      *
      * @param movements a list of movement directions ("RIGHT", "LEFT", "UP",
      *                  "DOWN")
      */
     public void move(List<Direction> movements) {
+        /* Removes contradictory movements: RIGHT+LEFT and UP+DOWN. */
+        if (movements.contains(Direction.RIGHT) && movements.contains(Direction.LEFT)) {
+            movements.remove(Direction.LEFT);
+        }
+        if (movements.contains(Direction.UP) && movements.contains(Direction.DOWN)) {
+            movements.remove(Direction.DOWN);
+        }
+        /* It verifies if the agent intends to move to the right. */
         if (movements.contains(Direction.RIGHT)) {
-            if (flipped) {
-                this.flipImage();
-                this.animationState.setFlipped(!this.animationState.isFlipped());
+            if (this.animationState.isFlipped()) {
+                this.animationState.setFlipped(false);
             }
+            /* It verifies if it is an up-diagonal movement. */
             if (movements.contains(Direction.RIGHT) && movements.contains(Direction.UP)) {
                 setPosY(posY -= speed);
                 setPosX(posX += speed);
-            } else if (movements.contains(Direction.RIGHT) && movements.contains(Direction.DOWN)) {
+            }
+            /* It verifies if it is a down-diagonal movement. */
+            else if (movements.contains(Direction.RIGHT) && movements.contains(Direction.DOWN)) {
                 setPosY(posY += speed);
                 setPosX(posX += speed);
-            } else {
+            }
+            /* Otherwise, it only has to move to the right. */
+            else {
                 setPosX(posX += speed);
                 setDirection(Direction.RIGHT);
             }
-        } else if (movements.contains(Direction.LEFT)) {
-            if (!flipped) {
-                this.flipImage();
-                this.animationState.setFlipped(!this.animationState.isFlipped());
+        }
+        /* It verifies if the agent intends to move to the left. */
+        if (movements.contains(Direction.LEFT)) {
+            if (!this.animationState.isFlipped()) {
+                this.animationState.setFlipped(true);
             }
+            /* It verifies if it is an up-diagonal movement. */
             if (movements.contains(Direction.LEFT) && movements.contains(Direction.UP)) {
                 setPosY(posY -= speed);
                 setPosX(posX -= speed);
-            } else if (movements.contains(Direction.LEFT) && movements.contains(Direction.DOWN)) {
+            }
+            /* It verifies if it is a down-diagonal movement. */
+            else if (movements.contains(Direction.LEFT) && movements.contains(Direction.DOWN)) {
                 setPosY(posY += speed);
                 setPosX(posX -= speed);
-            } else {
+            }
+            /* Otherwise, it only has to move to the right. */
+            else {
                 setPosX(posX -= speed);
                 setDirection(Direction.LEFT);
             }
-        } else if (movements.contains(Direction.UP)) {
+        }
+        /* It verifies if the agent intends to move up. */
+        else if (movements.contains(Direction.UP)) {
             setPosY(posY -= speed);
             setDirection(Direction.UP);
-        } else if (movements.contains(Direction.DOWN)) {
+        }
+        /* It verifies if the agent intends to move down. */
+        else if (movements.contains(Direction.DOWN)) {
             setPosY(posY += speed);
             setDirection(Direction.DOWN);
         }

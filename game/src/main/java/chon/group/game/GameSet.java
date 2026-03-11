@@ -185,7 +185,7 @@ public class GameSet {
                                 500,
                                 Direction.IDLE,
                                 "/images/agents/chonBot.png",
-                                true,
+                                false,
                                 true);
                 chonBot1.getAnimationSet().add(AnimationType.IDLE, idleChonBot);
                 Agent chonBot2 = new Agent(

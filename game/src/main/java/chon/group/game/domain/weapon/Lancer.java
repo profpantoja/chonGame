@@ -2,10 +2,13 @@ package chon.group.game.domain.weapon;
 
 import java.util.List;
 
+import chon.group.game.animation.Animation;
+import chon.group.game.animation.AnimationType;
 import chon.group.game.core.agent.Direction;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.messaging.Message;
+import javafx.scene.image.Image;
 
 public class Lancer extends Weapon {
 
@@ -20,7 +23,15 @@ public class Lancer extends Weapon {
             posX += 64 + 1;
         else
             posX -= 64 + 1;
-        return new Fireball(posX,
+        /*
+         * Animation frames for fireball. That is not the best solution. It needs to
+         * change.
+         */
+        Animation fireballShot = new Animation();
+        fireballShot.getFrames().add(new Image(
+                getClass().getResource("/images/weapons/fireball/fireball001.png").toExternalForm()));
+        Fireball fireball = new Fireball(
+                posX,
                 posY + 30,
                 42,
                 64,
@@ -30,6 +41,8 @@ public class Lancer extends Weapon {
                 "/images/weapons/fireball/fireball001.png",
                 false,
                 500);
+        fireball.getAnimationSet().add(AnimationType.IDLE, fireballShot);
+        return fireball;
     }
 
     @Override

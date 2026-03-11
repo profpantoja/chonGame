@@ -36,7 +36,7 @@ public class Object extends Entity {
             boolean collectible,
             boolean destructible,
             double attractionRadius) {
-        super(posX, posY, height, width, speed, health, direction, pathImage, flipped, visibleBars);
+        super(posX, posY, height, width, speed, health, direction, flipped, visibleBars);
         this.collectible = collectible;
         this.destructible = destructible;
         this.attractionRadius = attractionRadius;

@@ -72,6 +72,10 @@ public class RunningState implements GameState {
         for (Object object : game.getEnvironment().getCurrentLevel().getObjects()) {
             game.getAnimator().update(object);
         }
+        /* It animates all shots. */
+        for (Shot shot : game.getEnvironment().getCurrentLevel().getShots()) {
+            game.getAnimator().update(shot);
+        }
     }
 
     @Override

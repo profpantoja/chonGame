@@ -28,7 +28,8 @@ public class Cannon extends Weapon {
                 0,
                 direction,
                 "/images/weapons/missile/missile001.png",
-                false, 100);
+                false,
+                100);
     }
 
     @Override
