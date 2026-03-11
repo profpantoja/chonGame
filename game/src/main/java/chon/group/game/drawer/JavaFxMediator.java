@@ -85,12 +85,11 @@ public class JavaFxMediator implements EnvironmentDrawer {
     public void drawAgents() {
         for (Agent agent : this.environment.getCurrentLevel().getAgents()) {
             int newPosX = (int) this.environment.getCamera().updateEntity(agent);
-            drawer.drawImage(agent.getImage(),
+            drawer.drawImage(agent.getAnimationState().getCurrentImage(),
                     newPosX,
                     agent.getPosY(),
                     agent.getWidth(),
                     agent.getHeight());
-
             if (agent.isVisibleBars())
                 drawer.drawEnergyBar(agent.getEnergy(),
                         agent.getFullEnergy(),
@@ -117,7 +116,8 @@ public class JavaFxMediator implements EnvironmentDrawer {
         }
         Agent protagonist = this.environment.getProtagonist();
         int newPosX = (int) this.environment.getCamera().updateEntity(protagonist);
-        drawer.drawImage(protagonist.getImage(),
+        drawer.drawImage(
+                protagonist.getAnimationState().getCurrentImage(),
                 newPosX,
                 protagonist.getPosY(),
                 protagonist.getWidth(),
@@ -145,7 +145,7 @@ public class JavaFxMediator implements EnvironmentDrawer {
     @Override
     public void drawObjects() {
         for (Object object : environment.getCurrentLevel().getObjects()) {
-            drawer.drawImage(object.getImage(),
+            drawer.drawImage(object.getAnimationState().getCurrentImage(),
                     (int) this.environment.getCamera().updateEntity(object),
                     object.getPosY(),
                     object.getWidth(),

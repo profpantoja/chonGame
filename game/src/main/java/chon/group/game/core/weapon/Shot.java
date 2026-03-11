@@ -9,7 +9,6 @@ import chon.group.game.messaging.Message;
 public abstract class Shot extends Entity {
 
     private boolean destructible = false;
-    // private String direction;
     private int damage;
 
     public Shot(int posX, int posY, int height, int width, int speed, int health, Direction direction, String pathImage,
@@ -27,17 +26,6 @@ public abstract class Shot extends Entity {
         this.destructible = destructible;
     }
 
-    /*
-     * 
-     * public String getDirection() {
-     * return direction;
-     * }
-     * 
-     * public void setDirection(String direction) {
-     * this.direction = direction;
-     * }
-     * 
-     */
     public int getDamage() {
         return damage;
     }

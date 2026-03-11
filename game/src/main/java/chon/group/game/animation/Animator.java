@@ -1,6 +1,6 @@
 package chon.group.game.animation;
 
-import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.Entity;
 import chon.group.game.core.agent.EntityStatus;
 import chon.group.game.core.environment.Level;
 
@@ -16,13 +16,12 @@ public class Animator {
     /**
      * Updates one specific agent.
      */
-    public void update(Agent agent, long elapsedTime) {
-        if (agent.getStatus().equals(EntityStatus.IDLE)) {
-            agent.getAnimationState().setCurrentAnimation(agent.getAnimationSet().get(AnimationType.IDLE));
-            if (agent.getAnimationState().tick() >= agent.getAnimationState().getCurrentAnimation().getDuration()) {
-                int frameIndex = agent.getAnimationState().nextFrame();
-                agent.getAnimationState().setCurrentFrameIndex(frameIndex);
-                agent.setImage(agent.getAnimationState().getCurrentAnimation().getFrames().get(frameIndex));
+    public void update(Entity entity) {
+        if (entity.getStatus().equals(EntityStatus.IDLE)) {
+            entity.getAnimationState().setCurrentAnimation(entity.getAnimationSet().get(AnimationType.IDLE));
+            if (entity.getAnimationState().tick() >= entity.getAnimationState().getCurrentAnimation().getDuration()) {
+                int frameIndex = entity.getAnimationState().nextFrame();
+                entity.getAnimationState().setCurrentFrameIndex(frameIndex);
             }
         }
     }

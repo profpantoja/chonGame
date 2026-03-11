@@ -310,8 +310,10 @@ public abstract class Entity {
      */
     public void move(List<Direction> movements) {
         if (movements.contains(Direction.RIGHT)) {
-            if (flipped)
+            if (flipped) {
                 this.flipImage();
+                this.animationState.setFlipped(!this.animationState.isFlipped());
+            }
             if (movements.contains(Direction.RIGHT) && movements.contains(Direction.UP)) {
                 setPosY(posY -= speed);
                 setPosX(posX += speed);
@@ -323,8 +325,10 @@ public abstract class Entity {
                 setDirection(Direction.RIGHT);
             }
         } else if (movements.contains(Direction.LEFT)) {
-            if (!flipped)
+            if (!flipped) {
                 this.flipImage();
+                this.animationState.setFlipped(!this.animationState.isFlipped());
+            }
             if (movements.contains(Direction.LEFT) && movements.contains(Direction.UP)) {
                 setPosY(posY -= speed);
                 setPosX(posX -= speed);

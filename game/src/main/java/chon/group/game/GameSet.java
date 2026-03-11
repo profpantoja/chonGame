@@ -152,33 +152,79 @@ public class GameSet {
                                 "/images/agents/chonBota/chonBota_002.png",
                                 false,
                                 false);
-                Animation idle = new Animation();
-                idle.getFrames().add(new Image(
+                /* Animation frames for chonBota. It is just used for the protagonitst. */
+                Animation idleChonBota = new Animation();
+                idleChonBota.getFrames().add(new Image(
                                 getClass().getResource("/images/agents/chonBota/chonBota_001.png").toExternalForm()));
-                idle.getFrames().add(new Image(
+                idleChonBota.getFrames().add(new Image(
                                 getClass().getResource("/images/agents/chonBota/chonBota_002.png").toExternalForm()));
-                idle.getFrames().add(new Image(
+                idleChonBota.getFrames().add(new Image(
                                 getClass().getResource("/images/agents/chonBota/chonBota_003.png").toExternalForm()));
-                idle.getFrames().add(new Image(
+                idleChonBota.getFrames().add(new Image(
                                 getClass().getResource("/images/agents/chonBota/chonBota_004.png").toExternalForm()));
-                chonBota.getAnimationSet().add(AnimationType.IDLE, idle);
+                chonBota.getAnimationSet().add(AnimationType.IDLE, idleChonBota);
                 Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, 0.05, "", false);
                 Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
 
                 chonBota.setWeapon(cannon);
                 chonBota.setWeapon(lancer);
-
-                Agent chonBot1 = new Agent(920, 440, 90, 65, 1, 500, Direction.IDLE, "/images/agents/chonBot.png", true,
-                                true);
-                Agent chonBot2 = new Agent(2920, 640, 90, 65, 1, 500, Direction.IDLE, "/images/agents/chonBot.png",
+                /* Animation frames for chonBota. It can be reused among all instances. */
+                Animation idleChonBot = new Animation();
+                idleChonBot.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBot.png").toExternalForm()));
+                /*
+                 * Enemies instances. For each instance is necessary the Agent object and the
+                 * Animation Set.
+                 */
+                Agent chonBot1 = new Agent(
+                                920,
+                                440,
+                                90,
+                                65,
+                                1,
+                                500,
+                                Direction.IDLE,
+                                "/images/agents/chonBot.png",
                                 true,
                                 true);
-                Agent chonBot3 = new Agent(4920, 300, 90, 65, 1, 500, Direction.IDLE, "/images/agents/chonBot.png",
+                chonBot1.getAnimationSet().add(AnimationType.IDLE, idleChonBot);
+                Agent chonBot2 = new Agent(
+                                2920,
+                                640,
+                                90,
+                                65,
+                                1,
+                                500,
+                                Direction.IDLE,
+                                "/images/agents/chonBot.png",
                                 true,
                                 true);
-                Agent chonBot4 = new Agent(6920, 500, 90, 65, 1, 500, Direction.IDLE, "/images/agents/chonBot.png",
+                chonBot2.getAnimationSet().add(AnimationType.IDLE, idleChonBot);
+                Agent chonBot3 = new Agent(
+                                4920,
+                                300,
+                                90,
+                                65,
+                                1,
+                                500,
+                                Direction.IDLE,
+                                "/images/agents/chonBot.png",
                                 true,
                                 true);
+                chonBot3.getAnimationSet().add(AnimationType.IDLE, idleChonBot);
+                Agent chonBot4 = new Agent(
+                                6920,
+                                500,
+                                90,
+                                65,
+                                1,
+                                500,
+                                Direction.IDLE,
+                                "/images/agents/chonBot.png",
+                                true,
+                                true);
+                chonBot4.getAnimationSet().add(AnimationType.IDLE, idleChonBot);
+                /* Setting the protagonist and some Images in the Environment system. */
                 environment.setProtagonist(chonBota);
                 environment.setPauseImage("/images/environment/pause.png");
                 environment.setGameOverImage("/images/environment/gameover.png");
@@ -188,9 +234,19 @@ public class GameSet {
                 level1.getAgents().add(chonBot3);
                 level1.getAgents().add(chonBot4);
 
-                /* Set up some collectable objects */
+                /* Animation frames for objects. It can be reused among all instances. */
+                Animation idleCoin = new Animation();
+                idleCoin.getFrames().add(new Image(
+                                getClass().getResource("/images/objects/coin.png").toExternalForm()));
+                Animation idleBox = new Animation();
+                idleBox.getFrames().add(new Image(
+                                getClass().getResource("/images/objects/box.png").toExternalForm()));
+                /*
+                 * Set up some collectable objects. For each instance is necessary the Object
+                 * and the Animation Set.
+                 */
                 List<Object> objects = new ArrayList<>();
-                objects.add(new Object(
+                Object coin1 = new Object(
                                 200,
                                 350,
                                 32,
@@ -203,8 +259,10 @@ public class GameSet {
                                 false,
                                 true,
                                 false,
-                                200));
-                objects.add(new Object(
+                                200);
+                coin1.getAnimationSet().add(AnimationType.IDLE, idleCoin);
+                objects.add(coin1);
+                Object coin2 = new Object(
                                 400,
                                 380,
                                 32,
@@ -216,8 +274,10 @@ public class GameSet {
                                 false,
                                 true,
                                 true,
-                                true, 200));
-                objects.add(new Object(
+                                true, 200);
+                coin2.getAnimationSet().add(AnimationType.IDLE, idleCoin);
+                objects.add(coin2);
+                Object coin3 = new Object(
                                 1000,
                                 600,
                                 32,
@@ -230,8 +290,10 @@ public class GameSet {
                                 false,
                                 true,
                                 false,
-                                200));
-                objects.add(new Object(
+                                200);
+                coin3.getAnimationSet().add(AnimationType.IDLE, idleCoin);
+                objects.add(coin3);
+                Object box1 = new Object(
                                 1200,
                                 704,
                                 64,
@@ -244,8 +306,10 @@ public class GameSet {
                                 false,
                                 false,
                                 false,
-                                200));
-                objects.add(new Object(
+                                200);
+                box1.getAnimationSet().add(AnimationType.IDLE, idleBox);
+                objects.add(box1);
+                Object box2 = new Object(
                                 1200,
                                 650,
                                 64,
@@ -258,8 +322,10 @@ public class GameSet {
                                 false,
                                 false,
                                 true,
-                                200));
-                objects.add(new Object(
+                                200);
+                box2.getAnimationSet().add(AnimationType.IDLE, idleBox);
+                objects.add(box2);
+                Object box3 = new Object(
                                 1200,
                                 596,
                                 64,
@@ -272,8 +338,10 @@ public class GameSet {
                                 false,
                                 false,
                                 true,
-                                200));
-                objects.add(new Object(
+                                200);
+                box3.getAnimationSet().add(AnimationType.IDLE, idleBox);
+                objects.add(box3);
+                Object coin4 = new Object(
                                 1400,
                                 380,
                                 32,
@@ -286,8 +354,10 @@ public class GameSet {
                                 false,
                                 true,
                                 false,
-                                200));
-                objects.add(new Object(
+                                200);
+                coin4.getAnimationSet().add(AnimationType.IDLE, idleCoin);
+                objects.add(coin4);
+                Object coin5 = new Object(
                                 1800,
                                 650,
                                 32,
@@ -300,8 +370,10 @@ public class GameSet {
                                 false,
                                 true,
                                 false,
-                                200));
-                objects.add(new Object(
+                                200);
+                coin5.getAnimationSet().add(AnimationType.IDLE, idleCoin);
+                objects.add(coin5);
+                Object box4 = new Object(
                                 1900,
                                 350,
                                 64,
@@ -314,8 +386,10 @@ public class GameSet {
                                 false,
                                 false,
                                 true,
-                                0));
-                objects.add(new Object(
+                                0);
+                box4.getAnimationSet().add(AnimationType.IDLE, idleBox);
+                objects.add(box4);
+                Object coin6 = new Object(
                                 2000,
                                 580,
                                 32,
@@ -328,8 +402,10 @@ public class GameSet {
                                 false,
                                 true,
                                 false,
-                                200));
-                objects.add(new Object(
+                                200);
+                coin6.getAnimationSet().add(AnimationType.IDLE, idleCoin);
+                objects.add(coin6);
+                Object box5 = new Object(
                                 2150,
                                 550,
                                 64,
@@ -342,8 +418,10 @@ public class GameSet {
                                 false,
                                 false,
                                 true,
-                                0));
-                objects.add(new Object(
+                                0);
+                box5.getAnimationSet().add(AnimationType.IDLE, idleBox);
+                objects.add(box5);
+                Object coin7 = new Object(
                                 2300,
                                 380,
                                 32,
@@ -356,8 +434,10 @@ public class GameSet {
                                 false,
                                 true,
                                 false,
-                                200));
-                objects.add(new Object(
+                                200);
+                coin7.getAnimationSet().add(AnimationType.IDLE, idleCoin);
+                objects.add(coin7);
+                Object box6 = new Object(
                                 2500,
                                 680,
                                 64,
@@ -370,8 +450,10 @@ public class GameSet {
                                 false,
                                 false,
                                 true,
-                                0));
-                objects.add(new Object(
+                                0);
+                box6.getAnimationSet().add(AnimationType.IDLE, idleBox);
+                objects.add(box6);
+                Object coin8 = new Object(
                                 2600,
                                 500,
                                 32,
@@ -383,8 +465,10 @@ public class GameSet {
                                 false, false,
                                 true,
                                 false,
-                                200));
-                objects.add(new Object(
+                                200);
+                coin8.getAnimationSet().add(AnimationType.IDLE, idleCoin);
+                objects.add(coin8);
+                Object box7 = new Object(
                                 2700,
                                 450,
                                 64,
@@ -397,8 +481,10 @@ public class GameSet {
                                 false,
                                 false,
                                 true,
-                                0));
-                objects.add(new Object(
+                                0);
+                box7.getAnimationSet().add(AnimationType.IDLE, idleBox);
+                objects.add(box7);
+                Object box8 = new Object(
                                 2850,
                                 650,
                                 64,
@@ -411,8 +497,10 @@ public class GameSet {
                                 false,
                                 false,
                                 true,
-                                0));
-                objects.add(new Object(
+                                0);
+                box8.getAnimationSet().add(AnimationType.IDLE, idleBox);
+                objects.add(box8);
+                Object coin9 = new Object(
                                 2900,
                                 380,
                                 32,
@@ -425,8 +513,10 @@ public class GameSet {
                                 false,
                                 true,
                                 false,
-                                200));
-                objects.add(new Object(
+                                200);
+                coin9.getAnimationSet().add(AnimationType.IDLE, idleCoin);
+                objects.add(coin9);
+                Object box9 = new Object(
                                 3150,
                                 450,
                                 64,
@@ -439,8 +529,10 @@ public class GameSet {
                                 false,
                                 false,
                                 true,
-                                0));
-                objects.add(new Object(
+                                0);
+                box9.getAnimationSet().add(AnimationType.IDLE, idleBox);
+                objects.add(box9);
+                Object coin10 = new Object(
                                 3200,
                                 400,
                                 32,
@@ -453,8 +545,10 @@ public class GameSet {
                                 false,
                                 true,
                                 false,
-                                200));
-                objects.add(new Object(
+                                200);
+                coin10.getAnimationSet().add(AnimationType.IDLE, idleCoin);
+                objects.add(coin10);
+                Object box10 = new Object(
                                 3500,
                                 350,
                                 64,
@@ -467,8 +561,10 @@ public class GameSet {
                                 false,
                                 false,
                                 true,
-                                0));
-                objects.add(new Object(
+                                0);
+                box10.getAnimationSet().add(AnimationType.IDLE, idleBox);
+                objects.add(box10);
+                Object box11 = new Object(
                                 3850,
                                 550,
                                 64,
@@ -480,8 +576,10 @@ public class GameSet {
                                 false,
                                 false,
                                 true,
-                                0));
-                objects.add(new Object(
+                                0);
+                box11.getAnimationSet().add(AnimationType.IDLE, idleBox);
+                objects.add(box11);
+                Object coin11 = new Object(
                                 4100,
                                 500,
                                 32,
@@ -493,8 +591,10 @@ public class GameSet {
                                 false,
                                 false,
                                 true,
-                                false, 200));
-                objects.add(new Object(
+                                false, 200);
+                coin11.getAnimationSet().add(AnimationType.IDLE, idleCoin);
+                objects.add(coin11);
+                Object box12 = new Object(
                                 4350,
                                 550,
                                 64,
@@ -504,8 +604,10 @@ public class GameSet {
                                 Direction.IDLE,
                                 "/images/objects/box.png", false,
                                 false,
-                                false, true, 0));
-                objects.add(new Object(
+                                false, true, 0);
+                box12.getAnimationSet().add(AnimationType.IDLE, idleBox);
+                objects.add(box12);
+                Object box13 = new Object(
                                 4550,
                                 550,
                                 64,
@@ -516,8 +618,10 @@ public class GameSet {
                                 "/images/objects/box.png",
                                 false,
                                 false,
-                                false, true, 0));
-                objects.add(new Object(
+                                false, true, 0);
+                box13.getAnimationSet().add(AnimationType.IDLE, idleBox);
+                objects.add(box13);
+                Object box14 = new Object(
                                 4650,
                                 350,
                                 64,
@@ -528,8 +632,10 @@ public class GameSet {
                                 "/images/objects/box.png",
                                 false,
                                 false,
-                                false, true, 0));
-                objects.add(new Object(
+                                false, true, 0);
+                box14.getAnimationSet().add(AnimationType.IDLE, idleBox);
+                objects.add(box14);
+                Object box15 = new Object(
                                 4850,
                                 600,
                                 64,
@@ -540,8 +646,10 @@ public class GameSet {
                                 "/images/objects/box.png",
                                 false,
                                 false,
-                                false, true, 0));
-                objects.add(new Object(
+                                false, true, 0);
+                box15.getAnimationSet().add(AnimationType.IDLE, idleBox);
+                objects.add(box15);
+                Object coin12 = new Object(
                                 5000,
                                 380,
                                 32,
@@ -554,8 +662,10 @@ public class GameSet {
                                 false,
                                 true,
                                 false,
-                                200));
-                objects.add(new Object(
+                                200);
+                coin12.getAnimationSet().add(AnimationType.IDLE, idleCoin);
+                objects.add(coin12);
+                Object box16 = new Object(
                                 5150,
                                 650,
                                 64,
@@ -568,8 +678,10 @@ public class GameSet {
                                 false,
                                 false,
                                 true,
-                                0));
-                objects.add(new Object(
+                                0);
+                box16.getAnimationSet().add(AnimationType.IDLE, idleBox);
+                objects.add(box16);
+                Object box17 = new Object(
                                 5300,
                                 300,
                                 64,
@@ -582,8 +694,10 @@ public class GameSet {
                                 false,
                                 false,
                                 true,
-                                0));
-                objects.add(new Object(
+                                0);
+                box17.getAnimationSet().add(AnimationType.IDLE, idleBox);
+                objects.add(box17);
+                Object box18 = new Object(
                                 5600,
                                 550,
                                 64,
@@ -596,8 +710,10 @@ public class GameSet {
                                 false,
                                 false,
                                 true,
-                                0));
-                objects.add(new Object(
+                                0);
+                box18.getAnimationSet().add(AnimationType.IDLE, idleBox);
+                objects.add(box18);
+                Object coin13 = new Object(
                                 6200,
                                 400,
                                 32,
@@ -610,7 +726,9 @@ public class GameSet {
                                 false,
                                 true,
                                 false,
-                                200));
+                                200);
+                coin13.getAnimationSet().add(AnimationType.IDLE, idleCoin);
+                objects.add(coin13);
                 // Register objects into the environment and count total collectibles
                 level1.setObjects(objects);
                 level1.countCollectibles();

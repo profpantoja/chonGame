@@ -1,11 +1,18 @@
 package chon.group.game.animation;
 
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+
 public class AnimationState {
 
     private Animation currentAnimation;
     private int currentFrameIndex = 0;
     private long lastTime = 0;
     private boolean finished = false;
+    /** Indicates if the animation is facing left. */
+    private boolean flipped = false;
 
     public Animation getCurrentAnimation() {
         return currentAnimation;
@@ -40,6 +47,24 @@ public class AnimationState {
     }
 
     /**
+     * Gets if the animation is flipped.
+     *
+     * @return if the animation is flipped
+     */
+    public boolean isFlipped() {
+        return flipped;
+    }
+
+    /**
+     * Sets the animation flipped status.
+     *
+     * @param flipped the new flipped status
+     */
+    public void setFlipped(boolean flipped) {
+        this.flipped = flipped;
+    }
+
+    /**
      * Gets the next current frame.
      */
     public int nextFrame() {
@@ -51,6 +76,25 @@ public class AnimationState {
         long now = System.currentTimeMillis();
         long elapsedTime = now - lastTime;
         return elapsedTime;
+    }
+
+    public Image getCurrentImage() {
+        Image image = this.getCurrentAnimation().getFrames().get(currentFrameIndex);
+        if (flipped)
+            return this.flipImage(image);
+        else
+            return image;
+    }
+
+    /**
+     * Flips the Image horizontally.
+     */
+    public Image flipImage(Image image) {
+        ImageView flippedImage = new ImageView(image);
+        flippedImage.setScaleX(-1);
+        SnapshotParameters params = new SnapshotParameters();
+        params.setFill(Color.TRANSPARENT);
+        return flippedImage.snapshot(params, null);
     }
 
 }

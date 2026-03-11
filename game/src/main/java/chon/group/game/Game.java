@@ -97,7 +97,7 @@ public class Game {
     }
 
     public void loop() {
-        //this.timer();
+        this.timer();
         this.currentState.handleInput(this);
         this.currentState.update(this);
         this.currentState.render(this);

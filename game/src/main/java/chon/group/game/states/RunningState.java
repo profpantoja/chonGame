@@ -3,6 +3,7 @@ package chon.group.game.states;
 import chon.group.game.Game;
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.EntityStatus;
+import chon.group.game.core.agent.Object;
 import chon.group.game.core.weapon.Shot;
 
 public class RunningState implements GameState {
@@ -53,6 +54,8 @@ public class RunningState implements GameState {
             /* Every agent chases the protagonist. */
             agent.chase(game.getEnvironment().getProtagonist().getPosX(),
                     game.getEnvironment().getProtagonist().getPosY());
+            /* It animates all agents. */
+            game.getAnimator().update(agent);
         }
         game.getEnvironment().update();
         /* If the agent died in this loop, the state changes. */
@@ -62,9 +65,13 @@ public class RunningState implements GameState {
             game.getEnvironment().setCurrentMenu(game.getMenu().getGameOver());
             game.setCurrentState(new GameOverState());
         }
+        /* It animates the protagonist. */
         game.getAnimator().update(
-                game.getEnvironment().getProtagonist(),
-                game.getElapsedTime());
+                game.getEnvironment().getProtagonist());
+        /* It animates all objects. */
+        for (Object object : game.getEnvironment().getCurrentLevel().getObjects()) {
+            game.getAnimator().update(object);
+        }
     }
 
     @Override
