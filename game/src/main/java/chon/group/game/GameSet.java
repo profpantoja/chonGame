@@ -170,7 +170,14 @@ public class GameSet {
                                 getClass().getResource("/images/agents/chonBota/chonBota_005.png").toExternalForm()));
                 idleChonBota.getFrames().add(new Image(
                                 getClass().getResource("/images/agents/chonBota/chonBota_006.png").toExternalForm()));
+
+                Animation hoveringChonBota = new Animation();
+                hoveringChonBota.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBota/chonBota_Ahead_001.png")
+                                                .toExternalForm()));
+
                 chonBota.getAnimationSet().add(AnimationType.IDLE, idleChonBota);
+                chonBota.getAnimationSet().add(AnimationType.WALK, hoveringChonBota);
                 Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, 0.05, "", false);
                 Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
 
@@ -179,7 +186,46 @@ public class GameSet {
                 /* Animation frames for chonBota. It can be reused among all instances. */
                 Animation idleChonBot = new Animation();
                 idleChonBot.getFrames().add(new Image(
-                                getClass().getResource("/images/agents/chonBot.png").toExternalForm()));
+                                getClass().getResource("/images/agents/chonBot/idle/chonBot_001.png")
+                                                .toExternalForm()));
+                idleChonBot.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBot/idle/chonBot_002.png")
+                                                .toExternalForm()));
+                idleChonBot.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBot/idle/chonBot_003.png")
+                                                .toExternalForm()));
+                idleChonBot.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBot/idle/chonBot_004.png")
+                                                .toExternalForm()));
+                idleChonBot.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBot/idle/chonBot_004.png")
+                                                .toExternalForm()));
+
+                Animation deadChonBot = new Animation();
+                deadChonBot.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBot/dead/chonBot_dead_001.png")
+                                                .toExternalForm()));
+                deadChonBot.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBot/dead/chonBot_dead_002.png")
+                                                .toExternalForm()));
+                deadChonBot.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBot/dead/chonBot_dead_003.png")
+                                                .toExternalForm()));
+                deadChonBot.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBot/dead/chonBot_dead_004.png")
+                                                .toExternalForm()));
+                deadChonBot.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBot/dead/chonBot_dead_005.png")
+                                                .toExternalForm()));
+                deadChonBot.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBot/dead/chonBot_dead_004.png")
+                                                .toExternalForm()));
+                deadChonBot.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBot/dead/chonBot_dead_003.png")
+                                                .toExternalForm()));
+                deadChonBot.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBot/dead/chonBot_dead_002.png")
+                                                .toExternalForm()));
                 /*
                  * Enemies instances. For each instance is necessary the Agent object and the
                  * Animation Set.
@@ -207,7 +253,7 @@ public class GameSet {
                                 "/images/agents/chonBot.png",
                                 true,
                                 true);
-                chonBot2.getAnimationSet().add(AnimationType.IDLE, idleChonBot);
+                chonBot2.getAnimationSet().add(AnimationType.IDLE, deadChonBot);
                 Agent chonBot3 = new Agent(
                                 4920,
                                 300,

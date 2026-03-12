@@ -83,10 +83,7 @@ public class AnimationState {
 
     public Image getCurrentImage() {
         Image image = this.getCurrentAnimation().getFrames().get(currentFrameIndex);
-        //if (flipped)
-        //   return this.flipImage(image);
-        //else
-            return image;
+        return image;
     }
 
     /**

@@ -19,11 +19,19 @@ public class Animator {
     public void update(Entity entity) {
         if (entity.getStatus().equals(EntityStatus.IDLE)) {
             entity.getAnimationState().setCurrentAnimation(entity.getAnimationSet().get(AnimationType.IDLE));
-            if (entity.getAnimationState().tick() >= entity.getAnimationState().getCurrentAnimation().getDuration()) {
-                int frameIndex = entity.getAnimationState().nextFrame();
-                entity.getAnimationState().setCurrentFrameIndex(frameIndex);
+        } else {
+            entity.getAnimationState().setCurrentAnimation(entity.getAnimationSet().get(AnimationType.IDLE));
+        }
+        if (entity.getStatus().equals(EntityStatus.WALK)) {
+            Animation animation = entity.getAnimationSet().get(AnimationType.WALK);
+            if (!animation.equals(null)) {
+                entity.getAnimationState().setCurrentFrameIndex(0);
+                entity.getAnimationState().setCurrentAnimation(animation);
             }
         }
+        if (entity.getAnimationState().tick() >= entity.getAnimationState().getCurrentAnimation().getDuration()) {
+            int frameIndex = entity.getAnimationState().nextFrame();
+            entity.getAnimationState().setCurrentFrameIndex(frameIndex);
+        }
     }
-
 }
