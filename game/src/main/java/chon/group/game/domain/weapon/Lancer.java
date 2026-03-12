@@ -30,12 +30,16 @@ public class Lancer extends Weapon {
         Animation fireballShot = new Animation();
         fireballShot.getFrames().add(new Image(
                 getClass().getResource("/images/weapons/fireball/fireball001.png").toExternalForm()));
+        fireballShot.getFrames().add(new Image(
+                getClass().getResource("/images/weapons/fireball/fireball002.png").toExternalForm()));
+        fireballShot.getFrames().add(new Image(
+                getClass().getResource("/images/weapons/fireball/fireball003.png").toExternalForm()));
         Fireball fireball = new Fireball(
                 posX,
                 posY + 30,
                 42,
                 64,
-                4,
+                3,
                 0,
                 direction,
                 "/images/weapons/fireball/fireball001.png",

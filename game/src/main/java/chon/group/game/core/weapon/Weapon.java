@@ -6,6 +6,7 @@ import chon.group.game.core.agent.Entity;
 public abstract class Weapon extends Entity {
 
     private double energyCost;
+    private Shot typeShot;
 
     public Weapon(int posX, int posY, int height, int width, int speed, int health, double energyCost, String pathImage,
             boolean flipped) {
@@ -19,6 +20,14 @@ public abstract class Weapon extends Entity {
 
     public void setEnergyCost(double energyCost) {
         this.energyCost = energyCost;
+    }
+
+    public Shot getTypeShot() {
+        return typeShot;
+    }
+
+    public void setTypeShot(Shot typeShot) {
+        this.typeShot = typeShot;
     }
 
     protected abstract Shot createShot(int posX, int posY, Direction direction);

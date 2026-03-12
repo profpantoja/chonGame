@@ -146,7 +146,7 @@ public class GameSet {
                                 390,
                                 90,
                                 65,
-                                3,
+                                2,
                                 1000,
                                 Direction.IDLE,
                                 "/images/agents/chonBota/chonBota_002.png",
@@ -162,6 +162,14 @@ public class GameSet {
                                 getClass().getResource("/images/agents/chonBota/chonBota_003.png").toExternalForm()));
                 idleChonBota.getFrames().add(new Image(
                                 getClass().getResource("/images/agents/chonBota/chonBota_004.png").toExternalForm()));
+                idleChonBota.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBota/chonBota_004.png").toExternalForm()));
+                idleChonBota.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBota/chonBota_005.png").toExternalForm()));
+                idleChonBota.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBota/chonBota_005.png").toExternalForm()));
+                idleChonBota.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBota/chonBota_006.png").toExternalForm()));
                 chonBota.getAnimationSet().add(AnimationType.IDLE, idleChonBota);
                 Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, 0.05, "", false);
                 Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
@@ -237,7 +245,17 @@ public class GameSet {
                 /* Animation frames for objects. It can be reused among all instances. */
                 Animation idleCoin = new Animation();
                 idleCoin.getFrames().add(new Image(
-                                getClass().getResource("/images/objects/coin.png").toExternalForm()));
+                                getClass().getResource("/images/objects/chonCoin/coin_001.png").toExternalForm()));
+                idleCoin.getFrames().add(new Image(
+                                getClass().getResource("/images/objects/chonCoin/coin_002.png").toExternalForm()));
+                idleCoin.getFrames().add(new Image(
+                                getClass().getResource("/images/objects/chonCoin/coin_003.png").toExternalForm()));
+                idleCoin.getFrames().add(new Image(
+                                getClass().getResource("/images/objects/chonCoin/coin_004.png").toExternalForm()));
+                idleCoin.getFrames().add(new Image(
+                                getClass().getResource("/images/objects/chonCoin/coin_003.png").toExternalForm()));
+                idleCoin.getFrames().add(new Image(
+                                getClass().getResource("/images/objects/chonCoin/coin_002.png").toExternalForm()));
                 Animation idleBox = new Animation();
                 idleBox.getFrames().add(new Image(
                                 getClass().getResource("/images/objects/box.png").toExternalForm()));
