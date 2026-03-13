@@ -289,7 +289,7 @@ public class JavaFxDrawer {
      * @param posX The x-coordinate of the protagonist.
      * @param posY The y-coordinate of the protagonist.
      */
-    public void drawEntityPanel(int posX, int posY, int camX, int height, String direction, String status) {
+    public void drawEntityPanel(int posX, int posY, int camX, int height, String direction, String entityStatus) {
         Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
         int span = 15;
         int barSpan = 10;
@@ -299,7 +299,7 @@ public class JavaFxDrawer {
         this.gc.fillText("X: " + posX, (posX - camX), posY - (barSpan + (2 * span)));
         this.gc.fillText("Y: " + posY, (posX - camX), posY - (barSpan + (span)));
         /* Info bellow the Entity. */
-        this.gc.fillText("St.: " + status, (posX - camX), posY + height + span);
+        this.gc.fillText("St.: " + entityStatus, (posX - camX), posY + height + span);
         this.gc.fillText("Dir.: " + direction, (posX - camX), posY + height + (2 * span));
     }
 

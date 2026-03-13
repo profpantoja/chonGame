@@ -23,9 +23,6 @@ public class Animator {
          */
         if (entity.getStatus().equals(EntityStatus.IDLE)) {
             entity.getAnimationState().setCurrentAnimation(entity.getAnimationSet().get(AnimationType.IDLE));
-        } else {
-            /* This is here because there are Status not implemented yet. */
-            entity.getAnimationState().setCurrentAnimation(entity.getAnimationSet().get(AnimationType.IDLE));
         }
         /*
          * It verifies if the entity's status is WALKING. If so, it gets the correct
@@ -48,7 +45,7 @@ public class Animator {
         if (entity.getStatus().equals(EntityStatus.TERMINATE)) {
             Animation animation = entity.getAnimationSet().get(AnimationType.TERMINATE);
             if (animation != null) {
-                entity.getAnimationState().setCurrentFrameIndex(0);
+                //entity.getAnimationState().setCurrentFrameIndex(0);
                 entity.getAnimationState().setCurrentAnimation(animation);
             } else {
                 /* This is here because there are Status not implemented yet. */

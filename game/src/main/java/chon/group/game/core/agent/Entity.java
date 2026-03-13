@@ -319,15 +319,17 @@ public abstract class Entity {
      * @param targetY the target's Y (vertical) position
      */
     public void chase(int targetX, int targetY) {
-        if (targetX > this.posX) {
-            this.move(new ArrayList<Direction>(List.of(Direction.RIGHT)));
-        } else if (targetX < this.posX) {
-            this.move(new ArrayList<Direction>(List.of(Direction.LEFT)));
-        }
-        if (targetY > this.posY) {
-            this.move(new ArrayList<Direction>(List.of(Direction.DOWN)));
-        } else if (targetY < this.posY) {
-            this.move(new ArrayList<Direction>(List.of(Direction.UP)));
+        if (!this.isTerminated()) {
+            if (targetX > this.posX) {
+                this.move(new ArrayList<Direction>(List.of(Direction.RIGHT)));
+            } else if (targetX < this.posX) {
+                this.move(new ArrayList<Direction>(List.of(Direction.LEFT)));
+            }
+            if (targetY > this.posY) {
+                this.move(new ArrayList<Direction>(List.of(Direction.DOWN)));
+            } else if (targetY < this.posY) {
+                this.move(new ArrayList<Direction>(List.of(Direction.UP)));
+            }
         }
     }
 
@@ -353,6 +355,10 @@ public abstract class Entity {
 
     public boolean isTerminated() {
         return (this.getHealth() <= 0);
+    }
+
+    public boolean canRemove() {
+        return (this.getHealth() <= 0 && this.animationState.isFinished());
     }
 
     /**

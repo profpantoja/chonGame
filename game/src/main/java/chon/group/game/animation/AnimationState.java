@@ -1,12 +1,6 @@
 package chon.group.game.animation;
 
-import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelReader;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
 
 public class AnimationState {
 
@@ -72,7 +66,16 @@ public class AnimationState {
      */
     public int nextFrame() {
         this.lastTime = System.currentTimeMillis();
-        return (this.currentFrameIndex + 1) % this.currentAnimation.getFrames().size();
+        int nextframe = (this.currentFrameIndex + 1) % this.currentAnimation.getFrames().size();
+        /* If the current animation is not a loop, it has to end. */
+        if (!this.currentAnimation.isInLoop()) {
+            if (this.currentFrameIndex == (this.currentAnimation.getFrames().size() - 1)) {
+                this.finished = true;
+                return this.currentFrameIndex;
+            }
+        }
+        /* If the current animation is a loop the next frame can return to 0. */
+        return nextframe;
     }
 
     public long tick() {
@@ -84,31 +87,6 @@ public class AnimationState {
     public Image getCurrentImage() {
         Image image = this.getCurrentAnimation().getFrames().get(currentFrameIndex);
         return image;
-    }
-
-    /**
-     * Flips the Image horizontally.
-     */
-    public Image flipImage(Image image) {
-        ImageView flippedImage = new ImageView(image);
-        flippedImage.setScaleX(-1);
-        SnapshotParameters params = new SnapshotParameters();
-        params.setFill(Color.TRANSPARENT);
-        return flippedImage.snapshot(params, null);
-    }
-
-    public Image _flipImage(Image image) {
-        int width = (int) image.getWidth();
-        int height = (int) image.getHeight();
-        PixelReader reader = image.getPixelReader();
-        WritableImage flipped = new WritableImage(width, height);
-        PixelWriter writer = flipped.getPixelWriter();
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                writer.setArgb(width - x - 1, y, reader.getArgb(x, y));
-            }
-        }
-        return flipped;
     }
 
 }

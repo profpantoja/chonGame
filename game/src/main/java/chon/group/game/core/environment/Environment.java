@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Entity;
+import chon.group.game.core.agent.EntityStatus;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.weapon.Panel;
 import chon.group.game.core.weapon.Shot;
@@ -223,11 +224,12 @@ public class Environment {
          * verifies if any agents has collided with non-collectible obstacles.
          */
         for (Agent agent : this.currentLevel.getAgents()) {
-            /* It verifies agents vs. protagonist. */
-            if (protagonist != null && intersect(protagonist, agent)) {
-                int damage = 900;
-                protagonist.takeDamage(damage, messages);
-            }
+            /* It verifies a live agents vs. protagonist. */
+            if (!agent.isDead())
+                if (protagonist != null && intersect(protagonist, agent)) {
+                    int damage = 900;
+                    protagonist.takeDamage(damage, messages);
+                }
             /*
              * It verifies agents vs. obstacles. The collision can only happens with non
              * collectible objects.
@@ -391,12 +393,19 @@ public class Environment {
             Iterator<Agent> itAgent = this.currentLevel.getAgents().iterator();
             while (itAgent.hasNext()) {
                 Agent agent = itAgent.next();
-                if (intersect(agent, shot)) {
-                    agent.takeDamage(shot.getDamage(), messages);
-                    if (agent.isDead())
-                        itAgent.remove();
-                    itShot.remove();
-                    break currentShot;
+                if (agent.canRemove()) {
+                    itAgent.remove();
+                } else {
+                    if (!agent.isDead()) {
+                        if (intersect(agent, shot)) {
+                            agent.takeDamage(shot.getDamage(), messages);
+                            if (agent.isDead())
+                                agent.setStatus(EntityStatus.TERMINATE);
+                            // itAgent.remove();
+                            itShot.remove();
+                            break currentShot;
+                        }
+                    }
                 }
             }
             /**
