@@ -399,9 +399,10 @@ public class Environment {
                     if (!agent.isDead()) {
                         if (intersect(agent, shot)) {
                             agent.takeDamage(shot.getDamage(), messages);
-                            if (agent.isDead())
+                            if (agent.isDead()) {
                                 agent.setStatus(EntityStatus.TERMINATE);
-                            // itAgent.remove();
+                                agent.getAnimationState().setCurrentFrameIndex(0);
+                            }
                             itShot.remove();
                             break currentShot;
                         }

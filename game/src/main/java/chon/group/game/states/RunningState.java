@@ -1,5 +1,7 @@
 package chon.group.game.states;
 
+import java.util.Iterator;
+
 import chon.group.game.Game;
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.EntityStatus;
@@ -56,7 +58,13 @@ public class RunningState implements GameState {
         game.getEnvironment().checkBorders();
         /* ChonBot's Automatic Movements */
         /* Update the other agents' movements */
-        for (Agent agent : game.getEnvironment().getCurrentLevel().getAgents()) {
+        Iterator<Agent> itAgent = game.getEnvironment().getCurrentLevel().getAgents().iterator();
+        while (itAgent.hasNext()) {
+            Agent agent = itAgent.next();
+            if (agent.canRemove()) {
+                itAgent.remove();
+                break;
+            }
             /* Every agent chases the protagonist. */
             agent.chase(game.getEnvironment().getProtagonist().getPosX(),
                     game.getEnvironment().getProtagonist().getPosY());

@@ -147,7 +147,7 @@ public class GameSet {
                                 90,
                                 65,
                                 2,
-                                1000,
+                                5000,
                                 Direction.IDLE,
                                 "/images/agents/chonBota/chonBota_002.png",
                                 false,
@@ -201,10 +201,7 @@ public class GameSet {
                                 getClass().getResource("/images/agents/chonBot/idle/chonBot_004.png")
                                                 .toExternalForm()));
 
-                Animation deadChonBot = new Animation(300, false);
-                deadChonBot.getFrames().add(new Image(
-                                getClass().getResource("/images/agents/chonBot/dead/chonBot_dead_001.png")
-                                                .toExternalForm()));
+                Animation deadChonBot = new Animation(200, false);
                 deadChonBot.getFrames().add(new Image(
                                 getClass().getResource("/images/agents/chonBot/dead/chonBot_dead_001.png")
                                                 .toExternalForm()));
@@ -240,8 +237,9 @@ public class GameSet {
                                 Direction.IDLE,
                                 "/images/agents/chonBot.png",
                                 false,
-                                true);
+                                false);
                 chonBot1.getAnimationSet().add(AnimationType.IDLE, idleChonBot);
+                chonBot1.getAnimationSet().add(AnimationType.TERMINATE, deadChonBot);
                 Agent chonBot2 = new Agent(
                                 2920,
                                 640,
@@ -265,8 +263,9 @@ public class GameSet {
                                 Direction.IDLE,
                                 "/images/agents/chonBot.png",
                                 true,
-                                true);
+                                false);
                 chonBot3.getAnimationSet().add(AnimationType.IDLE, idleChonBot);
+                chonBot3.getAnimationSet().add(AnimationType.TERMINATE, deadChonBot);
                 Agent chonBot4 = new Agent(
                                 6920,
                                 500,
@@ -279,6 +278,7 @@ public class GameSet {
                                 true,
                                 true);
                 chonBot4.getAnimationSet().add(AnimationType.IDLE, idleChonBot);
+                chonBot4.getAnimationSet().add(AnimationType.TERMINATE, deadChonBot);
                 /* Setting the protagonist and some Images in the Environment system. */
                 environment.setProtagonist(chonBota);
                 environment.setPauseImage("/images/environment/pause.png");
@@ -790,11 +790,11 @@ public class GameSet {
                 coin13.getAnimationSet().add(AnimationType.IDLE, idleCoin);
                 objects.add(coin13);
                 // Register objects into the environment and count total collectibles
-                //level1.getAgents().add(chonBot1);
+                level1.getAgents().add(chonBot1);
                 level1.getAgents().add(chonBot2);
-                //level1.getAgents().add(chonBot3);
-                //level1.getAgents().add(chonBot4);
-                // level1.setObjects(objects);
+                level1.getAgents().add(chonBot3);
+                level1.getAgents().add(chonBot4);
+                level1.setObjects(objects);
                 level1.countCollectibles();
                 environment.getLevels().add(level0);
                 environment.getLevels().add(level1);
