@@ -11,6 +11,8 @@ public class RunningState implements GameState {
     @Override
     public void handleInput(Game game) {
         /** ChonBota Only Moves if the Player Press Something */
+        /* If nothing happens, the protagonist stays IDLE. */
+        game.getEnvironment().getProtagonist().setStatus(EntityStatus.IDLE);
         /** Update the protagonist's movements if game.getInput() exists */
         if (!game.getInput().isEmpty()) {
             /**
@@ -34,13 +36,17 @@ public class RunningState implements GameState {
                         /* The shot is added to the environment's current level. */
                         game.getEnvironment().getCurrentLevel().getShots().add(shot);
                 } else {
-                    /* Protagonist's Moves based on Joystick inputs. */
-                    game.getEnvironment().getProtagonist().move(game.getDirections(game.getInput()));
-                    game.getEnvironment().getProtagonist().setStatus(EntityStatus.WALK);
+                    /* If there is any movement key pressed. */
+                    if (game.getInput().contains("RIGHT") ||
+                            game.getInput().contains("LEFT") ||
+                            game.getInput().contains("DOWN") ||
+                            game.getInput().contains("UP")) {
+                        /* Protagonist's Moves based on Joystick inputs. */
+                        game.getEnvironment().getProtagonist().move(game.getDirections(game.getInput()));
+                        game.getEnvironment().getProtagonist().setStatus(EntityStatus.WALK);
+                    }
                 }
             }
-        } else {
-            game.getEnvironment().getProtagonist().setStatus(EntityStatus.IDLE);
         }
     }
 

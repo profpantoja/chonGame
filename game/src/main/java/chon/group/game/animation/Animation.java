@@ -13,7 +13,16 @@ public class Animation {
 
     private List<Image> frames = new ArrayList<Image>();
     private long duration = 100;
-    private boolean inLoop;
+    private boolean inLoop = false;
+
+    public Animation() {
+
+    }
+
+    public Animation(long duration, boolean inLoop) {
+        this.duration = duration;
+        this.inLoop = inLoop;
+    }
 
     public List<Image> getFrames() {
         return frames;
