@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Entity;
-import chon.group.game.core.agent.EntityStatus;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.weapon.Panel;
 import chon.group.game.core.weapon.Shot;
@@ -235,7 +234,7 @@ public class Environment {
              * collectible objects.
              */
             for (Object object : this.currentLevel.getObjects().stream()
-                    .filter(o -> !o.isCollectible())
+                    .filter(o -> (!o.isCollectible() && !o.isDestroyed()))
                     .collect(Collectors.toList())) {
                 this.onCollision(agent, object);
             }
@@ -246,7 +245,7 @@ public class Environment {
          * collectible objects.
          */
         for (Object object : this.currentLevel.getObjects().stream()
-                .filter(o -> !o.isCollectible())
+                .filter(o -> !o.isCollectible() && !o.isDestroyed())
                 .collect(Collectors.toList())) {
             this.onCollision(protagonist, object);
         }
@@ -360,52 +359,47 @@ public class Environment {
             Iterator<Object> itObject = this.currentLevel.getObjects().iterator();
             while (itObject.hasNext()) {
                 Object object = itObject.next();
-                /* The shot hit an object. */
-                if (intersect(object, shot)) {
-                    /* If the object is destructible, it must take some damage. */
-                    if (object.isDestructible()) {
-                        object.takeDamage(shot.getDamage(), messages);
-                        /* Then the shot is removed. */
-                        itShot.remove();
-                    } else {
-                        /*
-                         * If the object is indestructible, it is necessary to verify if it collectible
-                         * or not. If it is collectible, the shot must go on. Otherwise it should be
-                         * removed.
-                         */
-                        if (!object.isCollectible()) {
+                /*
+                 * The shot hit an object if it is not terminated. The shot may pass by
+                 * terminated objects.
+                 */
+                if (!object.isTerminated()) {
+                    if (intersect(object, shot)) {
+                        /* If the object is destructible, it must take some damage. */
+                        if (object.isDestructible()) {
+                            object.takeDamage(shot.getDamage(), messages);
+                            /* Then the shot is removed. */
                             itShot.remove();
+                            break currentShot;
                         } else {
                             /*
-                             * The shot must goes on. So, it leaves the object iterator and searches other
-                             * conditions.
+                             * If the object is indestructible, it is necessary to verify if it collectible
+                             * or not. If it is collectible, the shot must go on. Otherwise it should be
+                             * removed.
                              */
-                            break;
+                            if (!object.isCollectible()) {
+                                itShot.remove();
+                                break currentShot;
+                            } else {
+                                /*
+                                 * The shot must goes on. So, it leaves the object iterator and searches other
+                                 * conditions.
+                                 */
+                                break;
+                            }
                         }
                     }
-                    /* Finally, the object is removed if destroyed. */
-                    if (object.isDestroyed())
-                        this.currentLevel.getObjects().remove(object);
-                    break currentShot;
                 }
             }
             /* The same as before but now with all other agents. */
             Iterator<Agent> itAgent = this.currentLevel.getAgents().iterator();
             while (itAgent.hasNext()) {
                 Agent agent = itAgent.next();
-                if (agent.canRemove()) {
-                    itAgent.remove();
-                } else {
-                    if (!agent.isDead()) {
-                        if (intersect(agent, shot)) {
-                            agent.takeDamage(shot.getDamage(), messages);
-                            if (agent.isDead()) {
-                                agent.setStatus(EntityStatus.TERMINATE);
-                                agent.getAnimationState().setCurrentFrameIndex(0);
-                            }
-                            itShot.remove();
-                            break currentShot;
-                        }
+                if (!agent.isDead()) {
+                    if (intersect(agent, shot)) {
+                        agent.takeDamage(shot.getDamage(), messages);
+                        itShot.remove();
+                        break currentShot;
                     }
                 }
             }

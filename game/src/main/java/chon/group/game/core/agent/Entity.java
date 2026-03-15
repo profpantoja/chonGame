@@ -348,9 +348,16 @@ public abstract class Entity {
                     this.getPosY(),
                     25));
             /* After taking the damage, the health must not be negative. */
-            if (this.getHealth() < 0)
+            if (this.getHealth() <= 0) {
                 this.setHealth(0);
+                this.terminate();
+            }
         }
+    }
+
+    private void terminate() {
+        this.status = EntityStatus.TERMINATE;
+        this.animationState.setCurrentFrameIndex(0);
     }
 
     public boolean isTerminated() {

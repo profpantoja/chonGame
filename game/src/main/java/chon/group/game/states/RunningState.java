@@ -75,7 +75,6 @@ public class RunningState implements GameState {
         /* If the agent died in this loop, the state changes. */
         if (game.getEnvironment().getProtagonist().isDead()) {
             /* If the agent dies, the game moves to the Game Over state. */
-            game.getEnvironment().getProtagonist().setStatus(EntityStatus.TERMINATE);
             game.getEnvironment().setCurrentMenu(game.getMenu().getGameOver());
             game.setCurrentState(new GameOverState());
         }
@@ -83,7 +82,14 @@ public class RunningState implements GameState {
         game.getAnimator().update(
                 game.getEnvironment().getProtagonist());
         /* It animates all objects. */
-        for (Object object : game.getEnvironment().getCurrentLevel().getObjects()) {
+        Iterator<Object> itObject = game.getEnvironment().getCurrentLevel().getObjects().iterator();
+        while (itObject.hasNext()) {
+            Object object = itObject.next();
+            if (object.isDestroyed())
+                 if (object.canRemove()) {
+                    itObject.remove();
+                    break;
+                }
             game.getAnimator().update(object);
         }
         /* It animates all shots. */

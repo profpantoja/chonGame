@@ -45,7 +45,6 @@ public class Animator {
         if (entity.getStatus().equals(EntityStatus.TERMINATE)) {
             Animation animation = entity.getAnimationSet().get(AnimationType.TERMINATE);
             if (animation != null) {
-                //entity.getAnimationState().setCurrentFrameIndex(0);
                 entity.getAnimationState().setCurrentAnimation(animation);
             } else {
                 /* This is here because there are Status not implemented yet. */

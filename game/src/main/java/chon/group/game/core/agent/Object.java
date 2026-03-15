@@ -18,7 +18,6 @@ public class Object extends Entity {
      * @param posY             The y-coordinate of the object.
      * @param height           The height of the object.
      * @param width            The width of the object.
-     * @param pathImage        The image path of the object.
      * @param collectible      Whether the object is collectible.
      * @param destructible     Whether the object is destructible.
      * @param attractionRadius The attraction radius in pixels.
@@ -30,7 +29,6 @@ public class Object extends Entity {
             int speed,
             int health,
             Direction direction,
-            String pathImage,
             boolean flipped,
             boolean visibleBars,
             boolean collectible,
