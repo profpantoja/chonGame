@@ -210,7 +210,7 @@ public class GameSet {
                                 getClass().getResource("/images/agents/chonBota/walk/chonBota_Walk_010.png")
                                                 .toExternalForm()));
 
-                Animation shootingChonBota = new Animation(300, false);
+                Animation shootingChonBota = new Animation(100, false);
                 shootingChonBota.getFrames().add(new Image(
                                 getClass().getResource("/images/agents/chonBota/attack/chonBota_Attack_001.png")
                                                 .toExternalForm()));

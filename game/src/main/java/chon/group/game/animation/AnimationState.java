@@ -83,6 +83,7 @@ public class AnimationState {
         if (!this.currentAnimation.isInLoop()) {
             if (this.currentFrameIndex == (this.currentAnimation.getFrames().size() - 1)) {
                 this.finished = true;
+                this.blocked = false;
                 return this.currentFrameIndex;
             }
         }
@@ -92,8 +93,11 @@ public class AnimationState {
 
     public long tick() {
         long now = System.currentTimeMillis();
-        long elapsedTime = now - lastTime;
-        return elapsedTime;
+        if (lastTime == 0) {
+            lastTime = now;
+            return 0;
+        }
+        return now - lastTime;
     }
 
     public void reset() {
