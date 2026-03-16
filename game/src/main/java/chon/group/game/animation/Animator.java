@@ -16,39 +16,46 @@ public class Animator {
      * Updates one specific agent.
      */
     public void update(Entity entity) {
-        switch (entity.getStatus()) {
-            /*
-             * It verifies if the entity's status is IDLE. If so, it gets the correct
-             * Animation Set.
-             */
-            case IDLE:
-                entity.getAnimationState().setCurrentAnimation(entity.getAnimationSet().get(AnimationType.IDLE));
-                break;
-            /*
-             * It verifies if the entity's status is WALKING. If so, it gets the correct
-             * Animation Set.
-             */
-            case WALK:
-                Animation animation = entity.getAnimationSet().get(AnimationType.WALK);
-                if (animation != null) {
-                    entity.getAnimationState().setCurrentAnimation(animation);
-                } else {
+        if (!entity.getAnimationState().isBlocked())
+            switch (entity.getStatus()) {
+                /*
+                 * It verifies if the entity's status is IDLE. If so, it gets the correct
+                 * Animation Set.
+                 */
+                case IDLE:
                     entity.getAnimationState().setCurrentAnimation(entity.getAnimationSet().get(AnimationType.IDLE));
-                }
-                break;
-            /*
-             * It verifies if the entity's status is TERMINATE. If so, it gets the correct
-             * Animation Set.
-             */
-            case TERMINATE:
-                animation = entity.getAnimationSet().get(AnimationType.TERMINATE);
-                if (animation != null)
-                    entity.getAnimationState().setCurrentAnimation(animation);
-                break;
-            default:
-                entity.getAnimationState().setCurrentAnimation(entity.getAnimationSet().get(AnimationType.IDLE));
-                break;
-        }
+                    break;
+                /*
+                 * It verifies if the entity's status is WALKING. If so, it gets the correct
+                 * Animation Set.
+                 */
+                case WALK:
+                    Animation animation = entity.getAnimationSet().get(AnimationType.WALK);
+                    if (animation != null) {
+                        entity.getAnimationState().setCurrentAnimation(animation);
+                    } else {
+                        entity.getAnimationState()
+                                .setCurrentAnimation(entity.getAnimationSet().get(AnimationType.IDLE));
+                    }
+                    break;
+                /*
+                 * It verifies if the entity's status is TERMINATE. If so, it gets the correct
+                 * Animation Set.
+                 */
+                case TERMINATE:
+                    animation = entity.getAnimationSet().get(AnimationType.TERMINATE);
+                    if (animation != null)
+                        entity.getAnimationState().setCurrentAnimation(animation);
+                    break;
+                case ATTACK:
+                    animation = entity.getAnimationSet().get(AnimationType.ATTACK);
+                    if (animation != null)
+                        entity.getAnimationState().setCurrentAnimation(animation);
+                    break;
+                default:
+                    entity.getAnimationState().setCurrentAnimation(entity.getAnimationSet().get(AnimationType.IDLE));
+                    break;
+            }
         /*
          * It gets the elapsed time and compares with the frame duration of the current
          * animation.

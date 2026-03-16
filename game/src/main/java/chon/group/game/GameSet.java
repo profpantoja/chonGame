@@ -149,7 +149,6 @@ public class GameSet {
                                 2,
                                 5000,
                                 Direction.IDLE,
-                                "/images/agents/chonBota/chonBota_002.png",
                                 false,
                                 true);
                 /* Animation frames for chonBota. It is just used for the protagonitst. */
@@ -211,8 +210,14 @@ public class GameSet {
                                 getClass().getResource("/images/agents/chonBota/walk/chonBota_Walk_010.png")
                                                 .toExternalForm()));
 
+                Animation shootingChonBota = new Animation(300, false);
+                shootingChonBota.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBota/attack/chonBota_Attack_001.png")
+                                                .toExternalForm()));
+
                 chonBota.getAnimationSet().add(AnimationType.IDLE, idleChonBota);
                 chonBota.getAnimationSet().add(AnimationType.WALK, hoveringChonBota);
+                chonBota.getAnimationSet().add(AnimationType.ATTACK, shootingChonBota);
                 Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, 0.05, "", false);
                 Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
 
@@ -270,7 +275,6 @@ public class GameSet {
                                 1,
                                 500,
                                 Direction.IDLE,
-                                "/images/agents/chonBot.png",
                                 false,
                                 false);
                 chonBot1.getAnimationSet().add(AnimationType.IDLE, idleChonBot);
@@ -283,7 +287,6 @@ public class GameSet {
                                 1,
                                 500,
                                 Direction.IDLE,
-                                "/images/agents/chonBot.png",
                                 true,
                                 true);
                 chonBot2.getAnimationSet().add(AnimationType.IDLE, idleChonBot);
@@ -296,7 +299,6 @@ public class GameSet {
                                 1,
                                 500,
                                 Direction.IDLE,
-                                "/images/agents/chonBot.png",
                                 true,
                                 false);
                 chonBot3.getAnimationSet().add(AnimationType.IDLE, idleChonBot);
@@ -309,7 +311,6 @@ public class GameSet {
                                 1,
                                 500,
                                 Direction.IDLE,
-                                "/images/agents/chonBot.png",
                                 true,
                                 true);
                 chonBot4.getAnimationSet().add(AnimationType.IDLE, idleChonBot);
