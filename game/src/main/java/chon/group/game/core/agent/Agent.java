@@ -16,17 +16,11 @@ public class Agent extends Entity {
     /** The time of the last hit taken. */
     private long lastHitTime = 0;
 
-    /** The time of the last attack made. */
-    private long lastAttackTime = 0;
-
     /** Flag to control the invulnerability status of the agent. */
     private boolean invulnerable = false;
 
     /* Invulnerability (in milliseconds) */
     private final long INVULNERABILITY_COOLDOWN = 1000;
-
-    /* Attack cooldown (in milliseconds) */
-    private final long ATTACK_COOLDOWN = 100;
 
     /** The Agent's Weapon */
     private Weapon weapon;
@@ -74,14 +68,6 @@ public class Agent extends Entity {
      */
     public void setLastHitTime(long lastHitTime) {
         this.lastHitTime = lastHitTime;
-    }
-
-    public long getLastAttackTime() {
-        return lastAttackTime;
-    }
-
-    public void setLastAttackTime(long lastAttackTime) {
-        this.lastAttackTime = lastAttackTime;
     }
 
     /**
@@ -218,27 +204,17 @@ public class Agent extends Entity {
         return true;
     }
 
-    /**
-     * Method to return the shot cooldown status.
-     *
-     * @return if the agent has shot
-     */
-    private boolean inAttackCooldown() {
-        if (System.currentTimeMillis() - lastAttackTime >= ATTACK_COOLDOWN) {
-            return false;
-        }
-        return true;
-    }
-
     public Shot useWeapon() {
-        if (this.energy >= this.getWeapon().getEnergyCost() && !this.inAttackCooldown()) {
-            this.lastAttackTime = System.currentTimeMillis();
+        if (this.energy >= this.getWeapon().getEnergyCost()) {
             Direction direction = this.getAnimationState().isFlipped() ? Direction.LEFT : Direction.RIGHT;
-            this.setStatus(EntityStatus.ATTACK);
-            this.consumeEnergy(this.getWeapon().getEnergyCost());
-            return this.weapon.fire(this.getPosX(), this.getPosY(), direction);
-        } else
-            return null;
+            Shot shot = this.weapon.fire(this.getPosX(), this.getPosY(), direction);
+            if (shot != null) {
+                this.setStatus(EntityStatus.ATTACK);
+                this.consumeEnergy(this.getWeapon().getEnergyCost());
+                return shot;
+            }
+        }
+        return null;
     }
 
 }

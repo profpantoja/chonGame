@@ -7,6 +7,10 @@ public abstract class Weapon extends Entity {
 
     private double energyCost;
     private Shot typeShot;
+    /** The time of the last attack made. */
+    private long lastAttackTime = 0;
+    /* Attack cooldown (in milliseconds) */
+    private final long ATTACK_COOLDOWN = 100;
 
     public Weapon(int posX, int posY, int height, int width, int speed, int health, double energyCost, String pathImage,
             boolean flipped) {
@@ -30,10 +34,23 @@ public abstract class Weapon extends Entity {
         this.typeShot = typeShot;
     }
 
+    public long getLastAttackTime() {
+        return lastAttackTime;
+    }
+
+    public void setLastAttackTime(long lastAttackTime) {
+        this.lastAttackTime = lastAttackTime;
+    }
+
     protected abstract Shot createShot(int posX, int posY, Direction direction);
 
     public Shot fire(int posX, int posY, Direction direction) {
-        return this.createShot(posX, posY, direction);
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastAttackTime >= ATTACK_COOLDOWN) {
+            lastAttackTime = currentTime;
+            return createShot(posX, posY, direction);
+        }
+        return null;
     }
 
 }
