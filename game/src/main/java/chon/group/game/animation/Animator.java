@@ -1,7 +1,6 @@
 package chon.group.game.animation;
 
 import chon.group.game.core.agent.Entity;
-import chon.group.game.core.agent.EntityStatus;
 import chon.group.game.core.environment.Level;
 
 public class Animator {
@@ -17,39 +16,39 @@ public class Animator {
      * Updates one specific agent.
      */
     public void update(Entity entity) {
-        /*
-         * It verifies if the entity's status is IDLE. If so, it gets the correct
-         * Animation Set.
-         */
-        if (entity.getStatus().equals(EntityStatus.IDLE)) {
-            entity.getAnimationState().setCurrentAnimation(entity.getAnimationSet().get(AnimationType.IDLE));
-        }
-        /*
-         * It verifies if the entity's status is WALKING. If so, it gets the correct
-         * Animation Set.
-         */
-        if (entity.getStatus().equals(EntityStatus.WALK)) {
-            Animation animation = entity.getAnimationSet().get(AnimationType.WALK);
-            if (animation != null) {
-                entity.getAnimationState().setCurrentFrameIndex(0);
-                entity.getAnimationState().setCurrentAnimation(animation);
-            } else {
-                /* This is here because there are Status not implemented yet. */
+        switch (entity.getStatus()) {
+            /*
+             * It verifies if the entity's status is IDLE. If so, it gets the correct
+             * Animation Set.
+             */
+            case IDLE:
                 entity.getAnimationState().setCurrentAnimation(entity.getAnimationSet().get(AnimationType.IDLE));
-            }
-        }
-        /*
-         * It verifies if the entity's status is TERMINATE. If so, it gets the correct
-         * Animation Set.
-         */
-        if (entity.getStatus().equals(EntityStatus.TERMINATE)) {
-            Animation animation = entity.getAnimationSet().get(AnimationType.TERMINATE);
-            if (animation != null) {
-                entity.getAnimationState().setCurrentAnimation(animation);
-            } else {
-                /* This is here because there are Status not implemented yet. */
+                break;
+            /*
+             * It verifies if the entity's status is WALKING. If so, it gets the correct
+             * Animation Set.
+             */
+            case WALK:
+                Animation animation = entity.getAnimationSet().get(AnimationType.WALK);
+                if (animation != null) {
+                    entity.getAnimationState().setCurrentFrameIndex(0);
+                    entity.getAnimationState().setCurrentAnimation(animation);
+                } else {
+                    entity.getAnimationState().setCurrentAnimation(entity.getAnimationSet().get(AnimationType.IDLE));
+                }
+                break;
+            /*
+             * It verifies if the entity's status is TERMINATE. If so, it gets the correct
+             * Animation Set.
+             */
+            case TERMINATE:
+                animation = entity.getAnimationSet().get(AnimationType.TERMINATE);
+                if (animation != null)
+                    entity.getAnimationState().setCurrentAnimation(animation);
+                break;
+            default:
                 entity.getAnimationState().setCurrentAnimation(entity.getAnimationSet().get(AnimationType.IDLE));
-            }
+                break;
         }
         /*
          * It gets the elapsed time and compares with the frame duration of the current

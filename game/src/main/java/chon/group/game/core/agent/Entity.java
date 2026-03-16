@@ -310,6 +310,7 @@ public abstract class Entity {
             setPosY(posY += speed);
             setDirection(Direction.DOWN);
         }
+        this.status = EntityStatus.WALK;
     }
 
     /**
@@ -330,6 +331,7 @@ public abstract class Entity {
             } else if (targetY < this.posY) {
                 this.move(new ArrayList<Direction>(List.of(Direction.UP)));
             }
+            this.status = EntityStatus.WALK;
         }
     }
 
@@ -366,6 +368,10 @@ public abstract class Entity {
 
     public boolean canRemove() {
         return (this.getHealth() <= 0 && this.animationState.isFinished());
+    }
+
+    public void idle() {
+        this.status = EntityStatus.IDLE;
     }
 
     /**

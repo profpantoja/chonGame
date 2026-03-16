@@ -4,7 +4,6 @@ import java.util.Iterator;
 
 import chon.group.game.Game;
 import chon.group.game.core.agent.Agent;
-import chon.group.game.core.agent.EntityStatus;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.weapon.Shot;
 
@@ -14,7 +13,7 @@ public class RunningState implements GameState {
     public void handleInput(Game game) {
         /** ChonBota Only Moves if the Player Press Something */
         /* If nothing happens, the protagonist stays IDLE. */
-        game.getEnvironment().getProtagonist().setStatus(EntityStatus.IDLE);
+        game.getEnvironment().getProtagonist().idle();
         /** Update the protagonist's movements if game.getInput() exists */
         if (!game.getInput().isEmpty()) {
             /**
@@ -32,7 +31,6 @@ public class RunningState implements GameState {
                     /* The Shoot button is removed for not shooting forever. */
                     game.getInput().remove("SPACE");
                     Shot shot = game.getEnvironment().getProtagonist().useWeapon();
-                    game.getEnvironment().getProtagonist().setStatus(EntityStatus.ATTACK);
                     /* If there is an associate shot with the weapon. Some weapons don't shoot. */
                     if (shot != null)
                         /* The shot is added to the environment's current level. */
@@ -45,7 +43,6 @@ public class RunningState implements GameState {
                             game.getInput().contains("UP")) {
                         /* Protagonist's Moves based on Joystick inputs. */
                         game.getEnvironment().getProtagonist().move(game.getDirections(game.getInput()));
-                        game.getEnvironment().getProtagonist().setStatus(EntityStatus.WALK);
                     }
                 }
             }
@@ -86,7 +83,7 @@ public class RunningState implements GameState {
         while (itObject.hasNext()) {
             Object object = itObject.next();
             if (object.isDestroyed())
-                 if (object.canRemove()) {
+                if (object.canRemove()) {
                     itObject.remove();
                     break;
                 }
