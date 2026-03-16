@@ -31,7 +31,6 @@ public class Animator {
             case WALK:
                 Animation animation = entity.getAnimationSet().get(AnimationType.WALK);
                 if (animation != null) {
-                    entity.getAnimationState().setCurrentFrameIndex(0);
                     entity.getAnimationState().setCurrentAnimation(animation);
                 } else {
                     entity.getAnimationState().setCurrentAnimation(entity.getAnimationSet().get(AnimationType.IDLE));

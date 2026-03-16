@@ -155,25 +155,60 @@ public class GameSet {
                 /* Animation frames for chonBota. It is just used for the protagonitst. */
                 Animation idleChonBota = new Animation();
                 idleChonBota.getFrames().add(new Image(
-                                getClass().getResource("/images/agents/chonBota/chonBota_001.png").toExternalForm()));
+                                getClass().getResource("/images/agents/chonBota/idle/chonBota_001.png")
+                                                .toExternalForm()));
                 idleChonBota.getFrames().add(new Image(
-                                getClass().getResource("/images/agents/chonBota/chonBota_002.png").toExternalForm()));
+                                getClass().getResource("/images/agents/chonBota/idle/chonBota_002.png")
+                                                .toExternalForm()));
                 idleChonBota.getFrames().add(new Image(
-                                getClass().getResource("/images/agents/chonBota/chonBota_003.png").toExternalForm()));
+                                getClass().getResource("/images/agents/chonBota/idle/chonBota_003.png")
+                                                .toExternalForm()));
                 idleChonBota.getFrames().add(new Image(
-                                getClass().getResource("/images/agents/chonBota/chonBota_004.png").toExternalForm()));
+                                getClass().getResource("/images/agents/chonBota/idle/chonBota_004.png")
+                                                .toExternalForm()));
                 idleChonBota.getFrames().add(new Image(
-                                getClass().getResource("/images/agents/chonBota/chonBota_004.png").toExternalForm()));
+                                getClass().getResource("/images/agents/chonBota/idle/chonBota_004.png")
+                                                .toExternalForm()));
                 idleChonBota.getFrames().add(new Image(
-                                getClass().getResource("/images/agents/chonBota/chonBota_005.png").toExternalForm()));
+                                getClass().getResource("/images/agents/chonBota/idle/chonBota_005.png")
+                                                .toExternalForm()));
                 idleChonBota.getFrames().add(new Image(
-                                getClass().getResource("/images/agents/chonBota/chonBota_005.png").toExternalForm()));
+                                getClass().getResource("/images/agents/chonBota/idle/chonBota_005.png")
+                                                .toExternalForm()));
                 idleChonBota.getFrames().add(new Image(
-                                getClass().getResource("/images/agents/chonBota/chonBota_006.png").toExternalForm()));
+                                getClass().getResource("/images/agents/chonBota/idle/chonBota_006.png")
+                                                .toExternalForm()));
 
-                Animation hoveringChonBota = new Animation();
+                Animation hoveringChonBota = new Animation(150, true);
                 hoveringChonBota.getFrames().add(new Image(
-                                getClass().getResource("/images/agents/chonBota/chonBota_Ahead_001.png")
+                                getClass().getResource("/images/agents/chonBota/walk/chonBota_Walk_001.png")
+                                                .toExternalForm()));
+                hoveringChonBota.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBota/walk/chonBota_Walk_002.png")
+                                                .toExternalForm()));
+                hoveringChonBota.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBota/walk/chonBota_Walk_003.png")
+                                                .toExternalForm()));
+                hoveringChonBota.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBota/walk/chonBota_Walk_004.png")
+                                                .toExternalForm()));
+                hoveringChonBota.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBota/walk/chonBota_Walk_005.png")
+                                                .toExternalForm()));
+                hoveringChonBota.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBota/walk/chonBota_Walk_006.png")
+                                                .toExternalForm()));
+                hoveringChonBota.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBota/walk/chonBota_Walk_007.png")
+                                                .toExternalForm()));
+                hoveringChonBota.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBota/walk/chonBota_Walk_008.png")
+                                                .toExternalForm()));
+                hoveringChonBota.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBota/walk/chonBota_Walk_009.png")
+                                                .toExternalForm()));
+                hoveringChonBota.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBota/walk/chonBota_Walk_010.png")
                                                 .toExternalForm()));
 
                 chonBota.getAnimationSet().add(AnimationType.IDLE, idleChonBota);

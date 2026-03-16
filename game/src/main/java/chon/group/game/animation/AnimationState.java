@@ -17,6 +17,8 @@ public class AnimationState {
 
     public void setCurrentAnimation(Animation currentAnimation) {
         this.currentAnimation = currentAnimation;
+        if (currentFrameIndex > (currentAnimation.getFrames().size() - 1))
+            this.currentFrameIndex = 0;
     }
 
     public int getCurrentFrameIndex() {

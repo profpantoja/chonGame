@@ -12,8 +12,6 @@ public class RunningState implements GameState {
     @Override
     public void handleInput(Game game) {
         /** ChonBota Only Moves if the Player Press Something */
-        /* If nothing happens, the protagonist stays IDLE. */
-        game.getEnvironment().getProtagonist().idle();
         /** Update the protagonist's movements if game.getInput() exists */
         if (!game.getInput().isEmpty()) {
             /**
@@ -46,7 +44,9 @@ public class RunningState implements GameState {
                     }
                 }
             }
-        }
+        } else
+            /* If nothing happens, the protagonist stays IDLE. */
+            game.getEnvironment().getProtagonist().idle();
     }
 
     @Override

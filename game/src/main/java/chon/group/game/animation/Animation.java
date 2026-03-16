@@ -12,7 +12,7 @@ import javafx.scene.image.Image;
 public class Animation {
 
     private List<Image> frames = new ArrayList<Image>();
-    private long duration = 100;
+    private long duration = 200;
     private boolean inLoop = true;
 
     public Animation() {
