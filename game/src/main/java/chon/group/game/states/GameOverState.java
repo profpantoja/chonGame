@@ -26,6 +26,8 @@ public class GameOverState implements GameState {
         /* Although the game has ended, messages and shots keep flowing. */
         game.getEnvironment().updateMessages();
         game.getEnvironment().updateShots();
+        /* It animates the protagonist. */
+        game.getAnimator().update(game.getEnvironment().getProtagonist());
     }
 
     @Override
