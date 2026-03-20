@@ -20,9 +20,6 @@ public class Game {
     private Animator animator = new Animator();
     private ArrayList<String> input;
     private GameState currentState = new StartState();
-    /* [TO DO]: It could make a Clock class. */
-    private long lastTime = 0;
-    private long elapsedTime = 0;
 
     public Game(Environment environment, EnvironmentDrawer mediator, MenuHandler menu, ArrayList<String> input) {
         this.environment = environment;
@@ -80,24 +77,7 @@ public class Game {
         this.currentState = currentState;
     }
 
-    public long getLastTime() {
-        return lastTime;
-    }
-
-    public void setLastTime(long lastTime) {
-        this.lastTime = lastTime;
-    }
-
-    public long getElapsedTime() {
-        return elapsedTime;
-    }
-
-    public void setElapsedTime(long elapsedTime) {
-        this.elapsedTime = elapsedTime;
-    }
-
     public void loop() {
-        this.timer();
         this.currentState.handleInput(this);
         this.currentState.update(this);
         this.currentState.render(this);
@@ -147,12 +127,6 @@ public class Game {
             }
         }
         return directions;
-    }
-
-    private void timer() {
-        long now = System.currentTimeMillis();
-        this.elapsedTime = now - lastTime;
-        this.lastTime = now;
     }
 
 }

@@ -10,7 +10,7 @@ public abstract class Weapon extends Entity {
     /** The time of the last attack made. */
     private long lastAttackTime = 0;
     /* Attack cooldown (in milliseconds) */
-    private final long ATTACK_COOLDOWN = 100;
+    private final long ATTACK_COOLDOWN = 150;
 
     public Weapon(int posX, int posY, int height, int width, int speed, int health, double energyCost, String pathImage,
             boolean flipped) {

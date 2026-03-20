@@ -27,7 +27,7 @@ public class RunningState implements GameState {
                 /** But only if it has enough energy */
                 if (game.getInput().contains("SPACE")) {
                     /* The Shoot button is removed for not shooting forever. */
-                    game.getInput().remove("SPACE");
+                    // game.getInput().remove("SPACE");
                     Shot shot = game.getEnvironment().getProtagonist().useWeapon();
                     /* If there is an associate shot with the weapon. Some weapons don't shoot. */
                     if (shot != null)
