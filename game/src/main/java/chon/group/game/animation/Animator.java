@@ -49,7 +49,14 @@ public class Animator {
                     break;
                 case ATTACK:
                     animation = entity.getAnimationSet().get(AnimationType.ATTACK);
-                    if (animation != null){
+                    if (animation != null) {
+                        entity.getAnimationState().setCurrentAnimation(animation);
+                        entity.getAnimationState().setBlocked(true);
+                    }
+                    break;
+                case DAMAGE:
+                    animation = entity.getAnimationSet().get(AnimationType.DAMAGE);
+                    if (animation != null) {
                         entity.getAnimationState().setCurrentAnimation(animation);
                         entity.getAnimationState().setBlocked(true);
                     }

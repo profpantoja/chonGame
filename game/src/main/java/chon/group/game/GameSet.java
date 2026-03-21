@@ -215,6 +215,11 @@ public class GameSet {
                                 getClass().getResource("/images/agents/chonBota/attack/chonBota_Attack_001.png")
                                                 .toExternalForm()));
 
+                Animation hitChonBota = new Animation(200, false);
+                hitChonBota.getFrames().add(new Image(
+                                getClass().getResource("/images/agents/chonBota/hit/chonBota_Hit_001.png")
+                                                .toExternalForm()));
+
                 Animation deadChonBota = new Animation(100, false);
                 deadChonBota.getFrames().add(new Image(
                                 getClass().getResource("/images/agents/chonBota/dead/chonBota_Dead_001.png")
@@ -244,6 +249,7 @@ public class GameSet {
                 chonBota.getAnimationSet().add(AnimationType.IDLE, idleChonBota);
                 chonBota.getAnimationSet().add(AnimationType.WALK, hoveringChonBota);
                 chonBota.getAnimationSet().add(AnimationType.ATTACK, shootingChonBota);
+                chonBota.getAnimationSet().add(AnimationType.DAMAGE, hitChonBota);
                 chonBota.getAnimationSet().add(AnimationType.TERMINATE, deadChonBota);
                 Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, 0.05, "", false);
                 Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
