@@ -1,9 +1,6 @@
 package chon.group.game.drawer;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.effect.BlurType;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -22,6 +19,7 @@ public class JavaFxDrawer {
     /** The mediator instance, if necessary. */
     @SuppressWarnings("unused")
     private final EnvironmentDrawer mediator;
+    private final Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
 
     /**
      * Constructor to initialize the JavaFxDrawer.
@@ -139,37 +137,25 @@ public class JavaFxDrawer {
     public void drawDebugPanel(int panelWidth, int panelHeight, double camX, int messages, int shots) {
         int span = 20;
         drawGlassPanel(panelWidth, panelHeight, 10, 130);
+        this.gc.fillText("CamX: " + camX, 20, 155);
+        this.gc.fillText("Messages: " + messages, 20, 155 + span);
+        this.gc.fillText("Shots: " + shots, 20, 155 + (2 * span));
         drawTextWithBorder("CamX: " + camX, 20, 155, Color.WHITE, Color.BLACK, null);
-        drawTextWithBorder("Messages: " + messages, 20, 155 + span, Color.WHITE, Color.BLACK, null);
-        drawTextWithBorder("Shots: " + shots, 20, 155 + (2 * span), Color.WHITE, Color.BLACK, null);
+        drawTextWithBorder("Messages: " + messages, 20, 155 + span, Color.WHITE,
+                Color.BLACK, null);
+        drawTextWithBorder("Shots: " + shots, 20, 155 + (2 * span), Color.WHITE,
+                Color.BLACK, null);
     }
 
     /**
      * Draws a semi-transparent glass-style background panel with lighting effects.
      */
     private void drawGlassPanel(int panelWidth, int panelHeight, int posX, int posY) {
-        gc.setFill(Color.rgb(0, 0, 0, 0.4));
+        gc.setFill(Color.rgb(0, 0, 0, 0.65));
         gc.fillRoundRect(posX, posY, panelWidth, panelHeight, 15, 15);
-
-        gc.setStroke(Color.rgb(150, 255, 150, 0.3));
-        gc.setLineWidth(1.5);
+        gc.setStroke(Color.rgb(150, 255, 150, 0.15));
+        gc.setLineWidth(3.0);
         gc.strokeRoundRect(posX, posY, panelWidth, panelHeight, 15, 15);
-
-        InnerShadow innerShadow = new InnerShadow();
-        innerShadow.setColor(Color.rgb(0, 100, 0, 0.4));
-        innerShadow.setBlurType(BlurType.GAUSSIAN);
-        innerShadow.setRadius(10);
-        gc.setEffect(innerShadow);
-        gc.fillRoundRect(posX, posY, panelWidth, panelHeight, 15, 15);
-        gc.setEffect(null);
-
-        DropShadow glow = new DropShadow();
-        glow.setColor(Color.rgb(100, 255, 100, 0.2));
-        glow.setBlurType(BlurType.GAUSSIAN);
-        glow.setRadius(15);
-        gc.setEffect(glow);
-        gc.strokeRoundRect(posX, posY, panelWidth, panelHeight, 15, 15);
-        gc.setEffect(null);
     }
 
     /**
@@ -289,18 +275,44 @@ public class JavaFxDrawer {
      * @param posX The x-coordinate of the protagonist.
      * @param posY The y-coordinate of the protagonist.
      */
-    public void drawEntityPanel(int posX, int posY, int camX, int height, String direction, String entityStatus) {
-        Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
+    public void drawEntityPanel(int posX, int posY, int camX, int height, String direction, String entityStatus,
+            boolean blocked, boolean finished) {
         int span = 15;
         int barSpan = 10;
+        int glassWidth = 85;
         this.gc.setFont(theFont);
-        this.gc.setFill(Color.BLACK);
+
+        /* Panel above the Entity. */
+        drawGlassPanel(glassWidth,
+                35,
+                (posX - camX) - 5,
+                posY - (barSpan + (3 * span)));
+
         /* Info above the Entity. */
+        this.gc.setFill(Color.WHITE);
         this.gc.fillText("X: " + posX, (posX - camX), posY - (barSpan + (2 * span)));
         this.gc.fillText("Y: " + posY, (posX - camX), posY - (barSpan + (span)));
+        // drawTextWithBorder("X: " + posX, (posX - camX), posY - (barSpan + (2 *
+        // span)), Color.WHITE, Color.BLACK, null);
+        // drawTextWithBorder("Y: " + posY, (posX - camX), posY - (barSpan + (span)),
+        // Color.WHITE, Color.BLACK, null);
+
+        if (entityStatus.equals("TERMINATE"))
+            glassWidth = 135;
+        else
+            glassWidth = 110;
+        /* Panel bellow the Entity. */
+        drawGlassPanel(glassWidth,
+                65,
+                (posX - camX) - 5,
+                posY + height + 5);
+
         /* Info bellow the Entity. */
-        this.gc.fillText("St.: " + entityStatus, (posX - camX), posY + height + span);
-        this.gc.fillText("Dir.: " + direction, (posX - camX), posY + height + (2 * span));
+        this.gc.setFill(Color.WHITE);
+        this.gc.fillText("St.: " + entityStatus, (posX - camX), posY + height + span + 5);
+        this.gc.fillText("Dir.: " + direction, (posX - camX), posY + height + (2 * span) + 5);
+        this.gc.fillText("Block.: " + blocked, (posX - camX), posY + height + (3 * span) + 5);
+        this.gc.fillText("Finish.: " + finished, (posX - camX), posY + height + (4 * span) + 5);
     }
 
     /**

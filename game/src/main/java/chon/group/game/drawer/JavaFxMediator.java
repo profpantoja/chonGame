@@ -114,7 +114,9 @@ public class JavaFxMediator implements EnvironmentDrawer {
                         (int) this.environment.getCamera().getPosX(),
                         agent.getHeight(),
                         agent.getDirection().toString(),
-                        agent.getStatus().toString());
+                        agent.getStatus().toString(),
+                        agent.getAnimationState().isBlocked(),
+                        agent.getAnimationState().isFinished());
             }
         }
         Agent protagonist = this.environment.getProtagonist();
@@ -136,7 +138,9 @@ public class JavaFxMediator implements EnvironmentDrawer {
                     (int) this.environment.getCamera().getPosX(),
                     protagonist.getHeight(),
                     protagonist.getDirection().toString(),
-                    protagonist.getStatus().toString());
+                    protagonist.getStatus().toString(),
+                    protagonist.getAnimationState().isBlocked(),
+                    protagonist.getAnimationState().isFinished());
             this.drawDebugPanel();
         }
         this.drawPanel();
@@ -168,7 +172,9 @@ public class JavaFxMediator implements EnvironmentDrawer {
                         (int) this.environment.getCamera().getPosX(),
                         object.getHeight(),
                         object.getDirection().toString(),
-                        object.getStatus().toString());
+                        object.getStatus().toString(),
+                        object.getAnimationState().isBlocked(),
+                        object.getAnimationState().isFinished());
         }
     }
 
@@ -309,7 +315,9 @@ public class JavaFxMediator implements EnvironmentDrawer {
                         (int) this.environment.getCamera().getPosX(),
                         shot.getHeight(),
                         shot.getDirection().toString(),
-                        shot.getStatus().toString());
+                        shot.getStatus().toString(),
+                        shot.getAnimationState().isBlocked(),
+                        shot.getAnimationState().isFinished());
         }
     }
 
