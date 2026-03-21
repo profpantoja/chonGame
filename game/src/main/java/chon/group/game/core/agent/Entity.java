@@ -349,6 +349,7 @@ public abstract class Entity {
                     this.getPosX(),
                     this.getPosY(),
                     25));
+            this.setStatus(EntityStatus.DAMAGE);
             /* After taking the damage, the health must not be negative. */
             if (this.getHealth() <= 0) {
                 this.setHealth(0);

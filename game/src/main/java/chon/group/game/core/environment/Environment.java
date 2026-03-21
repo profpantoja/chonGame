@@ -302,24 +302,27 @@ public class Environment {
         Iterator<Object> iterator = this.currentLevel.getObjects().iterator();
         while (iterator.hasNext()) {
             Object object = iterator.next();
-            if (!object.isCollected() && object.isCollectible()) {
-                object.follow(protagonist);
-                double dx = object.getPosX() - protagonist.getPosX();
-                double dy = object.getPosY() - protagonist.getPosY();
-                double distance = Math.sqrt(dx * dx + dy * dy);
-                /**
-                 * If the radius between the agent and the object is less than 20 pxls then it
-                 * is collected.
-                 */
-                if (distance < 20) {
-                    object.onCollect();
-                    collectedCount++;
-                    score += 10;
+            if (!object.isTerminated()) {
+                object.idle();
+                if (!object.isCollected() && object.isCollectible()) {
+                    object.follow(protagonist);
+                    double dx = object.getPosX() - protagonist.getPosX();
+                    double dy = object.getPosY() - protagonist.getPosY();
+                    double distance = Math.sqrt(dx * dx + dy * dy);
+                    /**
+                     * If the radius between the agent and the object is less than 20 pxls then it
+                     * is collected.
+                     */
+                    if (distance < 20) {
+                        object.onCollect();
+                        collectedCount++;
+                        score += 10;
+                    }
                 }
-            }
-            /* If it was collected then it is removed. */
-            else if (object.isCollected() && object.isCollectible()) {
-                iterator.remove();
+                /* If it was collected then it is removed. */
+                else if (object.isCollected() && object.isCollectible()) {
+                    iterator.remove();
+                }
             }
         }
     }

@@ -187,7 +187,7 @@ public class Agent extends Entity {
     public void takeDamage(int damage, List<Message> messages) {
         this.invulnerable = this.updateInvulnerability();
         if (!this.invulnerable) {
-            this.setStatus(EntityStatus.DAMAGE);
+            //this.setStatus(EntityStatus.DAMAGE);
             super.takeDamage(damage, messages);
             this.lastHitTime = System.currentTimeMillis();
         }
