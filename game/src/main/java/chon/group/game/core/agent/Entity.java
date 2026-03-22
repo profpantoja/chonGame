@@ -10,19 +10,19 @@ import chon.group.game.messaging.Message;
 public abstract class Entity {
 
     /** X position (horizontal) of the entity. */
-    protected int posX;
+    private int posX;
 
     /** Y (vertical) position of the entity. */
-    protected int posY;
+    private int posY;
 
     /** Height of the entity. */
-    protected int height;
+    private int height;
 
     /** Width of the entity. */
-    protected int width;
+    private int width;
 
     /** entity speed. */
-    protected int speed;
+    private int speed;
 
     /** The initial entity's health. */
     private int health;

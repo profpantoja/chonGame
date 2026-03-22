@@ -124,10 +124,10 @@ public class Object extends Entity {
             double directionX = dx / distance;
             double directionY = dy / distance;
             /* It avoids the agent to runaway from the object. */
-            if (this.speed <= target.speed)
-                this.speed = target.speed + 2;
-            this.setPosX((int) (this.getPosX() + directionX * this.speed));
-            this.setPosY((int) (this.getPosY() + directionY * this.speed));
+            if (this.getSpeed() <= target.getSpeed())
+                this.setSpeed(target.getSpeed() + 2);
+            this.setPosX((int) (this.getPosX() + directionX * this.getSpeed()));
+            this.setPosY((int) (this.getPosY() + directionY * this.getSpeed()));
         }
     }
 

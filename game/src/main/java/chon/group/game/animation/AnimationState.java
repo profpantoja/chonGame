@@ -19,7 +19,7 @@ public class AnimationState {
     public void setCurrentAnimation(Animation currentAnimation) {
         if (this.currentAnimation != currentAnimation) {
             this.currentAnimation = currentAnimation;
-            if (currentFrameIndex > (currentAnimation.getFrames().size() - 1))
+            if (currentFrameIndex != 0)
                 this.reset();
         }
     }
