@@ -7,7 +7,7 @@ public class Animator {
     /**
      * Updates one specific agent.
      */
-    public void update(Entity entity) {
+    public void animate(Entity entity) {
         if (!entity.getAnimationState().isBlocked())
             entity.getAnimationState().setCurrentAnimation(this.selectAnimation(entity));
         /*
@@ -15,7 +15,7 @@ public class Animator {
          * animation.
          */
         if (entity.getAnimationState().tick() >= entity.getAnimationState().getCurrentAnimation().getDuration()) {
-            int frameIndex = entity.getAnimationState().nextFrame();
+            int frameIndex = entity.getAnimationState().advanceFrame();
             entity.getAnimationState().setCurrentFrameIndex(frameIndex);
         }
     }

@@ -27,7 +27,7 @@ public class GameOverState implements GameState {
         game.getEnvironment().updateMessages();
         game.getEnvironment().updateShots();
         /* It animates the protagonist. */
-        game.getAnimator().update(game.getEnvironment().getProtagonist());
+        game.getAnimator().animate(game.getEnvironment().getProtagonist());
     }
 
     @Override

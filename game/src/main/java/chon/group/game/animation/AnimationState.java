@@ -19,8 +19,7 @@ public class AnimationState {
     public void setCurrentAnimation(Animation currentAnimation) {
         if (this.currentAnimation != currentAnimation) {
             this.currentAnimation = currentAnimation;
-            if (currentFrameIndex != 0)
-                this.reset();
+            this.reset();
         }
     }
 
@@ -73,20 +72,26 @@ public class AnimationState {
     }
 
     /**
-     * Gets the next current frame.
+     * Advances to the next frame index.
+     *
+     * @return the next frame index
      */
-    public int nextFrame() {
+    public int advanceFrame() {
         this.lastTime = System.currentTimeMillis();
-        int nextframe = (this.currentFrameIndex + 1) % this.currentAnimation.getFrames().size();
-        /* If the current animation is not a loop, it has to end. */
+        int lastFrameIndex = this.currentAnimation.getFrames().size() - 1;
+        /* Non-looping animations stop at the last frame. */
         if (!this.currentAnimation.isInLoop()) {
-            if (this.currentFrameIndex == (this.currentAnimation.getFrames().size() - 1)) {
+            if (this.currentFrameIndex >= lastFrameIndex) {
                 this.finished = true;
-                return this.currentFrameIndex;
+                return lastFrameIndex;
             }
+            return this.currentFrameIndex + 1;
         }
-        /* If the current animation is a loop the next frame can return to 0. */
-        return nextframe;
+        /*
+         * Return the next frame. If the current animation is a loop the next frame can
+         * return to 0.
+         */
+        return (this.currentFrameIndex + 1) % this.currentAnimation.getFrames().size();
     }
 
     public long tick() {

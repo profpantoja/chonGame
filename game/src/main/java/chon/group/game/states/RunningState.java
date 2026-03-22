@@ -64,7 +64,7 @@ public class RunningState implements GameState {
             agent.chase(game.getEnvironment().getProtagonist().getPosX(),
                     game.getEnvironment().getProtagonist().getPosY());
             /* It animates all agents. */
-            game.getAnimator().update(agent);
+            game.getAnimator().animate(agent);
         }
         game.getEnvironment().update();
         /* If the agent died in this loop, the state changes. */
@@ -74,7 +74,7 @@ public class RunningState implements GameState {
             game.setCurrentState(new GameOverState());
         }
         /* It animates the protagonist. */
-        game.getAnimator().update(
+        game.getAnimator().animate(
                 game.getEnvironment().getProtagonist());
         /* It animates all objects. */
         Iterator<Object> itObject = game.getEnvironment().getCurrentLevel().getObjects().iterator();
@@ -85,11 +85,11 @@ public class RunningState implements GameState {
                     itObject.remove();
                     break;
                 }
-            game.getAnimator().update(object);
+            game.getAnimator().animate(object);
         }
         /* It animates all shots. */
         for (Shot shot : game.getEnvironment().getCurrentLevel().getShots()) {
-            game.getAnimator().update(shot);
+            game.getAnimator().animate(shot);
         }
     }
 
