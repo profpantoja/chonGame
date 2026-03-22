@@ -9,7 +9,6 @@ public class AnimationState {
     private long lastTime = 0;
     /** Indicates if the current animation has came to an end. */
     private boolean finished = false;
-    private boolean blocked = false;
     /** Indicates if the animation is facing left. */
     private boolean flipped = false;
 
@@ -18,9 +17,11 @@ public class AnimationState {
     }
 
     public void setCurrentAnimation(Animation currentAnimation) {
-        this.currentAnimation = currentAnimation;
-        if (currentFrameIndex > (currentAnimation.getFrames().size() - 1))
-            this.reset();
+        if (this.currentAnimation != currentAnimation) {
+            this.currentAnimation = currentAnimation;
+            if (currentFrameIndex > (currentAnimation.getFrames().size() - 1))
+                this.reset();
+        }
     }
 
     public int getCurrentFrameIndex() {
@@ -48,11 +49,9 @@ public class AnimationState {
     }
 
     public boolean isBlocked() {
-        return blocked;
-    }
-
-    public void setBlocked(boolean blocked) {
-        this.blocked = blocked;
+        return currentAnimation != null
+                && !currentAnimation.isInLoop()
+                && !finished;
     }
 
     /**
@@ -83,7 +82,6 @@ public class AnimationState {
         if (!this.currentAnimation.isInLoop()) {
             if (this.currentFrameIndex == (this.currentAnimation.getFrames().size() - 1)) {
                 this.finished = true;
-                this.blocked = false;
                 return this.currentFrameIndex;
             }
         }
@@ -103,7 +101,6 @@ public class AnimationState {
     public void reset() {
         this.lastTime = 0;
         this.currentFrameIndex = 0;
-        this.blocked = false;
         this.finished = false;
     }
 
