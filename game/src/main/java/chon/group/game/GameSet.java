@@ -384,6 +384,11 @@ public class GameSet {
                                 getClass().getResource("/images/objects/box/box_005.png").toExternalForm()));
                 terminateBox.getFrames().add(new Image(
                                 getClass().getResource("/images/objects/box/box_006.png").toExternalForm()));
+
+                Animation hitBox = new Animation(100, false);
+                hitBox.getFrames().add(new Image(
+                                getClass().getResource("/images/objects/box/box_002.png").toExternalForm()));
+
                 /*
                  * Set up some collectable objects. For each instance is necessary the Object
                  * and the Animation Set.
@@ -642,6 +647,7 @@ public class GameSet {
                                 0);
                 box8.getAnimationSet().add(AnimationType.IDLE, idleBox);
                 box8.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
+                box8.getAnimationSet().add(AnimationType.DAMAGE, hitBox);
                 objects.add(box8);
                 Object coin9 = new Object(
                                 2900,

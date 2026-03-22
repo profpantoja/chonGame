@@ -76,7 +76,7 @@ public class AnimationState {
      *
      * @return the next frame index
      */
-    public int advanceFrame() {
+    private int advanceFrame() {
         this.lastTime = System.currentTimeMillis();
         int lastFrameIndex = this.currentAnimation.getFrames().size() - 1;
         /* Non-looping animations stop at the last frame. */
@@ -94,7 +94,17 @@ public class AnimationState {
         return (this.currentFrameIndex + 1) % this.currentAnimation.getFrames().size();
     }
 
-    public long tick() {
+    /*
+     * It gets the elapsed time and compares with the frame duration of the current
+     * animation.
+     */
+    public void stepAnimation() {
+        if (this.tick() >= this.getCurrentAnimation().getDuration()) {
+            this.currentFrameIndex = this.advanceFrame();
+        }
+    }
+
+    private long tick() {
         long now = System.currentTimeMillis();
         if (lastTime == 0) {
             lastTime = now;
