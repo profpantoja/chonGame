@@ -17,4 +17,5 @@ public class AnimationSet {
     public Animation get(AnimationType action) {
         return animations.get(action);
     }
+
 }

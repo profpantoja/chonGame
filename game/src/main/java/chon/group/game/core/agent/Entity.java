@@ -6,6 +6,7 @@ import java.util.List;
 import chon.group.game.animation.AnimationSet;
 import chon.group.game.animation.AnimationState;
 import chon.group.game.messaging.Message;
+import chon.group.game.sound.SoundSet;
 
 public abstract class Entity {
 
@@ -36,14 +37,17 @@ public abstract class Entity {
     /** The Entity's status. */
     private EntityStatus status = EntityStatus.IDLE;
 
+    /** Indicates if the existing bars of life or energy are visible or not. */
+    private boolean visibleBars = false;
+
     /** Holds all the Frames for each available movement. */
     private AnimationSet animationSet = new AnimationSet();
 
     /** Holds the current Animation State of the entity. */
     private AnimationState animationState = new AnimationState();
 
-    /** Indicates if the existing bars of life or energy are visible or not. */
-    private boolean visibleBars = false;
+    /** Holds all the sound for each available event. */
+    private SoundSet soundSet = new SoundSet();
 
     /**
      * Constructor to initialize the entity properties.
@@ -241,6 +245,14 @@ public abstract class Entity {
 
     public void setAnimationState(AnimationState animationState) {
         this.animationState = animationState;
+    }
+
+    public SoundSet getSoundSet() {
+        return soundSet;
+    }
+
+    public void setSoundSet(SoundSet soundSet) {
+        this.soundSet = soundSet;
     }
 
     /**
