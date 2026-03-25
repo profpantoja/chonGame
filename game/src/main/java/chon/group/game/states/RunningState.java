@@ -6,6 +6,7 @@ import chon.group.game.Game;
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.weapon.Shot;
+import chon.group.game.sound.SoundEvent;
 
 public class RunningState implements GameState {
 
@@ -28,9 +29,12 @@ public class RunningState implements GameState {
                 if (game.getInput().contains("SPACE")) {
                     Shot shot = game.getEnvironment().getProtagonist().useWeapon();
                     /* If there is an associate shot with the weapon. Some weapons don't shoot. */
-                    if (shot != null)
+                    if (shot != null) {
+                        game.getSoundPlayer()
+                                .play(game.getEnvironment().getProtagonist().getSoundSet().get(SoundEvent.ATTACK));
                         /* The shot is added to the environment's current level. */
                         game.getEnvironment().getCurrentLevel().getShots().add(shot);
+                    }
                 } else {
                     /* If there is any movement key pressed. */
                     if (game.getInput().contains("RIGHT") ||

@@ -18,6 +18,9 @@ import chon.group.game.menu.Action;
 import chon.group.game.menu.Item;
 import chon.group.game.menu.Menu;
 import chon.group.game.menu.MenuHandler;
+import chon.group.game.sound.Sound;
+import chon.group.game.sound.SoundEvent;
+import chon.group.game.sound.SoundType;
 import javafx.scene.image.Image;
 
 public class GameSet {
@@ -884,6 +887,13 @@ public class GameSet {
                 coin13.getAnimationSet().add(AnimationType.IDLE, idleCoin);
                 coin13.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
                 objects.add(coin13);
+                // ChonBota sounds.
+                Sound lancerShotSound = new Sound(
+                                "/sounds/agents/chonBota/lancer_shot.wav",
+                                SoundType.SFX,
+                                false);
+                chonBota.getSoundSet().add(SoundEvent.ATTACK, lancerShotSound);
+
                 // Register objects into the environment and count total collectibles
                 level1.getAgents().add(chonBot1);
                 level1.getAgents().add(chonBot2);

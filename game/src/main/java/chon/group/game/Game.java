@@ -9,6 +9,7 @@ import chon.group.game.core.environment.Environment;
 import chon.group.game.core.environment.Level;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.menu.MenuHandler;
+import chon.group.game.sound.service.GameSoundManager;
 import chon.group.game.states.GameState;
 import chon.group.game.states.StartState;
 
@@ -16,6 +17,7 @@ public class Game {
 
     private Environment environment;
     private EnvironmentDrawer mediator;
+    private GameSoundManager soundPlayer;
     private MenuHandler menu;
     private Animator animator = new Animator();
     private ArrayList<String> input;
@@ -26,6 +28,7 @@ public class Game {
         this.mediator = mediator;
         this.menu = menu;
         this.input = input;
+        this.soundPlayer = new GameSoundManager(null);
         this.start();
     }
 
@@ -43,6 +46,14 @@ public class Game {
 
     public void setMediator(EnvironmentDrawer mediator) {
         this.mediator = mediator;
+    }
+
+    public GameSoundManager getSoundPlayer() {
+        return soundPlayer;
+    }
+
+    public void setSoundPlayer(GameSoundManager soundPlayer) {
+        this.soundPlayer = soundPlayer;
     }
 
     public MenuHandler getMenu() {
