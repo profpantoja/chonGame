@@ -9,15 +9,15 @@ import java.util.Map;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
-public class JavaFxPlayer {
-
-    private double musicVolume = 1.0;
-    private double sfxVolume = 1.0;
+public class JavaFxPlayer extends SoundPlayer {
 
     private final Map<String, Media> mediaCache = new HashMap<>();
     private final List<MediaPlayer> activeSoundEffects = new ArrayList<>();
-
     private MediaPlayer backgroundMusicPlayer;
+
+    public JavaFxPlayer() {
+
+    }
 
     public void playSound(String resourcePath) {
         try {
@@ -27,7 +27,7 @@ public class JavaFxPlayer {
             }
 
             MediaPlayer soundPlayer = new MediaPlayer(media);
-            soundPlayer.setVolume(sfxVolume);
+            soundPlayer.setVolume(this.getSfxVolume());
 
             soundPlayer.setOnEndOfMedia(() -> {
                 soundPlayer.stop();
@@ -60,7 +60,7 @@ public class JavaFxPlayer {
             }
 
             backgroundMusicPlayer = new MediaPlayer(media);
-            backgroundMusicPlayer.setVolume(musicVolume);
+            backgroundMusicPlayer.setVolume(this.getMusicVolume());
 
             // Use INDEFINITE if you want stage music looping by default
             backgroundMusicPlayer.setCycleCount(1);
@@ -77,17 +77,14 @@ public class JavaFxPlayer {
         if (backgroundMusicPlayer == null) {
             return false;
         }
-
         Media currentMedia = backgroundMusicPlayer.getMedia();
         if (currentMedia == null) {
             return false;
         }
-
         URL resourceUrl = getClass().getResource(resourcePath);
         if (resourceUrl == null) {
             return false;
         }
-
         return currentMedia.getSource().equals(resourceUrl.toString());
     }
 
@@ -137,25 +134,17 @@ public class JavaFxPlayer {
     }
 
     public void setMusicVolume(double volume) {
-        musicVolume = clamp(volume);
+        this.setMusicVolume(clamp(volume));
         if (backgroundMusicPlayer != null) {
-            backgroundMusicPlayer.setVolume(musicVolume);
+            backgroundMusicPlayer.setVolume(this.getMusicVolume());
         }
-    }
-
-    public double getMusicVolume() {
-        return musicVolume;
     }
 
     public void setSfxVolume(double volume) {
-        sfxVolume = clamp(volume);
+        this.setSfxVolume(clamp(volume));
         for (MediaPlayer mp : activeSoundEffects) {
-            mp.setVolume(sfxVolume);
+            mp.setVolume(this.getSfxVolume());
         }
-    }
-
-    public double getSfxVolume() {
-        return sfxVolume;
     }
 
     /**
@@ -164,7 +153,6 @@ public class JavaFxPlayer {
      */
     public void update() {
         List<MediaPlayer> finished = new ArrayList<>();
-
         for (MediaPlayer mp : activeSoundEffects) {
             MediaPlayer.Status status = mp.getStatus();
             if (status == MediaPlayer.Status.STOPPED || status == MediaPlayer.Status.DISPOSED) {
@@ -172,7 +160,6 @@ public class JavaFxPlayer {
                 finished.add(mp);
             }
         }
-
         activeSoundEffects.removeAll(finished);
     }
 
@@ -181,13 +168,11 @@ public class JavaFxPlayer {
         if (media != null) {
             return media;
         }
-
         URL resourceUrl = getClass().getResource(resourcePath);
         if (resourceUrl == null) {
             System.err.println("Arquivo de áudio não encontrado: " + resourcePath);
             return null;
         }
-
         media = new Media(resourceUrl.toString());
         mediaCache.put(resourcePath, media);
         return media;

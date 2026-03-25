@@ -84,11 +84,12 @@ public class RunningState implements GameState {
         Iterator<Object> itObject = game.getEnvironment().getCurrentLevel().getObjects().iterator();
         while (itObject.hasNext()) {
             Object object = itObject.next();
-            if (object.isDestroyed())
+            if (object.isDestroyed()) {
                 if (object.canRemove()) {
                     itObject.remove();
                     break;
                 }
+            }
             game.getAnimator().animate(object);
         }
         /* It animates all shots. */

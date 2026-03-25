@@ -6,6 +6,8 @@ import chon.group.game.Game;
 import chon.group.game.GameSet;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.drawer.JavaFxMediator;
+import chon.group.game.sound.client.JavaFxPlayer;
+import chon.group.game.sound.service.GameSoundManager;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -68,9 +70,12 @@ public class Engine extends Application {
             });
 
             EnvironmentDrawer mediator = new JavaFxMediator(gameSet.getEnvironment(), gc);
+            GameSoundManager soundManager = new GameSoundManager(new JavaFxPlayer());
+            
             Game chonGame = new Game(
                     gameSet.getEnvironment(),
                     mediator,
+                    soundManager,
                     gameSet.getMenu(),
                     input);
 

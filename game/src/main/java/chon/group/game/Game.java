@@ -23,12 +23,13 @@ public class Game {
     private ArrayList<String> input;
     private GameState currentState = new StartState();
 
-    public Game(Environment environment, EnvironmentDrawer mediator, MenuHandler menu, ArrayList<String> input) {
+    public Game(Environment environment, EnvironmentDrawer mediator, GameSoundManager soundPlayer, MenuHandler menu,
+            ArrayList<String> input) {
         this.environment = environment;
         this.mediator = mediator;
         this.menu = menu;
         this.input = input;
-        this.soundPlayer = new GameSoundManager(null);
+        this.soundPlayer = soundPlayer;
         this.start();
     }
 

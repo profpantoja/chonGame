@@ -892,8 +892,30 @@ public class GameSet {
                                 "/sounds/agents/chonBota/lancer_shot.wav",
                                 SoundType.SFX,
                                 false);
+                Sound chonBotaHit = new Sound(
+                                "/sounds/agents/chonBota/hit.wav",
+                                SoundType.SFX,
+                                false);
                 chonBota.getSoundSet().add(SoundEvent.ATTACK, lancerShotSound);
-
+                chonBota.getSoundSet().add(SoundEvent.DAMAGE, chonBotaHit);
+                // Box sounds.
+                Sound boxTerminate = new Sound(
+                                "/sounds/objects/crate_terminate.mp3",
+                                SoundType.SFX,
+                                false);
+                box1.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
+                box2.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
+                box3.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
+                box4.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
+                box5.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
+                box6.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
+                box7.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
+                box8.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
+                box9.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
+                box10.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
+                box11.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
+                box12.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
+                box13.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
                 // Register objects into the environment and count total collectibles
                 level1.getAgents().add(chonBot1);
                 level1.getAgents().add(chonBot2);

@@ -1,17 +1,14 @@
 package chon.group.game.sound.service;
 
-import chon.group.game.Game;
 import chon.group.game.sound.Sound;
-import chon.group.game.sound.client.JavaFxPlayer;
+import chon.group.game.sound.client.SoundPlayer;
 
 public class GameSoundManager implements SoundManager {
 
-    // private Game game;
-    private final JavaFxPlayer player;
+    private final SoundPlayer player;
 
-    public GameSoundManager(Game game) {
-        // this.game = game;
-        this.player = new JavaFxPlayer();
+    public GameSoundManager(SoundPlayer player) {
+        this.player = player;
     }
 
     @Override
