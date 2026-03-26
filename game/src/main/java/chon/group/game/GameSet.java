@@ -916,6 +916,12 @@ public class GameSet {
                 box11.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
                 box12.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
                 box13.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
+                // Level sounds.
+                Sound level1AmbientSound = new Sound(
+                                "/sounds/levels/forest.mp3",
+                                SoundType.MUSIC,
+                                true);
+                level1.getSoundSet().add(SoundEvent.AMBIENT, level1AmbientSound);
                 // Register objects into the environment and count total collectibles
                 level1.getAgents().add(chonBot1);
                 level1.getAgents().add(chonBot2);
