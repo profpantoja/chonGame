@@ -10,6 +10,7 @@ import chon.group.game.core.environment.Level;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.menu.MenuHandler;
 import chon.group.game.sound.Sound;
+import chon.group.game.sound.SoundEvent;
 import chon.group.game.sound.service.GameSoundManager;
 import chon.group.game.states.GameState;
 import chon.group.game.states.StartState;
@@ -91,6 +92,7 @@ public class Game {
     }
 
     public void loop() {
+        this.updateLevel();
         this.currentState.handleInput(this);
         this.currentState.update(this);
         this.playSounds();
@@ -120,6 +122,13 @@ public class Game {
         this.input.clear();
     }
 
+    public void updateLevel() {
+        if (this.environment.getCurrentLevel().isCompleted(this.environment)) {
+            this.soundPlayer.stop();
+            environment.loadNextLevel();
+        }
+    }
+
     public void resetLevel() {
         GameSet gameSet = new GameSet();
         int myLevelIndex = this.environment.getLevels().indexOf(this.environment.getCurrentLevel());
@@ -133,6 +142,13 @@ public class Game {
         this.environment.setCollectedCount(0);
         this.environment.setScore(0);
         this.input.clear();
+        this.soundPlayer.stop();
+        Sound ambient = this.environment.getCurrentLevel().getSoundSet().get(SoundEvent.AMBIENT);
+        Sound background = this.environment.getCurrentLevel().getSoundSet().get(SoundEvent.BACKGROUND);
+        if (ambient != null)
+            soundPlayer.playMusic(ambient);
+        if (background != null)
+            soundPlayer.playMusic(background);
     }
 
     public List<Direction> getDirections(List<String> input) {

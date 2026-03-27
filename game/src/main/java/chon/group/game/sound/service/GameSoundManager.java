@@ -21,4 +21,10 @@ public class GameSoundManager implements SoundManager {
         player.playMusic(sound.getPath());
     }
 
+    @Override
+    public void stop() {
+        player.stop();
+    }
+
+
 }

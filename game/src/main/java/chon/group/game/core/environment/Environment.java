@@ -443,11 +443,6 @@ public class Environment {
             camera.update();
     }
 
-    public void updateLevel() {
-        if (this.currentLevel.isCompleted(this))
-            this.loadNextLevel();
-    }
-
     /**
      * Performs a full update cycle of the environment.
      * Includes updating objects, shots, messages, camera,
@@ -460,7 +455,6 @@ public class Environment {
         updateCamera();
         detectCollision();
         protagonist.recoverEnergy();
-        updateLevel();
     }
 
     public void loadNextLevel() {
@@ -479,6 +473,12 @@ public class Environment {
                 this.camera.setLevelWidth(this.currentLevel.getWidth());
             }
         }
+        Sound ambient = this.currentLevel.getSoundSet().get(SoundEvent.AMBIENT);
+        Sound background = this.currentLevel.getSoundSet().get(SoundEvent.BACKGROUND);
+        if (ambient != null)
+            this.sounds.add(ambient);
+        if (background != null)
+            this.sounds.add(background);
     }
 
     public void reset() {

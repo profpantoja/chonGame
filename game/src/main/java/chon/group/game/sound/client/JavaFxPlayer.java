@@ -30,11 +30,11 @@ public class JavaFxPlayer extends SoundPlayer {
             MediaPlayer soundPlayer = new MediaPlayer(media);
             soundPlayer.setVolume(getSfxVolume());
 
-            soundPlayer.setOnEndOfMedia(() -> {
-                soundPlayer.stop();
-                soundPlayer.dispose();
-                activeSoundEffects.remove(soundPlayer);
-            });
+                soundPlayer.setOnEndOfMedia(() -> {
+                    //soundPlayer.stop();
+                    soundPlayer.dispose();
+                    activeSoundEffects.remove(soundPlayer);
+                });
 
             soundPlayer.setOnError(() -> {
                 System.err.println("Erro no player de efeito sonoro: " + resourcePath);
@@ -149,7 +149,7 @@ public class JavaFxPlayer extends SoundPlayer {
         resumeAllSoundEffects();
     }
 
-    public void stopAll() {
+    public void stop() {
         stopMusic();
         stopAmbient();
         stopAllSoundEffects();

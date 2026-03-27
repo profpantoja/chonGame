@@ -2,7 +2,6 @@ package chon.group.game.states;
 
 import chon.group.game.Game;
 import chon.group.game.menu.Action;
-import chon.group.game.sound.SoundEvent;
 
 public class StartState implements GameState {
 
@@ -10,11 +9,9 @@ public class StartState implements GameState {
     public void handleInput(Game game) {
         /* If the player has selected an option, an action is executed. */
         if (game.getEnvironment().getCurrentMenu().handleAction(game.getInput()).equals(Action.START)) {
+            game.getSoundPlayer().stop();
             /* It moves to next level. In this version, the Start State is the level 0. */
             game.getEnvironment().loadNextLevel();
-            game.getSoundPlayer()
-                    .playMusic(game.getEnvironment().getCurrentLevel().getSoundSet().get(SoundEvent.AMBIENT));
-            /* The game moves to the running state. */
             game.setCurrentState(new RunningState());
         }
     }

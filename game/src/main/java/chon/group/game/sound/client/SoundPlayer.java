@@ -40,4 +40,6 @@ public abstract class SoundPlayer {
 
     public abstract void playAmbient(String path);
 
+    public abstract void stop();
+
 }

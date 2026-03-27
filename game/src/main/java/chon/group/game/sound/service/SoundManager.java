@@ -10,4 +10,7 @@ public interface SoundManager {
     /** Plays the background music. */
     void playMusic(Sound sound);
 
+    /** Stops the Player. It is necessary to change between looping sounds. */
+    void stop();
+
 }

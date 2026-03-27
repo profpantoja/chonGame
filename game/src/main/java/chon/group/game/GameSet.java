@@ -351,6 +351,18 @@ public class GameSet {
                                 true);
                 chonBot4.getAnimationSet().add(AnimationType.IDLE, idleChonBot);
                 chonBot4.getAnimationSet().add(AnimationType.TERMINATE, deadChonBot);
+                Agent chonBot5 = new Agent(
+                                1500,
+                                500,
+                                90,
+                                65,
+                                1,
+                                500,
+                                Direction.IDLE,
+                                true,
+                                true);
+                chonBot5.getAnimationSet().add(AnimationType.IDLE, idleChonBot);
+                chonBot5.getAnimationSet().add(AnimationType.TERMINATE, deadChonBot);
                 /* Setting the protagonist and some Images in the Environment system. */
                 environment.setProtagonist(chonBota);
                 environment.setPauseImage("/images/environment/pause.png");
@@ -917,6 +929,7 @@ public class GameSet {
                 chonBot2.getSoundSet().add(SoundEvent.TERMINATE, chonBotTerminate);
                 chonBot3.getSoundSet().add(SoundEvent.TERMINATE, chonBotTerminate);
                 chonBot4.getSoundSet().add(SoundEvent.TERMINATE, chonBotTerminate);
+                chonBot5.getSoundSet().add(SoundEvent.TERMINATE, chonBotTerminate);
                 // Box sounds.
                 Sound boxTerminate = new Sound(
                                 "/sounds/objects/crate_terminate.wav",
@@ -971,6 +984,7 @@ public class GameSet {
                 level1.getAgents().add(chonBot4);
                 level1.setObjects(objects);
                 level1.countCollectibles();
+                level2.getAgents().add(chonBot5);
                 environment.getLevels().add(level0);
                 environment.getLevels().add(level1);
                 environment.getLevels().add(level2);
