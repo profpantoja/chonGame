@@ -105,6 +105,12 @@ public class Game {
                 case SFX:
                     this.soundPlayer.play(sound);
                     break;
+                case MUSIC:
+                    this.soundPlayer.playMusic(sound);
+                    break;
+                case AMBIENT:
+                    this.soundPlayer.playAmbient(sound);
+                    break;
                 default:
                     this.soundPlayer.playMusic(sound);
             }
@@ -124,7 +130,7 @@ public class Game {
         Sound ambient = this.environment.getCurrentLevel().getSoundSet().get(SoundEvent.AMBIENT);
         Sound background = this.environment.getCurrentLevel().getSoundSet().get(SoundEvent.BACKGROUND);
         if (ambient != null)
-            this.soundPlayer.playMusic(ambient);
+            this.soundPlayer.playAmbient(ambient);
         if (background != null)
             this.soundPlayer.playMusic(background);
     }
@@ -153,7 +159,7 @@ public class Game {
         Sound ambient = this.environment.getCurrentLevel().getSoundSet().get(SoundEvent.AMBIENT);
         Sound background = this.environment.getCurrentLevel().getSoundSet().get(SoundEvent.BACKGROUND);
         if (ambient != null)
-            soundPlayer.playMusic(ambient);
+            soundPlayer.playAmbient(ambient);
         if (background != null)
             soundPlayer.playMusic(background);
     }

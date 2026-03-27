@@ -22,9 +22,13 @@ public class GameSoundManager implements SoundManager {
     }
 
     @Override
+    public void playAmbient(Sound sound) {
+        player.playAmbient(sound.getPath());
+    }
+
+    @Override
     public void stop() {
         player.stop();
     }
-
 
 }

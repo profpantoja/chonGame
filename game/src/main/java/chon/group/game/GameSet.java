@@ -973,10 +973,26 @@ public class GameSet {
                 coin13.getSoundSet().add(SoundEvent.COLLECT, coinTerminate);
                 // Level sounds.
                 Sound level1AmbientSound = new Sound(
-                                "/sounds/levels/forest.mp3",
+                                "/sounds/levels/forestAmbient.mp3",
+                                SoundType.AMBIENT,
+                                true);
+                Sound level1BackgroundSound = new Sound(
+                                "/sounds/levels/forestMusic.mp3",
                                 SoundType.MUSIC,
                                 true);
                 level1.getSoundSet().add(SoundEvent.AMBIENT, level1AmbientSound);
+                level1.getSoundSet().add(SoundEvent.BACKGROUND, level1BackgroundSound);
+                Sound level2AmbientSound = new Sound(
+                                "/sounds/levels/castleAmbient.mp3",
+                                SoundType.AMBIENT,
+                                true);
+                Sound level2BackgroundSound = new Sound(
+                                "/sounds/levels/castleMusic.mp3",
+                                SoundType.MUSIC,
+                                true);
+                level2.getSoundSet().add(SoundEvent.AMBIENT, level2AmbientSound);
+                level2.getSoundSet().add(SoundEvent.BACKGROUND, level2BackgroundSound);
+
                 // Register objects into the environment and count total collectibles
                 level1.getAgents().add(chonBot1);
                 level1.getAgents().add(chonBot2);

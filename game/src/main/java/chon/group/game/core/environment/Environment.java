@@ -481,9 +481,4 @@ public class Environment {
             this.sounds.add(background);
     }
 
-    public void reset() {
-        this.currentLevel = this.levels.get(0);
-        this.getCamera().setPosX(0);
-    }
-
 }
