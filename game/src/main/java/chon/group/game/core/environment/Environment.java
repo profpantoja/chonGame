@@ -13,6 +13,7 @@ import chon.group.game.core.weapon.Shot;
 import chon.group.game.menu.Menu;
 import chon.group.game.messaging.Message;
 import chon.group.game.sound.Sound;
+import chon.group.game.sound.SoundEvent;
 import javafx.scene.image.Image;
 
 /**
@@ -327,6 +328,7 @@ public class Environment {
                      * is collected.
                      */
                     if (distance < 20) {
+                        this.getSounds().add(object.getSoundSet().get(SoundEvent.COLLECT));
                         object.onCollect();
                         collectedCount++;
                         score += 10;

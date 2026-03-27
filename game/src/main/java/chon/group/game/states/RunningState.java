@@ -42,7 +42,8 @@ public class RunningState implements GameState {
                             game.getInput().contains("DOWN") ||
                             game.getInput().contains("UP")) {
                         /* Protagonist's Moves based on Joystick inputs. */
-                        game.getEnvironment().getProtagonist().move(game.getDirections(game.getInput()));
+                        game.getEnvironment().getProtagonist().move(
+                                game.getDirections(game.getInput()));
                     }
                 }
             }

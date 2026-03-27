@@ -20,6 +20,8 @@ public enum SoundEvent {
     ATTACK,
     /* The sound of an entity suffering damage or a hit. */
     DAMAGE,
+    /* The sound when an object is collected. */
+    COLLECT,
     /* The background music. */
     BACKGROUND,
     /* The ambient sounds. */

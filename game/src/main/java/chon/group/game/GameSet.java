@@ -900,7 +900,12 @@ public class GameSet {
                                 "/sounds/agents/chonBot/terminate.wav",
                                 SoundType.SFX,
                                 false);
+                Sound chonBotaWalk = new Sound(
+                                "/sounds/agents/chonBota/walk.wav",
+                                SoundType.SFX,
+                                false);
                 chonBota.getSoundSet().add(SoundEvent.ATTACK, lancerShotSound);
+                chonBota.getSoundSet().add(SoundEvent.WALK, chonBotaWalk);
                 chonBota.getSoundSet().add(SoundEvent.DAMAGE, chonBotaHit);
                 chonBota.getSoundSet().add(SoundEvent.TERMINATE, chonBotaTerminate);
                 // ChonBots Sounds.
@@ -935,6 +940,24 @@ public class GameSet {
                 box16.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
                 box17.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
                 box18.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
+                // Coin sounds.
+                Sound coinTerminate = new Sound(
+                                "/sounds/objects/coin.wav",
+                                SoundType.SFX,
+                                false);
+                coin1.getSoundSet().add(SoundEvent.COLLECT, coinTerminate);
+                coin2.getSoundSet().add(SoundEvent.COLLECT, coinTerminate);
+                coin3.getSoundSet().add(SoundEvent.COLLECT, coinTerminate);
+                coin4.getSoundSet().add(SoundEvent.COLLECT, coinTerminate);
+                coin5.getSoundSet().add(SoundEvent.COLLECT, coinTerminate);
+                coin6.getSoundSet().add(SoundEvent.COLLECT, coinTerminate);
+                coin7.getSoundSet().add(SoundEvent.COLLECT, coinTerminate);
+                coin8.getSoundSet().add(SoundEvent.COLLECT, coinTerminate);
+                coin9.getSoundSet().add(SoundEvent.COLLECT, coinTerminate);
+                coin10.getSoundSet().add(SoundEvent.COLLECT, coinTerminate);
+                coin11.getSoundSet().add(SoundEvent.COLLECT, coinTerminate);
+                coin12.getSoundSet().add(SoundEvent.COLLECT, coinTerminate);
+                coin13.getSoundSet().add(SoundEvent.COLLECT, coinTerminate);
                 // Level sounds.
                 Sound level1AmbientSound = new Sound(
                                 "/sounds/levels/forest.mp3",
