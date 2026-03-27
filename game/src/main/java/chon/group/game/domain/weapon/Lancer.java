@@ -8,6 +8,7 @@ import chon.group.game.core.agent.Direction;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.messaging.Message;
+import chon.group.game.sound.Sound;
 import javafx.scene.image.Image;
 
 public class Lancer extends Weapon {
@@ -50,7 +51,7 @@ public class Lancer extends Weapon {
     }
 
     @Override
-    public void takeDamage(int damage, List<Message> messages) {
+    public void takeDamage(int damage, List<Message> messages, List<Sound> sounds) {
 
     }
 

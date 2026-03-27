@@ -9,6 +9,7 @@ import chon.group.game.core.environment.Environment;
 import chon.group.game.core.environment.Level;
 import chon.group.game.drawer.EnvironmentDrawer;
 import chon.group.game.menu.MenuHandler;
+import chon.group.game.sound.Sound;
 import chon.group.game.sound.service.GameSoundManager;
 import chon.group.game.states.GameState;
 import chon.group.game.states.StartState;
@@ -92,7 +93,21 @@ public class Game {
     public void loop() {
         this.currentState.handleInput(this);
         this.currentState.update(this);
+        this.playSounds();
         this.currentState.render(this);
+    }
+
+    private void playSounds() {
+        for (Sound sound : this.environment.getSounds()) {
+            switch (sound.getType()) {
+                case SFX:
+                    this.soundPlayer.play(sound);
+                    break;
+                default:
+                    this.soundPlayer.playMusic(sound);
+            }
+        }
+        this.environment.getSounds().clear();
     }
 
     public void start() {

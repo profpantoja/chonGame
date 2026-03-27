@@ -896,11 +896,25 @@ public class GameSet {
                                 "/sounds/agents/chonBota/hit.wav",
                                 SoundType.SFX,
                                 false);
+                Sound chonBotaTerminate = new Sound(
+                                "/sounds/agents/chonBot/terminate.wav",
+                                SoundType.SFX,
+                                false);
                 chonBota.getSoundSet().add(SoundEvent.ATTACK, lancerShotSound);
                 chonBota.getSoundSet().add(SoundEvent.DAMAGE, chonBotaHit);
+                chonBota.getSoundSet().add(SoundEvent.TERMINATE, chonBotaTerminate);
+                // ChonBots Sounds.
+                Sound chonBotTerminate = new Sound(
+                                "/sounds/agents/chonBot/terminate.wav",
+                                SoundType.SFX,
+                                false);
+                chonBot1.getSoundSet().add(SoundEvent.TERMINATE, chonBotTerminate);
+                chonBot2.getSoundSet().add(SoundEvent.TERMINATE, chonBotTerminate);
+                chonBot3.getSoundSet().add(SoundEvent.TERMINATE, chonBotTerminate);
+                chonBot4.getSoundSet().add(SoundEvent.TERMINATE, chonBotTerminate);
                 // Box sounds.
                 Sound boxTerminate = new Sound(
-                                "/sounds/objects/crate_terminate.mp3",
+                                "/sounds/objects/crate_terminate.wav",
                                 SoundType.SFX,
                                 false);
                 box1.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
@@ -916,6 +930,11 @@ public class GameSet {
                 box11.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
                 box12.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
                 box13.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
+                box14.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
+                box15.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
+                box16.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
+                box17.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
+                box18.getSoundSet().add(SoundEvent.TERMINATE, boxTerminate);
                 // Level sounds.
                 Sound level1AmbientSound = new Sound(
                                 "/sounds/levels/forest.mp3",

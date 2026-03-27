@@ -6,6 +6,7 @@ import chon.group.game.core.agent.Direction;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.messaging.Message;
+import chon.group.game.sound.Sound;
 
 public class Cannon extends Weapon {
 
@@ -33,7 +34,7 @@ public class Cannon extends Weapon {
     }
 
     @Override
-    public void takeDamage(int damage, List<Message> messages) {
+    public void takeDamage(int damage, List<Message> messages, List<Sound> sounds) {
 
     }
 

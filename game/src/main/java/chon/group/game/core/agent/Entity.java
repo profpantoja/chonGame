@@ -6,6 +6,8 @@ import java.util.List;
 import chon.group.game.animation.AnimationSet;
 import chon.group.game.animation.AnimationState;
 import chon.group.game.messaging.Message;
+import chon.group.game.sound.Sound;
+import chon.group.game.sound.SoundEvent;
 import chon.group.game.sound.SoundSet;
 
 public abstract class Entity {
@@ -352,7 +354,7 @@ public abstract class Entity {
      *
      * @param damage the amount of damage to be applied
      */
-    public void takeDamage(int damage, List<Message> messages) {
+    public void takeDamage(int damage, List<Message> messages, List<Sound> sounds) {
         if (this.getHealth() > 0) {
             /* Decrease health. */
             this.setHealth(this.getHealth() - damage);
@@ -362,10 +364,16 @@ public abstract class Entity {
                     this.getPosY(),
                     25));
             this.setStatus(EntityStatus.DAMAGE);
+            Sound sound = this.getSoundSet().get(SoundEvent.DAMAGE);
+            if (sound != null)
+                sounds.add(sound);
             /* After taking the damage, the health must not be negative. */
             if (this.getHealth() <= 0) {
                 this.setHealth(0);
                 this.terminate();
+                sound = this.getSoundSet().get(SoundEvent.TERMINATE);
+                if (sound != null)
+                    sounds.add(sound);
             }
         }
     }

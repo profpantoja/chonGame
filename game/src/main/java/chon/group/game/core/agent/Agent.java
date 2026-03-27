@@ -5,6 +5,7 @@ import java.util.List;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.messaging.Message;
+import chon.group.game.sound.Sound;
 
 /**
  * Represents an agent in the game, with properties such as position, size,
@@ -184,11 +185,10 @@ public class Agent extends Entity {
      * @param damage the amount of damage to be applied
      */
     @Override
-    public void takeDamage(int damage, List<Message> messages) {
+    public void takeDamage(int damage, List<Message> messages, List<Sound> sounds) {
         this.invulnerable = this.updateInvulnerability();
         if (!this.invulnerable) {
-            //this.setStatus(EntityStatus.DAMAGE);
-            super.takeDamage(damage, messages);
+            super.takeDamage(damage, messages, sounds);
             this.lastHitTime = System.currentTimeMillis();
         }
     }

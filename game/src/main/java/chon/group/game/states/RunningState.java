@@ -30,8 +30,8 @@ public class RunningState implements GameState {
                     Shot shot = game.getEnvironment().getProtagonist().useWeapon();
                     /* If there is an associate shot with the weapon. Some weapons don't shoot. */
                     if (shot != null) {
-                        game.getSoundPlayer()
-                                .play(game.getEnvironment().getProtagonist().getSoundSet().get(SoundEvent.ATTACK));
+                        game.getEnvironment().getSounds()
+                                .add(game.getEnvironment().getProtagonist().getSoundSet().get(SoundEvent.ATTACK));
                         /* The shot is added to the environment's current level. */
                         game.getEnvironment().getCurrentLevel().getShots().add(shot);
                     }

@@ -5,6 +5,7 @@ import java.util.List;
 import chon.group.game.core.agent.Direction;
 import chon.group.game.core.agent.Entity;
 import chon.group.game.messaging.Message;
+import chon.group.game.sound.Sound;
 
 public abstract class Shot extends Entity {
 
@@ -35,7 +36,7 @@ public abstract class Shot extends Entity {
     }
 
     @Override
-    public void takeDamage(int damage, List<Message> messages) {
+    public void takeDamage(int damage, List<Message> messages, List<Sound> sounds) {
         if (destructible) {
             /* Decrease health. */
             this.setHealth(this.getHealth() - damage);

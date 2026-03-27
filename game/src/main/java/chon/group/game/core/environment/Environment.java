@@ -12,6 +12,7 @@ import chon.group.game.core.weapon.Panel;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.menu.Menu;
 import chon.group.game.messaging.Message;
+import chon.group.game.sound.Sound;
 import javafx.scene.image.Image;
 
 /**
@@ -42,6 +43,9 @@ public class Environment {
     /** List of messages currently being displayed. */
     private List<Message> messages;
 
+    /** List of sounds currently being emitted. */
+    private List<Sound> sounds;
+
     /** The camera used to follow the protagonist. */
     private Camera camera;
 
@@ -68,6 +72,7 @@ public class Environment {
      */
     public Environment(int height, int width, double screenWidth, Panel panel) {
         this.messages = new ArrayList<Message>();
+        this.sounds = new ArrayList<Sound>();
         this.levels = new ArrayList<Level>();
         this.camera = new Camera(screenWidth, width, 0.49, 0.51);
         this.panel = panel;
@@ -144,6 +149,14 @@ public class Environment {
 
     public void setMessages(List<Message> messages) {
         this.messages = messages;
+    }
+
+    public List<Sound> getSounds() {
+        return sounds;
+    }
+
+    public void setSounds(List<Sound> sounds) {
+        this.sounds = sounds;
     }
 
     public Camera getCamera() {
@@ -227,7 +240,7 @@ public class Environment {
             if (!agent.isDead())
                 if (protagonist != null && intersect(protagonist, agent)) {
                     int damage = 900;
-                    protagonist.takeDamage(damage, messages);
+                    protagonist.takeDamage(damage, messages, sounds);
                 }
             /*
              * It verifies agents vs. obstacles. The collision can only happens with non
@@ -370,7 +383,7 @@ public class Environment {
                     if (intersect(object, shot)) {
                         /* If the object is destructible, it must take some damage. */
                         if (object.isDestructible()) {
-                            object.takeDamage(shot.getDamage(), messages);
+                            object.takeDamage(shot.getDamage(), messages, sounds);
                             /* Then the shot is removed. */
                             itShot.remove();
                             break currentShot;
@@ -400,7 +413,7 @@ public class Environment {
                 Agent agent = itAgent.next();
                 if (!agent.isDead()) {
                     if (intersect(agent, shot)) {
-                        agent.takeDamage(shot.getDamage(), messages);
+                        agent.takeDamage(shot.getDamage(), messages, sounds);
                         itShot.remove();
                         break currentShot;
                     }
@@ -411,7 +424,7 @@ public class Environment {
              * system is informed, and the shot is removed.
              */
             if (intersect(protagonist, shot)) {
-                protagonist.takeDamage(shot.getDamage(), messages);
+                protagonist.takeDamage(shot.getDamage(), messages, sounds);
                 itShot.remove();
                 break currentShot;
             }
