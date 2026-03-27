@@ -120,6 +120,13 @@ public class Game {
         this.environment = new GameSet().getEnvironment();
         this.mediator.setEnvironment(this.environment);
         this.input.clear();
+        this.soundPlayer.stop();
+        Sound ambient = this.environment.getCurrentLevel().getSoundSet().get(SoundEvent.AMBIENT);
+        Sound background = this.environment.getCurrentLevel().getSoundSet().get(SoundEvent.BACKGROUND);
+        if (ambient != null)
+            this.soundPlayer.playMusic(ambient);
+        if (background != null)
+            this.soundPlayer.playMusic(background);
     }
 
     public void updateLevel() {
