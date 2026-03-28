@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import chon.group.game.Game;
 import chon.group.game.GameSet;
-import chon.group.game.drawer.EnvironmentDrawer;
-import chon.group.game.drawer.EnvironmentMediator;
+import chon.group.game.drawer.GameDrawer;
+import chon.group.game.drawer.GameMediator;
 import chon.group.game.drawer.client.JavaFxDrawer;
 import chon.group.game.sound.client.JavaFxPlayer;
 import chon.group.game.sound.service.GameSoundManager;
@@ -70,16 +70,15 @@ public class Engine extends Application {
                 }
             });
 
-            EnvironmentDrawer mediator = new EnvironmentMediator(gameSet.getEnvironment(), new JavaFxDrawer(gc));
             GameSoundManager soundManager = new GameSoundManager(new JavaFxPlayer());
-
             Game chonGame = new Game(
                     gameSet.getEnvironment(),
-                    mediator,
                     soundManager,
                     gameSet.getMenu(),
                     input,
                     0);
+            GameDrawer mediator = new GameMediator(chonGame, new JavaFxDrawer(gc));
+            chonGame.setMediator(mediator);
 
             // Start the game loop
             new AnimationTimer() {

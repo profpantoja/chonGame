@@ -1,6 +1,6 @@
 package chon.group.game.drawer;
 
-import chon.group.game.core.environment.Environment;
+import chon.group.game.Game;
 
 /**
  * The {@code EnvironmentDrawer} interface defines methods for rendering
@@ -8,9 +8,9 @@ import chon.group.game.core.environment.Environment;
  * functionalities such as clearing the environment, rendering agents, and
  * displaying UI elements like life bars and status panels.
  */
-public interface EnvironmentDrawer {
+public interface GameDrawer {
 
-    void setEnvironment(Environment environment);
+    void setGame(Game game);
 
     /** Render the Game */
     void renderGame();

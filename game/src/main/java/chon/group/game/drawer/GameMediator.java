@@ -2,6 +2,7 @@ package chon.group.game.drawer;
 
 import java.util.Iterator;
 
+import chon.group.game.Game;
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.environment.Environment;
@@ -23,26 +24,27 @@ import javafx.scene.text.FontWeight;
  * between the {@link Environment} and the {@link JavaFxDrawer} to manage
  * graphical rendering.
  */
-public class EnvironmentMediator implements EnvironmentDrawer {
+public class GameMediator implements GameDrawer {
 
-    private Environment environment;
+    // private Environment environment;
+    private Game game;
     private final Drawer drawer;
 
     /**
      * Constructs a JavaFxMediator with the specified environment and graphics
      * context.
      *
-     * @param environment The game environment containing agents and the
+     * @param game The game environment containing agents and the
      *                    protagonist.
      * @param gc          The {@link GraphicsContext} used for rendering.
      */
-    public EnvironmentMediator(Environment environment, Drawer drawer) {
-        this.environment = environment;
+    public GameMediator(Game game, Drawer drawer) {
+        this.game = game;
         this.drawer = drawer;
     }
 
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
+    public void setGame(Game game) {
+        this.game = game;
     }
 
     /**
@@ -63,8 +65,8 @@ public class EnvironmentMediator implements EnvironmentDrawer {
      */
     @Override
     public void clearEnvironment() {
-        drawer.clearScreen((int) this.environment.getCamera().getScreenWidth(),
-                this.environment.getCurrentLevel().getHeight());
+        drawer.clearScreen((int) this.game.getEnvironment().getCamera().getScreenWidth(),
+                this.game.getEnvironment().getCurrentLevel().getHeight());
     }
 
     /**
@@ -72,11 +74,11 @@ public class EnvironmentMediator implements EnvironmentDrawer {
      */
     @Override
     public void drawBackground() {
-        int posX = (int) (this.environment.getCamera().getPosX() * -1);
-        drawer.drawImage(this.environment.getCurrentLevel().getImage(),
-                posX, this.environment.getCurrentLevel().getPosY(),
-                this.environment.getCurrentLevel().getWidth(),
-                this.environment.getCurrentLevel().getHeight());
+        int posX = (int) (this.game.getEnvironment().getCamera().getPosX() * -1);
+        drawer.drawImage(this.game.getEnvironment().getCurrentLevel().getImage(),
+                posX, this.game.getEnvironment().getCurrentLevel().getPosY(),
+                this.game.getEnvironment().getCurrentLevel().getWidth(),
+                this.game.getEnvironment().getCurrentLevel().getHeight());
     }
 
     /**
@@ -85,8 +87,8 @@ public class EnvironmentMediator implements EnvironmentDrawer {
      */
     @Override
     public void drawAgents() {
-        for (Agent agent : this.environment.getCurrentLevel().getAgents()) {
-            int newPosX = (int) this.environment.getCamera().updateEntity(agent);
+        for (Agent agent : this.game.getEnvironment().getCurrentLevel().getAgents()) {
+            int newPosX = (int) this.game.getEnvironment().getCamera().updateEntity(agent);
             drawer.drawImage(
                     agent.getAnimationState().getCurrentImage(),
                     newPosX,
@@ -98,22 +100,22 @@ public class EnvironmentMediator implements EnvironmentDrawer {
                         agent.getEnergy(),
                         agent.getFullEnergy(),
                         agent.getWidth(),
-                        (int) this.environment.getCamera().updateBar(agent),
+                        (int) this.game.getEnvironment().getCamera().updateBar(agent),
                         agent.getPosY(),
                         Color.BLUE);
                 drawer.drawLifeBar(
                         agent.getHealth(),
                         agent.getFullHealth(),
                         agent.getWidth(),
-                        (int) this.environment.getCamera().updateBar(agent),
+                        (int) this.game.getEnvironment().getCamera().updateBar(agent),
                         agent.getPosY(),
                         Color.GREEN);
             }
-            if (this.environment.isDebugMode()) {
+            if (this.game.getEnvironment().isDebugMode()) {
                 drawer.drawEntityPanel(
                         agent.getPosX(),
                         agent.getPosY(),
-                        (int) this.environment.getCamera().getPosX(),
+                        (int) this.game.getEnvironment().getCamera().getPosX(),
                         agent.getHeight(),
                         agent.getDirection().toString(),
                         agent.getStatus().toString(),
@@ -121,8 +123,8 @@ public class EnvironmentMediator implements EnvironmentDrawer {
                         agent.getAnimationState().isFinished());
             }
         }
-        Agent protagonist = this.environment.getProtagonist();
-        int newPosX = (int) this.environment.getCamera().updateEntity(protagonist);
+        Agent protagonist = this.game.getEnvironment().getProtagonist();
+        int newPosX = (int) this.game.getEnvironment().getCamera().updateEntity(protagonist);
         drawer.drawImage(
                 protagonist.getAnimationState().getCurrentImage(),
                 newPosX,
@@ -133,11 +135,11 @@ public class EnvironmentMediator implements EnvironmentDrawer {
             this.drawSingleLifeBar();
             this.drawSingleEnergyBar();
         }
-        if (this.environment.isDebugMode()) {
+        if (this.game.getEnvironment().isDebugMode()) {
             drawer.drawEntityPanel(
                     protagonist.getPosX(),
                     protagonist.getPosY(),
-                    (int) this.environment.getCamera().getPosX(),
+                    (int) this.game.getEnvironment().getCamera().getPosX(),
                     protagonist.getHeight(),
                     protagonist.getDirection().toString(),
                     protagonist.getStatus().toString(),
@@ -153,9 +155,9 @@ public class EnvironmentMediator implements EnvironmentDrawer {
      */
     @Override
     public void drawObjects() {
-        for (Object object : environment.getCurrentLevel().getObjects()) {
+        for (Object object : this.game.getEnvironment().getCurrentLevel().getObjects()) {
             drawer.drawImage(object.getAnimationState().getCurrentImage(),
-                    (int) this.environment.getCamera().updateEntity(object),
+                    (int) this.game.getEnvironment().getCamera().updateEntity(object),
                     object.getPosY(),
                     object.getFlippedWidth(),
                     object.getHeight());
@@ -164,14 +166,14 @@ public class EnvironmentMediator implements EnvironmentDrawer {
                         object.getHealth(),
                         object.getFullHealth(),
                         object.getWidth(),
-                        (int) this.environment.getCamera().updateBar(object),
+                        (int) this.game.getEnvironment().getCamera().updateBar(object),
                         object.getPosY(),
                         Color.GREEN);
-            if (this.environment.isDebugMode())
+            if (this.game.getEnvironment().isDebugMode())
                 drawer.drawEntityPanel(
                         object.getPosX(),
                         object.getPosY(),
-                        (int) this.environment.getCamera().getPosX(),
+                        (int) this.game.getEnvironment().getCamera().getPosX(),
                         object.getHeight(),
                         object.getDirection().toString(),
                         object.getStatus().toString(),
@@ -189,9 +191,9 @@ public class EnvironmentMediator implements EnvironmentDrawer {
         drawer.drawDebugPanel(
                 240,
                 85,
-                this.environment.getCamera().getPosX(),
-                this.environment.getMessages().size(),
-                this.environment.getCurrentLevel().getShots().size());
+                this.game.getEnvironment().getCamera().getPosX(),
+                this.game.getEnvironment().getMessages().size(),
+                this.game.getEnvironment().getCurrentLevel().getShots().size());
     }
 
     /**
@@ -199,13 +201,13 @@ public class EnvironmentMediator implements EnvironmentDrawer {
      */
     @Override
     public void drawSingleLifeBar() {
-        Agent protagonist = this.environment.getProtagonist();
+        Agent protagonist = this.game.getEnvironment().getProtagonist();
         if (protagonist != null) {
             drawer.drawLifeBar(
                     protagonist.getHealth(),
                     protagonist.getFullHealth(),
                     protagonist.getWidth(),
-                    (int) this.environment.getCamera().updateBar(protagonist),
+                    (int) this.game.getEnvironment().getCamera().updateBar(protagonist),
                     protagonist.getPosY(),
                     Color.GREEN);
         }
@@ -216,13 +218,13 @@ public class EnvironmentMediator implements EnvironmentDrawer {
      */
     @Override
     public void drawSingleEnergyBar() {
-        Agent protagonist = this.environment.getProtagonist();
+        Agent protagonist = this.game.getEnvironment().getProtagonist();
         if (protagonist != null) {
             drawer.drawEnergyBar(
                     protagonist.getEnergy(),
                     protagonist.getFullEnergy(),
                     protagonist.getWidth(),
-                    (int) this.environment.getCamera().updateBar(protagonist),
+                    (int) this.game.getEnvironment().getCamera().updateBar(protagonist),
                     protagonist.getPosY(),
                     Color.BLUE);
         }
@@ -230,10 +232,10 @@ public class EnvironmentMediator implements EnvironmentDrawer {
 
     @Override
     public void drawPanel() {
-        Agent protagonist = this.environment.getProtagonist();
-        int collected = environment.getCollectedCount();
-        int total = environment.getCurrentLevel().getTotalCollectibleCount();
-        int score = environment.getScore();
+        Agent protagonist = this.game.getEnvironment().getProtagonist();
+        int collected = this.game.getEnvironment().getCollectedCount();
+        int total = this.game.getEnvironment().getCurrentLevel().getTotalCollectibleCount();
+        int score = this.game.getEnvironment().getScore();
         int life = protagonist.getHealth();
         int maxLife = protagonist.getFullHealth();
         double energy = protagonist.getEnergy();
@@ -246,12 +248,12 @@ public class EnvironmentMediator implements EnvironmentDrawer {
                 energy,
                 maxEnergy,
                 Font.font("Verdana", FontWeight.BOLD, 18),
-                this.environment.getPanel().getLifeIcon(),
-                this.environment.getPanel().getEnergyIcon(),
-                this.environment.getPanel().getItemIcon(),
-                this.environment.getPanel().getScoreIcon(),
-                this.environment.getPanel().getPanelWidth(),
-                this.environment.getPanel().getPanelHeight());
+                this.game.getEnvironment().getPanel().getLifeIcon(),
+                this.game.getEnvironment().getPanel().getEnergyIcon(),
+                this.game.getEnvironment().getPanel().getItemIcon(),
+                this.game.getEnvironment().getPanel().getScoreIcon(),
+                this.game.getEnvironment().getPanel().getPanelWidth(),
+                this.game.getEnvironment().getPanel().getPanelHeight());
     }
 
     /**
@@ -260,11 +262,11 @@ public class EnvironmentMediator implements EnvironmentDrawer {
      */
     @Override
     public void drawPauseScreen() {
-        drawer.drawScreen(this.environment.getPauseImage(),
-                (int) this.environment.getPauseImage().getWidth(),
-                (int) this.environment.getPauseImage().getHeight(),
-                (int) this.environment.getCamera().getScreenWidth(),
-                this.environment.getCurrentLevel().getHeight());
+        drawer.drawScreen(this.game.getEnvironment().getPauseImage(),
+                (int) this.game.getEnvironment().getPauseImage().getWidth(),
+                (int) this.game.getEnvironment().getPauseImage().getHeight(),
+                (int) this.game.getEnvironment().getCamera().getScreenWidth(),
+                this.game.getEnvironment().getCurrentLevel().getHeight());
     }
 
     /**
@@ -273,11 +275,11 @@ public class EnvironmentMediator implements EnvironmentDrawer {
      */
     @Override
     public void drawGameOver() {
-        drawer.drawScreen(this.environment.getGameOverImage(),
-                (int) this.environment.getGameOverImage().getWidth(),
-                (int) this.environment.getGameOverImage().getHeight(),
-                (int) this.environment.getCamera().getScreenWidth(),
-                this.environment.getCurrentLevel().getHeight());
+        drawer.drawScreen(this.game.getEnvironment().getGameOverImage(),
+                (int) this.game.getEnvironment().getGameOverImage().getWidth(),
+                (int) this.game.getEnvironment().getGameOverImage().getHeight(),
+                (int) this.game.getEnvironment().getCamera().getScreenWidth(),
+                this.game.getEnvironment().getCurrentLevel().getHeight());
     }
 
     /**
@@ -286,13 +288,13 @@ public class EnvironmentMediator implements EnvironmentDrawer {
      */
     @Override
     public void drawMessages() {
-        for (Message message : this.environment.getMessages()) {
+        for (Message message : this.game.getEnvironment().getMessages()) {
             drawer.drawMessages(message.getSize(),
                     message.getOpacity(),
                     Color.BLACK,
                     Color.WHEAT,
                     String.valueOf(message.getMessage()),
-                    message.getPosX() - this.environment.getCamera().getPosX(),
+                    message.getPosX() - this.game.getEnvironment().getCamera().getPosX(),
                     message.getPosY());
         }
     }
@@ -302,19 +304,19 @@ public class EnvironmentMediator implements EnvironmentDrawer {
      */
     @Override
     public void drawShots() {
-        Iterator<Shot> iterator = this.environment.getCurrentLevel().getShots().iterator();
+        Iterator<Shot> iterator = this.game.getEnvironment().getCurrentLevel().getShots().iterator();
         while (iterator.hasNext()) {
             Shot shot = iterator.next();
             drawer.drawImage(shot.getAnimationState().getCurrentImage(),
-                    (int) this.environment.getCamera().updateEntity(shot),
+                    (int) this.game.getEnvironment().getCamera().updateEntity(shot),
                     shot.getPosY(),
                     shot.getFlippedWidth(),
                     shot.getHeight());
-            if (this.environment.isDebugMode())
+            if (this.game.getEnvironment().isDebugMode())
                 this.drawer.drawEntityPanel(
                         shot.getPosX(),
                         shot.getPosY(),
-                        (int) this.environment.getCamera().getPosX(),
+                        (int) this.game.getEnvironment().getCamera().getPosX(),
                         shot.getHeight(),
                         shot.getDirection().toString(),
                         shot.getStatus().toString(),
@@ -328,15 +330,15 @@ public class EnvironmentMediator implements EnvironmentDrawer {
      */
     @Override
     public void drawMenu() {
-        Menu currentMenu = this.environment.getCurrentMenu();
+        Menu currentMenu = this.game.getEnvironment().getCurrentMenu();
         drawer.drawMenu(
                 currentMenu.getTitle(),
                 currentMenu.getIndex(),
                 currentMenu.getHeightProportion(),
                 currentMenu.getWidth(),
                 currentMenu.getSpan(),
-                this.environment.getCamera().getScreenWidth(),
-                this.environment.getCurrentLevel().getHeight(),
+                this.game.getEnvironment().getCamera().getScreenWidth(),
+                this.game.getEnvironment().getCurrentLevel().getHeight(),
                 currentMenu.getItems().stream()
                         .map(Item::getTitle)
                         .toArray(String[]::new));

@@ -7,7 +7,7 @@ import chon.group.game.animation.Animator;
 import chon.group.game.core.agent.Direction;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.environment.Level;
-import chon.group.game.drawer.EnvironmentDrawer;
+import chon.group.game.drawer.GameDrawer;
 import chon.group.game.menu.MenuHandler;
 import chon.group.game.sound.Sound;
 import chon.group.game.sound.SoundEvent;
@@ -18,7 +18,7 @@ import chon.group.game.states.StartState;
 public class Game {
 
     private Environment environment;
-    private EnvironmentDrawer mediator;
+    private GameDrawer mediator;
     private GameSoundManager soundPlayer;
     private MenuHandler menu;
     private Animator animator = new Animator();
@@ -27,10 +27,9 @@ public class Game {
     private long lastLoop = 0;
     private long interval = 0;
 
-    public Game(Environment environment, EnvironmentDrawer mediator, GameSoundManager soundPlayer, MenuHandler menu,
+    public Game(Environment environment, GameSoundManager soundPlayer, MenuHandler menu,
             ArrayList<String> input, long interval) {
         this.environment = environment;
-        this.mediator = mediator;
         this.menu = menu;
         this.input = input;
         this.soundPlayer = soundPlayer;
@@ -46,11 +45,11 @@ public class Game {
         this.environment = environment;
     }
 
-    public EnvironmentDrawer getMediator() {
+    public GameDrawer getMediator() {
         return mediator;
     }
 
-    public void setMediator(EnvironmentDrawer mediator) {
+    public void setMediator(GameDrawer mediator) {
         this.mediator = mediator;
     }
 
@@ -129,7 +128,7 @@ public class Game {
 
     public void reset() {
         this.environment = new GameSet().getEnvironment();
-        this.mediator.setEnvironment(this.environment);
+        this.mediator.setGame(this);
         this.input.clear();
         this.soundPlayer.stop();
         Sound ambient = this.environment.getCurrentLevel().getSoundSet().get(SoundEvent.AMBIENT);
