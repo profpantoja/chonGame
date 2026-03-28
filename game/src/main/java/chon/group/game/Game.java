@@ -24,14 +24,17 @@ public class Game {
     private Animator animator = new Animator();
     private ArrayList<String> input;
     private GameState currentState = new StartState();
+    private long lastLoop = 0;
+    private long interval = 0;
 
     public Game(Environment environment, EnvironmentDrawer mediator, GameSoundManager soundPlayer, MenuHandler menu,
-            ArrayList<String> input) {
+            ArrayList<String> input, long interval) {
         this.environment = environment;
         this.mediator = mediator;
         this.menu = menu;
         this.input = input;
         this.soundPlayer = soundPlayer;
+        this.interval = interval;
         this.start();
     }
 
@@ -92,11 +95,13 @@ public class Game {
     }
 
     public void loop() {
-        this.updateLevel();
-        this.currentState.handleInput(this);
-        this.currentState.update(this);
-        this.playSounds();
-        this.currentState.render(this);
+        if (this.run()) {
+            this.updateLevel();
+            this.currentState.handleInput(this);
+            this.currentState.update(this);
+            this.playSounds();
+            this.currentState.render(this);
+        }
     }
 
     private void playSounds() {
@@ -183,6 +188,23 @@ public class Game {
             }
         }
         return directions;
+    }
+
+    private boolean run() {
+        long now = System.currentTimeMillis();
+        if (this.lastLoop == 0) {
+            this.lastLoop = now;
+            return true;
+        }
+        if (this.interval <= 0) {
+            this.lastLoop = now;
+            return true;
+        }
+        if (now - this.lastLoop >= this.interval) {
+            this.lastLoop = now;
+            return true;
+        }
+        return false;
     }
 
 }

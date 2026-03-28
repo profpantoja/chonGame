@@ -10,7 +10,7 @@ import chon.group.game.core.agent.Direction;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.environment.Level;
-import chon.group.game.core.weapon.Panel;
+import chon.group.game.core.environment.Panel;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.domain.weapon.Cannon;
 import chon.group.game.domain.weapon.Lancer;

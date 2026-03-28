@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Entity;
 import chon.group.game.core.agent.Object;
-import chon.group.game.core.weapon.Panel;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.menu.Menu;
 import chon.group.game.messaging.Message;

@@ -72,13 +72,14 @@ public class Engine extends Application {
 
             EnvironmentDrawer mediator = new EnvironmentMediator(gameSet.getEnvironment(), new JavaFxDrawer(gc));
             GameSoundManager soundManager = new GameSoundManager(new JavaFxPlayer());
-            
+
             Game chonGame = new Game(
                     gameSet.getEnvironment(),
                     mediator,
                     soundManager,
                     gameSet.getMenu(),
-                    input);
+                    input,
+                    0);
 
             // Start the game loop
             new AnimationTimer() {

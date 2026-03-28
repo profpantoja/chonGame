@@ -1,4 +1,4 @@
-package chon.group.game.core.weapon;
+package chon.group.game.core.environment;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
