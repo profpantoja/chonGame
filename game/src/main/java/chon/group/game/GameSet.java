@@ -86,6 +86,14 @@ public class GameSet {
                                 110);
 
                 /** Define the game's menus. */
+                Item settingsMenu1 = new Item("Sound", Action.START);
+                Item settingsMenu2 = new Item("Return", Action.POP);
+                Menu settingsMenu = new Menu(
+                                "SETTINGS",
+                                List.of(settingsMenu1, settingsMenu2),
+                                0.7,
+                                400);
+
                 Item startMenu1 = new Item("Start", Action.START);
                 Item startMenu2 = new Item("Settings", Action.ENTER);
                 Item startMenu3 = new Item("About", Action.ENTER);
@@ -97,7 +105,7 @@ public class GameSet {
 
                 Item pauseMenu1 = new Item("Back", Action.CONTINUE);
                 Item pauseMenu2 = new Item("Debug", Action.DEBUG);
-                Item pauseMenu3 = new Item("Settings", Action.ENTER);
+                Item pauseMenu3 = new Item("Settings", Action.ENTER, settingsMenu);
                 Item pauseMenu4 = new Item("Exit", Action.RESET);
                 Menu pauseMenu = new Menu(
                                 "PAUSED",

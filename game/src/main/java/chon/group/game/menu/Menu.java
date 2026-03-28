@@ -89,6 +89,10 @@ public class Menu {
         return Action.NONE;
     }
 
+    public Item getSelectedItem() {
+        return this.items.get(this.index);
+    }
+
     public void reset() {
         this.index = 0;
     }

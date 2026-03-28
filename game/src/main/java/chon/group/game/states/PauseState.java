@@ -2,6 +2,7 @@ package chon.group.game.states;
 
 import chon.group.game.Game;
 import chon.group.game.menu.Action;
+import chon.group.game.menu.Item;
 
 public class PauseState implements GameState {
 
@@ -20,6 +21,11 @@ public class PauseState implements GameState {
         Action action = game.getEnvironment().getCurrentMenu().handleAction(game.getInput());
         if (action.equals(Action.DEBUG))
             game.getEnvironment().setDebugMode(!game.getEnvironment().isDebugMode());
+        if (action.equals(Action.ENTER)) {
+            // Working in Progress...
+            Item item = game.getEnvironment().getCurrentMenu().getSelectedItem();
+            game.getEnvironment().setCurrentMenu(item.getSubMenu());
+        }
         if (action.equals(Action.RESET)) {
             /* The Game is reset to the Start State. */
             game.reset();

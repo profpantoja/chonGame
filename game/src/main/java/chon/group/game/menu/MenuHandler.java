@@ -1,11 +1,15 @@
 package chon.group.game.menu;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 public class MenuHandler {
 
     private Menu start;
     private Menu pause;
     private Menu skip;
     private Menu gameOver;
+    private Deque<Menu> history = new ArrayDeque<>();
 
     public MenuHandler(Menu start, Menu pause, Menu skip, Menu gameOver) {
         this.start = start;
@@ -44,6 +48,14 @@ public class MenuHandler {
 
     public void setGameOver(Menu gameOver) {
         this.gameOver = gameOver;
+    }
+
+    public Deque<Menu> getHistory() {
+        return history;
+    }
+
+    public void setHistory(Deque<Menu> history) {
+        this.history = history;
     }
 
 }
