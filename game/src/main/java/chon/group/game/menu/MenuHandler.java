@@ -67,4 +67,16 @@ public class MenuHandler {
         this.history = history;
     }
 
+    public void push(Menu menu) {
+        history.push(currentMenu);
+        currentMenu = menu;
+        currentMenu.reset();
+    }
+
+    public void pop() {
+        if (!history.isEmpty()) {
+            currentMenu = history.pop();
+        }
+    }
+
 }

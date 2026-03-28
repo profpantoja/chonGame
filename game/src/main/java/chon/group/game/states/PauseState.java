@@ -22,9 +22,12 @@ public class PauseState implements GameState {
         if (action.equals(Action.DEBUG))
             game.getEnvironment().setDebugMode(!game.getEnvironment().isDebugMode());
         if (action.equals(Action.ENTER)) {
-            // Working in Progress...
             Item item = game.getMenu().getCurrentMenu().getSelectedItem();
+            game.getMenu().push(game.getMenu().getCurrentMenu());
             game.getMenu().setCurrentMenu(item.getSubMenu());
+        }
+        if (action.equals(Action.POP)) {
+            game.getMenu().pop();
         }
         if (action.equals(Action.RESET)) {
             /* The Game is reset to the Start State. */
