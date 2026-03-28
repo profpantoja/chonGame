@@ -28,11 +28,11 @@ public class Game {
     private long interval = 0;
 
     public Game(
-        Environment environment, 
-        GameSoundManager soundPlayer,
-        GameDrawer mediator, 
-        MenuHandler menu,
-            ArrayList<String> input, 
+            Environment environment,
+            GameSoundManager soundPlayer,
+            GameDrawer mediator,
+            MenuHandler menu,
+            ArrayList<String> input,
             long interval) {
         this.environment = environment;
         this.menu = menu;
@@ -130,7 +130,7 @@ public class Game {
     }
 
     public void start() {
-        this.environment.setCurrentMenu(this.menu.getStart());
+        this.menu.setCurrentMenu(this.menu.getStart());
     }
 
     public void reset() {
@@ -159,7 +159,7 @@ public class Game {
         Level newLevel = gameSet.getEnvironment().getLevels().get(myLevelIndex);
         this.environment.getLevels().set(myLevelIndex, newLevel);
         this.environment.setCurrentLevel(newLevel);
-        this.environment.setCurrentMenu(this.menu.getPause());
+        this.menu.setCurrentMenu(this.menu.getPause());
         this.environment.setProtagonist(gameSet.getEnvironment().getProtagonist());
         this.environment.getCamera().setPosX(0);
         this.environment.getCamera().setLevelWidth(newLevel.getWidth());

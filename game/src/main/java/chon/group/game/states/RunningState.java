@@ -20,7 +20,7 @@ public class RunningState implements GameState {
              */
             if (game.getInput().contains("P")) {
                 game.setCurrentState(new PauseState());
-                game.getEnvironment().setCurrentMenu(game.getMenu().getPause());
+                game.getMenu().setCurrentMenu(game.getMenu().getPause());
                 /* The Pause needs to be removed. Otherwise, it will stay forever paused. */
                 game.getInput().remove("P");
             } else {
@@ -75,7 +75,7 @@ public class RunningState implements GameState {
         /* If the agent died in this loop, the state changes. */
         if (game.getEnvironment().getProtagonist().isDead()) {
             /* If the agent dies, the game moves to the Game Over state. */
-            game.getEnvironment().setCurrentMenu(game.getMenu().getGameOver());
+            game.getMenu().setCurrentMenu(game.getMenu().getGameOver());
             game.setCurrentState(new GameOverState());
         }
         /* It animates the protagonist. */

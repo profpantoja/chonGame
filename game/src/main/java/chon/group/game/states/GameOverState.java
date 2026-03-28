@@ -8,12 +8,12 @@ public class GameOverState implements GameState {
     @Override
     public void handleInput(Game game) {
         /* It gets which action the player has chosen in the menu. */
-        Action action = game.getEnvironment().getCurrentMenu().handleAction(game.getInput());
+        Action action = game.getMenu().getCurrentMenu().handleAction(game.getInput());
         if (action.equals(Action.RESET)) {
             /* The Game is reset to the Start State. */
             game.reset();
             game.setCurrentState(new StartState());
-            game.getEnvironment().setCurrentMenu(game.getMenu().getStart());
+            game.getMenu().setCurrentMenu(game.getMenu().getStart());
         } else if (action.equals(Action.CONTINUE)) {
             /* The same level is restarted. */
             game.resetLevel();

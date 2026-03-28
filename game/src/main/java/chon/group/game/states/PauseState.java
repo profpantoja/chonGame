@@ -18,19 +18,19 @@ public class PauseState implements GameState {
             game.setCurrentState(new RunningState());
         }
         /* It gets which action the player has chosen in the menu. */
-        Action action = game.getEnvironment().getCurrentMenu().handleAction(game.getInput());
+        Action action = game.getMenu().getCurrentMenu().handleAction(game.getInput());
         if (action.equals(Action.DEBUG))
             game.getEnvironment().setDebugMode(!game.getEnvironment().isDebugMode());
         if (action.equals(Action.ENTER)) {
             // Working in Progress...
-            Item item = game.getEnvironment().getCurrentMenu().getSelectedItem();
-            game.getEnvironment().setCurrentMenu(item.getSubMenu());
+            Item item = game.getMenu().getCurrentMenu().getSelectedItem();
+            game.getMenu().setCurrentMenu(item.getSubMenu());
         }
         if (action.equals(Action.RESET)) {
             /* The Game is reset to the Start State. */
             game.reset();
             game.setCurrentState(new StartState());
-            game.getEnvironment().setCurrentMenu(game.getMenu().getStart());
+            game.getMenu().setCurrentMenu(game.getMenu().getStart());
         } else if (action.equals(Action.CONTINUE)) {
             /* The game returns to the Running State. */
             game.setCurrentState(new RunningState());

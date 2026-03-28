@@ -329,7 +329,7 @@ public class GameMediator implements GameDrawer {
      */
     @Override
     public void drawMenu() {
-        Menu currentMenu = this.game.getEnvironment().getCurrentMenu();
+        Menu currentMenu = this.game.getMenu().getCurrentMenu();
         drawer.drawMenu(
                 currentMenu.getTitle(),
                 currentMenu.getIndex(),

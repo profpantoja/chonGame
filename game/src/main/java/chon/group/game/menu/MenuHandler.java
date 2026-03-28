@@ -9,6 +9,7 @@ public class MenuHandler {
     private Menu pause;
     private Menu skip;
     private Menu gameOver;
+    private Menu currentMenu;
     private Deque<Menu> history = new ArrayDeque<>();
 
     public MenuHandler(Menu start, Menu pause, Menu skip, Menu gameOver) {
@@ -48,6 +49,14 @@ public class MenuHandler {
 
     public void setGameOver(Menu gameOver) {
         this.gameOver = gameOver;
+    }
+
+    public Menu getCurrentMenu() {
+        return currentMenu;
+    }
+
+    public void setCurrentMenu(Menu currentMenu) {
+        this.currentMenu = currentMenu;
     }
 
     public Deque<Menu> getHistory() {

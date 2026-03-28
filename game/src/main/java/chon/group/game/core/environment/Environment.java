@@ -9,7 +9,6 @@ import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Entity;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.weapon.Shot;
-import chon.group.game.menu.Menu;
 import chon.group.game.messaging.Message;
 import chon.group.game.sound.Sound;
 import chon.group.game.sound.SoundEvent;
@@ -38,7 +37,7 @@ public class Environment {
 
     private Level currentLevel;
 
-    private Menu currentMenu;
+    // private Menu currentMenu;
 
     /** List of messages currently being displayed. */
     private List<Message> messages;
@@ -135,13 +134,13 @@ public class Environment {
         this.currentLevel = currentLevel;
     }
 
-    public Menu getCurrentMenu() {
-        return currentMenu;
-    }
+    // public Menu getCurrentMenu() {
+    // return currentMenu;
+    // }
 
-    public void setCurrentMenu(Menu currentMenu) {
-        this.currentMenu = currentMenu;
-    }
+    // public void setCurrentMenu(Menu currentMenu) {
+    // this.currentMenu = currentMenu;
+    // }
 
     public List<Message> getMessages() {
         return messages;
