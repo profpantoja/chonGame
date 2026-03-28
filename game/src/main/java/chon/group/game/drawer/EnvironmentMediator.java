@@ -332,6 +332,7 @@ public class EnvironmentMediator implements EnvironmentDrawer {
         drawer.drawMenu(
                 currentMenu.getTitle(),
                 currentMenu.getIndex(),
+                currentMenu.getHeightProportion(),
                 currentMenu.getWidth(),
                 currentMenu.getSpan(),
                 this.environment.getCamera().getScreenWidth(),

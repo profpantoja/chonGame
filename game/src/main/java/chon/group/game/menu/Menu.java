@@ -7,22 +7,26 @@ public class Menu {
     private int index = 0;
     private String title;
     private List<Item> items;
+    /** It adjusts the Y position considering a percentage. */
+    private double heightProportion = 0.7;
     private double width = 400;
     private double span = 45;
 
-    public Menu(String title, List<Item> items, double width) {
+    public Menu(String title, List<Item> items, double proportion, double width) {
         this.title = title;
         this.items = items;
+        this.heightProportion = proportion;
+        this.width = width;
     }
-   
-    public Menu(int index, String title, List<Item> items, double width, double span) {
+
+    public Menu(int index, String title, List<Item> items, double proportion, double width, double span) {
         this.index = index;
         this.title = title;
         this.items = items;
+        this.heightProportion = proportion;
         this.width = width;
         this.span = span;
     }
-
 
     public int getIndex() {
         return index;
@@ -48,6 +52,14 @@ public class Menu {
         this.items = items;
     }
 
+    public double getHeightProportion() {
+        return heightProportion;
+    }
+
+    public void setHeightProportion(double heightProportion) {
+        this.heightProportion = heightProportion;
+    }
+
     public double getWidth() {
         return width;
     }
@@ -63,7 +75,7 @@ public class Menu {
     public void setSpan(double span) {
         this.span = span;
     }
-    
+
     public Action handleAction(List<String> input) {
         if (input.contains("ENTER")) {
             input.clear();

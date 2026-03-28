@@ -184,6 +184,7 @@ public abstract class Drawer {
         public abstract void drawMenu(
                         String title,
                         int selectedIndex,
+                        double percentage,
                         double width,
                         double span,
                         double screenWidth,

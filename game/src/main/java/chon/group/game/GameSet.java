@@ -87,18 +87,22 @@ public class GameSet {
 
                 /** Define the game's menus. */
                 Item startMenu1 = new Item("Start", Action.START);
-                Item startMenu2 = new Item("About", Action.ENTER);
+                Item startMenu2 = new Item("Settings", Action.ENTER);
+                Item startMenu3 = new Item("About", Action.ENTER);
                 Menu startMenu = new Menu(
                                 "CHON GAME",
-                                List.of(startMenu1, startMenu2),
+                                List.of(startMenu1, startMenu2, startMenu3),
+                                0.7,
                                 400);
 
                 Item pauseMenu1 = new Item("Back", Action.CONTINUE);
                 Item pauseMenu2 = new Item("Debug", Action.DEBUG);
-                Item pauseMenu3 = new Item("Exit", Action.RESET);
+                Item pauseMenu3 = new Item("Settings", Action.ENTER);
+                Item pauseMenu4 = new Item("Exit", Action.RESET);
                 Menu pauseMenu = new Menu(
                                 "PAUSED",
-                                List.of(pauseMenu1, pauseMenu2, pauseMenu3),
+                                List.of(pauseMenu1, pauseMenu2, pauseMenu3, pauseMenu4),
+                                0.63,
                                 400);
 
                 Item gameOverMenu1 = new Item("Continue", Action.CONTINUE);
@@ -106,6 +110,7 @@ public class GameSet {
                 Menu gaveOverMenu = new Menu(
                                 "GAME OVER",
                                 List.of(gameOverMenu1, gameOverMenu2),
+                                0.7,
                                 400);
 
                 this.menu = new MenuHandler(startMenu, pauseMenu, null, gaveOverMenu);

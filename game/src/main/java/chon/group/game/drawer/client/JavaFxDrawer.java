@@ -318,13 +318,19 @@ public class JavaFxDrawer extends Drawer {
     }
 
     @Override
-    public void drawMenu(String title, int selectedIndex, double width, double span, double screenWidth,
+    public void drawMenu(
+            String title,
+            int selectedIndex,
+            double percentage,
+            double width,
+            double span,
+            double screenWidth,
             double levelHeight,
             String[] options) {
         /* Sets the middle of the screen. */
         double posX = screenWidth / 2;
         /* Sets the Y position considering a percentage of the level height. */
-        double posY = levelHeight * 0.70;
+        double posY = levelHeight * percentage;
         /* Sets the final Y position considering the space sum between options. */
         double finalPosY = posY + (options.length * span);
         this.drawGlassPanel(
