@@ -1,4 +1,4 @@
-package chon.group.game.drawer;
+package chon.group.game.drawer.client;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -12,13 +12,10 @@ import javafx.scene.text.TextAlignment;
  * of the game environment using JavaFX. It provides methods to draw images,
  * life bars, status panels, and the pause screen.
  */
-public class JavaFxDrawer {
+public class JavaFxDrawer extends Drawer {
 
     /** The graphics context used to render the environment. */
     private final GraphicsContext gc;
-    /** The mediator instance, if necessary. */
-    @SuppressWarnings("unused")
-    private final EnvironmentDrawer mediator;
     private final Font theFont = Font.font("Verdana", FontWeight.BOLD, 14);
 
     /**
@@ -27,44 +24,21 @@ public class JavaFxDrawer {
      * @param gc       The GraphicsContext instance used for rendering.
      * @param mediator The mediator that manages the environment.
      */
-    public JavaFxDrawer(GraphicsContext gc, EnvironmentDrawer mediator) {
+    public JavaFxDrawer(GraphicsContext gc) {
         this.gc = gc;
-        this.mediator = mediator;
     }
 
-    /**
-     * Clears the canvas area, removing previously drawn elements.
-     *
-     * @param width  The width of the area to clear.
-     * @param height The height of the area to clear.
-     */
+    @Override
     public void clearScreen(int width, int height) {
         this.gc.clearRect(0, 0, width, height);
     }
 
-    /**
-     * Renders an image at the specified position and dimensions.
-     *
-     * @param image  The image to be drawn.
-     * @param posX   The x-coordinate position.
-     * @param posY   The y-coordinate position.
-     * @param width  The width of the image.
-     * @param height The height of the image.
-     */
+    @Override
     public void drawImage(Image image, int posX, int posY, int width, int height) {
         this.gc.drawImage(image, posX, posY, width, height);
     }
 
-    /**
-     * Renders the protagonist's life bar.
-     *
-     * @param health     The current health value.
-     * @param fullHealth The maximum health value.
-     * @param width      The width of the life bar.
-     * @param posX       The x-coordinate position.
-     * @param posY       The y-coordinate position.
-     * @param color      The color of the life bar.
-     */
+    @Override
     public void drawLifeBar(int health, int fullHealth, int width, int posX, int posY, Color color) {
         int borderThickness = 2;
         int barHeight = 5;
@@ -81,16 +55,7 @@ public class JavaFxDrawer {
                 barHeight);
     }
 
-    /**
-     * Renders the agent's energy bar.
-     *
-     * @param energy     The current energy value (0.0 to 1.0).
-     * @param fullEnergy The maximum energy value (typically 1.0).
-     * @param width      The width of the energy bar.
-     * @param posX       The x-coordinate position.
-     * @param posY       The y-coordinate position.
-     * @param color      The base color of the energy bar.
-     */
+    @Override
     public void drawEnergyBar(double energy, double fullEnergy, int width, int posX, int posY, Color color) {
         int borderThickness = 2;
         int barHeight = 5;
@@ -115,17 +80,7 @@ public class JavaFxDrawer {
                 barHeight);
     }
 
-    /**
-     * Draws the status panel showing health, energy, score, and collectibles.
-     *
-     * @param life      current life value
-     * @param maxLife   maximum life value
-     * @param collected number of collected items
-     * @param total     total collectible items
-     * @param score     current score
-     * @param energy    current energy value
-     * @param maxEnergy maximum energy value
-     */
+    @Override
     public void drawPanel(int life, int maxLife, int collected, int total, int score, double energy, double maxEnergy,
             Font pixelFont, Image lifeIcon, Image energyIcon, Image itemIcon, Image scoreIcon, int panelWidth,
             int panelHeight) {
@@ -134,6 +89,7 @@ public class JavaFxDrawer {
                 itemIcon, scoreIcon);
     }
 
+    @Override
     public void drawDebugPanel(int panelWidth, int panelHeight, double camX, int messages, int shots) {
         int span = 20;
         drawGlassPanel(panelWidth, panelHeight, 10, 130);
@@ -269,12 +225,7 @@ public class JavaFxDrawer {
         gc.strokeRoundRect(x, y, width, height, 8, 8);
     }
 
-    /**
-     * Displays a status panel showing the protagonist's coordinates.
-     *
-     * @param posX The x-coordinate of the protagonist.
-     * @param posY The y-coordinate of the protagonist.
-     */
+    @Override
     public void drawEntityPanel(int posX, int posY, int camX, int height, String direction, String entityStatus,
             boolean blocked, boolean finished) {
         int span = 15;
@@ -315,15 +266,6 @@ public class JavaFxDrawer {
         this.gc.fillText("Finish.: " + finished, (posX - camX), posY + height + (4 * span) + 5);
     }
 
-    /**
-     * Renders the pause screen, centering the pause image within the environment.
-     *
-     * @param image       The image representing the pause screen.
-     * @param imageWidth  The width of the pause image.
-     * @param imageHeight The height of the pause image.
-     * @param width       The total width of the environment.
-     * @param height      The total height of the environment.
-     */
     public void drawScreen(Image image, int imageWidth, int imageHeight, int width, int height) {
         if (image != null && this.gc != null) {
             double centerX = (width - imageWidth) / 2;
@@ -332,18 +274,7 @@ public class JavaFxDrawer {
         }
     }
 
-    /**
-     * Draws damage numbers that appear when agents take damage.
-     * The numbers float upward and fade out over time.
-     * 
-     * @param fontSize    The font size to be printed.
-     * @param opacity     The opacity value from 0 to 1.
-     * @param borderColor The border color.
-     * @param fillColor   The inside color.
-     * @param message     The message to be printed.
-     * @param posX        The x-coordinate of the protagonist.
-     * @param posY        The y-coordinate of the protagonist.
-     */
+    @Override
     public void drawMessages(int fontSize, double opacity, Color borderColor, Color fillColor, String message,
             double posX, double posY) {
         Font damageFont = Font.font("Verdana", FontWeight.BOLD, fontSize);
@@ -379,30 +310,14 @@ public class JavaFxDrawer {
         gc.setGlobalAlpha(1.0);
     }
 
-    /**
-     * Desenha um highlight (retângulo ou borda) para destacar a seleção atual em
-     * menus.
-     *
-     * @param x      Posição X do highlight.
-     * @param y      Posição Y do highlight.
-     * @param width  Largura do highlight.
-     * @param height Altura do highlight.
-     */
+    @Override
     public void drawHighlight(double x, double y, double width, double height) {
         gc.setStroke(Color.YELLOW);
         gc.setLineWidth(3);
         gc.strokeRect(x, y, width, height);
     }
 
-    /**
-     * Design the game's main menu, with a background that fills the entire screen.
-     *
-     * @param backgroundImage The image to fill the entire screen. If it is null,
-     *                        use a black background.
-     * @param title           The center menu title.
-     * @param selectedIndex   The index of the currently selected option.
-     * @param options         The text options for the central menu.
-     */
+    @Override
     public void drawMenu(String title, int selectedIndex, double width, double span, double screenWidth,
             double levelHeight,
             String[] options) {

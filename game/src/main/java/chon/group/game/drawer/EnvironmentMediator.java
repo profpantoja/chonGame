@@ -6,6 +6,8 @@ import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.weapon.Shot;
+import chon.group.game.drawer.client.Drawer;
+import chon.group.game.drawer.client.JavaFxDrawer;
 import chon.group.game.menu.Item;
 import chon.group.game.menu.Menu;
 import chon.group.game.messaging.Message;
@@ -21,10 +23,10 @@ import javafx.scene.text.FontWeight;
  * between the {@link Environment} and the {@link JavaFxDrawer} to manage
  * graphical rendering.
  */
-public class JavaFxMediator implements EnvironmentDrawer {
+public class EnvironmentMediator implements EnvironmentDrawer {
 
     private Environment environment;
-    private final JavaFxDrawer drawer;
+    private final Drawer drawer;
 
     /**
      * Constructs a JavaFxMediator with the specified environment and graphics
@@ -34,9 +36,9 @@ public class JavaFxMediator implements EnvironmentDrawer {
      *                    protagonist.
      * @param gc          The {@link GraphicsContext} used for rendering.
      */
-    public JavaFxMediator(Environment environment, GraphicsContext gc) {
+    public EnvironmentMediator(Environment environment, Drawer drawer) {
         this.environment = environment;
-        this.drawer = new JavaFxDrawer(gc, this);
+        this.drawer = drawer;
     }
 
     public void setEnvironment(Environment environment) {
