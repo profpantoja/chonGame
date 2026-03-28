@@ -71,14 +71,15 @@ public class Engine extends Application {
             });
 
             GameSoundManager soundManager = new GameSoundManager(new JavaFxPlayer());
+            GameDrawer mediator = new GameMediator(new JavaFxDrawer(gc));
+            
             Game chonGame = new Game(
                     gameSet.getEnvironment(),
                     soundManager,
+                    mediator,
                     gameSet.getMenu(),
                     input,
                     0);
-            GameDrawer mediator = new GameMediator(chonGame, new JavaFxDrawer(gc));
-            chonGame.setMediator(mediator);
 
             // Start the game loop
             new AnimationTimer() {

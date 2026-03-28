@@ -27,12 +27,19 @@ public class Game {
     private long lastLoop = 0;
     private long interval = 0;
 
-    public Game(Environment environment, GameSoundManager soundPlayer, MenuHandler menu,
-            ArrayList<String> input, long interval) {
+    public Game(
+        Environment environment, 
+        GameSoundManager soundPlayer,
+        GameDrawer mediator, 
+        MenuHandler menu,
+            ArrayList<String> input, 
+            long interval) {
         this.environment = environment;
         this.menu = menu;
         this.input = input;
         this.soundPlayer = soundPlayer;
+        this.mediator = mediator;
+        this.mediator.setGame(this);
         this.interval = interval;
         this.start();
     }

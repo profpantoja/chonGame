@@ -38,8 +38,7 @@ public class GameMediator implements GameDrawer {
      *                    protagonist.
      * @param gc          The {@link GraphicsContext} used for rendering.
      */
-    public GameMediator(Game game, Drawer drawer) {
-        this.game = game;
+    public GameMediator(Drawer drawer) {
         this.drawer = drawer;
     }
 
