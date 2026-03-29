@@ -41,6 +41,7 @@ public class Game {
         this.mediator = mediator;
         this.mediator.setGame(this);
         this.interval = interval;
+        this.reset();
         this.start();
     }
 

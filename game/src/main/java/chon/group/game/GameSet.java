@@ -86,7 +86,7 @@ public class GameSet {
                                 110);
 
                 /** Define the game's menus. */
-                Item settingsMenu1 = new Item("Sound", Action.START);
+                Item settingsMenu1 = new Item("Sound", Action.NONE);
                 Item settingsMenu2 = new Item("Return", Action.POP);
                 Menu settingsMenu = new Menu(
                                 "SETTINGS",
@@ -95,8 +95,8 @@ public class GameSet {
                                 400);
 
                 Item startMenu1 = new Item("Start", Action.START);
-                Item startMenu2 = new Item("Settings", Action.ENTER);
-                Item startMenu3 = new Item("About", Action.ENTER);
+                Item startMenu2 = new Item("Settings", Action.ENTER, settingsMenu);
+                Item startMenu3 = new Item("About", Action.NONE);
                 Menu startMenu = new Menu(
                                 "CHON GAME",
                                 List.of(startMenu1, startMenu2, startMenu3),
@@ -985,6 +985,11 @@ public class GameSet {
                 coin12.getSoundSet().add(SoundEvent.COLLECT, coinTerminate);
                 coin13.getSoundSet().add(SoundEvent.COLLECT, coinTerminate);
                 // Level sounds.
+                Sound level0BackgroundSound = new Sound(
+                                "/sounds/levels/openingMusic.mp3",
+                                SoundType.MUSIC,
+                                true);
+                level0.getSoundSet().add(SoundEvent.BACKGROUND, level0BackgroundSound);
                 Sound level1AmbientSound = new Sound(
                                 "/sounds/levels/forestAmbient.mp3",
                                 SoundType.AMBIENT,
