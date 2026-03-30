@@ -86,7 +86,7 @@ public class GameSet {
                                 110);
 
                 /** Define the game's menus. */
-                Item settingsMenu1 = new Item("Sound", Action.NONE);
+                Item settingsMenu1 = new Item("[-] Sound [+]", Action.VOLUME);
                 Item settingsMenu2 = new Item("Return", Action.POP);
                 Menu settingsMenu = new Menu(
                                 "SETTINGS",

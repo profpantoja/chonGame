@@ -16,6 +16,8 @@ public enum Action {
     CONTINUE,
     /* It activates the debug mode. */
     DEBUG,
+    /* Any volume action. */
+    VOLUME,
     /* An empty state. */
     NONE
 

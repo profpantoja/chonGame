@@ -11,6 +11,10 @@ public class GameSoundManager implements SoundManager {
         this.player = player;
     }
 
+    public SoundPlayer getPlayer() {
+        return player;
+    }
+
     @Override
     public void play(Sound sound) {
         player.playSound(sound.getPath());
@@ -29,6 +33,18 @@ public class GameSoundManager implements SoundManager {
     @Override
     public void stop() {
         player.stop();
+    }
+
+    @Override
+    public void increaseVolume() {
+        player.increaseMusicVolume();
+        player.setMusicVolume(player.getMusicVolume());
+    }
+
+    @Override
+    public void decreaseVolume() {
+        player.decreaseMusicVolume();
+        player.setMusicVolume(player.getMusicVolume());
     }
 
 }

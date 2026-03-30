@@ -77,15 +77,22 @@ public class Menu {
     }
 
     public Action handleAction(List<String> input) {
-        if (input.contains("ENTER")) {
+        if (!input.isEmpty()) {
+            if (input.contains("ENTER")) {
+                input.clear();
+                return items.get(this.index).getAction();
+            }
+            if (input.contains("UP"))
+                this.index = (this.index - 1 + items.size()) % items.size();
+            if (input.contains("DOWN"))
+                this.index = (this.index + 1) % items.size();
+            if (input.contains("LEFT") || input.contains("RIGHT")) {
+                Action action = items.get(this.index).getAction();
+                if (action.equals(Action.VOLUME))
+                    return action;
+            }
             input.clear();
-            return items.get(this.index).getAction();
         }
-        if (input.contains("UP"))
-            this.index = (this.index - 1 + items.size()) % items.size();
-        if (input.contains("DOWN"))
-            this.index = (this.index + 1) % items.size();
-        input.clear();
         return Action.NONE;
     }
 

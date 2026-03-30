@@ -19,16 +19,6 @@ public class PauseState implements GameState {
         }
         /* It gets which action the player has chosen in the menu. */
         Action action = game.getMenu().getCurrentMenu().handleAction(game.getInput());
-        if (action.equals(Action.DEBUG))
-            game.getEnvironment().setDebugMode(!game.getEnvironment().isDebugMode());
-        if (action.equals(Action.ENTER)) {
-            Item item = game.getMenu().getCurrentMenu().getSelectedItem();
-            game.getMenu().push(game.getMenu().getCurrentMenu());
-            game.getMenu().setCurrentMenu(item.getSubMenu());
-        }
-        if (action.equals(Action.POP)) {
-            game.getMenu().pop();
-        }
         if (action.equals(Action.RESET)) {
             /* The Game is reset to the Start State. */
             game.reset();
@@ -38,6 +28,32 @@ public class PauseState implements GameState {
             /* The game returns to the Running State. */
             game.setCurrentState(new RunningState());
         }
+
+        switch (action) {
+            case ENTER:
+                Item item = game.getMenu().getCurrentMenu().getSelectedItem();
+                game.getMenu().push(game.getMenu().getCurrentMenu());
+                game.getMenu().setCurrentMenu(item.getSubMenu());
+                break;
+            case POP:
+                game.getMenu().pop();
+                break;
+            /* If the player has selected an option, an action is executed. */
+            case DEBUG:
+                if (action.equals(Action.DEBUG))
+                    game.getEnvironment().setDebugMode(!game.getEnvironment().isDebugMode());
+                break;
+            case VOLUME:
+                if (game.getInput().contains("LEFT"))
+                    game.getSoundPlayer().decreaseVolume();
+                if (game.getInput().contains("RIGHT"))
+                    game.getSoundPlayer().increaseVolume();
+                game.getInput().clear();
+                break;
+            default:
+                break;
+        }
+
     }
 
     @Override

@@ -16,4 +16,10 @@ public interface SoundManager {
     /** Stops the Player. It is necessary to change between looping sounds. */
     void stop();
 
+    /** Increase Volume */
+    void increaseVolume();
+
+    /** Decrease Volume */
+    void decreaseVolume();
+
 }
