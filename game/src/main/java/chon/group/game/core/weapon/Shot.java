@@ -12,7 +12,15 @@ public abstract class Shot extends Entity {
     private boolean destructible = false;
     private int damage;
 
-    public Shot(int posX, int posY, int height, int width, int speed, int health, Direction direction, String pathImage,
+    public Shot(
+            int posX,
+            int posY,
+            int height,
+            int width,
+            int speed,
+            int health,
+            Direction direction,
+            String pathImage,
             boolean flipped,
             int damage) {
         super(posX, posY, height, width, speed, health, direction, flipped, false);
@@ -37,7 +45,7 @@ public abstract class Shot extends Entity {
 
     @Override
     public void takeDamage(int damage, List<Message> messages, List<Sound> sounds) {
-        if (destructible) {
+        if (this.destructible) {
             /* Decrease health. */
             this.setHealth(this.getHealth() - damage);
             messages.add(new Message(

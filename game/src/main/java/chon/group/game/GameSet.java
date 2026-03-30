@@ -267,8 +267,18 @@ public class GameSet {
                 chonBota.getAnimationSet().add(AnimationType.ATTACK, shootingChonBota);
                 chonBota.getAnimationSet().add(AnimationType.DAMAGE, hitChonBota);
                 chonBota.getAnimationSet().add(AnimationType.TERMINATE, deadChonBota);
+
+                /** Game's Weapons and Shots. */
                 Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, 0.05, "", false);
+
                 Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
+                Animation fireballShot = new Animation();
+                fireballShot.getFrames().add(new Image(
+                                getClass().getResource("/images/weapons/fireball/fireball001.png").toExternalForm()));
+                fireballShot.getFrames().add(new Image(
+                                getClass().getResource("/images/weapons/fireball/fireball002.png").toExternalForm()));
+                fireballShot.getFrames().add(new Image(
+                                getClass().getResource("/images/weapons/fireball/fireball003.png").toExternalForm()));
 
                 chonBota.setWeapon(cannon);
                 chonBota.setWeapon(lancer);

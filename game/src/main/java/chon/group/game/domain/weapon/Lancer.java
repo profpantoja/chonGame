@@ -13,13 +13,24 @@ import javafx.scene.image.Image;
 
 public class Lancer extends Weapon {
 
-    public Lancer(int posX, int posY, int height, int width, int speed, int health, double energyCost, String pathImage,
+    public Lancer(
+            int posX,
+            int posY,
+            int height,
+            int width,
+            int speed,
+            int health,
+            double energyCost,
+            String pathImage,
             boolean flipped) {
         super(posX, posY, height, width, speed, health, energyCost, pathImage, flipped);
     }
 
     @Override
     protected Shot createShot(int posX, int posY, Direction direction) {
+        /*
+         * Precisa passar o valor da entidade que atira para não criar colisão própria.
+         */
         if (direction.equals(Direction.RIGHT))
             posX += 64 + 1;
         else

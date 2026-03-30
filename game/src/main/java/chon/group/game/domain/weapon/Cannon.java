@@ -10,7 +10,15 @@ import chon.group.game.sound.Sound;
 
 public class Cannon extends Weapon {
 
-    public Cannon(int posX, int posY, int height, int width, int speed, int health, double energyCost, String pathImage,
+    public Cannon(
+            int posX,
+            int posY,
+            int height,
+            int width,
+            int speed,
+            int health,
+            double energyCost,
+            String pathImage,
             boolean flipped) {
         super(posX, posY, height, width, speed, health, energyCost, pathImage, flipped);
     }
