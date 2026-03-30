@@ -20,7 +20,6 @@ public abstract class Weapon extends Entity {
             int speed,
             int health,
             double energyCost,
-            String pathImage,
             boolean flipped) {
         super(posX, posY, height, width, speed, health, Direction.IDLE, flipped, false);
         this.energyCost = energyCost;
@@ -34,7 +33,6 @@ public abstract class Weapon extends Entity {
             int speed,
             int health,
             double energyCost,
-            String pathImage,
             boolean flipped,
             long cooldown) {
         super(posX, posY, height, width, speed, health, Direction.IDLE, flipped, false);

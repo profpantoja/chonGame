@@ -20,7 +20,6 @@ public abstract class Shot extends Entity {
             int speed,
             int health,
             Direction direction,
-            String pathImage,
             boolean flipped,
             int damage) {
         super(posX, posY, height, width, speed, health, direction, flipped, false);

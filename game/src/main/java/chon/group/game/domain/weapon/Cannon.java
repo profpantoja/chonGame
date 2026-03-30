@@ -20,7 +20,7 @@ public class Cannon extends Weapon {
             double energyCost,
             String pathImage,
             boolean flipped) {
-        super(posX, posY, height, width, speed, health, energyCost, pathImage, flipped);
+        super(posX, posY, height, width, speed, health, energyCost, flipped);
     }
 
     @Override

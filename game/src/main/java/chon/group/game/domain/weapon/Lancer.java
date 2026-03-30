@@ -23,7 +23,7 @@ public class Lancer extends Weapon {
             double energyCost,
             String pathImage,
             boolean flipped) {
-        super(posX, posY, height, width, speed, health, energyCost, pathImage, flipped);
+        super(posX, posY, height, width, speed, health, energyCost, flipped);
     }
 
     @Override
@@ -54,7 +54,6 @@ public class Lancer extends Weapon {
                 3,
                 0,
                 direction,
-                "/images/weapons/fireball/fireball001.png",
                 false,
                 500);
         fireball.getAnimationSet().add(AnimationType.IDLE, fireballShot);
