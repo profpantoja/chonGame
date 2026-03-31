@@ -14,7 +14,7 @@ public abstract class Shot extends Entity {
     /** Time when this shot was created. */
     private long creationTime;
     /** Duration in milliseconds that the shot/hit is effectible. */
-    private long lifetime = 0;
+    private long lifetime = 2000;
 
     public Shot(
             int posX,

@@ -365,71 +365,76 @@ public class Environment {
          * defines the collision priority.
          */
         currentShot: while (itShot.hasNext()) {
+
             Shot shot = itShot.next();
-            /* if the shot's position went off the level width, it is removed. */
-            if ((shot.getPosX() > this.currentLevel.getWidth()) || ((shot.getPosX() + shot.getWidth()) < 0)) {
-                itShot.remove();
-                break currentShot;
-            }
-            /* If the remaining shots hit (in)destructible and no collectible objects. */
-            Iterator<Object> itObject = this.currentLevel.getObjects().iterator();
-            while (itObject.hasNext()) {
-                Object object = itObject.next();
-                /*
-                 * The shot hit an object if it is not terminated. The shot may pass by
-                 * terminated objects.
-                 */
-                if (!object.isTerminated()) {
-                    if (intersect(object, shot)) {
-                        /* If the object is destructible, it must take some damage. */
-                        if (object.isDestructible()) {
-                            object.takeDamage(shot.getDamage(), messages, sounds);
-                            /* Then the shot is removed. */
-                            itShot.remove();
-                            break currentShot;
-                        } else {
-                            /*
-                             * If the object is indestructible, it is necessary to verify if it collectible
-                             * or not. If it is collectible, the shot must go on. Otherwise it should be
-                             * removed.
-                             */
-                            if (!object.isCollectible()) {
+            if (!shot.hasExpired()) {
+                /* if the shot's position went off the level width, it is removed. */
+                if ((shot.getPosX() > this.currentLevel.getWidth()) || ((shot.getPosX() + shot.getWidth()) < 0)) {
+                    itShot.remove();
+                    break currentShot;
+                }
+                /* If the remaining shots hit (in)destructible and no collectible objects. */
+                Iterator<Object> itObject = this.currentLevel.getObjects().iterator();
+                while (itObject.hasNext()) {
+                    Object object = itObject.next();
+                    /*
+                     * The shot hit an object if it is not terminated. The shot may pass by
+                     * terminated objects.
+                     */
+                    if (!object.isTerminated()) {
+                        if (intersect(object, shot)) {
+                            /* If the object is destructible, it must take some damage. */
+                            if (object.isDestructible()) {
+                                object.takeDamage(shot.getDamage(), messages, sounds);
+                                /* Then the shot is removed. */
                                 itShot.remove();
                                 break currentShot;
                             } else {
                                 /*
-                                 * The shot must goes on. So, it leaves the object iterator and searches other
-                                 * conditions.
+                                 * If the object is indestructible, it is necessary to verify if it collectible
+                                 * or not. If it is collectible, the shot must go on. Otherwise it should be
+                                 * removed.
                                  */
-                                break;
+                                if (!object.isCollectible()) {
+                                    itShot.remove();
+                                    break currentShot;
+                                } else {
+                                    /*
+                                     * The shot must goes on. So, it leaves the object iterator and searches other
+                                     * conditions.
+                                     */
+                                    break;
+                                }
                             }
                         }
                     }
                 }
-            }
-            /* The same as before but now with all other agents. */
-            Iterator<Agent> itAgent = this.currentLevel.getAgents().iterator();
-            while (itAgent.hasNext()) {
-                Agent agent = itAgent.next();
-                if (!agent.isDead()) {
-                    if (intersect(agent, shot)) {
-                        agent.takeDamage(shot.getDamage(), messages, sounds);
-                        itShot.remove();
-                        break currentShot;
+                /* The same as before but now with all other agents. */
+                Iterator<Agent> itAgent = this.currentLevel.getAgents().iterator();
+                while (itAgent.hasNext()) {
+                    Agent agent = itAgent.next();
+                    if (!agent.isDead()) {
+                        if (intersect(agent, shot)) {
+                            agent.takeDamage(shot.getDamage(), messages, sounds);
+                            itShot.remove();
+                            break currentShot;
+                        }
                     }
                 }
-            }
-            /**
-             * If any shot intersected the protagonist, the damage is taken, the message
-             * system is informed, and the shot is removed.
-             */
-            if (intersect(protagonist, shot)) {
-                protagonist.takeDamage(shot.getDamage(), messages, sounds);
+                /**
+                 * If any shot intersected the protagonist, the damage is taken, the message
+                 * system is informed, and the shot is removed.
+                 */
+                if (intersect(protagonist, shot)) {
+                    protagonist.takeDamage(shot.getDamage(), messages, sounds);
+                    itShot.remove();
+                    break currentShot;
+                }
+                /* The remaining shots move. */
+                shot.move(new ArrayList<>(List.of(shot.getDirection())));
+            } else {
                 itShot.remove();
-                break currentShot;
             }
-            /* The remaining shots move. */
-            shot.move(new ArrayList<>(List.of(shot.getDirection())));
         }
     }
 
