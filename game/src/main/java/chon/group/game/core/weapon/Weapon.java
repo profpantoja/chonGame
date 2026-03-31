@@ -26,8 +26,6 @@ public abstract class Weapon extends Entity {
     }
 
     public Weapon(
-            int posX,
-            int posY,
             int height,
             int width,
             int speed,
@@ -35,7 +33,7 @@ public abstract class Weapon extends Entity {
             double energyCost,
             boolean flipped,
             long cooldown) {
-        super(posX, posY, height, width, speed, health, Direction.IDLE, flipped, false);
+        super(0, 0, height, width, speed, health, Direction.IDLE, flipped, false);
         this.energyCost = energyCost;
         this.cooldown = cooldown;
     }
@@ -72,13 +70,21 @@ public abstract class Weapon extends Entity {
         this.cooldown = cooldown;
     }
 
-    protected abstract Shot createShot(int posX, int posY, Direction direction);
+    protected abstract Shot createShot(
+            int posX,
+            int posY,
+            int entityWidth,
+            Direction direction);
 
-    public Shot fire(int posX, int posY, Direction direction) {
+    public Shot fire(int posX, int posY, int entityWidth, Direction direction) {
         long currentTime = System.currentTimeMillis();
         if (currentTime - this.lastAttackTime >= this.cooldown) {
             this.lastAttackTime = currentTime;
-            return createShot(posX, posY, direction);
+            return createShot(
+                    posX,
+                    posY,
+                    entityWidth,
+                    direction);
         }
         return null;
     }

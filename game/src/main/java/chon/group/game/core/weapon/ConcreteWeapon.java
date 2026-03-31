@@ -1,0 +1,73 @@
+package chon.group.game.core.weapon;
+
+import java.util.List;
+
+import chon.group.game.core.agent.Direction;
+import chon.group.game.messaging.Message;
+import chon.group.game.sound.Sound;
+
+public class ConcreteWeapon extends Weapon {
+
+    private ConcreteShot shot;
+
+    public ConcreteWeapon(
+            int posX,
+            int posY,
+            int height,
+            int width,
+            int speed,
+            int health,
+            double energyCost,
+            boolean flipped,
+            ConcreteShot shot) {
+        super(posX, posY, height, width, speed, health, energyCost, flipped);
+        this.shot = shot;
+    }
+
+    public ConcreteWeapon(
+            int height,
+            int width,
+            int speed,
+            int health,
+            double energyCost,
+            boolean flipped,
+            long cooldown,
+            ConcreteShot shot) {
+        super(height, width, speed, health, energyCost, flipped, cooldown);
+        this.shot = shot;
+    }
+
+    public ConcreteShot getShot() {
+        return shot;
+    }
+
+    public void setShot(ConcreteShot shot) {
+        this.shot = shot;
+    }
+
+    @Override
+    protected Shot createShot(int posX, int posY, int entityWidth, Direction direction) {
+        if (direction.equals(Direction.RIGHT))
+            posX += entityWidth + 1;
+        else
+            posX -= entityWidth + 1;
+        ConcreteShot shot = new ConcreteShot(
+                posX,
+                posY + 30,
+                this.shot.getHeight(),
+                this.shot.getWidth(),
+                this.shot.getSpeed(),
+                this.shot.getHealth(),
+                direction,
+                false,
+                this.shot.getDamage());
+        shot.setAnimationSet(this.shot.getAnimationSet());
+        return shot;
+    }
+
+    @Override
+    public void takeDamage(int damage, List<Message> messages, List<Sound> sounds) {
+
+    }
+
+}

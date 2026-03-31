@@ -11,9 +11,9 @@ import chon.group.game.core.agent.Object;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.environment.Level;
 import chon.group.game.core.environment.Panel;
+import chon.group.game.core.weapon.ConcreteShot;
+import chon.group.game.core.weapon.ConcreteWeapon;
 import chon.group.game.core.weapon.Weapon;
-import chon.group.game.domain.weapon.Cannon;
-import chon.group.game.domain.weapon.Lancer;
 import chon.group.game.menu.Action;
 import chon.group.game.menu.Item;
 import chon.group.game.menu.Menu;
@@ -269,9 +269,43 @@ public class GameSet {
                 chonBota.getAnimationSet().add(AnimationType.TERMINATE, deadChonBota);
 
                 /** Game's Weapons and Shots. */
-                Weapon cannon = new Cannon(400, 390, 0, 0, 3, 0, 0.05, "", false);
+                // New Canno with Missile.
+                Animation missileShot = new Animation();
+                missileShot.getFrames().add(new Image(
+                                getClass().getResource("/images/weapons/missile/missile001.png").toExternalForm()));
+                missileShot.getFrames().add(new Image(
+                                getClass().getResource("/images/weapons/missile/missile002.png").toExternalForm()));
+                missileShot.getFrames().add(new Image(
+                                getClass().getResource("/images/weapons/missile/missile003.png").toExternalForm()));
+                missileShot.getFrames().add(new Image(
+                                getClass().getResource("/images/weapons/missile/missile004.png").toExternalForm()));
+                missileShot.getFrames().add(new Image(
+                                getClass().getResource("/images/weapons/missile/missile005.png").toExternalForm()));
+                missileShot.getFrames().add(new Image(
+                                getClass().getResource("/images/weapons/missile/missile006.png").toExternalForm()));
+                missileShot.getFrames().add(new Image(
+                                getClass().getResource("/images/weapons/missile/missile007.png").toExternalForm()));
+                missileShot.getFrames().add(new Image(
+                                getClass().getResource("/images/weapons/missile/missile008.png").toExternalForm()));
 
-                Weapon lancer = new Lancer(400, 390, 0, 0, 3, 0, 0.05, "", false);
+                ConcreteShot missile = new ConcreteShot(
+                                42,
+                                64,
+                                3,
+                                0,
+                                false,
+                                800);
+                missile.getAnimationSet().add(AnimationType.IDLE, missileShot);
+                Weapon cannon = new ConcreteWeapon(
+                                0,
+                                0,
+                                3,
+                                0,
+                                0.05,
+                                false,
+                                150,
+                                missile);
+
                 Animation fireballShot = new Animation();
                 fireballShot.getFrames().add(new Image(
                                 getClass().getResource("/images/weapons/fireball/fireball001.png").toExternalForm()));
@@ -280,8 +314,27 @@ public class GameSet {
                 fireballShot.getFrames().add(new Image(
                                 getClass().getResource("/images/weapons/fireball/fireball003.png").toExternalForm()));
 
-                chonBota.setWeapon(cannon);
+                ConcreteShot fireball = new ConcreteShot(
+                                42,
+                                64,
+                                3,
+                                0,
+                                false,
+                                500);
+                fireball.getAnimationSet().add(AnimationType.IDLE, fireballShot);
+                // New Lancer with Fireball.
+                Weapon lancer = new ConcreteWeapon(
+                                0,
+                                0,
+                                3,
+                                0,
+                                0.05,
+                                false,
+                                150,
+                                fireball);
                 chonBota.setWeapon(lancer);
+                chonBota.setWeapon(cannon);
+
                 /* Animation frames for chonBota. It can be reused among all instances. */
                 Animation idleChonBot = new Animation();
                 idleChonBot.getFrames().add(new Image(

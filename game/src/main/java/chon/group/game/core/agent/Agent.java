@@ -208,7 +208,11 @@ public class Agent extends Entity {
     public Shot useWeapon() {
         if (this.energy >= this.getWeapon().getEnergyCost()) {
             Direction direction = this.getAnimationState().isFlipped() ? Direction.LEFT : Direction.RIGHT;
-            Shot shot = this.weapon.fire(this.getPosX(), this.getPosY(), direction);
+            Shot shot = this.weapon.fire(
+                    this.getPosX(),
+                    this.getPosY(),
+                    this.getWidth(),
+                    direction);
             if (shot != null) {
                 this.setStatus(EntityStatus.ATTACK);
                 this.consumeEnergy(this.getWeapon().getEnergyCost());
