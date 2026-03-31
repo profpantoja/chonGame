@@ -11,6 +11,10 @@ public abstract class Shot extends Entity {
 
     private boolean destructible = false;
     private int damage;
+    /** Time when this shot was created. */
+    private long creationTime;
+    /** Duration in milliseconds that the shot/hit is effectible. */
+    private long lifetime = 0;
 
     public Shot(
             int posX,
@@ -24,6 +28,7 @@ public abstract class Shot extends Entity {
             int damage) {
         super(posX, posY, height, width, speed, health, direction, flipped, false);
         this.damage = damage;
+        this.creationTime = System.currentTimeMillis();
     }
 
     public boolean isDestructible() {
@@ -42,6 +47,22 @@ public abstract class Shot extends Entity {
         this.damage = damage;
     }
 
+    public long getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(long creationTime) {
+        this.creationTime = creationTime;
+    }
+
+    public long getLifetime() {
+        return lifetime;
+    }
+
+    public void setLifetime(long lifetime) {
+        this.lifetime = lifetime;
+    }
+
     @Override
     public void takeDamage(int damage, List<Message> messages, List<Sound> sounds) {
         if (this.destructible) {
@@ -57,4 +78,24 @@ public abstract class Shot extends Entity {
                 this.setHealth(0);
         }
     }
+
+    /**
+     * Checks whether this shot has exceeded its lifetime.
+     *
+     * <p>
+     * If the lifetime is less than or equal to zero, the shot is treated as
+     * non-expirable and this method always returns {@code false}.
+     * </p>
+     *
+     * @return {@code true} if the shot has expired; {@code false} otherwise
+     */
+    public boolean hasExpired() {
+        if (this.lifetime <= 0) {
+            return false;
+        }
+        long currentTime = System.currentTimeMillis();
+        long age = currentTime - this.creationTime;
+        return age > this.lifetime;
+    }
+
 }

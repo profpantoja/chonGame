@@ -72,7 +72,7 @@ public class Engine extends Application {
 
             GameSoundManager soundManager = new GameSoundManager(new JavaFxPlayer());
             GameDrawer mediator = new GameMediator(new JavaFxDrawer(gc));
-            
+
             Game chonGame = new Game(
                     gameSet.getEnvironment(),
                     soundManager,

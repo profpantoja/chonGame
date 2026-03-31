@@ -270,7 +270,7 @@ public class GameSet {
 
                 /** Game's Weapons and Shots. */
                 // New Canno with Missile.
-                Animation missileShot = new Animation();
+                Animation missileShot = new Animation(0, true);
                 missileShot.getFrames().add(new Image(
                                 getClass().getResource("/images/weapons/missile/missile001.png").toExternalForm()));
                 missileShot.getFrames().add(new Image(
@@ -332,9 +332,9 @@ public class GameSet {
                                 false,
                                 150,
                                 fireball);
-                chonBota.setWeapon(lancer);
                 chonBota.setWeapon(cannon);
-
+                chonBota.setWeapon(lancer);
+                
                 /* Animation frames for chonBota. It can be reused among all instances. */
                 Animation idleChonBot = new Animation();
                 idleChonBot.getFrames().add(new Image(

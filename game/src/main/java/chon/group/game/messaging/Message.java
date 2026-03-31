@@ -108,7 +108,7 @@ public class Message {
      */
     public boolean update() {
         long currentTime = System.currentTimeMillis();
-        long age = currentTime - creationTime;
+        long age = currentTime - this.creationTime;
 
         if (age >= LIFETIME) {
             return false;
