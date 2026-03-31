@@ -12,9 +12,9 @@ public abstract class Shot extends Entity {
     private boolean destructible = false;
     private int damage;
     /** Time when this shot was created. */
-    private long creationTime;
+    private int creationPosX;
     /** Duration in milliseconds that the shot/hit is effectible. */
-    private long lifetime = 1000;
+    private int range = 1200;
 
     public Shot(
             int posX,
@@ -28,7 +28,7 @@ public abstract class Shot extends Entity {
             int damage) {
         super(posX, posY, height, width, speed, health, direction, flipped, false);
         this.damage = damage;
-        this.creationTime = System.currentTimeMillis();
+        this.creationPosX = posX;
     }
 
     public boolean isDestructible() {
@@ -47,20 +47,20 @@ public abstract class Shot extends Entity {
         this.damage = damage;
     }
 
-    public long getCreationTime() {
-        return creationTime;
+    public long getCreationPosX() {
+        return creationPosX;
     }
 
-    public void setCreationTime(long creationTime) {
-        this.creationTime = creationTime;
+    public void setCreationPosX(int creationPosX) {
+        this.creationPosX = creationPosX;
     }
 
-    public long getLifetime() {
-        return lifetime;
+    public long getRange() {
+        return range;
     }
 
-    public void setLifetime(long lifetime) {
-        this.lifetime = lifetime;
+    public void setRange(int range) {
+        this.range = range;
     }
 
     @Override
@@ -90,12 +90,10 @@ public abstract class Shot extends Entity {
      * @return {@code true} if the shot has expired; {@code false} otherwise
      */
     public boolean hasExpired() {
-        if (this.lifetime <= 0) {
+        if (this.range <= 0) {
             return false;
         }
-        long currentTime = System.currentTimeMillis();
-        long age = currentTime - this.creationTime;
-        return age > this.lifetime;
+        return Math.abs(this.getPosX() - this.creationPosX) >= this.range;
     }
 
 }
