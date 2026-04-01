@@ -16,16 +16,12 @@ public class Object extends Entity {
      *
      * @param posX             The x-coordinate of the object.
      * @param posY             The y-coordinate of the object.
-     * @param height           The height of the object.
-     * @param width            The width of the object.
      * @param collectible      Whether the object is collectible.
      * @param destructible     Whether the object is destructible.
      * @param attractionRadius The attraction radius in pixels.
      */
     public Object(int posX,
             int posY,
-            int height,
-            int width,
             int speed,
             int health,
             Direction direction,
@@ -34,7 +30,7 @@ public class Object extends Entity {
             boolean collectible,
             boolean destructible,
             double attractionRadius) {
-        super(posX, posY, height, width, speed, health, direction, flipped, visibleBars);
+        super(posX, posY, speed, health, direction, flipped, visibleBars);
         this.collectible = collectible;
         this.destructible = destructible;
         this.attractionRadius = attractionRadius;

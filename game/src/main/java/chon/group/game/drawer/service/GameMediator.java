@@ -74,7 +74,7 @@ public class GameMediator implements GameDrawer {
     @Override
     public void drawBackground() {
         int posX = (int) (this.game.getEnvironment().getCamera().getPosX() * -1);
-        drawer.drawImage(this.game.getEnvironment().getCurrentLevel().getImage(),
+        drawer.drawImage(this.game.getEnvironment().getCurrentLevel().getAnimationState().getCurrentImage(),
                 posX, this.game.getEnvironment().getCurrentLevel().getPosY(),
                 this.game.getEnvironment().getCurrentLevel().getWidth(),
                 this.game.getEnvironment().getCurrentLevel().getHeight());

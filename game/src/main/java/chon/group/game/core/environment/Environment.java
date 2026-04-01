@@ -64,12 +64,11 @@ public class Environment {
      *
      * @param posX        the initial X position of the environment
      * @param posY        the initial Y position of the environment
-     * @param height      the height of the environment
      * @param width       the width of the environment
      * @param screenWidth the screen width used for camera calculations
      * @param pathImage   the path to the background image
      */
-    public Environment(int height, int width, double screenWidth, Panel panel) {
+    public Environment(int width, double screenWidth, Panel panel) {
         this.messages = new ArrayList<Message>();
         this.sounds = new ArrayList<Sound>();
         this.levels = new ArrayList<Level>();

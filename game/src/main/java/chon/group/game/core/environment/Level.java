@@ -5,7 +5,6 @@ import chon.group.game.core.agent.Direction;
 import chon.group.game.core.agent.Entity;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.weapon.Shot;
-import javafx.scene.image.Image;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,14 +29,10 @@ public class Level extends Entity {
     /** Total number of collectible objects in the environment. */
     private int totalCollectibleCount = 0;
 
-    /** Image representing the entity. */
-    protected Image image;
-
-    public Level(int posX, int posY, int height, int width, int topY, int bottomY, String pathImage) {
-        super(posX, posY, height, width, 0, 0, Direction.IDLE, false, false);
+    public Level(int posX, int posY, int topY, int bottomY) {
+        super(posX, posY, 0, 0, Direction.IDLE, false, false);
         this.topY = topY;
         this.bottomY = bottomY;
-        this.image = new Image(getClass().getResource(pathImage).toExternalForm());
         this.agents = new ArrayList<Agent>();
         this.objects = new ArrayList<Object>();
         this.shots = new ArrayList<Shot>();
@@ -81,24 +76,6 @@ public class Level extends Entity {
 
     public void setShots(List<Shot> shots) {
         this.shots = shots;
-    }
-
-    /**
-     * Gets the entity image.
-     *
-     * @return the entity image
-     */
-    public Image getImage() {
-        return image;
-    }
-
-    /**
-     * Gets the entity flipped status.
-     *
-     * @param image the new image
-     */
-    public void setImage(Image image) {
-        this.image = image;
     }
 
     /**

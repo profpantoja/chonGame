@@ -128,11 +128,8 @@ public class GameSet {
                 Level level0 = new Level(
                                 0,
                                 0,
-                                canvasHeight,
-                                1280,
                                 0,
-                                0,
-                                "/images/environment/chonGame.png");
+                                0);
                 Animation level0Animation = new Animation();
                 level0Animation.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/environment/chonGame.png")
@@ -146,11 +143,8 @@ public class GameSet {
                 Level level1 = new Level(
                                 0,
                                 0,
-                                canvasHeight,
-                                8024,
                                 260,
-                                canvasHeight,
-                                "/images/environment/castleLong.png");
+                                canvasHeight);
                 level1Animation.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/environment/castleLong.png")
                                                 .toExternalForm()),
@@ -163,11 +157,8 @@ public class GameSet {
                 Level level2 = new Level(
                                 0,
                                 0,
-                                canvasHeight,
-                                8024,
                                 380,
-                                590,
-                                "/images/environment/insideCastle.png");
+                                590);
                 level2Animation.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/environment/insideCastle.png")
                                                 .toExternalForm()),
@@ -177,7 +168,6 @@ public class GameSet {
                 level2.getAnimationState().setCurrentAnimation(level2Animation);
 
                 environment = new Environment(
-                                this.canvasHeight,
                                 level1.getWidth(),
                                 this.canvasWidth,
                                 panel);
@@ -185,8 +175,6 @@ public class GameSet {
                 Agent chonBota = new Agent(
                                 400,
                                 390,
-                                90,
-                                65,
                                 2,
                                 5000,
                                 Direction.IDLE,
@@ -396,8 +384,6 @@ public class GameSet {
                                 800);
                 missile.getAnimationSet().add(AnimationType.IDLE, missileShot);
                 Weapon cannon = new ConcreteWeapon(
-                                0,
-                                0,
                                 3,
                                 0,
                                 0.05,
@@ -429,8 +415,6 @@ public class GameSet {
                 fireball.getAnimationSet().add(AnimationType.IDLE, fireballShot);
                 // New Lancer with Fireball.
                 Weapon lancer = new ConcreteWeapon(
-                                0,
-                                0,
                                 3,
                                 0,
                                 0.05,
@@ -511,8 +495,6 @@ public class GameSet {
                 Agent chonBot1 = new Agent(
                                 920,
                                 440,
-                                90,
-                                65,
                                 1,
                                 500,
                                 Direction.IDLE,
@@ -523,8 +505,6 @@ public class GameSet {
                 Agent chonBot2 = new Agent(
                                 2920,
                                 640,
-                                90,
-                                65,
                                 1,
                                 500,
                                 Direction.IDLE,
@@ -535,8 +515,6 @@ public class GameSet {
                 Agent chonBot3 = new Agent(
                                 4920,
                                 300,
-                                90,
-                                65,
                                 1,
                                 500,
                                 Direction.IDLE,
@@ -547,8 +525,6 @@ public class GameSet {
                 Agent chonBot4 = new Agent(
                                 6920,
                                 500,
-                                90,
-                                65,
                                 1,
                                 500,
                                 Direction.IDLE,
@@ -559,8 +535,6 @@ public class GameSet {
                 Agent chonBot5 = new Agent(
                                 1500,
                                 500,
-                                90,
-                                65,
                                 1,
                                 500,
                                 Direction.IDLE,
@@ -652,8 +626,6 @@ public class GameSet {
                 Object coin1 = new Object(
                                 200,
                                 350,
-                                32,
-                                32,
                                 0,
                                 0,
                                 Direction.IDLE,
@@ -669,8 +641,6 @@ public class GameSet {
                 Object coin2 = new Object(
                                 400,
                                 380,
-                                32,
-                                32,
                                 0,
                                 1,
                                 Direction.IDLE,
@@ -685,8 +655,6 @@ public class GameSet {
                 Object coin3 = new Object(
                                 1000,
                                 600,
-                                32,
-                                32,
                                 0,
                                 0,
                                 Direction.IDLE,
@@ -702,8 +670,6 @@ public class GameSet {
                 Object box1 = new Object(
                                 1200,
                                 704,
-                                64,
-                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -719,8 +685,6 @@ public class GameSet {
                 Object box2 = new Object(
                                 1200,
                                 650,
-                                64,
-                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -736,8 +700,6 @@ public class GameSet {
                 Object box3 = new Object(
                                 1200,
                                 596,
-                                64,
-                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -753,8 +715,6 @@ public class GameSet {
                 Object coin4 = new Object(
                                 1400,
                                 380,
-                                32,
-                                32,
                                 0,
                                 0,
                                 Direction.IDLE,
@@ -770,8 +730,6 @@ public class GameSet {
                 Object coin5 = new Object(
                                 1800,
                                 650,
-                                32,
-                                32,
                                 0,
                                 0,
                                 Direction.IDLE,
@@ -787,8 +745,6 @@ public class GameSet {
                 Object box4 = new Object(
                                 1900,
                                 350,
-                                64,
-                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -804,8 +760,6 @@ public class GameSet {
                 Object coin6 = new Object(
                                 2000,
                                 580,
-                                32,
-                                32,
                                 0,
                                 0,
                                 Direction.IDLE,
@@ -821,8 +775,6 @@ public class GameSet {
                 Object box5 = new Object(
                                 2150,
                                 550,
-                                64,
-                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -838,8 +790,6 @@ public class GameSet {
                 Object coin7 = new Object(
                                 2300,
                                 380,
-                                32,
-                                32,
                                 0,
                                 0,
                                 Direction.IDLE,
@@ -855,8 +805,6 @@ public class GameSet {
                 Object box6 = new Object(
                                 2500,
                                 680,
-                                64,
-                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -872,8 +820,6 @@ public class GameSet {
                 Object coin8 = new Object(
                                 2600,
                                 500,
-                                32,
-                                32,
                                 0,
                                 0,
                                 Direction.IDLE,
@@ -888,8 +834,6 @@ public class GameSet {
                 Object box7 = new Object(
                                 2700,
                                 450,
-                                64,
-                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -905,8 +849,6 @@ public class GameSet {
                 Object box8 = new Object(
                                 2850,
                                 650,
-                                64,
-                                64,
                                 0,
                                 5000,
                                 Direction.IDLE,
@@ -923,8 +865,6 @@ public class GameSet {
                 Object coin9 = new Object(
                                 2900,
                                 380,
-                                32,
-                                32,
                                 0,
                                 0,
                                 Direction.IDLE,
@@ -940,8 +880,6 @@ public class GameSet {
                 Object box9 = new Object(
                                 3150,
                                 450,
-                                64,
-                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -957,8 +895,6 @@ public class GameSet {
                 Object coin10 = new Object(
                                 3200,
                                 400,
-                                32,
-                                32,
                                 0,
                                 0,
                                 Direction.IDLE,
@@ -974,8 +910,6 @@ public class GameSet {
                 Object box10 = new Object(
                                 3500,
                                 350,
-                                64,
-                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -991,8 +925,6 @@ public class GameSet {
                 Object box11 = new Object(
                                 3850,
                                 550,
-                                64,
-                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -1008,8 +940,6 @@ public class GameSet {
                 Object coin11 = new Object(
                                 4100,
                                 500,
-                                32,
-                                32,
                                 0,
                                 0,
                                 Direction.IDLE,
@@ -1024,8 +954,6 @@ public class GameSet {
                 Object box12 = new Object(
                                 4350,
                                 550,
-                                64,
-                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -1041,8 +969,6 @@ public class GameSet {
                 Object box13 = new Object(
                                 4550,
                                 550,
-                                64,
-                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -1058,8 +984,6 @@ public class GameSet {
                 Object box14 = new Object(
                                 4650,
                                 350,
-                                64,
-                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -1073,8 +997,6 @@ public class GameSet {
                 Object box15 = new Object(
                                 4850,
                                 600,
-                                64,
-                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -1088,8 +1010,6 @@ public class GameSet {
                 Object coin12 = new Object(
                                 5000,
                                 380,
-                                32,
-                                32,
                                 0,
                                 0,
                                 Direction.IDLE,
@@ -1105,8 +1025,6 @@ public class GameSet {
                 Object box16 = new Object(
                                 5150,
                                 650,
-                                64,
-                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -1122,8 +1040,6 @@ public class GameSet {
                 Object box17 = new Object(
                                 5300,
                                 300,
-                                64,
-                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -1139,8 +1055,6 @@ public class GameSet {
                 Object box18 = new Object(
                                 5600,
                                 550,
-                                64,
-                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -1156,8 +1070,6 @@ public class GameSet {
                 Object coin13 = new Object(
                                 6200,
                                 400,
-                                32,
-                                32,
                                 0,
                                 0,
                                 Direction.IDLE,

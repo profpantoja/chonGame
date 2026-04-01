@@ -15,27 +15,23 @@ public class ConcreteWeapon extends Weapon {
     public ConcreteWeapon(
             int posX,
             int posY,
-            int height,
-            int width,
             int speed,
             int health,
             double energyCost,
             boolean flipped,
             ConcreteShot shot) {
-        super(posX, posY, height, width, speed, health, energyCost, flipped);
+        super(posX, posY, speed, health, energyCost, flipped);
         this.shot = shot;
     }
 
     public ConcreteWeapon(
-            int height,
-            int width,
             int speed,
             int health,
             double energyCost,
             boolean flipped,
             long cooldown,
             ConcreteShot shot) {
-        super(height, width, speed, health, energyCost, flipped, cooldown);
+        super(speed, health, energyCost, flipped, cooldown);
         this.shot = shot;
     }
 

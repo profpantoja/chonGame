@@ -56,13 +56,11 @@ public abstract class Entity {
      *
      * @param posX      the entity's initial X (horizontal) position
      * @param posY      the entity's initial Y (vertical) position
-     * @param height    the entity's height
-     * @param width     the entity's width
      * @param speed     the entity's speed
      * @param health    the entity's health
      * @param pathImage the path to the entity's image
      */
-    public Entity(int posX, int posY, int height, int width, int speed, int health, Direction direction,
+    public Entity(int posX, int posY, int speed, int health, Direction direction,
             boolean flipped,
             boolean visibleBars) {
         /*
@@ -73,8 +71,6 @@ public abstract class Entity {
             health = 1;
         this.posX = posX;
         this.posY = posY;
-        // this.height = height;
-        // this.width = width;
         this.speed = speed;
         this.health = health;
         this.fullHealth = health;
