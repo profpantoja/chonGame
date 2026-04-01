@@ -1,4 +1,4 @@
-package chon.group.game.drawer;
+package chon.group.game.drawer.service;
 
 import chon.group.game.Game;
 

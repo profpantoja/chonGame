@@ -19,12 +19,13 @@ public abstract class Shot extends Entity {
     public Shot(
             int posX,
             int posY,
+            int width,
             int speed,
             int health,
             Direction direction,
             boolean flipped,
             int damage) {
-        super(posX, posY, speed, health, direction, flipped, false);
+        super(posX, posY, width, speed, health, direction, flipped, false);
         this.damage = damage;
         this.creationPosX = posX;
     }

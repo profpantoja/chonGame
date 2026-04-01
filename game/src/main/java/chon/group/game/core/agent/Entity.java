@@ -18,11 +18,8 @@ public abstract class Entity {
     /** Y (vertical) position of the entity. */
     private int posY;
 
-    /** Height of the entity. */
-    // private int height;
-
-    /** Width of the entity. */
-    // private int width;
+    /** Anchor Width of the entity. */
+    private int width;
 
     /** entity speed. */
     private int speed;
@@ -60,7 +57,7 @@ public abstract class Entity {
      * @param health    the entity's health
      * @param pathImage the path to the entity's image
      */
-    public Entity(int posX, int posY, int speed, int health, Direction direction,
+    public Entity(int posX, int posY, int width, int speed, int health, Direction direction,
             boolean flipped,
             boolean visibleBars) {
         /*
@@ -71,6 +68,7 @@ public abstract class Entity {
             health = 1;
         this.posX = posX;
         this.posY = posY;
+        this.width = width;
         this.speed = speed;
         this.health = health;
         this.fullHealth = health;
@@ -133,9 +131,9 @@ public abstract class Entity {
      *
      * @param height the new height
      */
-    //public void setHeight(int height) {
-    //    this.height = height;
-    //}
+    // public void setHeight(int height) {
+    // this.height = height;
+    // }
 
     /**
      * Gets the width of the entity.
@@ -155,9 +153,9 @@ public abstract class Entity {
      *
      * @param width the new width
      */
-    //public void setWidth(int width) {
-    //    this.width = width;
-    //}
+    // public void setWidth(int width) {
+    // this.width = width;
+    // }
 
     /**
      * Gets the entity's speed.
@@ -412,7 +410,7 @@ public abstract class Entity {
                         .getCurrentFrameIndex())
                 .getWidth();
         if (this.animationState.isFlipped())
-            return width * (-1);
+            return -width;
         return width;
     }
 
@@ -423,13 +421,7 @@ public abstract class Entity {
      */
     public int getFlippedPosX() {
         if (this.animationState.isFlipped()) {
-            int width = this.getAnimationState()
-                    .getCurrentAnimation()
-                    .getFrames()
-                    .get(this.getAnimationState()
-                            .getCurrentFrameIndex())
-                    .getWidth();
-            return posX + width;
+            return posX + this.width;
         }
         return posX;
     }

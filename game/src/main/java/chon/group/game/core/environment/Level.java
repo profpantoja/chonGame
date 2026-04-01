@@ -30,7 +30,7 @@ public class Level extends Entity {
     private int totalCollectibleCount = 0;
 
     public Level(int posX, int posY, int topY, int bottomY) {
-        super(posX, posY, 0, 0, Direction.IDLE, false, false);
+        super(posX, posY, 0, 0, 0, Direction.IDLE, false, false);
         this.topY = topY;
         this.bottomY = bottomY;
         this.agents = new ArrayList<Agent>();

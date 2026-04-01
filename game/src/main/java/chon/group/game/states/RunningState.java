@@ -33,7 +33,11 @@ public class RunningState implements GameState {
                         game.getEnvironment().getSounds()
                                 .add(game.getEnvironment().getProtagonist().getSoundSet().get(SoundEvent.ATTACK));
                         /* The shot is added to the environment's current level. */
-                        game.getEnvironment().getCurrentLevel().getShots().add(shot);
+                        /*
+                         * ESTA LINHA PRECISA SER DESCOMENTADA ASSIM QUE OS TESTES DOS PUNCHES
+                         * TERMINAREM.
+                         */
+                        // game.getEnvironment().getCurrentLevel().getShots().add(shot);
                     }
                 } else {
                     /* If there is any movement key pressed. */
