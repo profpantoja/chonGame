@@ -19,7 +19,7 @@ public abstract class Entity {
     private int posY;
 
     /** Anchor Width of the entity. */
-    private int width;
+    private int widthOffset;
 
     /** entity speed. */
     private int speed;
@@ -68,7 +68,7 @@ public abstract class Entity {
             health = 1;
         this.posX = posX;
         this.posY = posY;
-        this.width = width;
+        this.widthOffset = width;
         this.speed = speed;
         this.health = health;
         this.fullHealth = health;
@@ -127,15 +127,6 @@ public abstract class Entity {
     }
 
     /**
-     * Sets the height of the entity.
-     *
-     * @param height the new height
-     */
-    // public void setHeight(int height) {
-    // this.height = height;
-    // }
-
-    /**
      * Gets the width of the entity.
      *
      * @return the width of the entity
@@ -149,13 +140,13 @@ public abstract class Entity {
     }
 
     /**
-     * Sets the width of the entity.
+     * Gets the width anchor (offset) of the entity.
      *
-     * @param width the new width
+     * @return the width anchor (offset) of the entity
      */
-    // public void setWidth(int width) {
-    // this.width = width;
-    // }
+    public int getWidthOffset() {
+        return this.widthOffset;
+    }
 
     /**
      * Gets the entity's speed.
@@ -421,7 +412,7 @@ public abstract class Entity {
      */
     public int getFlippedPosX() {
         if (this.animationState.isFlipped()) {
-            return posX + this.width;
+            return posX + this.widthOffset;
         }
         return posX;
     }

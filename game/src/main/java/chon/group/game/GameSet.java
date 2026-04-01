@@ -1249,12 +1249,11 @@ public class GameSet {
                 level2.getSoundSet().add(SoundEvent.BACKGROUND, level2BackgroundSound);
 
                 // Register objects into the environment and count total collectibles
-                /*
-                 * level1.getAgents().add(chonBot1);
-                 * level1.getAgents().add(chonBot2);
-                 * level1.getAgents().add(chonBot3);
-                 * level1.getAgents().add(chonBot4);
-                 */
+                level1.getAgents().add(chonBot1);
+                level1.getAgents().add(chonBot2);
+                level1.getAgents().add(chonBot3);
+                level1.getAgents().add(chonBot4);
+
                 level1.setObjects(objects);
                 level1.countCollectibles();
                 level2.getAgents().add(chonBot5);

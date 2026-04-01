@@ -104,7 +104,7 @@ public class Camera {
 
     public double updateBar(Entity entity) {
         if (entity.getAnimationState().isFlipped())
-            return this.updateEntity(entity) - entity.getWidth();
+            return this.updateEntity(entity) - entity.getWidthOffset();
         return this.updateEntity(entity);
     }
 

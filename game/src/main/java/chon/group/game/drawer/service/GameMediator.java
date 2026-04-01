@@ -98,14 +98,14 @@ public class GameMediator implements GameDrawer {
                 drawer.drawEnergyBar(
                         agent.getEnergy(),
                         agent.getFullEnergy(),
-                        agent.getWidth(),
+                        agent.getWidthOffset(),
                         (int) this.game.getEnvironment().getCamera().updateBar(agent),
                         agent.getPosY(),
                         Color.BLUE);
                 drawer.drawLifeBar(
                         agent.getHealth(),
                         agent.getFullHealth(),
-                        agent.getWidth(),
+                        agent.getWidthOffset(),
                         (int) this.game.getEnvironment().getCamera().updateBar(agent),
                         agent.getPosY(),
                         Color.GREEN);
@@ -205,7 +205,7 @@ public class GameMediator implements GameDrawer {
             drawer.drawLifeBar(
                     protagonist.getHealth(),
                     protagonist.getFullHealth(),
-                    protagonist.getWidth(),
+                    protagonist.getWidthOffset(),
                     (int) this.game.getEnvironment().getCamera().updateBar(protagonist),
                     protagonist.getPosY(),
                     Color.GREEN);
@@ -222,7 +222,7 @@ public class GameMediator implements GameDrawer {
             drawer.drawEnergyBar(
                     protagonist.getEnergy(),
                     protagonist.getFullEnergy(),
-                    protagonist.getWidth(),
+                    protagonist.getWidthOffset(),
                     (int) this.game.getEnvironment().getCamera().updateBar(protagonist),
                     protagonist.getPosY(),
                     Color.BLUE);
