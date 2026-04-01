@@ -120,7 +120,7 @@ public class AnimationState {
     }
 
     public Image getCurrentImage() {
-        Image image = this.getCurrentAnimation().getFrames().get(currentFrameIndex);
+        Image image = this.getCurrentAnimation().getFrames().get(currentFrameIndex).getImage();
         return image;
     }
 

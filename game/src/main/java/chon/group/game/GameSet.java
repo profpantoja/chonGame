@@ -5,6 +5,7 @@ import java.util.List;
 
 import chon.group.game.animation.Animation;
 import chon.group.game.animation.AnimationType;
+import chon.group.game.animation.Frame;
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Direction;
 import chon.group.game.core.agent.Object;
@@ -169,98 +170,154 @@ public class GameSet {
                                 true);
                 /* Animation frames for chonBota. It is just used for the protagonitst. */
                 Animation idleChonBota = new Animation();
-                idleChonBota.getFrames().add(new Image(
+                idleChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/idle/chonBota_001.png")
-                                                .toExternalForm()));
-                idleChonBota.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                idleChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/idle/chonBota_002.png")
-                                                .toExternalForm()));
-                idleChonBota.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                idleChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/idle/chonBota_003.png")
-                                                .toExternalForm()));
-                idleChonBota.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                idleChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/idle/chonBota_004.png")
-                                                .toExternalForm()));
-                idleChonBota.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                idleChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/idle/chonBota_004.png")
-                                                .toExternalForm()));
-                idleChonBota.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                idleChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/idle/chonBota_005.png")
-                                                .toExternalForm()));
-                idleChonBota.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                idleChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/idle/chonBota_005.png")
-                                                .toExternalForm()));
-                idleChonBota.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                idleChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/idle/chonBota_006.png")
-                                                .toExternalForm()));
+                                                .toExternalForm()),
+                                65,
+                                90));
 
                 Animation hoveringChonBota = new Animation(150, true);
-                hoveringChonBota.getFrames().add(new Image(
+                hoveringChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/walk/chonBota_Walk_001.png")
-                                                .toExternalForm()));
-                hoveringChonBota.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                hoveringChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/walk/chonBota_Walk_002.png")
-                                                .toExternalForm()));
-                hoveringChonBota.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                hoveringChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/walk/chonBota_Walk_003.png")
-                                                .toExternalForm()));
-                hoveringChonBota.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                hoveringChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/walk/chonBota_Walk_004.png")
-                                                .toExternalForm()));
-                hoveringChonBota.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                hoveringChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/walk/chonBota_Walk_005.png")
-                                                .toExternalForm()));
-                hoveringChonBota.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                hoveringChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/walk/chonBota_Walk_006.png")
-                                                .toExternalForm()));
-                hoveringChonBota.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                hoveringChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/walk/chonBota_Walk_007.png")
-                                                .toExternalForm()));
-                hoveringChonBota.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                hoveringChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/walk/chonBota_Walk_008.png")
-                                                .toExternalForm()));
-                hoveringChonBota.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                hoveringChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/walk/chonBota_Walk_009.png")
-                                                .toExternalForm()));
-                hoveringChonBota.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                hoveringChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/walk/chonBota_Walk_010.png")
-                                                .toExternalForm()));
+                                                .toExternalForm()),
+                                65,
+                                90));
 
                 Animation shootingChonBota = new Animation(100, false);
-                shootingChonBota.getFrames().add(new Image(
+                shootingChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/attack/chonBota_Attack_001.png")
-                                                .toExternalForm()));
+                                                .toExternalForm()),
+                                65,
+                                90));
 
                 Animation hitChonBota = new Animation(200, false);
-                hitChonBota.getFrames().add(new Image(
+                hitChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/hit/chonBota_Hit_001.png")
-                                                .toExternalForm()));
+                                                .toExternalForm()),
+                                65,
+                                90));
 
                 Animation deadChonBota = new Animation(100, false);
-                deadChonBota.getFrames().add(new Image(
+                deadChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/dead/chonBota_Dead_001.png")
-                                                .toExternalForm()));
-                deadChonBota.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                deadChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/dead/chonBota_Dead_002.png")
-                                                .toExternalForm()));
-                deadChonBota.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                deadChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/dead/chonBota_Dead_003.png")
-                                                .toExternalForm()));
-                deadChonBota.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                deadChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/dead/chonBota_Dead_004.png")
-                                                .toExternalForm()));
-                deadChonBota.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                deadChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/dead/chonBota_Dead_005.png")
-                                                .toExternalForm()));
-                deadChonBota.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                deadChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/dead/chonBota_Dead_006.png")
-                                                .toExternalForm()));
-                deadChonBota.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                deadChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/dead/chonBota_Dead_007.png")
-                                                .toExternalForm()));
-                deadChonBota.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                deadChonBota.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBota/dead/chonBota_Dead_007.png")
-                                                .toExternalForm()));
+                                                .toExternalForm()),
+                                65,
+                                90));
 
                 chonBota.getAnimationSet().add(AnimationType.IDLE, idleChonBota);
                 chonBota.getAnimationSet().add(AnimationType.WALK, hoveringChonBota);
@@ -271,22 +328,38 @@ public class GameSet {
                 /** Game's Weapons and Shots. */
                 // New Canno with Missile.
                 Animation missileShot = new Animation(0, true);
-                missileShot.getFrames().add(new Image(
-                                getClass().getResource("/images/weapons/missile/missile001.png").toExternalForm()));
-                missileShot.getFrames().add(new Image(
-                                getClass().getResource("/images/weapons/missile/missile002.png").toExternalForm()));
-                missileShot.getFrames().add(new Image(
-                                getClass().getResource("/images/weapons/missile/missile003.png").toExternalForm()));
-                missileShot.getFrames().add(new Image(
-                                getClass().getResource("/images/weapons/missile/missile004.png").toExternalForm()));
-                missileShot.getFrames().add(new Image(
-                                getClass().getResource("/images/weapons/missile/missile005.png").toExternalForm()));
-                missileShot.getFrames().add(new Image(
-                                getClass().getResource("/images/weapons/missile/missile006.png").toExternalForm()));
-                missileShot.getFrames().add(new Image(
-                                getClass().getResource("/images/weapons/missile/missile007.png").toExternalForm()));
-                missileShot.getFrames().add(new Image(
-                                getClass().getResource("/images/weapons/missile/missile008.png").toExternalForm()));
+                missileShot.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/weapons/missile/missile001.png").toExternalForm()),
+                                64,
+                                42));
+                missileShot.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/weapons/missile/missile002.png").toExternalForm()),
+                                64,
+                                42));
+                missileShot.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/weapons/missile/missile003.png").toExternalForm()),
+                                64,
+                                42));
+                missileShot.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/weapons/missile/missile004.png").toExternalForm()),
+                                64,
+                                42));
+                missileShot.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/weapons/missile/missile005.png").toExternalForm()),
+                                64,
+                                42));
+                missileShot.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/weapons/missile/missile006.png").toExternalForm()),
+                                64,
+                                42));
+                missileShot.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/weapons/missile/missile007.png").toExternalForm()),
+                                64,
+                                42));
+                missileShot.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/weapons/missile/missile008.png").toExternalForm()),
+                                64,
+                                42));
 
                 ConcreteShot missile = new ConcreteShot(
                                 42,
@@ -307,12 +380,18 @@ public class GameSet {
                                 missile);
 
                 Animation fireballShot = new Animation();
-                fireballShot.getFrames().add(new Image(
-                                getClass().getResource("/images/weapons/fireball/fireball001.png").toExternalForm()));
-                fireballShot.getFrames().add(new Image(
-                                getClass().getResource("/images/weapons/fireball/fireball002.png").toExternalForm()));
-                fireballShot.getFrames().add(new Image(
-                                getClass().getResource("/images/weapons/fireball/fireball003.png").toExternalForm()));
+                fireballShot.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/weapons/fireball/fireball001.png").toExternalForm()),
+                                64,
+                                42));
+                fireballShot.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/weapons/fireball/fireball002.png").toExternalForm()),
+                                64,
+                                42));
+                fireballShot.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/weapons/fireball/fireball003.png").toExternalForm()),
+                                64,
+                                42));
 
                 ConcreteShot fireball = new ConcreteShot(
                                 42,
@@ -334,47 +413,71 @@ public class GameSet {
                                 fireball);
                 chonBota.setWeapon(cannon);
                 chonBota.setWeapon(lancer);
-                
+
                 /* Animation frames for chonBota. It can be reused among all instances. */
                 Animation idleChonBot = new Animation();
-                idleChonBot.getFrames().add(new Image(
+                idleChonBot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBot/idle/chonBot_001.png")
-                                                .toExternalForm()));
-                idleChonBot.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                idleChonBot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBot/idle/chonBot_002.png")
-                                                .toExternalForm()));
-                idleChonBot.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                idleChonBot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBot/idle/chonBot_003.png")
-                                                .toExternalForm()));
-                idleChonBot.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                idleChonBot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBot/idle/chonBot_004.png")
-                                                .toExternalForm()));
-                idleChonBot.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                idleChonBot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBot/idle/chonBot_004.png")
-                                                .toExternalForm()));
+                                                .toExternalForm()),
+                                65,
+                                90));
 
                 Animation deadChonBot = new Animation(200, false);
-                deadChonBot.getFrames().add(new Image(
+                deadChonBot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBot/dead/chonBot_dead_001.png")
-                                                .toExternalForm()));
-                deadChonBot.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                deadChonBot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBot/dead/chonBot_dead_002.png")
-                                                .toExternalForm()));
-                deadChonBot.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                deadChonBot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBot/dead/chonBot_dead_002.png")
-                                                .toExternalForm()));
-                deadChonBot.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                deadChonBot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBot/dead/chonBot_dead_003.png")
-                                                .toExternalForm()));
-                deadChonBot.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                deadChonBot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBot/dead/chonBot_dead_003.png")
-                                                .toExternalForm()));
-                deadChonBot.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                deadChonBot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBot/dead/chonBot_dead_004.png")
-                                                .toExternalForm()));
-                deadChonBot.getFrames().add(new Image(
+                                                .toExternalForm()),
+                                65,
+                                90));
+                deadChonBot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/agents/chonBot/dead/chonBot_dead_005.png")
-                                                .toExternalForm()));
+                                                .toExternalForm()),
+                                65,
+                                90));
                 /*
                  * Enemies instances. For each instance is necessary the Agent object and the
                  * Animation Set.
@@ -446,39 +549,67 @@ public class GameSet {
 
                 /* Animation frames for objects. It can be reused among all instances. */
                 Animation idleCoin = new Animation();
-                idleCoin.getFrames().add(new Image(
-                                getClass().getResource("/images/objects/chonCoin/coin_001.png").toExternalForm()));
-                idleCoin.getFrames().add(new Image(
-                                getClass().getResource("/images/objects/chonCoin/coin_002.png").toExternalForm()));
-                idleCoin.getFrames().add(new Image(
-                                getClass().getResource("/images/objects/chonCoin/coin_003.png").toExternalForm()));
-                idleCoin.getFrames().add(new Image(
-                                getClass().getResource("/images/objects/chonCoin/coin_004.png").toExternalForm()));
-                idleCoin.getFrames().add(new Image(
-                                getClass().getResource("/images/objects/chonCoin/coin_003.png").toExternalForm()));
-                idleCoin.getFrames().add(new Image(
-                                getClass().getResource("/images/objects/chonCoin/coin_002.png").toExternalForm()));
+                idleCoin.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/objects/chonCoin/coin_001.png").toExternalForm()),
+                                32,
+                                32));
+                idleCoin.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/objects/chonCoin/coin_002.png").toExternalForm()),
+                                32,
+                                32));
+                idleCoin.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/objects/chonCoin/coin_003.png").toExternalForm()),
+                                32,
+                                32));
+                idleCoin.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/objects/chonCoin/coin_004.png").toExternalForm()),
+                                32,
+                                32));
+                idleCoin.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/objects/chonCoin/coin_003.png").toExternalForm()),
+                                32,
+                                32));
+                idleCoin.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/objects/chonCoin/coin_002.png").toExternalForm()),
+                                32,
+                                32));
                 Animation terminateCoin = new Animation(100, false);
-                terminateCoin.getFrames().add(new Image(
-                                getClass().getResource("/images/objects/chonCoin/coin_001.png").toExternalForm()));
+                terminateCoin.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/objects/chonCoin/coin_001.png").toExternalForm()),
+                                32,
+                                32));
                 Animation idleBox = new Animation();
-                idleBox.getFrames().add(new Image(
-                                getClass().getResource("/images/objects/box/box_001.png").toExternalForm()));
+                idleBox.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/objects/box/box_001.png").toExternalForm()),
+                                64,
+                                64));
                 Animation terminateBox = new Animation(100, false);
-                terminateBox.getFrames().add(new Image(
-                                getClass().getResource("/images/objects/box/box_002.png").toExternalForm()));
-                terminateBox.getFrames().add(new Image(
-                                getClass().getResource("/images/objects/box/box_003.png").toExternalForm()));
-                terminateBox.getFrames().add(new Image(
-                                getClass().getResource("/images/objects/box/box_004.png").toExternalForm()));
-                terminateBox.getFrames().add(new Image(
-                                getClass().getResource("/images/objects/box/box_005.png").toExternalForm()));
-                terminateBox.getFrames().add(new Image(
-                                getClass().getResource("/images/objects/box/box_006.png").toExternalForm()));
+                terminateBox.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/objects/box/box_002.png").toExternalForm()),
+                                64,
+                                64));
+                terminateBox.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/objects/box/box_003.png").toExternalForm()),
+                                64,
+                                64));
+                terminateBox.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/objects/box/box_004.png").toExternalForm()),
+                                64,
+                                64));
+                terminateBox.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/objects/box/box_005.png").toExternalForm()),
+                                64,
+                                64));
+                terminateBox.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/objects/box/box_006.png").toExternalForm()),
+                                64,
+                                64));
 
                 Animation hitBox = new Animation(100, false);
-                hitBox.getFrames().add(new Image(
-                                getClass().getResource("/images/objects/box/box_002.png").toExternalForm()));
+                hitBox.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/objects/box/box_002.png").toExternalForm()),
+                                64,
+                                64));
 
                 /*
                  * Set up some collectable objects. For each instance is necessary the Object
