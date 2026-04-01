@@ -176,6 +176,7 @@ public class GameSet {
                                 400,
                                 390,
                                 64,
+                                90,
                                 2,
                                 5000,
                                 Direction.IDLE,
@@ -414,6 +415,7 @@ public class GameSet {
                 missile.getAnimationSet().add(AnimationType.IDLE, missileShot);
                 Weapon cannon = new ConcreteWeapon(
                                 0,
+                                0,
                                 3,
                                 0,
                                 0.05,
@@ -445,6 +447,7 @@ public class GameSet {
                 fireball.getAnimationSet().add(AnimationType.IDLE, fireballShot);
                 // New Lancer with Fireball.
                 Weapon lancer = new ConcreteWeapon(
+                                0,
                                 0,
                                 3,
                                 0,
@@ -527,6 +530,7 @@ public class GameSet {
                                 920,
                                 440,
                                 65,
+                                90,
                                 1,
                                 500,
                                 Direction.IDLE,
@@ -538,6 +542,7 @@ public class GameSet {
                                 2920,
                                 640,
                                 65,
+                                90,
                                 1,
                                 500,
                                 Direction.IDLE,
@@ -549,6 +554,7 @@ public class GameSet {
                                 4920,
                                 300,
                                 65,
+                                90,
                                 1,
                                 500,
                                 Direction.IDLE,
@@ -560,6 +566,7 @@ public class GameSet {
                                 6920,
                                 500,
                                 65,
+                                90,
                                 1,
                                 500,
                                 Direction.IDLE,
@@ -571,6 +578,7 @@ public class GameSet {
                                 1500,
                                 500,
                                 65,
+                                90,
                                 1,
                                 500,
                                 Direction.IDLE,
@@ -663,6 +671,7 @@ public class GameSet {
                                 200,
                                 350,
                                 32,
+                                32,
                                 0,
                                 0,
                                 Direction.IDLE,
@@ -679,6 +688,7 @@ public class GameSet {
                                 400,
                                 380,
                                 32,
+                                32,
                                 0,
                                 1,
                                 Direction.IDLE,
@@ -693,6 +703,7 @@ public class GameSet {
                 Object coin3 = new Object(
                                 1000,
                                 600,
+                                32,
                                 32,
                                 0,
                                 0,
@@ -710,6 +721,7 @@ public class GameSet {
                                 1200,
                                 704,
                                 64,
+                                32,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -725,6 +737,7 @@ public class GameSet {
                 Object box2 = new Object(
                                 1200,
                                 650,
+                                64,
                                 64,
                                 0,
                                 1000,
@@ -742,6 +755,7 @@ public class GameSet {
                                 1200,
                                 596,
                                 64,
+                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -757,6 +771,7 @@ public class GameSet {
                 Object coin4 = new Object(
                                 1400,
                                 380,
+                                32,
                                 32,
                                 0,
                                 0,
@@ -774,6 +789,7 @@ public class GameSet {
                                 1800,
                                 650,
                                 32,
+                                32,
                                 0,
                                 0,
                                 Direction.IDLE,
@@ -789,6 +805,7 @@ public class GameSet {
                 Object box4 = new Object(
                                 1900,
                                 350,
+                                64,
                                 64,
                                 0,
                                 1000,
@@ -806,6 +823,7 @@ public class GameSet {
                                 2000,
                                 580,
                                 32,
+                                32,
                                 0,
                                 0,
                                 Direction.IDLE,
@@ -821,6 +839,7 @@ public class GameSet {
                 Object box5 = new Object(
                                 2150,
                                 550,
+                                64,
                                 64,
                                 0,
                                 1000,
@@ -838,6 +857,7 @@ public class GameSet {
                                 2300,
                                 380,
                                 32,
+                                32,
                                 0,
                                 0,
                                 Direction.IDLE,
@@ -853,6 +873,7 @@ public class GameSet {
                 Object box6 = new Object(
                                 2500,
                                 680,
+                                64,
                                 64,
                                 0,
                                 1000,
@@ -870,6 +891,7 @@ public class GameSet {
                                 2600,
                                 500,
                                 32,
+                                32,
                                 0,
                                 0,
                                 Direction.IDLE,
@@ -884,6 +906,7 @@ public class GameSet {
                 Object box7 = new Object(
                                 2700,
                                 450,
+                                64,
                                 64,
                                 0,
                                 1000,
@@ -900,6 +923,7 @@ public class GameSet {
                 Object box8 = new Object(
                                 2850,
                                 650,
+                                64,
                                 64,
                                 0,
                                 5000,
@@ -918,6 +942,7 @@ public class GameSet {
                                 2900,
                                 380,
                                 32,
+                                32,
                                 0,
                                 0,
                                 Direction.IDLE,
@@ -933,6 +958,7 @@ public class GameSet {
                 Object box9 = new Object(
                                 3150,
                                 450,
+                                64,
                                 64,
                                 0,
                                 1000,
@@ -950,6 +976,7 @@ public class GameSet {
                                 3200,
                                 400,
                                 32,
+                                32,
                                 0,
                                 0,
                                 Direction.IDLE,
@@ -965,6 +992,7 @@ public class GameSet {
                 Object box10 = new Object(
                                 3500,
                                 350,
+                                64,
                                 64,
                                 0,
                                 1000,
@@ -982,6 +1010,7 @@ public class GameSet {
                                 3850,
                                 550,
                                 64,
+                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -998,6 +1027,7 @@ public class GameSet {
                                 4100,
                                 500,
                                 32,
+                                32,
                                 0,
                                 0,
                                 Direction.IDLE,
@@ -1012,6 +1042,7 @@ public class GameSet {
                 Object box12 = new Object(
                                 4350,
                                 550,
+                                64,
                                 64,
                                 0,
                                 1000,
@@ -1029,6 +1060,7 @@ public class GameSet {
                                 4550,
                                 550,
                                 64,
+                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -1045,6 +1077,7 @@ public class GameSet {
                                 4650,
                                 350,
                                 64,
+                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -1059,6 +1092,7 @@ public class GameSet {
                                 4850,
                                 600,
                                 64,
+                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -1072,6 +1106,7 @@ public class GameSet {
                 Object coin12 = new Object(
                                 5000,
                                 380,
+                                32,
                                 32,
                                 0,
                                 0,
@@ -1089,6 +1124,7 @@ public class GameSet {
                                 5150,
                                 650,
                                 64,
+                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -1104,6 +1140,7 @@ public class GameSet {
                 Object box17 = new Object(
                                 5300,
                                 300,
+                                64,
                                 64,
                                 0,
                                 1000,
@@ -1121,6 +1158,7 @@ public class GameSet {
                                 5600,
                                 550,
                                 64,
+                                64,
                                 0,
                                 1000,
                                 Direction.IDLE,
@@ -1136,6 +1174,7 @@ public class GameSet {
                 Object coin13 = new Object(
                                 6200,
                                 400,
+                                32,
                                 32,
                                 0,
                                 0,
@@ -1249,10 +1288,10 @@ public class GameSet {
                 level2.getSoundSet().add(SoundEvent.BACKGROUND, level2BackgroundSound);
 
                 // Register objects into the environment and count total collectibles
-                level1.getAgents().add(chonBot1);
-                level1.getAgents().add(chonBot2);
-                level1.getAgents().add(chonBot3);
-                level1.getAgents().add(chonBot4);
+                // level1.getAgents().add(chonBot1);
+                // level1.getAgents().add(chonBot2);
+                // level1.getAgents().add(chonBot3);
+                // level1.getAgents().add(chonBot4);
 
                 level1.setObjects(objects);
                 level1.countCollectibles();

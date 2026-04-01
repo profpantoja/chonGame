@@ -39,6 +39,9 @@ public abstract class Entity {
     /** Indicates if the existing bars of life or energy are visible or not. */
     private boolean visibleBars = false;
 
+    /** The hitbox for collision mechanics. */
+    private Hitbox hitbox;
+
     /** Holds all the Frames for each available movement. */
     private AnimationSet animationSet = new AnimationSet();
 
@@ -57,7 +60,7 @@ public abstract class Entity {
      * @param health    the entity's health
      * @param pathImage the path to the entity's image
      */
-    public Entity(int posX, int posY, int width, int speed, int health, Direction direction,
+    public Entity(int posX, int posY, int width, int height, int speed, int health, Direction direction,
             boolean flipped,
             boolean visibleBars) {
         /*
@@ -75,6 +78,7 @@ public abstract class Entity {
         this.direction = direction;
         this.getAnimationState().setFlipped(flipped);
         this.visibleBars = visibleBars;
+        this.hitbox = new Hitbox(posX, posY, width, height);
     }
 
     /**
@@ -224,6 +228,14 @@ public abstract class Entity {
 
     public void setVisibleBars(boolean visible) {
         this.visibleBars = visible;
+    }
+
+    public Hitbox getHitbox() {
+        return hitbox;
+    }
+
+    public void setHitbox(Hitbox hitbox) {
+        this.hitbox = hitbox;
     }
 
     public AnimationSet getAnimationSet() {

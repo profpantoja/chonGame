@@ -16,11 +16,12 @@ public abstract class Weapon extends Entity {
             int posX,
             int posY,
             int width,
+            int height,
             int speed,
             int health,
             double energyCost,
             boolean flipped) {
-        super(posX, posY, width, speed, health, Direction.IDLE, flipped, false);
+        super(posX, posY, width, height, speed, health, Direction.IDLE, flipped, false);
         this.energyCost = energyCost;
     }
 
@@ -28,10 +29,11 @@ public abstract class Weapon extends Entity {
             int speed,
             int health,
             int width,
+            int height,
             double energyCost,
             boolean flipped,
             long cooldown) {
-        super(0, 0, width, speed, health, Direction.IDLE, flipped, false);
+        super(0, 0, width, height, speed, health, Direction.IDLE, flipped, false);
         this.energyCost = energyCost;
         this.cooldown = cooldown;
     }

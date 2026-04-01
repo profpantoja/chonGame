@@ -14,7 +14,7 @@ public class ConcreteShot extends Shot {
             Direction direction,
             boolean flipped,
             int damage) {
-        super(posX, posY, width, speed, health, direction, flipped, damage);
+        super(posX, posY, width, height, speed, health, direction, flipped, damage);
     }
 
     public ConcreteShot(
@@ -24,7 +24,7 @@ public class ConcreteShot extends Shot {
             int health,
             boolean flipped,
             int damage) {
-        super(0, 0, width,  speed, health, Direction.RIGHT, flipped, damage);
+        super(0, 0, width, height, speed, health, Direction.RIGHT, flipped, damage);
     }
 
 }
