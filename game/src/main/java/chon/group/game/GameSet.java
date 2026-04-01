@@ -175,7 +175,7 @@ public class GameSet {
                 Agent chonBota = new Agent(
                                 400,
                                 390,
-                                64,
+                                65,
                                 90,
                                 2,
                                 5000,
@@ -1288,10 +1288,10 @@ public class GameSet {
                 level2.getSoundSet().add(SoundEvent.BACKGROUND, level2BackgroundSound);
 
                 // Register objects into the environment and count total collectibles
-                // level1.getAgents().add(chonBot1);
-                // level1.getAgents().add(chonBot2);
-                // level1.getAgents().add(chonBot3);
-                // level1.getAgents().add(chonBot4);
+                level1.getAgents().add(chonBot1);
+                level1.getAgents().add(chonBot2);
+                level1.getAgents().add(chonBot3);
+                level1.getAgents().add(chonBot4);
 
                 level1.setObjects(objects);
                 level1.countCollectibles();

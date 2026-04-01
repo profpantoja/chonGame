@@ -299,10 +299,10 @@ public class Environment {
      * @return true if their areas overlap, false otherwise
      */
     private boolean intersect(Entity a, Entity b) {
-        return a.getPosX() < b.getPosX() + b.getWidth() &&
-                a.getPosX() + a.getWidth() > b.getPosX() &&
-                a.getPosY() < b.getPosY() + b.getHeight() &&
-                a.getPosY() + a.getHeight() > b.getPosY();
+        return a.getPosX() < b.getPosX() + b.getHitbox().getWidth() &&
+                a.getPosX() + a.getHitbox().getWidth() > b.getPosX() &&
+                a.getPosY() < b.getPosY() + b.getHitbox().getHeight() &&
+                a.getPosY() + a.getHitbox().getHeight() > b.getPosY();
     }
 
     /**
