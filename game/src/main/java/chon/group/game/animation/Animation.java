@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
  */
 public class Animation {
 
+    private List<Frame> _frames = new ArrayList<Frame>();
     private List<Image> frames = new ArrayList<Image>();
     private long duration = 200;
     private boolean inLoop = true;
@@ -22,6 +23,14 @@ public class Animation {
     public Animation(long duration, boolean inLoop) {
         this.duration = duration;
         this.inLoop = inLoop;
+    }
+
+    public List<Frame> get_frames() {
+        return _frames;
+    }
+
+    public void set_frames(List<Frame> _frames) {
+        this._frames = _frames;
     }
 
     public List<Image> getFrames() {
