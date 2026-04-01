@@ -2,6 +2,8 @@ package chon.group.game.core.weapon;
 
 import java.util.List;
 
+import chon.group.game.animation.AnimationSet;
+import chon.group.game.animation.AnimationType;
 import chon.group.game.core.agent.Direction;
 import chon.group.game.messaging.Message;
 import chon.group.game.sound.Sound;
@@ -51,6 +53,8 @@ public class ConcreteWeapon extends Weapon {
             posX += entityWidth + 1;
         else
             posX -= entityWidth + 1;
+        AnimationSet animationSet = this.shot.getAnimationSet();
+        this.shot.getAnimationState().setCurrentAnimation(animationSet.get(AnimationType.IDLE));
         ConcreteShot shot = new ConcreteShot(
                 posX,
                 posY + 30,
@@ -61,7 +65,8 @@ public class ConcreteWeapon extends Weapon {
                 direction,
                 false,
                 this.shot.getDamage());
-        shot.setAnimationSet(this.shot.getAnimationSet());
+        shot.setAnimationSet(animationSet);
+        shot.getAnimationState().setCurrentAnimation(animationSet.get(AnimationType.IDLE));
         return shot;
     }
 

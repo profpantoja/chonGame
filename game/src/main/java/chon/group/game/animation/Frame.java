@@ -22,7 +22,7 @@ public class Frame {
         this.image = image;
     }
 
-    public double getWidth() {
+    public int getWidth() {
         return width;
     }
 
@@ -30,7 +30,7 @@ public class Frame {
         this.width = width;
     }
 
-    public double getHeight() {
+    public int getHeight() {
         return height;
     }
 

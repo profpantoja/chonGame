@@ -19,10 +19,10 @@ public abstract class Entity {
     private int posY;
 
     /** Height of the entity. */
-    private int height;
+    // private int height;
 
     /** Width of the entity. */
-    private int width;
+    // private int width;
 
     /** entity speed. */
     private int speed;
@@ -73,8 +73,8 @@ public abstract class Entity {
             health = 1;
         this.posX = posX;
         this.posY = posY;
-        this.height = height;
-        this.width = width;
+        // this.height = height;
+        // this.width = width;
         this.speed = speed;
         this.health = health;
         this.fullHealth = health;
@@ -125,7 +125,11 @@ public abstract class Entity {
      * @return the height of the entity
      */
     public int getHeight() {
-        return height;
+        return this.getAnimationState()
+                .getCurrentAnimation()
+                .getFrames()
+                .get(this.getAnimationState().getCurrentFrameIndex())
+                .getHeight();
     }
 
     /**
@@ -133,9 +137,9 @@ public abstract class Entity {
      *
      * @param height the new height
      */
-    public void setHeight(int height) {
-        this.height = height;
-    }
+    //public void setHeight(int height) {
+    //    this.height = height;
+    //}
 
     /**
      * Gets the width of the entity.
@@ -143,7 +147,11 @@ public abstract class Entity {
      * @return the width of the entity
      */
     public int getWidth() {
-        return width;
+        return this.getAnimationState()
+                .getCurrentAnimation()
+                .getFrames()
+                .get(this.getAnimationState().getCurrentFrameIndex())
+                .getWidth();
     }
 
     /**
@@ -151,9 +159,9 @@ public abstract class Entity {
      *
      * @param width the new width
      */
-    public void setWidth(int width) {
-        this.width = width;
-    }
+    //public void setWidth(int width) {
+    //    this.width = width;
+    //}
 
     /**
      * Gets the entity's speed.
@@ -401,6 +409,12 @@ public abstract class Entity {
      * @return the width of the entity
      */
     public int getFlippedWidth() {
+        int width = this.getAnimationState()
+                .getCurrentAnimation()
+                .getFrames()
+                .get(this.getAnimationState()
+                        .getCurrentFrameIndex())
+                .getWidth();
         if (this.animationState.isFlipped())
             return width * (-1);
         return width;
@@ -412,8 +426,15 @@ public abstract class Entity {
      * @return the X (horizontal) position of the entity
      */
     public int getFlippedPosX() {
-        if (this.animationState.isFlipped())
+        if (this.animationState.isFlipped()) {
+            int width = this.getAnimationState()
+                    .getCurrentAnimation()
+                    .getFrames()
+                    .get(this.getAnimationState()
+                            .getCurrentFrameIndex())
+                    .getWidth();
             return posX + width;
+        }
         return posX;
     }
 

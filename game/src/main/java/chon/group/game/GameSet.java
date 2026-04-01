@@ -133,7 +133,16 @@ public class GameSet {
                                 0,
                                 0,
                                 "/images/environment/chonGame.png");
+                Animation level0Animation = new Animation();
+                level0Animation.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/environment/chonGame.png")
+                                                .toExternalForm()),
+                                1280,
+                                canvasHeight));
+                level0.getAnimationSet().add(AnimationType.IDLE, level0Animation);
+                level0.getAnimationState().setCurrentAnimation(level0Animation);
 
+                Animation level1Animation = new Animation();
                 Level level1 = new Level(
                                 0,
                                 0,
@@ -142,7 +151,15 @@ public class GameSet {
                                 260,
                                 canvasHeight,
                                 "/images/environment/castleLong.png");
+                level1Animation.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/environment/castleLong.png")
+                                                .toExternalForm()),
+                                8024,
+                                canvasHeight));
+                level1.getAnimationSet().add(AnimationType.IDLE, level1Animation);
+                level1.getAnimationState().setCurrentAnimation(level1Animation);
 
+                Animation level2Animation = new Animation();
                 Level level2 = new Level(
                                 0,
                                 0,
@@ -151,6 +168,13 @@ public class GameSet {
                                 380,
                                 590,
                                 "/images/environment/insideCastle.png");
+                level2Animation.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/environment/insideCastle.png")
+                                                .toExternalForm()),
+                                8024,
+                                canvasHeight));
+                level2.getAnimationSet().add(AnimationType.IDLE, level2Animation);
+                level2.getAnimationState().setCurrentAnimation(level2Animation);
 
                 environment = new Environment(
                                 this.canvasHeight,
@@ -324,6 +348,8 @@ public class GameSet {
                 chonBota.getAnimationSet().add(AnimationType.ATTACK, shootingChonBota);
                 chonBota.getAnimationSet().add(AnimationType.DAMAGE, hitChonBota);
                 chonBota.getAnimationSet().add(AnimationType.TERMINATE, deadChonBota);
+
+                chonBota.getAnimationState().setCurrentAnimation(idleChonBota);
 
                 /** Game's Weapons and Shots. */
                 // New Canno with Missile.
@@ -542,6 +568,13 @@ public class GameSet {
                                 true);
                 chonBot5.getAnimationSet().add(AnimationType.IDLE, idleChonBot);
                 chonBot5.getAnimationSet().add(AnimationType.TERMINATE, deadChonBot);
+
+                chonBot1.getAnimationState().setCurrentAnimation(idleChonBot);
+                chonBot2.getAnimationState().setCurrentAnimation(idleChonBot);
+                chonBot3.getAnimationState().setCurrentAnimation(idleChonBot);
+                chonBot4.getAnimationState().setCurrentAnimation(idleChonBot);
+                chonBot5.getAnimationState().setCurrentAnimation(idleChonBot);
+
                 /* Setting the protagonist and some Images in the Environment system. */
                 environment.setProtagonist(chonBota);
                 environment.setPauseImage("/images/environment/pause.png");
@@ -631,6 +664,7 @@ public class GameSet {
                                 200);
                 coin1.getAnimationSet().add(AnimationType.IDLE, idleCoin);
                 coin1.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
+                coin1.getAnimationState().setCurrentAnimation(idleCoin);
                 objects.add(coin1);
                 Object coin2 = new Object(
                                 400,
@@ -646,6 +680,7 @@ public class GameSet {
                                 true, 200);
                 coin2.getAnimationSet().add(AnimationType.IDLE, idleCoin);
                 coin2.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
+                coin2.getAnimationState().setCurrentAnimation(idleCoin);
                 objects.add(coin2);
                 Object coin3 = new Object(
                                 1000,
@@ -662,6 +697,7 @@ public class GameSet {
                                 200);
                 coin3.getAnimationSet().add(AnimationType.IDLE, idleCoin);
                 coin3.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
+                coin3.getAnimationState().setCurrentAnimation(idleCoin);
                 objects.add(coin3);
                 Object box1 = new Object(
                                 1200,
@@ -678,6 +714,7 @@ public class GameSet {
                                 200);
                 box1.getAnimationSet().add(AnimationType.IDLE, idleBox);
                 box1.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
+                box1.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box1);
                 Object box2 = new Object(
                                 1200,
@@ -694,6 +731,7 @@ public class GameSet {
                                 200);
                 box2.getAnimationSet().add(AnimationType.IDLE, idleBox);
                 box2.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
+                box2.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box2);
                 Object box3 = new Object(
                                 1200,
@@ -710,6 +748,7 @@ public class GameSet {
                                 200);
                 box3.getAnimationSet().add(AnimationType.IDLE, idleBox);
                 box3.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
+                box3.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box3);
                 Object coin4 = new Object(
                                 1400,
@@ -726,6 +765,7 @@ public class GameSet {
                                 200);
                 coin4.getAnimationSet().add(AnimationType.IDLE, idleCoin);
                 coin4.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
+                coin4.getAnimationState().setCurrentAnimation(idleCoin);
                 objects.add(coin4);
                 Object coin5 = new Object(
                                 1800,
@@ -742,6 +782,7 @@ public class GameSet {
                                 200);
                 coin5.getAnimationSet().add(AnimationType.IDLE, idleCoin);
                 coin5.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
+                coin5.getAnimationState().setCurrentAnimation(idleCoin);
                 objects.add(coin5);
                 Object box4 = new Object(
                                 1900,
@@ -758,6 +799,7 @@ public class GameSet {
                                 0);
                 box4.getAnimationSet().add(AnimationType.IDLE, idleBox);
                 box4.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
+                box4.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box4);
                 Object coin6 = new Object(
                                 2000,
@@ -774,6 +816,7 @@ public class GameSet {
                                 200);
                 coin6.getAnimationSet().add(AnimationType.IDLE, idleCoin);
                 coin6.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
+                coin6.getAnimationState().setCurrentAnimation(idleCoin);
                 objects.add(coin6);
                 Object box5 = new Object(
                                 2150,
@@ -790,6 +833,7 @@ public class GameSet {
                                 0);
                 box5.getAnimationSet().add(AnimationType.IDLE, idleBox);
                 box5.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
+                box5.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box5);
                 Object coin7 = new Object(
                                 2300,
@@ -806,6 +850,7 @@ public class GameSet {
                                 200);
                 coin7.getAnimationSet().add(AnimationType.IDLE, idleCoin);
                 coin7.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
+                coin7.getAnimationState().setCurrentAnimation(idleCoin);
                 objects.add(coin7);
                 Object box6 = new Object(
                                 2500,
@@ -822,6 +867,7 @@ public class GameSet {
                                 0);
                 box6.getAnimationSet().add(AnimationType.IDLE, idleBox);
                 box6.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
+                box6.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box6);
                 Object coin8 = new Object(
                                 2600,
@@ -837,6 +883,7 @@ public class GameSet {
                                 200);
                 coin8.getAnimationSet().add(AnimationType.IDLE, idleCoin);
                 coin8.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
+                coin8.getAnimationState().setCurrentAnimation(idleCoin);
                 objects.add(coin8);
                 Object box7 = new Object(
                                 2700,
@@ -853,6 +900,7 @@ public class GameSet {
                                 0);
                 box7.getAnimationSet().add(AnimationType.IDLE, idleBox);
                 box7.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
+                box7.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box7);
                 Object box8 = new Object(
                                 2850,
@@ -870,6 +918,7 @@ public class GameSet {
                 box8.getAnimationSet().add(AnimationType.IDLE, idleBox);
                 box8.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
                 box8.getAnimationSet().add(AnimationType.DAMAGE, hitBox);
+                box8.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box8);
                 Object coin9 = new Object(
                                 2900,
@@ -886,6 +935,7 @@ public class GameSet {
                                 200);
                 coin9.getAnimationSet().add(AnimationType.IDLE, idleCoin);
                 coin9.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
+                coin9.getAnimationState().setCurrentAnimation(idleCoin);
                 objects.add(coin9);
                 Object box9 = new Object(
                                 3150,
@@ -902,6 +952,7 @@ public class GameSet {
                                 0);
                 box9.getAnimationSet().add(AnimationType.IDLE, idleBox);
                 box9.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
+                box9.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box9);
                 Object coin10 = new Object(
                                 3200,
@@ -918,6 +969,7 @@ public class GameSet {
                                 200);
                 coin10.getAnimationSet().add(AnimationType.IDLE, idleCoin);
                 coin10.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
+                coin10.getAnimationState().setCurrentAnimation(idleCoin);
                 objects.add(coin10);
                 Object box10 = new Object(
                                 3500,
@@ -934,6 +986,7 @@ public class GameSet {
                                 0);
                 box10.getAnimationSet().add(AnimationType.IDLE, idleBox);
                 box10.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
+                box10.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box10);
                 Object box11 = new Object(
                                 3850,
@@ -950,6 +1003,7 @@ public class GameSet {
                                 0);
                 box11.getAnimationSet().add(AnimationType.IDLE, idleBox);
                 box11.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
+                box11.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box11);
                 Object coin11 = new Object(
                                 4100,
@@ -965,6 +1019,7 @@ public class GameSet {
                                 false, 200);
                 coin11.getAnimationSet().add(AnimationType.IDLE, idleCoin);
                 coin11.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
+                coin11.getAnimationState().setCurrentAnimation(idleCoin);
                 objects.add(coin11);
                 Object box12 = new Object(
                                 4350,
@@ -981,6 +1036,7 @@ public class GameSet {
                                 0);
                 box12.getAnimationSet().add(AnimationType.IDLE, idleBox);
                 box12.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
+                box12.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box12);
                 Object box13 = new Object(
                                 4550,
@@ -997,6 +1053,7 @@ public class GameSet {
                                 0);
                 box13.getAnimationSet().add(AnimationType.IDLE, idleBox);
                 box13.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
+                box13.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box13);
                 Object box14 = new Object(
                                 4650,
@@ -1011,6 +1068,7 @@ public class GameSet {
                                 false, true, 0);
                 box14.getAnimationSet().add(AnimationType.IDLE, idleBox);
                 box14.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
+                box14.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box14);
                 Object box15 = new Object(
                                 4850,
@@ -1025,6 +1083,7 @@ public class GameSet {
                                 false, true, 0);
                 box15.getAnimationSet().add(AnimationType.IDLE, idleBox);
                 box15.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
+                box15.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box15);
                 Object coin12 = new Object(
                                 5000,
@@ -1041,6 +1100,7 @@ public class GameSet {
                                 200);
                 coin12.getAnimationSet().add(AnimationType.IDLE, idleCoin);
                 coin12.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
+                coin12.getAnimationState().setCurrentAnimation(idleCoin);
                 objects.add(coin12);
                 Object box16 = new Object(
                                 5150,
@@ -1057,6 +1117,7 @@ public class GameSet {
                                 0);
                 box16.getAnimationSet().add(AnimationType.IDLE, idleBox);
                 box16.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
+                box16.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box16);
                 Object box17 = new Object(
                                 5300,
@@ -1073,6 +1134,7 @@ public class GameSet {
                                 0);
                 box17.getAnimationSet().add(AnimationType.IDLE, idleBox);
                 box17.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
+                box17.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box17);
                 Object box18 = new Object(
                                 5600,
@@ -1089,6 +1151,7 @@ public class GameSet {
                                 0);
                 box18.getAnimationSet().add(AnimationType.IDLE, idleBox);
                 box18.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
+                box18.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box18);
                 Object coin13 = new Object(
                                 6200,
@@ -1105,6 +1168,7 @@ public class GameSet {
                                 200);
                 coin13.getAnimationSet().add(AnimationType.IDLE, idleCoin);
                 coin13.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
+                coin13.getAnimationState().setCurrentAnimation(idleCoin);
                 objects.add(coin13);
                 // ChonBota sounds.
                 Sound lancerShotSound = new Sound(
