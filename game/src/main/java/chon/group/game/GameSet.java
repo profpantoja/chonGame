@@ -374,40 +374,40 @@ public class GameSet {
                 Animation missileShot = new Animation(0, true);
                 missileShot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/weapons/missile/missile001.png").toExternalForm()),
-                                128,
-                                84));
+                                88,
+                                64));
                 missileShot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/weapons/missile/missile002.png").toExternalForm()),
-                                128,
-                                84));
+                                88,
+                                64));
                 missileShot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/weapons/missile/missile003.png").toExternalForm()),
-                                128,
-                                84));
+                                88,
+                                64));
                 missileShot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/weapons/missile/missile004.png").toExternalForm()),
-                                128,
-                                84));
+                                88,
+                                64));
                 missileShot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/weapons/missile/missile005.png").toExternalForm()),
-                                128,
-                                84));
+                                88,
+                                64));
                 missileShot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/weapons/missile/missile006.png").toExternalForm()),
-                                128,
-                                84));
+                                88,
+                                64));
                 missileShot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/weapons/missile/missile007.png").toExternalForm()),
-                                128,
-                                84));
+                                88,
+                                64));
                 missileShot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/weapons/missile/missile008.png").toExternalForm()),
-                                128,
-                                84));
+                                88,
+                                64));
 
                 ConcreteShot missile = new ConcreteShot(
-                                84,
-                                128,
+                                64,
+                                88,
                                 3,
                                 0,
                                 false,
@@ -415,7 +415,7 @@ public class GameSet {
                                 1200);
                 missile.getAnimationSet().add(AnimationType.IDLE, missileShot);
                 Weapon cannon = new ConcreteWeapon(
-                                10,
+                                20,
                                 0,
                                 0,
                                 3,
@@ -487,10 +487,10 @@ public class GameSet {
                                 false,
                                 250,
                                 punch);
-
-                chonBota.setWeapon(lancer);
                 chonBota.setWeapon(bareHands);
                 chonBota.setWeapon(cannon);
+                chonBota.setWeapon(lancer);
+
                 /* Animation frames for chonBota. It can be reused among all instances. */
                 Animation idleChonBot = new Animation();
                 idleChonBot.getFrames().add(new Frame(new Image(

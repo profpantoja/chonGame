@@ -1,16 +1,14 @@
 package chon.group.game.drawer.service;
 
-import java.util.Iterator;
-
 import chon.group.game.Game;
 import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.Entity;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.drawer.client.Drawer;
 import chon.group.game.drawer.client.JavaFxDrawer;
 import chon.group.game.menu.Item;
-import chon.group.game.menu.Menu;
 import chon.group.game.messaging.Message;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -73,11 +71,13 @@ public class GameMediator implements GameDrawer {
      */
     @Override
     public void drawBackground() {
-        int posX = (int) (this.game.getEnvironment().getCamera().getPosX() * -1);
-        drawer.drawImage(this.game.getEnvironment().getCurrentLevel().getAnimationState().getCurrentImage(),
-                posX, this.game.getEnvironment().getCurrentLevel().getPosY(),
-                this.game.getEnvironment().getCurrentLevel().getWidth(),
-                this.game.getEnvironment().getCurrentLevel().getHeight());
+        var environment = this.game.getEnvironment();
+        var level = environment.getCurrentLevel();
+        drawer.drawImage(level.getAnimationState().getCurrentImage(),
+                (int) (environment.getCamera().getPosX() * -1),
+                level.getPosY(),
+                level.getWidth(),
+                level.getHeight());
     }
 
     /**
@@ -87,63 +87,22 @@ public class GameMediator implements GameDrawer {
     @Override
     public void drawAgents() {
         for (Agent agent : this.game.getEnvironment().getCurrentLevel().getAgents()) {
-            int newPosX = (int) this.game.getEnvironment().getCamera().updateEntity(agent);
-            drawer.drawImage(
-                    agent.getAnimationState().getCurrentImage(),
-                    newPosX,
-                    agent.getPosY(),
-                    agent.getFlippedWidth(),
-                    agent.getHeight());
+            this.drawEntity(agent);
             if (agent.isVisibleBars()) {
-                drawer.drawEnergyBar(
-                        agent.getEnergy(),
-                        agent.getFullEnergy(),
-                        agent.getWidthOffset(),
-                        (int) this.game.getEnvironment().getCamera().updateBar(agent),
-                        agent.getPosY(),
-                        Color.BLUE);
-                drawer.drawLifeBar(
-                        agent.getHealth(),
-                        agent.getFullHealth(),
-                        agent.getWidthOffset(),
-                        (int) this.game.getEnvironment().getCamera().updateBar(agent),
-                        agent.getPosY(),
-                        Color.GREEN);
+                this.drawEnergyBar(agent);
+                this.drawLifeBar(agent);
             }
-            if (this.game.getEnvironment().isDebugMode()) {
-                drawer.drawEntityPanel(
-                        agent.getPosX(),
-                        agent.getPosY(),
-                        (int) this.game.getEnvironment().getCamera().getPosX(),
-                        agent.getHeight(),
-                        agent.getDirection().toString(),
-                        agent.getStatus().toString(),
-                        agent.getAnimationState().isBlocked(),
-                        agent.getAnimationState().isFinished());
-            }
+            if (this.game.getEnvironment().isDebugMode())
+                this.drawEntityDebugPanel(agent);
         }
-        Agent protagonist = this.game.getEnvironment().getProtagonist();
-        int newPosX = (int) this.game.getEnvironment().getCamera().updateEntity(protagonist);
-        drawer.drawImage(
-                protagonist.getAnimationState().getCurrentImage(),
-                newPosX,
-                protagonist.getPosY(),
-                protagonist.getFlippedWidth(),
-                protagonist.getHeight());
+        var protagonist = this.game.getEnvironment().getProtagonist();
+        this.drawEntity(protagonist);
         if (protagonist.isVisibleBars()) {
-            this.drawSingleLifeBar();
-            this.drawSingleEnergyBar();
+            this.drawLifeBar(protagonist);
+            this.drawEnergyBar(protagonist);
         }
         if (this.game.getEnvironment().isDebugMode()) {
-            drawer.drawEntityPanel(
-                    protagonist.getPosX(),
-                    protagonist.getPosY(),
-                    (int) this.game.getEnvironment().getCamera().getPosX(),
-                    protagonist.getHeight(),
-                    protagonist.getDirection().toString(),
-                    protagonist.getStatus().toString(),
-                    protagonist.getAnimationState().isBlocked(),
-                    protagonist.getAnimationState().isFinished());
+            this.drawEntityDebugPanel(protagonist);
             this.drawDebugPanel();
         }
         this.drawPanel();
@@ -155,29 +114,11 @@ public class GameMediator implements GameDrawer {
     @Override
     public void drawObjects() {
         for (Object object : this.game.getEnvironment().getCurrentLevel().getObjects()) {
-            drawer.drawImage(object.getAnimationState().getCurrentImage(),
-                    (int) this.game.getEnvironment().getCamera().updateEntity(object),
-                    object.getPosY(),
-                    object.getFlippedWidth(),
-                    object.getHeight());
+            this.drawEntity(object);
             if (object.isVisibleBars())
-                drawer.drawLifeBar(
-                        object.getHealth(),
-                        object.getFullHealth(),
-                        object.getWidth(),
-                        (int) this.game.getEnvironment().getCamera().updateBar(object),
-                        object.getPosY(),
-                        Color.GREEN);
+                this.drawLifeBar(object);
             if (this.game.getEnvironment().isDebugMode())
-                drawer.drawEntityPanel(
-                        object.getPosX(),
-                        object.getPosY(),
-                        (int) this.game.getEnvironment().getCamera().getPosX(),
-                        object.getHeight(),
-                        object.getDirection().toString(),
-                        object.getStatus().toString(),
-                        object.getAnimationState().isBlocked(),
-                        object.getAnimationState().isFinished());
+                this.drawEntityDebugPanel(object);
         }
     }
 
@@ -187,54 +128,23 @@ public class GameMediator implements GameDrawer {
      */
     @Override
     public void drawDebugPanel() {
+        var environment = this.game.getEnvironment();
         drawer.drawDebugPanel(
                 240,
                 85,
-                this.game.getEnvironment().getCamera().getPosX(),
-                this.game.getEnvironment().getMessages().size(),
-                this.game.getEnvironment().getCurrentLevel().getShots().size());
-    }
-
-    /**
-     * Draws the protagonist's life bar on the screen.
-     */
-    @Override
-    public void drawSingleLifeBar() {
-        Agent protagonist = this.game.getEnvironment().getProtagonist();
-        if (protagonist != null) {
-            drawer.drawLifeBar(
-                    protagonist.getHealth(),
-                    protagonist.getFullHealth(),
-                    protagonist.getWidthOffset(),
-                    (int) this.game.getEnvironment().getCamera().updateBar(protagonist),
-                    protagonist.getPosY(),
-                    Color.GREEN);
-        }
-    }
-
-    /**
-     * Draws the protagonist's energy bar on the screen.
-     */
-    @Override
-    public void drawSingleEnergyBar() {
-        Agent protagonist = this.game.getEnvironment().getProtagonist();
-        if (protagonist != null) {
-            drawer.drawEnergyBar(
-                    protagonist.getEnergy(),
-                    protagonist.getFullEnergy(),
-                    protagonist.getWidthOffset(),
-                    (int) this.game.getEnvironment().getCamera().updateBar(protagonist),
-                    protagonist.getPosY(),
-                    Color.BLUE);
-        }
+                environment.getCamera().getPosX(),
+                environment.getMessages().size(),
+                environment.getCurrentLevel().getShots().size());
     }
 
     @Override
     public void drawPanel() {
-        Agent protagonist = this.game.getEnvironment().getProtagonist();
-        int collected = this.game.getEnvironment().getCollectedCount();
-        int total = this.game.getEnvironment().getCurrentLevel().getTotalCollectibleCount();
-        int score = this.game.getEnvironment().getScore();
+        var environment = this.game.getEnvironment();
+        var protagonist = environment.getProtagonist();
+        var panel = environment.getPanel();
+        int collected = environment.getCollectedCount();
+        int total = environment.getCurrentLevel().getTotalCollectibleCount();
+        int score = environment.getScore();
         int life = protagonist.getHealth();
         int maxLife = protagonist.getFullHealth();
         double energy = protagonist.getEnergy();
@@ -247,12 +157,12 @@ public class GameMediator implements GameDrawer {
                 energy,
                 maxEnergy,
                 Font.font("Verdana", FontWeight.BOLD, 18),
-                this.game.getEnvironment().getPanel().getLifeIcon(),
-                this.game.getEnvironment().getPanel().getEnergyIcon(),
-                this.game.getEnvironment().getPanel().getItemIcon(),
-                this.game.getEnvironment().getPanel().getScoreIcon(),
-                this.game.getEnvironment().getPanel().getPanelWidth(),
-                this.game.getEnvironment().getPanel().getPanelHeight());
+                panel.getLifeIcon(),
+                panel.getEnergyIcon(),
+                panel.getItemIcon(),
+                panel.getScoreIcon(),
+                panel.getPanelWidth(),
+                panel.getPanelHeight());
     }
 
     /**
@@ -261,11 +171,12 @@ public class GameMediator implements GameDrawer {
      */
     @Override
     public void drawPauseScreen() {
-        drawer.drawScreen(this.game.getEnvironment().getPauseImage(),
-                (int) this.game.getEnvironment().getPauseImage().getWidth(),
-                (int) this.game.getEnvironment().getPauseImage().getHeight(),
-                (int) this.game.getEnvironment().getCamera().getScreenWidth(),
-                this.game.getEnvironment().getCurrentLevel().getHeight());
+        var environment = this.game.getEnvironment();
+        drawer.drawScreen(environment.getPauseImage(),
+                (int) environment.getPauseImage().getWidth(),
+                (int) environment.getPauseImage().getHeight(),
+                (int) environment.getCamera().getScreenWidth(),
+                environment.getCurrentLevel().getHeight());
     }
 
     /**
@@ -274,11 +185,12 @@ public class GameMediator implements GameDrawer {
      */
     @Override
     public void drawGameOver() {
-        drawer.drawScreen(this.game.getEnvironment().getGameOverImage(),
-                (int) this.game.getEnvironment().getGameOverImage().getWidth(),
-                (int) this.game.getEnvironment().getGameOverImage().getHeight(),
-                (int) this.game.getEnvironment().getCamera().getScreenWidth(),
-                this.game.getEnvironment().getCurrentLevel().getHeight());
+        var environment = this.game.getEnvironment();
+        drawer.drawScreen(environment.getGameOverImage(),
+                (int) environment.getGameOverImage().getWidth(),
+                (int) environment.getGameOverImage().getHeight(),
+                (int) environment.getCamera().getScreenWidth(),
+                environment.getCurrentLevel().getHeight());
     }
 
     /**
@@ -303,25 +215,12 @@ public class GameMediator implements GameDrawer {
      */
     @Override
     public void drawShots() {
-        Iterator<Shot> iterator = this.game.getEnvironment().getCurrentLevel().getShots().iterator();
-        while (iterator.hasNext()) {
-            Shot shot = iterator.next();
+        for (Shot shot : this.game.getEnvironment().getCurrentLevel().getShots()) {
             if (shot.isVisible()) {
-                drawer.drawImage(shot.getAnimationState().getCurrentImage(),
-                        (int) this.game.getEnvironment().getCamera().updateEntity(shot),
-                        shot.getPosY(),
-                        shot.getFlippedWidth(),
-                        shot.getHeight());
-                if (this.game.getEnvironment().isDebugMode())
-                    this.drawer.drawEntityPanel(
-                            shot.getPosX(),
-                            shot.getPosY(),
-                            (int) this.game.getEnvironment().getCamera().getPosX(),
-                            shot.getHeight(),
-                            shot.getDirection().toString(),
-                            shot.getStatus().toString(),
-                            shot.getAnimationState().isBlocked(),
-                            shot.getAnimationState().isFinished());
+                this.drawEntity(shot);
+                if (this.game.getEnvironment().isDebugMode()) {
+                    this.drawEntityDebugPanel(shot);
+                }
             }
         }
     }
@@ -331,7 +230,7 @@ public class GameMediator implements GameDrawer {
      */
     @Override
     public void drawMenu() {
-        Menu currentMenu = this.game.getMenu().getCurrentMenu();
+        var currentMenu = this.game.getMenu().getCurrentMenu();
         drawer.drawMenu(
                 currentMenu.getTitle(),
                 currentMenu.getIndex(),
@@ -343,6 +242,55 @@ public class GameMediator implements GameDrawer {
                 currentMenu.getItems().stream()
                         .map(Item::getTitle)
                         .toArray(String[]::new));
+    }
+
+    private void drawEntityDebugPanel(Entity entity) {
+        drawer.drawEntityPanel(
+                entity.getPosX(),
+                entity.getPosY(),
+                (int) this.game.getEnvironment().getCamera().getPosX(),
+                entity.getHeight(),
+                entity.getDirection().toString(),
+                entity.getStatus().toString(),
+                entity.getAnimationState().isBlocked(),
+                entity.getAnimationState().isFinished());
+    }
+
+    private void drawEntity(Entity entity) {
+        drawer.drawImage(
+                entity.getAnimationState().getCurrentImage(),
+                (int) this.game.getEnvironment().getCamera().updateEntity(entity),
+                entity.getPosY(),
+                entity.getFlippedWidth(),
+                entity.getHeight());
+    }
+
+    /**
+     * Draws the protagonist's life bar on the screen.
+     */
+    @Override
+    public void drawLifeBar(Entity entity) {
+        drawer.drawLifeBar(
+                entity.getHealth(),
+                entity.getFullHealth(),
+                entity.getWidth(),
+                (int) this.game.getEnvironment().getCamera().updateBar(entity),
+                entity.getPosY(),
+                Color.GREEN);
+    }
+
+    /**
+     * Draws the protagonist's energy bar on the screen.
+     */
+    @Override
+    public void drawEnergyBar(Agent agent) {
+        drawer.drawEnergyBar(
+                agent.getEnergy(),
+                agent.getFullEnergy(),
+                agent.getWidthOffset(),
+                (int) this.game.getEnvironment().getCamera().updateBar(agent),
+                agent.getPosY(),
+                Color.BLUE);
     }
 
 }

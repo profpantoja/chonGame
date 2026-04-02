@@ -1,6 +1,8 @@
 package chon.group.game.drawer.service;
 
 import chon.group.game.Game;
+import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.Entity;
 
 /**
  * The {@code EnvironmentDrawer} interface defines methods for rendering
@@ -38,12 +40,12 @@ public interface GameDrawer {
     /**
      * Draws the life bar for agents or players.
      */
-    void drawSingleLifeBar();
+    void drawLifeBar(Entity entity);
 
     /**
      * Draws the energy bar for agents or players.
      */
-    void drawSingleEnergyBar();
+    void drawEnergyBar(Agent agent);
 
     /**
      * Draws the game panel.
