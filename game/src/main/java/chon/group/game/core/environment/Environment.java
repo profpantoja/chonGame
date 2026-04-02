@@ -271,22 +271,39 @@ public class Environment {
      *
      */
     public void onCollision(Agent agent, Object object) {
-        if (intersect(agent, object)) {
-            switch (agent.getDirection()) {
-                case RIGHT:
-                    agent.setPosX(object.getPosX() - agent.getWidth());
-                    break;
-                case LEFT:
-                    agent.setPosX(object.getPosX() + object.getWidth());
-                    break;
-                case DOWN:
-                    agent.setPosY(object.getPosY() - agent.getHeight());
-                    break;
-                case UP:
-                    agent.setPosY(object.getPosY() + object.getHeight());
-                    break;
-                case IDLE:
-                    break;
+        if (!intersect(agent, object)) {
+            return;
+        }
+
+        int agentLeft = agent.getPosX();
+        int agentRight = agent.getPosX() + agent.getHitbox().getWidth();
+        int agentTop = agent.getPosY();
+        int agentBottom = agent.getPosY() + agent.getHitbox().getHeight();
+
+        int objectLeft = object.getPosX();
+        int objectRight = object.getPosX() + object.getHitbox().getWidth();
+        int objectTop = object.getPosY();
+        int objectBottom = object.getPosY() + object.getHitbox().getHeight();
+
+        int overlapLeft = agentRight - objectLeft;
+        int overlapRight = objectRight - agentLeft;
+        int overlapTop = agentBottom - objectTop;
+        int overlapBottom = objectBottom - agentTop;
+
+        int minOverlapX = Math.min(overlapLeft, overlapRight);
+        int minOverlapY = Math.min(overlapTop, overlapBottom);
+
+        if (minOverlapX < minOverlapY) {
+            if (overlapLeft < overlapRight) {
+                agent.setPosX(objectLeft - agent.getHitbox().getWidth() - 1);
+            } else {
+                agent.setPosX(objectRight + 1);
+            }
+        } else {
+            if (overlapTop < overlapBottom) {
+                agent.setPosY(objectTop - agent.getHitbox().getHeight() - 1);
+            } else {
+                agent.setPosY(objectBottom + 1);
             }
         }
     }

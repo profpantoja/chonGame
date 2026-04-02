@@ -5,6 +5,7 @@ import chon.group.game.core.agent.Entity;
 
 public abstract class Weapon extends Entity {
 
+    private int offsetPosY = 0;
     private double energyCost;
     private Shot typeShot;
     /** The time of the last attack made. */
@@ -26,6 +27,7 @@ public abstract class Weapon extends Entity {
     }
 
     public Weapon(
+            int offsetPosY,
             int speed,
             int health,
             int width,
@@ -34,8 +36,17 @@ public abstract class Weapon extends Entity {
             boolean flipped,
             long cooldown) {
         super(0, 0, width, height, speed, health, Direction.IDLE, flipped, false);
+        this.offsetPosY = offsetPosY;
         this.energyCost = energyCost;
         this.cooldown = cooldown;
+    }
+
+    public int getOffsetPosY() {
+        return offsetPosY;
+    }
+
+    public void setOffsetPosY(int offsetPosY) {
+        this.offsetPosY = offsetPosY;
     }
 
     public double getEnergyCost() {
@@ -73,7 +84,7 @@ public abstract class Weapon extends Entity {
     protected abstract Shot createShot(
             int posX,
             int posY,
-            int entityWidth,
+            int offsetPosY,
             Direction direction);
 
     public Shot fire(int posX, int posY, int entityWidth, Direction direction) {

@@ -362,8 +362,8 @@ public class GameSet {
 
                 chonBota.getAnimationSet().add(AnimationType.IDLE, idleChonBota);
                 chonBota.getAnimationSet().add(AnimationType.WALK, hoveringChonBota);
-                chonBota.getAnimationSet().add(AnimationType.ATTACK, punchChonBota);
-                // chonBota.getAnimationSet().add(AnimationType.ATTACK, shootingChonBota);
+                // chonBota.getAnimationSet().add(AnimationType.ATTACK, punchChonBota);
+                chonBota.getAnimationSet().add(AnimationType.ATTACK, shootingChonBota);
                 chonBota.getAnimationSet().add(AnimationType.DAMAGE, hitChonBota);
                 chonBota.getAnimationSet().add(AnimationType.TERMINATE, deadChonBota);
 
@@ -374,46 +374,48 @@ public class GameSet {
                 Animation missileShot = new Animation(0, true);
                 missileShot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/weapons/missile/missile001.png").toExternalForm()),
-                                64,
-                                42));
+                                128,
+                                84));
                 missileShot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/weapons/missile/missile002.png").toExternalForm()),
-                                64,
-                                42));
+                                128,
+                                84));
                 missileShot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/weapons/missile/missile003.png").toExternalForm()),
-                                64,
-                                42));
+                                128,
+                                84));
                 missileShot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/weapons/missile/missile004.png").toExternalForm()),
-                                64,
-                                42));
+                                128,
+                                84));
                 missileShot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/weapons/missile/missile005.png").toExternalForm()),
-                                64,
-                                42));
+                                128,
+                                84));
                 missileShot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/weapons/missile/missile006.png").toExternalForm()),
-                                64,
-                                42));
+                                128,
+                                84));
                 missileShot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/weapons/missile/missile007.png").toExternalForm()),
-                                64,
-                                42));
+                                128,
+                                84));
                 missileShot.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/weapons/missile/missile008.png").toExternalForm()),
-                                64,
-                                42));
+                                128,
+                                84));
 
                 ConcreteShot missile = new ConcreteShot(
-                                42,
-                                64,
+                                84,
+                                128,
                                 3,
                                 0,
                                 false,
-                                800);
+                                250,
+                                1200);
                 missile.getAnimationSet().add(AnimationType.IDLE, missileShot);
                 Weapon cannon = new ConcreteWeapon(
+                                10,
                                 0,
                                 0,
                                 3,
@@ -443,10 +445,12 @@ public class GameSet {
                                 3,
                                 0,
                                 false,
-                                500);
+                                500,
+                                1200);
                 fireball.getAnimationSet().add(AnimationType.IDLE, fireballShot);
                 // New Lancer with Fireball.
                 Weapon lancer = new ConcreteWeapon(
+                                30,
                                 0,
                                 0,
                                 3,
@@ -463,29 +467,30 @@ public class GameSet {
                                                 .toExternalForm()),
                                 30,
                                 15));
-
                 ConcreteShot punch = new ConcreteShot(
                                 15,
                                 30,
                                 3,
                                 0,
                                 false,
-                                800);
+                                500,
+                                15);
                 punch.getAnimationSet().add(AnimationType.IDLE, null);
                 // punch.getAnimationSet().add(AnimationType.IDLE, hitBoxPunch);
                 Weapon bareHands = new ConcreteWeapon(
+                                30,
                                 15,
                                 15,
                                 3,
                                 0,
                                 0.05,
                                 false,
-                                150,
+                                250,
                                 punch);
 
-                chonBota.setWeapon(cannon);
                 chonBota.setWeapon(lancer);
                 chonBota.setWeapon(bareHands);
+                chonBota.setWeapon(cannon);
                 /* Animation frames for chonBota. It can be reused among all instances. */
                 Animation idleChonBot = new Animation();
                 idleChonBot.getFrames().add(new Frame(new Image(

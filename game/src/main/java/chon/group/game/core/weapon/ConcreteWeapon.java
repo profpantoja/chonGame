@@ -27,6 +27,7 @@ public class ConcreteWeapon extends Weapon {
     }
 
     public ConcreteWeapon(
+            int offsetPosY,
             int width,
             int height,
             int speed,
@@ -35,7 +36,7 @@ public class ConcreteWeapon extends Weapon {
             boolean flipped,
             long cooldown,
             ConcreteShot shot) {
-        super(width, height, speed, health, energyCost, flipped, cooldown);
+        super(offsetPosY, width, height, speed, health, energyCost, flipped, cooldown);
         this.shot = shot;
     }
 
@@ -65,17 +66,18 @@ public class ConcreteWeapon extends Weapon {
         }
         ConcreteShot shot = new ConcreteShot(
                 posX,
-                posY + 30,
+                posY + this.getOffsetPosY(),
                 height,
                 width,
                 this.shot.getSpeed(),
                 this.shot.getHealth(),
                 direction,
                 false,
-                this.shot.getDamage());
+                this.shot.getDamage(),
+                this.shot.getRange());
         shot.setAnimationSet(animationSet);
         shot.getAnimationState().setCurrentAnimation(animationSet.get(AnimationType.IDLE));
-         return shot;
+        return shot;
     }
 
     @Override

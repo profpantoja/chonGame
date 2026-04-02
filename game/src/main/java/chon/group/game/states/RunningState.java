@@ -35,6 +35,7 @@ public class RunningState implements GameState {
                         /* The shot is added to the environment's current level. */
                         game.getEnvironment().getCurrentLevel().getShots().add(shot);
                     }
+                    game.getInput().remove("SPACE");
                 } else {
                     /* If there is any movement key pressed. */
                     if (game.getInput().contains("RIGHT") ||

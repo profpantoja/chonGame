@@ -25,10 +25,12 @@ public abstract class Shot extends Entity {
             int health,
             Direction direction,
             boolean flipped,
-            int damage) {
+            int damage,
+            int range) {
         super(posX, posY, width, height, speed, health, direction, flipped, false);
         this.damage = damage;
         this.creationPosX = posX;
+        this.range = range;
     }
 
     public boolean isDestructible() {
@@ -55,7 +57,7 @@ public abstract class Shot extends Entity {
         this.creationPosX = creationPosX;
     }
 
-    public long getRange() {
+    public int getRange() {
         return range;
     }
 
