@@ -78,7 +78,7 @@ public abstract class Entity {
         this.direction = direction;
         this.getAnimationState().setFlipped(flipped);
         this.visibleBars = visibleBars;
-        this.hitbox = new Hitbox(posX, posY, width, height);
+        this.hitbox = new Hitbox(width, height);
     }
 
     /**

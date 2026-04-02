@@ -50,9 +50,9 @@ public class ConcreteWeapon extends Weapon {
     @Override
     protected Shot createShot(int posX, int posY, int entityWidth, Direction direction) {
         if (direction.equals(Direction.RIGHT))
-            posX += entityWidth + 1;
+            posX += (entityWidth + 1);
         else
-            posX -= entityWidth + 1;
+            posX -= (entityWidth + this.shot.getWidth() + 1);
         AnimationSet animationSet = this.shot.getAnimationSet();
         this.shot.getAnimationState().setCurrentAnimation(animationSet.get(AnimationType.IDLE));
         int height, width;
@@ -75,7 +75,7 @@ public class ConcreteWeapon extends Weapon {
                 this.shot.getDamage());
         shot.setAnimationSet(animationSet);
         shot.getAnimationState().setCurrentAnimation(animationSet.get(AnimationType.IDLE));
-        return shot;
+         return shot;
     }
 
     @Override

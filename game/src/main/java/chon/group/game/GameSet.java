@@ -459,7 +459,8 @@ public class GameSet {
                 // Punches with Invisible Shots (punch with hitbox).
                 Animation hitBoxPunch = new Animation();
                 hitBoxPunch.getFrames().add(new Frame(new Image(
-                                getClass().getResource("/images/agents/chonBota/punch/chonBota_Punch.png").toExternalForm()),
+                                getClass().getResource("/images/agents/chonBota/punch/chonBota_Punch.png")
+                                                .toExternalForm()),
                                 30,
                                 15));
 
@@ -470,7 +471,8 @@ public class GameSet {
                                 0,
                                 false,
                                 800);
-                punch.getAnimationSet().add(AnimationType.IDLE, hitBoxPunch);
+                punch.getAnimationSet().add(AnimationType.IDLE, null);
+                // punch.getAnimationSet().add(AnimationType.IDLE, hitBoxPunch);
                 Weapon bareHands = new ConcreteWeapon(
                                 15,
                                 15,
@@ -481,11 +483,9 @@ public class GameSet {
                                 150,
                                 punch);
 
-                
                 chonBota.setWeapon(cannon);
                 chonBota.setWeapon(lancer);
                 chonBota.setWeapon(bareHands);
-
                 /* Animation frames for chonBota. It can be reused among all instances. */
                 Animation idleChonBot = new Animation();
                 idleChonBot.getFrames().add(new Frame(new Image(
@@ -1323,6 +1323,7 @@ public class GameSet {
 
                 level1.setObjects(objects);
                 level1.countCollectibles();
+
                 level2.getAgents().add(chonBot5);
                 environment.getLevels().add(level0);
                 environment.getLevels().add(level1);
