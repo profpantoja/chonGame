@@ -14,7 +14,8 @@ public class Animator {
          * It gets the elapsed time and compares with the frame duration of the current
          * animation.
          */
-      entity.getAnimationState().stepAnimation();
+        if (entity.isVisible())
+            entity.getAnimationState().stepAnimation();
     }
 
     private Animation selectAnimation(Entity entity) {

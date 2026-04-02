@@ -55,11 +55,19 @@ public class ConcreteWeapon extends Weapon {
             posX -= entityWidth + 1;
         AnimationSet animationSet = this.shot.getAnimationSet();
         this.shot.getAnimationState().setCurrentAnimation(animationSet.get(AnimationType.IDLE));
+        int height, width;
+        if (!this.shot.isVisible()) {
+            height = this.shot.getHitbox().getHeight();
+            width = this.shot.getHitbox().getWidth();
+        } else {
+            height = this.shot.getHeight();
+            width = this.shot.getWidth();
+        }
         ConcreteShot shot = new ConcreteShot(
                 posX,
                 posY + 30,
-                this.shot.getHeight(),
-                this.shot.getWidth(),
+                height,
+                width,
                 this.shot.getSpeed(),
                 this.shot.getHealth(),
                 direction,

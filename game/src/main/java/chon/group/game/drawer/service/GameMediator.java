@@ -306,21 +306,23 @@ public class GameMediator implements GameDrawer {
         Iterator<Shot> iterator = this.game.getEnvironment().getCurrentLevel().getShots().iterator();
         while (iterator.hasNext()) {
             Shot shot = iterator.next();
-            drawer.drawImage(shot.getAnimationState().getCurrentImage(),
-                    (int) this.game.getEnvironment().getCamera().updateEntity(shot),
-                    shot.getPosY(),
-                    shot.getFlippedWidth(),
-                    shot.getHeight());
-            if (this.game.getEnvironment().isDebugMode())
-                this.drawer.drawEntityPanel(
-                        shot.getPosX(),
+            if (shot.isVisible()) {
+                drawer.drawImage(shot.getAnimationState().getCurrentImage(),
+                        (int) this.game.getEnvironment().getCamera().updateEntity(shot),
                         shot.getPosY(),
-                        (int) this.game.getEnvironment().getCamera().getPosX(),
-                        shot.getHeight(),
-                        shot.getDirection().toString(),
-                        shot.getStatus().toString(),
-                        shot.getAnimationState().isBlocked(),
-                        shot.getAnimationState().isFinished());
+                        shot.getFlippedWidth(),
+                        shot.getHeight());
+                if (this.game.getEnvironment().isDebugMode())
+                    this.drawer.drawEntityPanel(
+                            shot.getPosX(),
+                            shot.getPosY(),
+                            (int) this.game.getEnvironment().getCamera().getPosX(),
+                            shot.getHeight(),
+                            shot.getDirection().toString(),
+                            shot.getStatus().toString(),
+                            shot.getAnimationState().isBlocked(),
+                            shot.getAnimationState().isFinished());
+            }
         }
     }
 

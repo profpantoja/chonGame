@@ -136,11 +136,14 @@ public abstract class Entity {
      * @return the width of the entity
      */
     public int getWidth() {
-        return this.getAnimationState()
-                .getCurrentAnimation()
-                .getFrames()
-                .get(this.getAnimationState().getCurrentFrameIndex())
-                .getWidth();
+        if (this.isVisible())
+            return this.getAnimationState()
+                    .getCurrentAnimation()
+                    .getFrames()
+                    .get(this.getAnimationState().getCurrentFrameIndex())
+                    .getWidth();
+        else
+            return this.getHitbox().getWidth();
     }
 
     /**
@@ -427,6 +430,14 @@ public abstract class Entity {
             return posX + this.widthOffset;
         }
         return posX;
+    }
+
+    public boolean isVisible() {
+        if (animationState == null ||
+                animationState.getCurrentAnimation() == null ||
+                animationState.getCurrentAnimation().getFrames() == null)
+            return false;
+        return true;
     }
 
 }

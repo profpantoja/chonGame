@@ -14,7 +14,7 @@ public abstract class Shot extends Entity {
     /** Time when this shot was created. */
     private int creationPosX;
     /** Duration in milliseconds that the shot/hit is effectible. */
-    private int range = 1200;
+    private int range = 150;
 
     public Shot(
             int posX,

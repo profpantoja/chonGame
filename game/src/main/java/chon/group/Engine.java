@@ -79,7 +79,7 @@ public class Engine extends Application {
                     mediator,
                     gameSet.getMenu(),
                     input,
-                    0);
+                    15);
 
             // Start the game loop
             new AnimationTimer() {
