@@ -362,8 +362,8 @@ public class GameSet {
 
                 chonBota.getAnimationSet().add(AnimationType.IDLE, idleChonBota);
                 chonBota.getAnimationSet().add(AnimationType.WALK, hoveringChonBota);
-                // chonBota.getAnimationSet().add(AnimationType.ATTACK, punchChonBota);
-                chonBota.getAnimationSet().add(AnimationType.ATTACK, shootingChonBota);
+                chonBota.getAnimationSet().add(AnimationType.ATTACK, punchChonBota);
+                // chonBota.getAnimationSet().add(AnimationType.ATTACK, shootingChonBota);
                 chonBota.getAnimationSet().add(AnimationType.DAMAGE, hitChonBota);
                 chonBota.getAnimationSet().add(AnimationType.TERMINATE, deadChonBota);
 
@@ -487,9 +487,9 @@ public class GameSet {
                                 false,
                                 250,
                                 punch);
-                chonBota.setWeapon(bareHands);
                 chonBota.setWeapon(cannon);
                 chonBota.setWeapon(lancer);
+                chonBota.setWeapon(bareHands);
 
                 /* Animation frames for chonBota. It can be reused among all instances. */
                 Animation idleChonBot = new Animation();

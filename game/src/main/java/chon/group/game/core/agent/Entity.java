@@ -78,7 +78,7 @@ public abstract class Entity {
         this.direction = direction;
         this.getAnimationState().setFlipped(flipped);
         this.visibleBars = visibleBars;
-        this.hitbox = new Hitbox(width, height);
+        this.hitbox = new Hitbox(width, (int) (height * 0.4));
     }
 
     /**
@@ -123,11 +123,13 @@ public abstract class Entity {
      * @return the height of the entity
      */
     public int getHeight() {
-        return this.getAnimationState()
-                .getCurrentAnimation()
-                .getFrames()
-                .get(this.getAnimationState().getCurrentFrameIndex())
-                .getHeight();
+        if (this.isVisible())
+            return this.getAnimationState()
+                    .getCurrentAnimation()
+                    .getFrames()
+                    .get(this.getAnimationState().getCurrentFrameIndex())
+                    .getHeight();
+        return this.getHitbox().getHeight();
     }
 
     /**

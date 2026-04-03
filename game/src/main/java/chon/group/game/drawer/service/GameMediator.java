@@ -1,13 +1,17 @@
 package chon.group.game.drawer.service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 import chon.group.game.Game;
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Entity;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.environment.Environment;
+import chon.group.game.core.environment.Level;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.drawer.client.Drawer;
-import chon.group.game.drawer.client.JavaFxDrawer;
 import chon.group.game.menu.Item;
 import chon.group.game.messaging.Message;
 import javafx.scene.canvas.GraphicsContext;
@@ -16,10 +20,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 /**
- * The {@code JavaFxMediator} class serves as an intermediary for rendering the
- * game environment and its elements using JavaFX. It coordinates the
+ * The {@code GameMediator} class serves as an intermediary for rendering the
+ * game environment and its elements using a UI client. It coordinates the
  * interaction
- * between the {@link Environment} and the {@link JavaFxDrawer} to manage
+ * between the {@link Environment} and the {@link Drawer} to manage
  * graphical rendering.
  */
 public class GameMediator implements GameDrawer {
@@ -50,11 +54,59 @@ public class GameMediator implements GameDrawer {
      */
     @Override
     public void renderGame() {
+        this.beatAndUp();
+        // this.topDownGame();
+    }
+
+    @SuppressWarnings("unused")
+    private void beatAndUp() {
+        this.drawBackground();
+        this.drawEntities();
+        this.drawMessages();
+        this.drawPanel();
+    }
+
+    @SuppressWarnings("unused")
+    private void topDownGame() {
         this.drawBackground();
         this.drawAgents();
         this.drawObjects();
         this.drawShots();
         this.drawMessages();
+        this.drawPanel();
+    }
+
+    private void drawEntities() {
+        for (Entity entity : this.getSortedEntities()) {
+            if (entity.isVisible()) {
+                this.drawEntity(entity);
+                if (entity.isVisibleBars()) {
+                    this.drawLifeBar(entity);
+                    if (entity instanceof Agent)
+                        this.drawEnergyBar((Agent) entity);
+                }
+                if (this.game.getEnvironment().isDebugMode())
+                    this.drawEntityDebugPanel(entity);
+            }
+        }
+    }
+
+    private List<Entity> getSortedEntities() {
+        Environment environment = this.game.getEnvironment();
+        Level level = environment.getCurrentLevel();
+        List<Entity> entities = new ArrayList<Entity>();
+        // Adds all existing entities into one List.
+        entities.addAll(level.getObjects());
+        entities.addAll(level.getAgents());
+        entities.addAll(level.getShots());
+        entities.add(environment.getProtagonist());
+        // It needs to sort applying the Y-sorting.
+        entities.sort(Comparator.comparingInt(this::getDepthY));
+        return entities;
+    }
+
+    private int getDepthY(Entity entity) {
+        return entity.getPosY() + entity.getHeight();
     }
 
     /**
@@ -105,7 +157,6 @@ public class GameMediator implements GameDrawer {
             this.drawEntityDebugPanel(protagonist);
             this.drawDebugPanel();
         }
-        this.drawPanel();
     }
 
     /**
@@ -273,7 +324,7 @@ public class GameMediator implements GameDrawer {
         drawer.drawLifeBar(
                 entity.getHealth(),
                 entity.getFullHealth(),
-                entity.getWidth(),
+                entity.getHitbox().getWidth(),
                 (int) this.game.getEnvironment().getCamera().updateBar(entity),
                 entity.getPosY(),
                 Color.GREEN);
@@ -287,7 +338,7 @@ public class GameMediator implements GameDrawer {
         drawer.drawEnergyBar(
                 agent.getEnergy(),
                 agent.getFullEnergy(),
-                agent.getWidthOffset(),
+                agent.getHitbox().getWidth(),
                 (int) this.game.getEnvironment().getCamera().updateBar(agent),
                 agent.getPosY(),
                 Color.BLUE);
