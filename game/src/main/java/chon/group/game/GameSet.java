@@ -12,6 +12,7 @@ import chon.group.game.core.agent.Object;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.environment.Level;
 import chon.group.game.core.environment.Panel;
+import chon.group.game.core.environment.StoryType;
 import chon.group.game.core.weapon.ConcreteShot;
 import chon.group.game.core.weapon.ConcreteWeapon;
 import chon.group.game.core.weapon.Weapon;
@@ -104,6 +105,14 @@ public class GameSet {
                                 0.7,
                                 400);
 
+                Item skipMenu1 = new Item("Next", Action.START);
+                Item skipMenu2 = new Item("Skip", Action.SKIP);
+                Menu skipMenu = new Menu(
+                                "Aqui vai uma história muito legal da chonBota que vai voltar a era medieval por algum motivo e agora terá que lutar para voltar...",
+                                List.of(skipMenu1, skipMenu2),
+                                0.7,
+                                1000);
+
                 Item pauseMenu1 = new Item("Back", Action.CONTINUE);
                 Item pauseMenu2 = new Item("Debug", Action.DEBUG);
                 Item pauseMenu3 = new Item("Settings", Action.ENTER, settingsMenu);
@@ -132,16 +141,12 @@ public class GameSet {
                 this.menu = new MenuHandler(
                                 startMenu,
                                 pauseMenu,
-                                null,
+                                skipMenu,
                                 gaveOverMenu,
                                 winningMenu);
 
                 /* Initialize the game environment, levels, agents and weapons */
-                Level level0 = new Level(
-                                0,
-                                0,
-                                0,
-                                0);
+                Level level0 = new Level(StoryType.START);
                 Animation level0Animation = new Animation();
                 level0Animation.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/environment/chonGame.png")
@@ -151,33 +156,41 @@ public class GameSet {
                 level0.getAnimationSet().add(AnimationType.IDLE, level0Animation);
                 level0.getAnimationState().setCurrentAnimation(level0Animation);
 
+                Level level1 = new Level(StoryType.STORY);
                 Animation level1Animation = new Animation();
-                Level level1 = new Level(
-                                0,
-                                0,
-                                260,
-                                canvasHeight);
                 level1Animation.getFrames().add(new Frame(new Image(
-                                getClass().getResource("/images/environment/castleLong.png")
+                                getClass().getResource("/images/environment/loading.png")
                                                 .toExternalForm()),
-                                8024,
+                                1280,
                                 canvasHeight));
                 level1.getAnimationSet().add(AnimationType.IDLE, level1Animation);
                 level1.getAnimationState().setCurrentAnimation(level1Animation);
 
-                Animation level2Animation = new Animation();
-                Level level2 = new Level(
-                                0,
-                                0,
+                Animation level3Animation = new Animation();
+                Level level3 = new Level(
+                                260,
+                                canvasHeight,
+                                StoryType.PLAYABLE);
+                level3Animation.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/environment/castleLong.png")
+                                                .toExternalForm()),
+                                8024,
+                                canvasHeight));
+                level3.getAnimationSet().add(AnimationType.IDLE, level3Animation);
+                level3.getAnimationState().setCurrentAnimation(level3Animation);
+
+                Animation level4Animation = new Animation();
+                Level level4 = new Level(
                                 380,
-                                590);
-                level2Animation.getFrames().add(new Frame(new Image(
+                                590,
+                                StoryType.PLAYABLE);
+                level4Animation.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/environment/insideCastle.png")
                                                 .toExternalForm()),
                                 8024,
                                 canvasHeight));
-                level2.getAnimationSet().add(AnimationType.IDLE, level2Animation);
-                level2.getAnimationState().setCurrentAnimation(level2Animation);
+                level4.getAnimationSet().add(AnimationType.IDLE, level4Animation);
+                level4.getAnimationState().setCurrentAnimation(level4Animation);
 
                 environment = new Environment(
                                 level1.getWidth(),
@@ -856,39 +869,40 @@ public class GameSet {
                                 SoundType.MUSIC,
                                 true);
                 level0.getSoundSet().add(SoundEvent.BACKGROUND, level0BackgroundSound);
-                Sound level1AmbientSound = new Sound(
+                Sound level3AmbientSound = new Sound(
                                 "/sounds/levels/forestAmbient.mp3",
                                 SoundType.AMBIENT,
                                 true);
-                Sound level1BackgroundSound = new Sound(
+                Sound level3BackgroundSound = new Sound(
                                 "/sounds/levels/forestMusic.mp3",
                                 SoundType.MUSIC,
                                 true);
-                level1.getSoundSet().add(SoundEvent.AMBIENT, level1AmbientSound);
-                level1.getSoundSet().add(SoundEvent.BACKGROUND, level1BackgroundSound);
-                Sound level2AmbientSound = new Sound(
+                level3.getSoundSet().add(SoundEvent.AMBIENT, level3AmbientSound);
+                level3.getSoundSet().add(SoundEvent.BACKGROUND, level3BackgroundSound);
+                Sound level4AmbientSound = new Sound(
                                 "/sounds/levels/castleAmbient.mp3",
                                 SoundType.AMBIENT,
                                 true);
-                Sound level2BackgroundSound = new Sound(
+                Sound level4BackgroundSound = new Sound(
                                 "/sounds/levels/castleMusic.mp3",
                                 SoundType.MUSIC,
                                 true);
-                level2.getSoundSet().add(SoundEvent.AMBIENT, level2AmbientSound);
-                level2.getSoundSet().add(SoundEvent.BACKGROUND, level2BackgroundSound);
+                level4.getSoundSet().add(SoundEvent.AMBIENT, level4AmbientSound);
+                level4.getSoundSet().add(SoundEvent.BACKGROUND, level4BackgroundSound);
 
                 // Register objects into the environment and count total collectibles
-                level1.getAgents().add(chonBot1);
-                level1.getAgents().add(chonBot2);
-                level1.getAgents().add(chonBot3);
-                level1.getAgents().add(chonBot4);
+                level3.getAgents().add(chonBot1);
+                level3.getAgents().add(chonBot2);
+                level3.getAgents().add(chonBot3);
+                level3.getAgents().add(chonBot4);
 
-                level1.setObjects(objects);
+                level3.setObjects(objects);
 
-                level2.getAgents().add(chonBot5);
+                level4.getAgents().add(chonBot5);
                 environment.getLevels().add(level0);
                 environment.getLevels().add(level1);
-                environment.getLevels().add(level2);
+                environment.getLevels().add(level3);
+                environment.getLevels().add(level4);
                 environment.setCurrentLevel(level0);
         }
 

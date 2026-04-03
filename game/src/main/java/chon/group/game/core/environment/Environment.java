@@ -108,7 +108,7 @@ public class Environment {
     }
 
     public void setTheEndImage(String pathImage) {
-        this.pauseImage = new Image(getClass().getResource(pathImage).toExternalForm());
+        this.theEndImage = new Image(getClass().getResource(pathImage).toExternalForm());
     }
 
     public Agent getProtagonist() {

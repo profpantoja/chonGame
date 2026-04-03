@@ -197,6 +197,10 @@ public class Game {
         return directions;
     }
 
+    public void skip() {
+        this.getEnvironment().loadNextLevel();
+    }
+
     private boolean run() {
         long now = System.currentTimeMillis();
         if (this.lastLoop == 0) {
@@ -216,8 +220,9 @@ public class Game {
 
     public boolean isGameCompleted() {
         return this.environment.getCurrentLevel() != null
-            && this.environment.getLevels().indexOf(this.environment.getCurrentLevel()) == this.environment.getLevels().size() - 1
-            && this.environment.getCurrentLevel().isCompleted(this.environment);
+                && this.environment.getLevels()
+                        .indexOf(this.environment.getCurrentLevel()) == this.environment.getLevels().size() - 1
+                && this.environment.getCurrentLevel().isCompleted(this.environment);
     }
 
 }

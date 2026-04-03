@@ -15,7 +15,7 @@ public class PauseState implements GameState {
         if (game.getInput().contains("P")) {
             /* The Pause needs to be removed. Otherwise, it will stay forever paused. */
             game.getInput().remove("P");
-            game.setCurrentState(new RunningState());
+            game.setCurrentState(new PlayableState());
         }
         /* It gets which action the player has chosen in the menu. */
         Action action = game.getMenu().getCurrentMenu().handleAction(game.getInput());
@@ -26,7 +26,7 @@ public class PauseState implements GameState {
             game.getMenu().setCurrentMenu(game.getMenu().getStart());
         } else if (action.equals(Action.CONTINUE)) {
             /* The game returns to the Running State. */
-            game.setCurrentState(new RunningState());
+            game.setCurrentState(new PlayableState());
         }
 
         switch (action) {
@@ -64,7 +64,7 @@ public class PauseState implements GameState {
 
     @Override
     public void render(Game game) {
-        /* It needs to reder the game, because there is no customized pause screen. */
+        /* It needs to render the game, because there is no customized pause screen. */
         game.getMediator().renderGame();
         /** Rendering the Pause Screen and menu. */
         game.getMediator().drawPauseScreen();

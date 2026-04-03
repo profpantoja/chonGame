@@ -8,7 +8,7 @@ import chon.group.game.core.agent.Object;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.sound.SoundEvent;
 
-public class RunningState implements GameState {
+public class PlayableState implements GameState {
 
     @Override
     public void handleInput(Game game) {

@@ -26,13 +26,34 @@ public class Level extends Entity {
     /** List of shots in the environment. */
     private List<Shot> shots;
 
-    public Level(int posX, int posY, int topY, int bottomY) {
+    private StoryType type = StoryType.PLAYABLE;
+
+    public Level(int posX, int posY, int topY, int bottomY, StoryType type) {
         super(posX, posY, 0, 0, 0, 0, 0, Direction.IDLE, false, false);
         this.topY = topY;
         this.bottomY = bottomY;
         this.agents = new ArrayList<Agent>();
         this.objects = new ArrayList<Object>();
         this.shots = new ArrayList<Shot>();
+        this.type = type;
+    }
+
+    public Level(int topY, int bottomY, StoryType type) {
+        super(0, 0, 0, 0, 0, 0, 0, Direction.IDLE, false, false);
+        this.topY = topY;
+        this.bottomY = bottomY;
+        this.agents = new ArrayList<Agent>();
+        this.objects = new ArrayList<Object>();
+        this.shots = new ArrayList<Shot>();
+        this.type = type;
+    }
+
+    public Level(StoryType type) {
+        super(0, 0, 0, 0, 0, 0, 0, Direction.IDLE, false, false);
+        this.agents = new ArrayList<Agent>();
+        this.objects = new ArrayList<Object>();
+        this.shots = new ArrayList<Shot>();
+        this.type = type;
     }
 
     public int getTopY() {
@@ -73,6 +94,14 @@ public class Level extends Entity {
 
     public void setShots(List<Shot> shots) {
         this.shots = shots;
+    }
+
+    public StoryType getType() {
+        return type;
+    }
+
+    public void setType(StoryType type) {
+        this.type = type;
     }
 
     /**

@@ -24,10 +24,10 @@ public class WinState implements GameState {
 
     @Override
     public void render(Game game) {
-        /* It needs to reder the game, because there is no customized winning screen. */
+        /* It needs to render the game, because there is no customized winning screen. */
         game.getMediator().renderGame();
         /** Rendering The End Screen and menu. */
-        game.getMediator().drawPauseScreen();
+        game.getMediator().drawTheEndScreen();
         game.getMediator().drawMenu();
     }
 

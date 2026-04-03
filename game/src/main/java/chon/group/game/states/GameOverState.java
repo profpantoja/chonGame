@@ -17,7 +17,7 @@ public class GameOverState implements GameState {
         } else if (action.equals(Action.CONTINUE)) {
             /* The same level is restarted. */
             game.resetLevel();
-            game.setCurrentState(new RunningState());
+            game.setCurrentState(new PlayableState());
         }
     }
 
@@ -33,7 +33,7 @@ public class GameOverState implements GameState {
     @Override
     public void render(Game game) {
         /*
-         * It needs to reder the game, because there is no customized game over screen.
+         * It needs to render the game, because there is no customized game over screen.
          */
         game.getMediator().renderGame();
         /** Rendering the Game Over Screen and menu. */
