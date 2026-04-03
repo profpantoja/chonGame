@@ -27,7 +27,7 @@ public abstract class Shot extends Entity {
             boolean flipped,
             int damage,
             int range) {
-        super(posX, posY, width, height, speed, health, direction, flipped, false);
+        super(posX, posY, width, height, 0, speed, health, direction, flipped, false);
         this.damage = damage;
         this.creationPosX = posX;
         this.range = range;

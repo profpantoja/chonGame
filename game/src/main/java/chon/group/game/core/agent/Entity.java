@@ -56,11 +56,20 @@ public abstract class Entity {
      *
      * @param posX      the entity's initial X (horizontal) position
      * @param posY      the entity's initial Y (vertical) position
+     * @param ratio     the hitbox ratio for Beat'n Up Games
      * @param speed     the entity's speed
      * @param health    the entity's health
      * @param pathImage the path to the entity's image
      */
-    public Entity(int posX, int posY, int width, int height, int speed, int health, Direction direction,
+    public Entity(
+            int posX,
+            int posY,
+            int width,
+            int height,
+            double ratio,
+            int speed,
+            int health,
+            Direction direction,
             boolean flipped,
             boolean visibleBars) {
         /*
@@ -78,7 +87,7 @@ public abstract class Entity {
         this.direction = direction;
         this.getAnimationState().setFlipped(flipped);
         this.visibleBars = visibleBars;
-        this.hitbox = new Hitbox(width, (int) (height * 0.4));
+        this.hitbox = new Hitbox(width, height, ratio);
     }
 
     /**

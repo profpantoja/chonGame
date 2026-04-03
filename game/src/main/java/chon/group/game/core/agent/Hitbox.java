@@ -4,10 +4,14 @@ public class Hitbox {
 
     private int width;
     private int height;
+    private double ratio = 1;
 
-    public Hitbox(int width, int height) {
+    public Hitbox(int width, int height, double ratio) {
+        this.ratio = ratio;
+        if (ratio == 0 || ratio > 1)
+            ratio = 1;
         this.width = width;
-        this.height = height;
+        this.height = (int) (height * ratio);
     }
 
     public int getWidth() {
@@ -24,6 +28,14 @@ public class Hitbox {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    public double getRatio() {
+        return ratio;
+    }
+
+    public void setRatio(double ratio) {
+        this.ratio = ratio;
     }
 
 }

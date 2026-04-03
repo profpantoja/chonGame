@@ -24,6 +24,7 @@ public class Object extends Entity {
             int posY,
             int width,
             int height,
+            double ratio,
             int speed,
             int health,
             Direction direction,
@@ -32,7 +33,7 @@ public class Object extends Entity {
             boolean collectible,
             boolean destructible,
             double attractionRadius) {
-        super(posX, posY, width, height, speed, health, direction, flipped, visibleBars);
+        super(posX, posY, width, height, ratio, speed, health, direction, flipped, visibleBars);
         this.collectible = collectible;
         this.destructible = destructible;
         this.attractionRadius = attractionRadius;
@@ -136,6 +137,30 @@ public class Object extends Entity {
      */
     public boolean isDestroyed() {
         return (this.isTerminated());
+    }
+
+    public Object copy(int posX, int posY) {
+        Object copy = new Object(
+                posX,
+                posY,
+                this.getWidthOffset(),
+                this.getHeight(),
+                this.getHitbox().getRatio(),
+                this.getSpeed(),
+                this.getHealth(),
+                this.getDirection(),
+                this.getAnimationState().isFlipped(),
+                this.isVisibleBars(),
+                this.isCollectible(),
+                this.isDestructible(),
+                this.getAttractionRadius());
+        copy.setCollected(this.isCollected());
+        copy.setFullHealth(this.getFullHealth());
+        copy.setStatus(this.getStatus());
+        copy.setAnimationSet(this.getAnimationSet());
+        copy.setSoundSet(this.getSoundSet());
+        copy.getAnimationState().setCurrentAnimation(this.getAnimationState().getCurrentAnimation());
+        return copy;
     }
 
 }

@@ -45,9 +45,9 @@ public class Agent extends Entity {
      * @param pathImage the path to the agent's image
      * @param flipped   the agent's direction (RIGHT=0 or LEFT=1)
      */
-    public Agent(int posX, int posY, int width, int height, int speed, int health, Direction direction, boolean flipped,
+    public Agent(int posX, int posY, int width, int height, double ratio, int speed, int health, Direction direction, boolean flipped,
             boolean visibleBars) {
-        super(posX, posY, width, height, speed, health, direction, flipped, visibleBars);
+        super(posX, posY, width, height, ratio, speed, health, direction, flipped, visibleBars);
         this.energy = 1.0;
         this.fullEnergy = 1.0;
         this.recoveryFactor = 0.0002;

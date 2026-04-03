@@ -177,6 +177,7 @@ public class GameSet {
                                 390,
                                 65,
                                 90,
+                                0.4,
                                 2,
                                 5000,
                                 Direction.IDLE,
@@ -488,9 +489,9 @@ public class GameSet {
                                 250,
                                 punch);
                 chonBota.setWeapon(cannon);
-                chonBota.setWeapon(lancer);
-                chonBota.setWeapon(bareHands);
 
+                chonBota.setWeapon(bareHands);
+                chonBota.setWeapon(lancer);
                 /* Animation frames for chonBota. It can be reused among all instances. */
                 Animation idleChonBot = new Animation();
                 idleChonBot.getFrames().add(new Frame(new Image(
@@ -564,6 +565,7 @@ public class GameSet {
                                 440,
                                 65,
                                 90,
+                                0.4,
                                 1,
                                 500,
                                 Direction.IDLE,
@@ -576,6 +578,7 @@ public class GameSet {
                                 640,
                                 65,
                                 90,
+                                0.4,
                                 1,
                                 500,
                                 Direction.IDLE,
@@ -588,6 +591,7 @@ public class GameSet {
                                 300,
                                 65,
                                 90,
+                                0.4,
                                 1,
                                 500,
                                 Direction.IDLE,
@@ -600,6 +604,7 @@ public class GameSet {
                                 500,
                                 65,
                                 90,
+                                0.4,
                                 1,
                                 500,
                                 Direction.IDLE,
@@ -612,6 +617,7 @@ public class GameSet {
                                 500,
                                 65,
                                 90,
+                                0.4,
                                 1,
                                 500,
                                 Direction.IDLE,
@@ -699,45 +705,14 @@ public class GameSet {
                  * Set up some collectable objects. For each instance is necessary the Object
                  * and the Animation Set.
                  */
+                // Starting from Coins with a prototype object.
                 List<Object> objects = new ArrayList<>();
-                Object coin1 = new Object(
+                Object coin = new Object(
                                 200,
                                 350,
                                 32,
                                 32,
-                                0,
-                                0,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                true,
-                                false,
-                                200);
-                coin1.getAnimationSet().add(AnimationType.IDLE, idleCoin);
-                coin1.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
-                coin1.getAnimationState().setCurrentAnimation(idleCoin);
-                objects.add(coin1);
-                Object coin2 = new Object(
-                                400,
-                                380,
-                                32,
-                                32,
-                                0,
                                 1,
-                                Direction.IDLE,
-                                false,
-                                true,
-                                true,
-                                true, 200);
-                coin2.getAnimationSet().add(AnimationType.IDLE, idleCoin);
-                coin2.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
-                coin2.getAnimationState().setCurrentAnimation(idleCoin);
-                objects.add(coin2);
-                Object coin3 = new Object(
-                                1000,
-                                600,
-                                32,
-                                32,
                                 0,
                                 0,
                                 Direction.IDLE,
@@ -746,481 +721,100 @@ public class GameSet {
                                 true,
                                 false,
                                 200);
-                coin3.getAnimationSet().add(AnimationType.IDLE, idleCoin);
-                coin3.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
-                coin3.getAnimationState().setCurrentAnimation(idleCoin);
+                coin.getAnimationSet().add(AnimationType.IDLE, idleCoin);
+                coin.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
+                coin.getAnimationState().setCurrentAnimation(idleCoin);
+
+                Object coin1 = coin.copy(200, 380);
+                // Coin 2 is different since it is destructible.
+                Object coin2 = coin.copy(30, 300);
+                Object coin3 = coin.copy(400, 380);
+                coin3.setDestructible(true);
+                coin3.setVisibleBars(true);
+                Object coin4 = coin.copy(1000, 280);
+                Object coin5 = coin.copy(2300, 300);
+                Object coin6 = coin.copy(3400, 600);
+                Object coin7 = coin.copy(4100, 320);
+                Object coin8 = coin.copy(5000, 500);
+                Object coin9 = coin.copy(6200, 600);
+                Object coin10 = coin.copy(6400, 350);
+                Object coin11 = coin.copy(7000, 600);
+                Object coin12 = coin.copy(7200, 500);
+                Object coin13 = coin.copy(7400, 500);
+                objects.add(coin1);
+                objects.add(coin2);
                 objects.add(coin3);
-                Object box1 = new Object(
+                objects.add(coin4);
+                objects.add(coin5);
+                objects.add(coin6);
+                objects.add(coin7);
+                objects.add(coin8);
+                objects.add(coin9);
+                objects.add(coin10);
+                objects.add(coin11);
+                objects.add(coin12);
+                objects.add(coin13);
+
+                // Creating Boxes.
+                Object box = new Object(
                                 1200,
                                 704,
                                 64,
                                 32,
+                                0.4,
                                 0,
                                 1000,
                                 Direction.IDLE,
                                 false,
                                 false,
                                 false,
-                                false,
-                                200);
-                box1.getAnimationSet().add(AnimationType.IDLE, idleBox);
-                box1.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
-                box1.getAnimationState().setCurrentAnimation(idleBox);
+                                true,
+                                1);
+                box.getAnimationSet().add(AnimationType.IDLE, idleBox);
+                box.getAnimationSet().add(AnimationType.DAMAGE, hitBox);
+                box.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
+                box.getAnimationState().setCurrentAnimation(idleBox);
+
+                Object box1 = box.copy(1200, 596);
+                Object box2 = box.copy(1200, 650);
+                Object box3 = box.copy(1200, 704);
+                box3.setDestructible(false);
+                Object box4 = box.copy(1900, 350);
+                Object box5 = box.copy(2150, 550);
+                Object box6 = box.copy(2500, 680);
+                Object box7 = box.copy(2700, 450);
+                Object box8 = box.copy(2850, 650);
+                box8.setVisibleBars(true);
+                box8.setHealth(5000);
+                box8.setFullHealth(5000);
+                box8.getAnimationState().setFlipped(true);
+                Object box9 = box.copy(3150, 450);
+                Object box10 = box.copy(3500, 350);
+                Object box11 = box.copy(3850, 550);
+                Object box12 = box.copy(4350, 550);
+                Object box13 = box.copy(4550, 550);
+                Object box14 = box.copy(4650, 350);
+                Object box15 = box.copy(4850, 600);
+                Object box16 = box.copy(5150, 450);
+                Object box17 = box.copy(5350, 300);
+                Object box18 = box.copy(5600, 550);
                 objects.add(box1);
-                Object box2 = new Object(
-                                1200,
-                                650,
-                                64,
-                                64,
-                                0,
-                                1000,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                false,
-                                true,
-                                200);
-                box2.getAnimationSet().add(AnimationType.IDLE, idleBox);
-                box2.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
-                box2.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box2);
-                Object box3 = new Object(
-                                1200,
-                                596,
-                                64,
-                                64,
-                                0,
-                                1000,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                false,
-                                true,
-                                200);
-                box3.getAnimationSet().add(AnimationType.IDLE, idleBox);
-                box3.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
-                box3.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box3);
-                Object coin4 = new Object(
-                                1400,
-                                380,
-                                32,
-                                32,
-                                0,
-                                0,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                true,
-                                false,
-                                200);
-                coin4.getAnimationSet().add(AnimationType.IDLE, idleCoin);
-                coin4.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
-                coin4.getAnimationState().setCurrentAnimation(idleCoin);
-                objects.add(coin4);
-                Object coin5 = new Object(
-                                1800,
-                                650,
-                                32,
-                                32,
-                                0,
-                                0,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                true,
-                                false,
-                                200);
-                coin5.getAnimationSet().add(AnimationType.IDLE, idleCoin);
-                coin5.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
-                coin5.getAnimationState().setCurrentAnimation(idleCoin);
-                objects.add(coin5);
-                Object box4 = new Object(
-                                1900,
-                                350,
-                                64,
-                                64,
-                                0,
-                                1000,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                false,
-                                true,
-                                0);
-                box4.getAnimationSet().add(AnimationType.IDLE, idleBox);
-                box4.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
-                box4.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box4);
-                Object coin6 = new Object(
-                                2000,
-                                580,
-                                32,
-                                32,
-                                0,
-                                0,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                true,
-                                false,
-                                200);
-                coin6.getAnimationSet().add(AnimationType.IDLE, idleCoin);
-                coin6.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
-                coin6.getAnimationState().setCurrentAnimation(idleCoin);
-                objects.add(coin6);
-                Object box5 = new Object(
-                                2150,
-                                550,
-                                64,
-                                64,
-                                0,
-                                1000,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                false,
-                                true,
-                                0);
-                box5.getAnimationSet().add(AnimationType.IDLE, idleBox);
-                box5.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
-                box5.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box5);
-                Object coin7 = new Object(
-                                2300,
-                                380,
-                                32,
-                                32,
-                                0,
-                                0,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                true,
-                                false,
-                                200);
-                coin7.getAnimationSet().add(AnimationType.IDLE, idleCoin);
-                coin7.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
-                coin7.getAnimationState().setCurrentAnimation(idleCoin);
-                objects.add(coin7);
-                Object box6 = new Object(
-                                2500,
-                                680,
-                                64,
-                                64,
-                                0,
-                                1000,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                false,
-                                true,
-                                0);
-                box6.getAnimationSet().add(AnimationType.IDLE, idleBox);
-                box6.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
-                box6.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box6);
-                Object coin8 = new Object(
-                                2600,
-                                500,
-                                32,
-                                32,
-                                0,
-                                0,
-                                Direction.IDLE,
-                                false, false,
-                                true,
-                                false,
-                                200);
-                coin8.getAnimationSet().add(AnimationType.IDLE, idleCoin);
-                coin8.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
-                coin8.getAnimationState().setCurrentAnimation(idleCoin);
-                objects.add(coin8);
-                Object box7 = new Object(
-                                2700,
-                                450,
-                                64,
-                                64,
-                                0,
-                                1000,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                false,
-                                true,
-                                0);
-                box7.getAnimationSet().add(AnimationType.IDLE, idleBox);
-                box7.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
-                box7.getAnimationState().setCurrentAnimation(idleBox);
-                objects.add(box7);
-                Object box8 = new Object(
-                                2850,
-                                650,
-                                64,
-                                64,
-                                0,
-                                5000,
-                                Direction.IDLE,
-                                true,
-                                true,
-                                false,
-                                true,
-                                0);
-                box8.getAnimationSet().add(AnimationType.IDLE, idleBox);
-                box8.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
-                box8.getAnimationSet().add(AnimationType.DAMAGE, hitBox);
-                box8.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box8);
-                Object coin9 = new Object(
-                                2900,
-                                380,
-                                32,
-                                32,
-                                0,
-                                0,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                true,
-                                false,
-                                200);
-                coin9.getAnimationSet().add(AnimationType.IDLE, idleCoin);
-                coin9.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
-                coin9.getAnimationState().setCurrentAnimation(idleCoin);
-                objects.add(coin9);
-                Object box9 = new Object(
-                                3150,
-                                450,
-                                64,
-                                64,
-                                0,
-                                1000,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                false,
-                                true,
-                                0);
-                box9.getAnimationSet().add(AnimationType.IDLE, idleBox);
-                box9.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
-                box9.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box9);
-                Object coin10 = new Object(
-                                3200,
-                                400,
-                                32,
-                                32,
-                                0,
-                                0,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                true,
-                                false,
-                                200);
-                coin10.getAnimationSet().add(AnimationType.IDLE, idleCoin);
-                coin10.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
-                coin10.getAnimationState().setCurrentAnimation(idleCoin);
-                objects.add(coin10);
-                Object box10 = new Object(
-                                3500,
-                                350,
-                                64,
-                                64,
-                                0,
-                                1000,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                false,
-                                true,
-                                0);
-                box10.getAnimationSet().add(AnimationType.IDLE, idleBox);
-                box10.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
-                box10.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box10);
-                Object box11 = new Object(
-                                3850,
-                                550,
-                                64,
-                                64,
-                                0,
-                                1000,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                false,
-                                true,
-                                0);
-                box11.getAnimationSet().add(AnimationType.IDLE, idleBox);
-                box11.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
-                box11.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box11);
-                Object coin11 = new Object(
-                                4100,
-                                500,
-                                32,
-                                32,
-                                0,
-                                0,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                true,
-                                false, 200);
-                coin11.getAnimationSet().add(AnimationType.IDLE, idleCoin);
-                coin11.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
-                coin11.getAnimationState().setCurrentAnimation(idleCoin);
-                objects.add(coin11);
-                Object box12 = new Object(
-                                4350,
-                                550,
-                                64,
-                                64,
-                                0,
-                                1000,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                false,
-                                true,
-                                0);
-                box12.getAnimationSet().add(AnimationType.IDLE, idleBox);
-                box12.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
-                box12.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box12);
-                Object box13 = new Object(
-                                4550,
-                                550,
-                                64,
-                                64,
-                                0,
-                                1000,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                false,
-                                true,
-                                0);
-                box13.getAnimationSet().add(AnimationType.IDLE, idleBox);
-                box13.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
-                box13.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box13);
-                Object box14 = new Object(
-                                4650,
-                                350,
-                                64,
-                                64,
-                                0,
-                                1000,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                false, true, 0);
-                box14.getAnimationSet().add(AnimationType.IDLE, idleBox);
-                box14.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
-                box14.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box14);
-                Object box15 = new Object(
-                                4850,
-                                600,
-                                64,
-                                64,
-                                0,
-                                1000,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                false, true, 0);
-                box15.getAnimationSet().add(AnimationType.IDLE, idleBox);
-                box15.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
-                box15.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box15);
-                Object coin12 = new Object(
-                                5000,
-                                380,
-                                32,
-                                32,
-                                0,
-                                0,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                true,
-                                false,
-                                200);
-                coin12.getAnimationSet().add(AnimationType.IDLE, idleCoin);
-                coin12.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
-                coin12.getAnimationState().setCurrentAnimation(idleCoin);
-                objects.add(coin12);
-                Object box16 = new Object(
-                                5150,
-                                650,
-                                64,
-                                64,
-                                0,
-                                1000,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                false,
-                                true,
-                                0);
-                box16.getAnimationSet().add(AnimationType.IDLE, idleBox);
-                box16.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
-                box16.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box16);
-                Object box17 = new Object(
-                                5300,
-                                300,
-                                64,
-                                64,
-                                0,
-                                1000,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                false,
-                                true,
-                                0);
-                box17.getAnimationSet().add(AnimationType.IDLE, idleBox);
-                box17.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
-                box17.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box17);
-                Object box18 = new Object(
-                                5600,
-                                550,
-                                64,
-                                64,
-                                0,
-                                1000,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                false,
-                                true,
-                                0);
-                box18.getAnimationSet().add(AnimationType.IDLE, idleBox);
-                box18.getAnimationSet().add(AnimationType.TERMINATE, terminateBox);
-                box18.getAnimationState().setCurrentAnimation(idleBox);
                 objects.add(box18);
-                Object coin13 = new Object(
-                                6200,
-                                400,
-                                32,
-                                32,
-                                0,
-                                0,
-                                Direction.IDLE,
-                                false,
-                                false,
-                                true,
-                                false,
-                                200);
-                coin13.getAnimationSet().add(AnimationType.IDLE, idleCoin);
-                coin13.getAnimationSet().add(AnimationType.TERMINATE, terminateCoin);
-                coin13.getAnimationState().setCurrentAnimation(idleCoin);
-                objects.add(coin13);
                 // ChonBota sounds.
                 Sound lancerShotSound = new Sound(
                                 "/sounds/agents/chonBota/lancer_shot.wav",
