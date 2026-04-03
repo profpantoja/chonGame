@@ -77,6 +77,13 @@ public interface GameDrawer {
      */
     void drawGameOver();
 
+
+    /**
+     * Draws the end screen when the game is over.
+     */
+    void drawTheEndScreen();
+
+
     /**
      * Draws the current Menu.
      */

@@ -98,6 +98,13 @@ public class RunningState implements GameState {
         for (Shot shot : game.getEnvironment().getCurrentLevel().getShots()) {
             game.getAnimator().animate(shot);
         }
+
+        if (game.isGameCompleted()) {
+            /* If the end of the game, the game moves to the Winning state. */
+            game.getMenu().setCurrentMenu(game.getMenu().getWin());
+            game.setCurrentState(new WinState());
+        }
+
     }
 
     @Override

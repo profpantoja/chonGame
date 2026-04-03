@@ -214,4 +214,10 @@ public class Game {
         return false;
     }
 
+    public boolean isGameCompleted() {
+        return this.environment.getCurrentLevel() != null
+            && this.environment.getLevels().indexOf(this.environment.getCurrentLevel()) == this.environment.getLevels().size() - 1
+            && this.environment.getCurrentLevel().isCompleted(this.environment);
+    }
+
 }

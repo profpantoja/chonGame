@@ -122,7 +122,19 @@ public class GameSet {
                                 0.7,
                                 400);
 
-                this.menu = new MenuHandler(startMenu, pauseMenu, null, gaveOverMenu);
+                Item winningMenu1 = new Item("Exit", Action.RESET);
+                Menu winningMenu = new Menu(
+                                "THE END",
+                                List.of(winningMenu1),
+                                0.7,
+                                400);
+
+                this.menu = new MenuHandler(
+                                startMenu,
+                                pauseMenu,
+                                null,
+                                gaveOverMenu,
+                                winningMenu);
 
                 /* Initialize the game environment, levels, agents and weapons */
                 Level level0 = new Level(
@@ -586,6 +598,7 @@ public class GameSet {
                 environment.setProtagonist(chonBota);
                 environment.setPauseImage("/images/environment/pause.png");
                 environment.setGameOverImage("/images/environment/gameover.png");
+                environment.setTheEndImage("/images/environment/theEnd.png");
 
                 /* Animation frames for objects. It can be reused among all instances. */
                 Animation idleCoin = new Animation();

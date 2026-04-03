@@ -30,14 +30,15 @@ public class Environment {
     /** The background image for the game over screen. */
     private Image gameOverImage;
 
+    /** The background image for the game over screen. */
+    private Image theEndImage;
+
     /** The protagonist of the environment. */
     private Agent protagonist;
 
     private List<Level> levels;
 
     private Level currentLevel;
-
-    // private Menu currentMenu;
 
     /** List of messages currently being displayed. */
     private List<Message> messages;
@@ -100,6 +101,14 @@ public class Environment {
      */
     public void setGameOverImage(String pathImage) {
         this.gameOverImage = new Image(getClass().getResource(pathImage).toExternalForm());
+    }
+
+    public Image getTheEndImage() {
+        return theEndImage;
+    }
+
+    public void setTheEndImage(String pathImage) {
+        this.pauseImage = new Image(getClass().getResource(pathImage).toExternalForm());
     }
 
     public Agent getProtagonist() {

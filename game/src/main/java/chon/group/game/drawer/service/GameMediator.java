@@ -271,6 +271,20 @@ public class GameMediator implements GameDrawer {
     }
 
     /**
+     * Draws the end screen overlay, displaying a The End image centered within the
+     * environment.
+     */
+    @Override
+    public void drawTheEndScreen() {
+        var environment = this.game.getEnvironment();
+        drawer.drawScreen(environment.getTheEndImage(),
+                (int) environment.getTheEndImage().getWidth(),
+                (int) environment.getTheEndImage().getHeight(),
+                (int) environment.getCamera().getScreenWidth(),
+                environment.getCurrentLevel().getHeight());
+    }
+
+    /**
      * Draws damage messages that appear when agents take damage.
      * The messages float upward and fade out over time.
      */
