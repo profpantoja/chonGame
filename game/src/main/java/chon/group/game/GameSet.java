@@ -166,6 +166,16 @@ public class GameSet {
                 level1.getAnimationSet().add(AnimationType.IDLE, level1Animation);
                 level1.getAnimationState().setCurrentAnimation(level1Animation);
 
+                Level level2 = new Level(StoryType.STORY);
+                Animation level2Animation = new Animation();
+                level2Animation.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/environment/loading.png")
+                                                .toExternalForm()),
+                                1280,
+                                canvasHeight));
+                level2.getAnimationSet().add(AnimationType.IDLE, level2Animation);
+                level2.getAnimationState().setCurrentAnimation(level2Animation);
+
                 Animation level3Animation = new Animation();
                 Level level3 = new Level(
                                 260,
@@ -901,6 +911,7 @@ public class GameSet {
                 level4.getAgents().add(chonBot5);
                 environment.getLevels().add(level0);
                 environment.getLevels().add(level1);
+                environment.getLevels().add(level2);
                 environment.getLevels().add(level3);
                 environment.getLevels().add(level4);
                 environment.setCurrentLevel(level0);

@@ -1,10 +1,14 @@
 package chon.group.game.drawer.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 /**
@@ -329,44 +333,91 @@ public class JavaFxDrawer extends Drawer {
             String[] options) {
         /* Sets the middle of the screen. */
         double posX = screenWidth / 2;
+        /* Title configuration. */
+        Font titleFont = Font.font("Verdana", FontWeight.BOLD, 28);
+        double titleLineSpacing = span * 0.8;
+        double spaceAfterTitle = span * 0.35;
+        double maxTextWidth = width - span;
+        String[] titleLines = wrapText(title, titleFont, maxTextWidth);
+        /*
+         * Calculates the panel height considering:
+         *
+         * - one top span before the title;
+         * - wrapped title height;
+         * - a reduced space between title and options;
+         * - all menu options;
+         * - one bottom span after the last option.
+         */
+        double titleHeight = titleLines.length * titleLineSpacing;
+        double optionsHeight = options.length * span;
+        double panelHeight = span + titleHeight + spaceAfterTitle + optionsHeight - (span / 2);
         /* Sets the Y position considering a percentage of the level height. */
-        double posY = levelHeight * percentage;
-        /* Sets the final Y position considering the space sum between options. */
-        double finalPosY = posY + (options.length * span);
+        double centerY = levelHeight * percentage;
+        double panelY = centerY - (centerY + panelHeight - levelHeight + (span / 2));
+        double posY = panelY;
         this.drawGlassPanel(
                 (int) width,
-                /*
-                 * This parameter considers the Y position plus 2 spans:
-                 * 
-                 * - where the first one considers the space between the line and the title;
-                 * - and the second considers the space between the end line and the last
-                 * option.
-                 * 
-                 */
-                (int) (finalPosY - posY + span + span),
+                (int) panelHeight,
                 (int) (posX - (width / 2)),
-                (int) posY);
+                (int) panelY);
         /* It prints the Menu title considering its font, style, and color. */
-        gc.setFont(Font.font("Verdana", FontWeight.BOLD, 28));
+        gc.setFont(titleFont);
         gc.setFill(Color.LIGHTGRAY);
         gc.setTextAlign(TextAlignment.CENTER);
-        /* It adds a span between the title and the options. */
+        /* Top spacing before the title. */
         posY += span;
-        gc.fillText(title, posX, posY);
+        /* Draw wrapped title lines. */
+        for (String line : titleLines) {
+            gc.fillText(line, posX, posY);
+            posY += titleLineSpacing;
+        }
+        gc.setTextAlign(TextAlignment.CENTER);
+        /* Reduced spacing between title and options. */
+        double optionsStartY = posY + spaceAfterTitle;
         /* It sets the font for printing the Menu options. */
         gc.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
-        /* It prints each option considering a span (45px) between each one. */
-        for (int i = 1; i <= options.length; i++) {
-            double optionY = posY + (i * span);
+        /* It prints each option considering a span between each one. */
+        for (int i = 0; i < options.length; i++) {
+            double optionY = optionsStartY + (i * span);
             /* It makes the selected option Yellow. */
-            gc.setFill((i - 1 == selectedIndex) ? Color.YELLOW : Color.WHITE);
-            gc.fillText(options[i - 1], posX, optionY);
+            gc.setFill(i == selectedIndex ? Color.YELLOW : Color.WHITE);
+            gc.fillText(options[i], posX, optionY);
         }
         /*
          * It resets the text alignment. It can causes bugs in other panels if isn't
          * reset.
          */
         gc.setTextAlign(TextAlignment.LEFT);
+    }
+
+    private String[] wrapText(String text, Font font, double maxWidth) {
+        List<String> lines = new ArrayList<>();
+        StringBuilder currentLine = new StringBuilder();
+
+        for (String word : text.split(" ")) {
+            String testLine = currentLine.length() == 0
+                    ? word
+                    : currentLine + " " + word;
+
+            Text textNode = new Text(testLine);
+            textNode.setFont(font);
+            double textWidth = textNode.getLayoutBounds().getWidth();
+
+            if (textWidth > maxWidth) {
+                if (currentLine.length() > 0) {
+                    lines.add(currentLine.toString());
+                }
+                currentLine = new StringBuilder(word);
+            } else {
+                currentLine = new StringBuilder(testLine);
+            }
+        }
+
+        if (currentLine.length() > 0) {
+            lines.add(currentLine.toString());
+        }
+
+        return lines.toArray(new String[0]);
     }
 
 }

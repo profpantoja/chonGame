@@ -7,7 +7,7 @@ public class Menu {
     private int index = 0;
     private String title;
     private List<Item> items;
-    /** It adjusts the Y position considering a percentage. */
+    /** It adjusts the Y position considering a ratio. */
     private double heightProportion = 0.7;
     private double width = 400;
     private double span = 45;
