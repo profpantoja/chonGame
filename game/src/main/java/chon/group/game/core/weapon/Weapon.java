@@ -11,7 +11,7 @@ public abstract class Weapon extends Entity {
     /** The time of the last attack made. */
     private long lastAttackTime = 0;
     /* Attack cooldown (in milliseconds) */
-    private long cooldown = 150;
+    private long cooldown = 0;
 
     public Weapon(
             int posX,

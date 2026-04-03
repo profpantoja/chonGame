@@ -871,7 +871,6 @@ public class GameSet {
                 level1.getAgents().add(chonBot4);
 
                 level1.setObjects(objects);
-                level1.countCollectibles();
 
                 level2.getAgents().add(chonBot5);
                 environment.getLevels().add(level0);

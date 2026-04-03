@@ -54,20 +54,46 @@ public class GameMediator implements GameDrawer {
      */
     @Override
     public void renderGame() {
-        this.beatAndUp();
-        // this.topDownGame();
+        this.beatThemUp();
+        // this.layeredGame();
     }
 
     @SuppressWarnings("unused")
-    private void beatAndUp() {
+    private void beatThemUp() {
         this.drawBackground();
         this.drawEntities();
         this.drawMessages();
         this.drawPanel();
     }
 
+    /**
+     * Renders the scene using a fixed layer order commonly used in layered 2D
+     * games.
+     *
+     * <p>
+     * The drawing order is:
+     * background, agents, objects, shots, messages, and finally the protagonist's
+     * panel.
+     * </p>
+     *
+     * <p>
+     * This approach is appropriate when visual depth does not depend on the
+     * entities' vertical position on the screen.
+     * </p>
+     *
+     * <p>
+     * Examples of games that can use this rendering strategy include:
+     * </p>
+     * <ul>
+     * <li>Top-down games</li>
+     * <li>Shoot 'em up games (shmups)</li>
+     * <li>Side-scrolling shooters</li>
+     * <li>Fixed-layer action games</li>
+     * <li>Arcade-style 2D games with predefined visual layers</li>
+     * </ul>
+     */
     @SuppressWarnings("unused")
-    private void topDownGame() {
+    private void layeredGame() {
         this.drawBackground();
         this.drawAgents();
         this.drawObjects();

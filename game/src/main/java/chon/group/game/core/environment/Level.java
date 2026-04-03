@@ -26,9 +26,6 @@ public class Level extends Entity {
     /** List of shots in the environment. */
     private List<Shot> shots;
 
-    /** Total number of collectible objects in the environment. */
-    private int totalCollectibleCount = 0;
-
     public Level(int posX, int posY, int topY, int bottomY) {
         super(posX, posY, 0, 0, 0, 0, 0, Direction.IDLE, false, false);
         this.topY = topY;
@@ -84,28 +81,26 @@ public class Level extends Entity {
      * @return the total number of collectibles
      */
     public int getTotalCollectibleCount() {
-        return totalCollectibleCount;
-    }
-
-    public boolean isCompleted(Environment env) {
-        if (env.getProtagonist().getPosX() >= 0.95 * this.getWidth()) {
-            for (Agent agent : this.agents) {
-                if (agent != env.getProtagonist() && !agent.isDead()) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
+        return (int) this.objects.stream().filter(Object::isCollectible).count();
     }
 
     /**
-     * Counts how many collectible objects are currently in the environment.
+     * Checks whether the level has been completed.
+     *
+     * <p>
+     * A level is considered completed when the protagonist has reached at least
+     * 95% of the level width and all agents in the level are dead.
+     * </p>
+     *
+     * @param env the current game environment
+     * @return {@code true} if the level is completed; {@code false} otherwise
      */
-    public void countCollectibles() {
-        totalCollectibleCount = (int) this.objects.stream()
-                .filter(Object::isCollectible)
-                .count();
+    public boolean isCompleted(Environment env) {
+        boolean reachedLevelEnd = env.getProtagonist().getPosX() >= 0.95 * this.getWidth();
+        if (!reachedLevelEnd) {
+            return false;
+        }
+        return this.agents.stream().allMatch(Agent::isDead);
     }
 
 }
