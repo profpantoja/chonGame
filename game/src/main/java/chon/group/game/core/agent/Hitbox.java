@@ -9,9 +9,9 @@ public class Hitbox {
     public Hitbox(int width, int height, double ratio) {
         this.ratio = ratio;
         if (ratio == 0 || ratio > 1)
-            ratio = 1;
+            this.ratio = 1;
         this.width = width;
-        this.height = (int) (height * ratio);
+        this.height = (int) (height * this.ratio);
     }
 
     public int getWidth() {

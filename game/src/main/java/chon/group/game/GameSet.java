@@ -560,77 +560,27 @@ public class GameSet {
                  * Enemies instances. For each instance is necessary the Agent object and the
                  * Animation Set.
                  */
-                Agent chonBot1 = new Agent(
+                Agent chonBot = new Agent(
                                 920,
                                 440,
                                 65,
                                 90,
-                                0.4,
+                                0.6,
                                 1,
                                 500,
                                 Direction.IDLE,
                                 false,
                                 false);
-                chonBot1.getAnimationSet().add(AnimationType.IDLE, idleChonBot);
-                chonBot1.getAnimationSet().add(AnimationType.TERMINATE, deadChonBot);
-                Agent chonBot2 = new Agent(
-                                2920,
-                                640,
-                                65,
-                                90,
-                                0.4,
-                                1,
-                                500,
-                                Direction.IDLE,
-                                true,
-                                true);
-                chonBot2.getAnimationSet().add(AnimationType.IDLE, idleChonBot);
-                chonBot2.getAnimationSet().add(AnimationType.TERMINATE, deadChonBot);
-                Agent chonBot3 = new Agent(
-                                4920,
-                                300,
-                                65,
-                                90,
-                                0.4,
-                                1,
-                                500,
-                                Direction.IDLE,
-                                true,
-                                false);
-                chonBot3.getAnimationSet().add(AnimationType.IDLE, idleChonBot);
-                chonBot3.getAnimationSet().add(AnimationType.TERMINATE, deadChonBot);
-                Agent chonBot4 = new Agent(
-                                6920,
-                                500,
-                                65,
-                                90,
-                                0.4,
-                                1,
-                                500,
-                                Direction.IDLE,
-                                true,
-                                true);
-                chonBot4.getAnimationSet().add(AnimationType.IDLE, idleChonBot);
-                chonBot4.getAnimationSet().add(AnimationType.TERMINATE, deadChonBot);
-                Agent chonBot5 = new Agent(
-                                1500,
-                                500,
-                                65,
-                                90,
-                                0.4,
-                                1,
-                                500,
-                                Direction.IDLE,
-                                true,
-                                true);
-                chonBot5.getAnimationSet().add(AnimationType.IDLE, idleChonBot);
-                chonBot5.getAnimationSet().add(AnimationType.TERMINATE, deadChonBot);
+                chonBot.getAnimationSet().add(AnimationType.IDLE, idleChonBot);
+                chonBot.getAnimationSet().add(AnimationType.TERMINATE, deadChonBot);
 
-                chonBot1.getAnimationState().setCurrentAnimation(idleChonBot);
-                chonBot2.getAnimationState().setCurrentAnimation(idleChonBot);
-                chonBot3.getAnimationState().setCurrentAnimation(idleChonBot);
-                chonBot4.getAnimationState().setCurrentAnimation(idleChonBot);
-                chonBot5.getAnimationState().setCurrentAnimation(idleChonBot);
+                Agent chonBot1 = chonBot.copy(920, 440);
+                Agent chonBot2 = chonBot.copy(2920, 640);
+                chonBot2.setVisibleBars(true);
+                Agent chonBot3 = chonBot.copy(4920, 300);
+                Agent chonBot4 = chonBot.copy(6920, 500);
+                chonBot4.setVisibleBars(true);
+                Agent chonBot5 = chonBot.copy(1500, 500);
 
                 /* Setting the protagonist and some Images in the Environment system. */
                 environment.setProtagonist(chonBota);

@@ -45,7 +45,8 @@ public class Agent extends Entity {
      * @param pathImage the path to the agent's image
      * @param flipped   the agent's direction (RIGHT=0 or LEFT=1)
      */
-    public Agent(int posX, int posY, int width, int height, double ratio, int speed, int health, Direction direction, boolean flipped,
+    public Agent(int posX, int posY, int width, int height, double ratio, int speed, int health, Direction direction,
+            boolean flipped,
             boolean visibleBars) {
         super(posX, posY, width, height, ratio, speed, health, direction, flipped, visibleBars);
         this.energy = 1.0;
@@ -218,6 +219,26 @@ public class Agent extends Entity {
             }
         }
         return null;
+    }
+
+    public Agent copy(int posX, int posY) {
+        Agent copy = new Agent(
+                posX,
+                posY,
+                this.getWidthOffset(),
+                this.getHeight(),
+                this.getHitbox().getRatio(),
+                this.getSpeed(),
+                this.getHealth(),
+                this.getDirection(),
+                this.getAnimationState().isFlipped(),
+                this.isVisibleBars());
+        copy.setFullHealth(this.getFullHealth());
+        copy.setStatus(this.getStatus());
+        copy.setAnimationSet(this.getAnimationSet());
+        copy.setSoundSet(this.getSoundSet());
+        copy.getAnimationState().setCurrentAnimation(this.getAnimationState().getCurrentAnimation());
+        return copy;
     }
 
 }
