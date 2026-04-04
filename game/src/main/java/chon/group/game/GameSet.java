@@ -100,7 +100,7 @@ public class GameSet {
                 Item startMenu2 = new Item("Settings", Action.ENTER, settingsMenu);
                 Item startMenu3 = new Item("About", Action.NONE);
                 Menu startMenu = new Menu(
-                                "CHON GAME",
+                                "MENU",
                                 List.of(startMenu1, startMenu2, startMenu3),
                                 0.7,
                                 400);
@@ -108,7 +108,7 @@ public class GameSet {
                 Item skipMenu1 = new Item("Next", Action.START);
                 Item skipMenu2 = new Item("Skip", Action.SKIP);
                 Menu skipMenu = new Menu(
-                                "Aqui vai uma história muito legal da chonBota que vai voltar a era medieval por algum motivo e agora terá que lutar para voltar...",
+                                "",
                                 List.of(skipMenu1, skipMenu2),
                                 0.7,
                                 1000);
@@ -156,51 +156,75 @@ public class GameSet {
                 level0.getAnimationSet().add(AnimationType.IDLE, level0Animation);
                 level0.getAnimationState().setCurrentAnimation(level0Animation);
 
-                Level level1 = new Level(StoryType.STORY);
+                Level level1 = new Level(StoryType.STORY,
+                                "In Chon city, a scientific experiment is being held in a laboratory. ChonBota and his friends are nearby when something goes wrong...");
                 Animation level1Animation = new Animation();
                 level1Animation.getFrames().add(new Frame(new Image(
-                                getClass().getResource("/images/environment/loading.png")
+                                getClass().getResource("/images/environment/stories/story001.png")
                                                 .toExternalForm()),
-                                1280,
+                                1800,
                                 canvasHeight));
                 level1.getAnimationSet().add(AnimationType.IDLE, level1Animation);
                 level1.getAnimationState().setCurrentAnimation(level1Animation);
 
-                Level level2 = new Level(StoryType.STORY);
+                Level level2 = new Level(StoryType.STORY,
+                                "... they were sent back in time to the medieval era! Now, ChonBots were corrupted by a strange virus, turning them crazy!");
                 Animation level2Animation = new Animation();
                 level2Animation.getFrames().add(new Frame(new Image(
-                                getClass().getResource("/images/environment/loading.png")
+                                getClass().getResource("/images/environment/stories/story002.png")
                                                 .toExternalForm()),
                                 1280,
                                 canvasHeight));
                 level2.getAnimationSet().add(AnimationType.IDLE, level2Animation);
                 level2.getAnimationState().setCurrentAnimation(level2Animation);
 
+                Level level3 = new Level(StoryType.STORY,
+                                "ChonBota now must fight back the rogue ChonBots and find a way to return back to the future.");
                 Animation level3Animation = new Animation();
-                Level level3 = new Level(
-                                260,
-                                canvasHeight,
-                                StoryType.PLAYABLE);
                 level3Animation.getFrames().add(new Frame(new Image(
-                                getClass().getResource("/images/environment/castleLong.png")
+                                getClass().getResource("/images/environment/stories/story003.png")
                                                 .toExternalForm()),
-                                8024,
+                                1280,
                                 canvasHeight));
                 level3.getAnimationSet().add(AnimationType.IDLE, level3Animation);
                 level3.getAnimationState().setCurrentAnimation(level3Animation);
 
                 Animation level4Animation = new Animation();
                 Level level4 = new Level(
-                                380,
-                                590,
+                                260,
+                                canvasHeight,
                                 StoryType.PLAYABLE);
                 level4Animation.getFrames().add(new Frame(new Image(
-                                getClass().getResource("/images/environment/insideCastle.png")
+                                getClass().getResource("/images/environment/castleLong.png")
                                                 .toExternalForm()),
                                 8024,
                                 canvasHeight));
                 level4.getAnimationSet().add(AnimationType.IDLE, level4Animation);
                 level4.getAnimationState().setCurrentAnimation(level4Animation);
+
+                Animation level5Animation = new Animation();
+                Level level5 = new Level(StoryType.STORY,
+                                "ChonBota goes inside the Castle looking for some way of getting back to her time.");
+                level5Animation.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/environment/stories/story003.png")
+                                                .toExternalForm()),
+                                1280,
+                                canvasHeight));
+                level5.getAnimationSet().add(AnimationType.IDLE, level5Animation);
+                level5.getAnimationState().setCurrentAnimation(level5Animation);
+
+                Animation level6Animation = new Animation();
+                Level level6 = new Level(
+                                380,
+                                590,
+                                StoryType.PLAYABLE);
+                level6Animation.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/environment/insideCastle.png")
+                                                .toExternalForm()),
+                                8024,
+                                canvasHeight));
+                level6.getAnimationSet().add(AnimationType.IDLE, level6Animation);
+                level6.getAnimationState().setCurrentAnimation(level6Animation);
 
                 environment = new Environment(
                                 level1.getWidth(),
@@ -879,41 +903,43 @@ public class GameSet {
                                 SoundType.MUSIC,
                                 true);
                 level0.getSoundSet().add(SoundEvent.BACKGROUND, level0BackgroundSound);
-                Sound level3AmbientSound = new Sound(
+                Sound level4AmbientSound = new Sound(
                                 "/sounds/levels/forestAmbient.mp3",
                                 SoundType.AMBIENT,
                                 true);
-                Sound level3BackgroundSound = new Sound(
-                                "/sounds/levels/forestMusic.mp3",
-                                SoundType.MUSIC,
-                                true);
-                level3.getSoundSet().add(SoundEvent.AMBIENT, level3AmbientSound);
-                level3.getSoundSet().add(SoundEvent.BACKGROUND, level3BackgroundSound);
-                Sound level4AmbientSound = new Sound(
-                                "/sounds/levels/castleAmbient.mp3",
-                                SoundType.AMBIENT,
-                                true);
                 Sound level4BackgroundSound = new Sound(
-                                "/sounds/levels/castleMusic.mp3",
+                                "/sounds/levels/forestMusic.mp3",
                                 SoundType.MUSIC,
                                 true);
                 level4.getSoundSet().add(SoundEvent.AMBIENT, level4AmbientSound);
                 level4.getSoundSet().add(SoundEvent.BACKGROUND, level4BackgroundSound);
+                Sound level6AmbientSound = new Sound(
+                                "/sounds/levels/castleAmbient.mp3",
+                                SoundType.AMBIENT,
+                                true);
+                Sound level6BackgroundSound = new Sound(
+                                "/sounds/levels/castleMusic.mp3",
+                                SoundType.MUSIC,
+                                true);
+                level6.getSoundSet().add(SoundEvent.AMBIENT, level6AmbientSound);
+                level6.getSoundSet().add(SoundEvent.BACKGROUND, level6BackgroundSound);
 
                 // Register objects into the environment and count total collectibles
-                level3.getAgents().add(chonBot1);
-                level3.getAgents().add(chonBot2);
-                level3.getAgents().add(chonBot3);
-                level3.getAgents().add(chonBot4);
+                level4.getAgents().add(chonBot1);
+                level4.getAgents().add(chonBot2);
+                level4.getAgents().add(chonBot3);
+                level4.getAgents().add(chonBot4);
 
-                level3.setObjects(objects);
+                level4.setObjects(objects);
 
-                level4.getAgents().add(chonBot5);
+                level6.getAgents().add(chonBot5);
                 environment.getLevels().add(level0);
                 environment.getLevels().add(level1);
                 environment.getLevels().add(level2);
                 environment.getLevels().add(level3);
                 environment.getLevels().add(level4);
+                environment.getLevels().add(level5);
+                environment.getLevels().add(level6);
                 environment.setCurrentLevel(level0);
         }
 

@@ -11,6 +11,9 @@ import java.util.List;
 
 public class Level extends Entity {
 
+    /** Just a brief for the level. */
+    private String description = new String();
+
     /** It defines the top boundary of the level. */
     private int topY;
 
@@ -54,6 +57,23 @@ public class Level extends Entity {
         this.objects = new ArrayList<Object>();
         this.shots = new ArrayList<Shot>();
         this.type = type;
+    }
+
+    public Level(StoryType type, String description) {
+        super(0, 0, 0, 0, 0, 0, 0, Direction.IDLE, false, false);
+        this.description = description;
+        this.agents = new ArrayList<Agent>();
+        this.objects = new ArrayList<Object>();
+        this.shots = new ArrayList<Shot>();
+        this.type = type;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public int getTopY() {

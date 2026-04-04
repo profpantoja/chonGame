@@ -21,6 +21,8 @@ public class StoryState implements GameState {
                         game.setCurrentState(new PlayableState());
                         break;
                     case STORY:
+                        game.getMenu().getCurrentMenu()
+                                .setTitle(game.getEnvironment().getCurrentLevel().getDescription());
                         game.setCurrentState(new StoryState());
                         break;
                     default:

@@ -99,6 +99,19 @@ public class PlayableState implements GameState {
             game.getAnimator().animate(shot);
         }
 
+        switch (game.getEnvironment().getCurrentLevel().getType()) {
+            case PLAYABLE:
+                game.setCurrentState(new PlayableState());
+                break;
+            case STORY:
+                game.getMenu().getCurrentMenu()
+                        .setTitle(game.getEnvironment().getCurrentLevel().getDescription());
+                game.setCurrentState(new StoryState());
+                break;
+            default:
+                break;
+        }
+
         if (game.isGameCompleted()) {
             /* If the end of the game, the game moves to the Winning state. */
             game.getMenu().setCurrentMenu(game.getMenu().getWin());

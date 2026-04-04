@@ -31,6 +31,8 @@ public class StartState implements GameState {
                     case STORY:
                         game.setCurrentState(new StoryState());
                         game.getMenu().setCurrentMenu(game.getMenu().getSkip());
+                        game.getMenu().getCurrentMenu()
+                                .setTitle(game.getEnvironment().getCurrentLevel().getDescription());
                         break;
                     default:
                         break;
