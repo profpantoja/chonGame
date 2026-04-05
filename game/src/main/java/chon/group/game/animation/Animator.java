@@ -1,6 +1,10 @@
 package chon.group.game.animation;
 
+import java.util.List;
+
+import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Entity;
+import chon.group.game.core.environment.Level;
 
 public class Animator {
 
@@ -16,6 +20,23 @@ public class Animator {
          */
         if (entity.isVisible())
             entity.getAnimationState().stepAnimation();
+    }
+
+    public void animateEntities(List<? extends Entity> entities) {
+        for (Entity entity : entities) {
+            this.animate(entity);
+        }
+    }
+
+    public void animateLevel(Level level, Agent protagonist) {
+        /* It animates the protagonist. */
+        this.animate(protagonist);
+        /* It animates all agents. */
+        this.animateEntities(level.getAgents());
+        /* It animates all objects. */
+        this.animateEntities(level.getObjects());
+        /* It animates all shots. */
+        this.animateEntities(level.getShots());
     }
 
     private Animation selectAnimation(Entity entity) {

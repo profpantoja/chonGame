@@ -548,9 +548,8 @@ public class GameSet {
                                 250,
                                 punch);
                 chonBota.setWeapon(cannon);
-
-                chonBota.setWeapon(bareHands);
                 chonBota.setWeapon(lancer);
+                chonBota.setWeapon(bareHands);
                 /* Animation frames for chonBota. It can be reused among all instances. */
                 Animation idleChonBot = new Animation();
                 idleChonBot.getFrames().add(new Frame(new Image(

@@ -20,8 +20,7 @@ public class WinState implements GameState {
     @Override
     public void update(Game game) {
         /* It animates the protagonist. */
-        game.getAnimator().animate(
-                game.getEnvironment().getProtagonist());
+        game.getAnimator().animate(game.getEnvironment().getProtagonist());
     }
 
     @Override

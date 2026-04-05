@@ -120,19 +120,7 @@ public class PlayableState implements GameState {
     }
 
     public void animate(Game game, Level currentLevel, Agent protagonist) {
-        game.getAnimator().animate(protagonist);
-        /* It animates all agents. */
-        for (Agent agent : currentLevel.getAgents()) {
-            game.getAnimator().animate(agent);
-        }
-        /* It animates all objects. */
-        for (Object object : currentLevel.getObjects()) {
-            game.getAnimator().animate(object);
-        }
-        /* It animates all shots. */
-        for (Shot shot : currentLevel.getShots()) {
-            game.getAnimator().animate(shot);
-        }
+        game.getAnimator().animateLevel(currentLevel, protagonist);
     }
 
     private boolean handlePause(Game game) {
@@ -182,4 +170,5 @@ public class PlayableState implements GameState {
                 input.contains("DOWN") ||
                 input.contains("UP");
     }
+
 }
