@@ -131,7 +131,7 @@ public class Game {
     }
 
     public void start() {
-        this.menu.setCurrentMenu(this.menu.getStart());
+        this.menu.openStart();
     }
 
     public void reset() {
@@ -160,7 +160,7 @@ public class Game {
         Level newLevel = gameSet.getEnvironment().getLevels().get(myLevelIndex);
         this.environment.getLevels().set(myLevelIndex, newLevel);
         this.environment.setCurrentLevel(newLevel);
-        this.menu.setCurrentMenu(this.menu.getPause());
+        this.menu.openPause();
         this.environment.setProtagonist(gameSet.getEnvironment().getProtagonist());
         this.environment.getCamera().setPosX(0);
         this.environment.getCamera().setLevelWidth(newLevel.getWidth());

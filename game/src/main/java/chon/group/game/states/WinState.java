@@ -13,7 +13,7 @@ public class WinState implements GameState {
             /* The Game is reset to the Start State. */
             game.reset();
             game.setCurrentState(new StartState());
-            game.getMenu().setCurrentMenu(game.getMenu().getStart());
+            game.getMenu().openStart();
         }
     }
 

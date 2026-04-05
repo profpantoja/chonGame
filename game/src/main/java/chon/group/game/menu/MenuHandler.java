@@ -21,46 +21,6 @@ public class MenuHandler {
         this.win = win;
     }
 
-    public Menu getStart() {
-        return start;
-    }
-
-    public void setStart(Menu start) {
-        this.start = start;
-    }
-
-    public Menu getPause() {
-        return pause;
-    }
-
-    public void setPause(Menu pause) {
-        this.pause = pause;
-    }
-
-    public Menu getSkip() {
-        return skip;
-    }
-
-    public void setSkip(Menu skip) {
-        this.skip = skip;
-    }
-
-    public Menu getGameOver() {
-        return gameOver;
-    }
-
-    public void setGameOver(Menu gameOver) {
-        this.gameOver = gameOver;
-    }
-
-    public Menu getWin() {
-        return win;
-    }
-
-    public void setWin(Menu win) {
-        this.win = win;
-    }
-
     public Menu getCurrentMenu() {
         return currentMenu;
     }
@@ -69,24 +29,50 @@ public class MenuHandler {
         this.currentMenu = currentMenu;
     }
 
-    public Deque<Menu> getHistory() {
-        return history;
-    }
-
-    public void setHistory(Deque<Menu> history) {
-        this.history = history;
-    }
-
-    public void push(Menu menu) {
+    private void push(Menu menu) {
         history.push(currentMenu);
-        currentMenu = menu;
-        currentMenu.reset();
     }
 
     public void pop() {
         if (!history.isEmpty()) {
             currentMenu = history.pop();
         }
+    }
+
+    public void open(Menu menu) {
+        this.currentMenu = menu;
+        if (this.currentMenu != null) {
+            this.currentMenu.reset();
+        }
+    }
+
+    public void openStart() {
+        open(start);
+    }
+
+    public void openPause() {
+        open(pause);
+    }
+
+    public void openSkip() {
+        open(skip);
+    }
+
+    public void openGameOver() {
+        open(gameOver);
+    }
+
+    public void openWin() {
+        open(win);
+    }
+
+    public void openSubMenu() {
+        Item item = this.currentMenu.getSelectedItem();
+        if (item == null || item.getSubMenu() == null) {
+            return;
+        }
+        this.push(this.currentMenu);
+        this.currentMenu = item.getSubMenu();
     }
 
 }

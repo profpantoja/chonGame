@@ -1,6 +1,7 @@
 package chon.group.game.states;
 
 import chon.group.game.Game;
+import chon.group.game.core.environment.Environment;
 import chon.group.game.menu.Action;
 
 public class GameOverState implements GameState {
@@ -13,7 +14,7 @@ public class GameOverState implements GameState {
             /* The Game is reset to the Start State. */
             game.reset();
             game.setCurrentState(new StartState());
-            game.getMenu().setCurrentMenu(game.getMenu().getStart());
+            game.getMenu().openStart();
         } else if (action.equals(Action.CONTINUE)) {
             /* The same level is restarted. */
             game.resetLevel();
@@ -23,12 +24,14 @@ public class GameOverState implements GameState {
 
     @Override
     public void update(Game game) {
+        Environment environment = game.getEnvironment();
         /* Although the game has ended, messages and shots keep flowing. */
-        game.getEnvironment().updateMessages();
-        game.getEnvironment().updateShots();
-        /* It animates the protagonist. */
-        game.getAnimator().animate(game.getEnvironment().getProtagonist());
-        game.getAnimator().animateEntities(game.getEnvironment().getCurrentLevel().getAgents());
+        environment.updateMessages();
+        environment.updateShots();
+        /* It animates the level. */
+        game.getAnimator().animateLevel(
+                environment.getCurrentLevel(),
+                environment.getProtagonist());
     }
 
     @Override

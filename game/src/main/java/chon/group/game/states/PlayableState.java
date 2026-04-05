@@ -61,19 +61,19 @@ public class PlayableState implements GameState {
         Agent protagonist = environment.getProtagonist();
         /* If the agent died in this loop, the state changes. */
         if (protagonist.isDead()) {
-            game.getMenu().setCurrentMenu(game.getMenu().getGameOver());
+            game.getMenu().openGameOver();
             /* If the agent dies, the game moves to the Game Over state. */
             game.setCurrentState(new GameOverState());
             return true;
         }
         if (game.isGameCompleted()) {
-            game.getMenu().setCurrentMenu(game.getMenu().getWin());
+            game.getMenu().openWin();
             game.setCurrentState(new WinState());
             return true;
         }
         switch (currentLevel.getType()) {
             case STORY:
-                game.getMenu().setCurrentMenu(game.getMenu().getSkip());
+                game.getMenu().openSkip();
                 game.getMenu().getCurrentMenu().setTitle(currentLevel.getDescription());
                 game.setCurrentState(new StoryState());
                 return true;
@@ -131,7 +131,7 @@ public class PlayableState implements GameState {
             return false;
         }
         game.setCurrentState(new PauseState());
-        game.getMenu().setCurrentMenu(game.getMenu().getPause());
+        game.getMenu().openPause();
         /* The Pause needs to be removed. Otherwise, it will stay forever paused. */
         game.getInput().remove("P");
         return true;

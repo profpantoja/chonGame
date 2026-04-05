@@ -3,7 +3,6 @@ package chon.group.game.states;
 import chon.group.game.Game;
 import chon.group.game.drawer.service.GameDrawer;
 import chon.group.game.menu.Action;
-import chon.group.game.menu.Item;
 
 public class PauseState implements GameState {
 
@@ -49,7 +48,7 @@ public class PauseState implements GameState {
     private void handleMenuAction(Game game, Action action) {
         switch (action) {
             case ENTER:
-                this.openSubMenu(game);
+                game.getMenu().openSubMenu();
                 break;
             case POP:
                 game.getMenu().pop();
@@ -69,7 +68,7 @@ public class PauseState implements GameState {
                 /* The Game is reset to the Start State. */
                 game.reset();
                 game.setCurrentState(new StartState());
-                game.getMenu().setCurrentMenu(game.getMenu().getStart());
+                game.getMenu().openStart();
                 break;
             case CONTINUE:
                 /* The game returns to the Running State. */
@@ -78,15 +77,6 @@ public class PauseState implements GameState {
             default:
                 break;
         }
-    }
-
-    private void openSubMenu(Game game) {
-        Item item = game.getMenu().getCurrentMenu().getSelectedItem();
-        if (item == null || item.getSubMenu() == null) {
-            return;
-        }
-        game.getMenu().push(game.getMenu().getCurrentMenu());
-        game.getMenu().setCurrentMenu(item.getSubMenu());
     }
 
 }
