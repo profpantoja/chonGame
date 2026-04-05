@@ -1,6 +1,7 @@
 package chon.group.game.states;
 
 import java.util.Iterator;
+import java.util.List;
 
 import chon.group.game.Game;
 import chon.group.game.core.agent.Agent;
@@ -38,17 +39,6 @@ public class PlayableState implements GameState {
         Environment environment = game.getEnvironment();
         Level currentLevel = environment.getCurrentLevel();
         Agent protagonist = environment.getProtagonist();
-
-        switch (currentLevel.getType()) {
-            case STORY:
-                game.getMenu().getCurrentMenu()
-                        .setTitle(currentLevel.getDescription());
-                game.setCurrentState(new StoryState());
-                break;
-            default:
-                break;
-        }
-
         /* It checks if the protagonist is outside boundaries. */
         environment.checkBorders();
         /* ChonBot's Automatic Movements */
@@ -67,12 +57,7 @@ public class PlayableState implements GameState {
             game.getAnimator().animate(agent);
         }
         environment.update();
-        /* If the agent died in this loop, the state changes. */
-        if (protagonist.isDead()) {
-            /* If the agent dies, the game moves to the Game Over state. */
-            game.getMenu().setCurrentMenu(game.getMenu().getGameOver());
-            game.setCurrentState(new GameOverState());
-        }
+        this.updateState(game);
         /* It animates the protagonist. */
         game.getAnimator().animate(protagonist);
         /* It animates all objects. */
@@ -91,13 +76,6 @@ public class PlayableState implements GameState {
         for (Shot shot : currentLevel.getShots()) {
             game.getAnimator().animate(shot);
         }
-
-        if (game.isGameCompleted()) {
-            /* If the end of the game, the game moves to the Winning state. */
-            game.getMenu().setCurrentMenu(game.getMenu().getWin());
-            game.setCurrentState(new WinState());
-        }
-
     }
 
     @Override
@@ -106,12 +84,22 @@ public class PlayableState implements GameState {
         game.getMediator().renderGame();
     }
 
-    private void updateStateTransition(Game game) {
+    private void updateState(Game game) {
         Environment environment = game.getEnvironment();
         Level currentLevel = environment.getCurrentLevel();
         Agent protagonist = environment.getProtagonist();
+        switch (currentLevel.getType()) {
+            case STORY:
+                game.getMenu().getCurrentMenu().setTitle(currentLevel.getDescription());
+                game.setCurrentState(new StoryState());
+                return;
+            default:
+                break;
+        }
+        /* If the agent died in this loop, the state changes. */
         if (protagonist.isDead()) {
             game.getMenu().setCurrentMenu(game.getMenu().getGameOver());
+            /* If the agent dies, the game moves to the Game Over state. */
             game.setCurrentState(new GameOverState());
             return;
         }
@@ -119,14 +107,6 @@ public class PlayableState implements GameState {
             game.getMenu().setCurrentMenu(game.getMenu().getWin());
             game.setCurrentState(new WinState());
             return;
-        }
-        switch (currentLevel.getType()) {
-            case STORY:
-                game.getMenu().getCurrentMenu().setTitle(currentLevel.getDescription());
-                game.setCurrentState(new StoryState());
-                return;
-            default:
-                return;
         }
     }
 
@@ -164,14 +144,17 @@ public class PlayableState implements GameState {
 
     private void handleMovement(Game game) {
         /* If there is any movement key pressed. */
-        if (game.getInput().contains("RIGHT") ||
-                game.getInput().contains("LEFT") ||
-                game.getInput().contains("DOWN") ||
-                game.getInput().contains("UP")) {
+        if (this.hasMovement(game.getInput())) {
             /* Protagonist's Moves based on Joystick inputs. */
             game.getEnvironment().getProtagonist().move(
                     game.getDirections(game.getInput()));
         }
     }
 
+    private boolean hasMovement(List<String> input) {
+        return input.contains("RIGHT") ||
+                input.contains("LEFT") ||
+                input.contains("DOWN") ||
+                input.contains("UP");
+    }
 }
