@@ -156,6 +156,8 @@ public class GameMediator implements GameDrawer {
                 level.getPosY(),
                 level.getWidth(),
                 level.getHeight());
+        if (environment.isDebugMode())
+            this.drawDebugPanel();
     }
 
     /**
@@ -179,10 +181,8 @@ public class GameMediator implements GameDrawer {
             this.drawLifeBar(protagonist);
             this.drawEnergyBar(protagonist);
         }
-        if (this.game.getEnvironment().isDebugMode()) {
+        if (this.game.getEnvironment().isDebugMode())
             this.drawEntityDebugPanel(protagonist);
-            this.drawDebugPanel();
-        }
     }
 
     /**

@@ -95,6 +95,7 @@ public class JavaFxDrawer extends Drawer {
 
     @Override
     public void drawDebugPanel(int panelWidth, int panelHeight, double camX, int messages, int shots) {
+        this.gc.setFont(theFont);
         int span = 20;
         drawGlassPanel(panelWidth, panelHeight, 10, 130);
         this.gc.fillText("CamX: " + camX, 20, 155);

@@ -509,4 +509,29 @@ public class Environment {
             this.sounds.add(background);
     }
 
+    public void loadNextPlayableLevel() {
+        if (this.levels == null || this.levels.isEmpty()) {
+            return;
+        }
+        int startIndex = 0;
+        if (this.currentLevel != null) {
+            startIndex = this.levels.indexOf(this.currentLevel) + 1;
+        }
+        this.currentLevel = this.levels.stream()
+                .skip(startIndex)
+                .filter(level -> level.getType() == StoryType.PLAYABLE)
+                .findFirst()
+                .orElse(null);
+        this.protagonist.setPosX(10);
+        this.protagonist.setPosY(600);
+        this.camera.setPosX(0);
+        this.camera.setLevelWidth(this.currentLevel.getWidth());
+        Sound ambient = this.currentLevel.getSoundSet().get(SoundEvent.AMBIENT);
+        Sound background = this.currentLevel.getSoundSet().get(SoundEvent.BACKGROUND);
+        if (ambient != null)
+            this.sounds.add(ambient);
+        if (background != null)
+            this.sounds.add(background);
+    }
+
 }

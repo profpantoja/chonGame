@@ -198,7 +198,7 @@ public class Game {
     }
 
     public void skip() {
-        this.getEnvironment().loadNextLevel();
+        this.getEnvironment().loadNextPlayableLevel();
     }
 
     private boolean run() {
