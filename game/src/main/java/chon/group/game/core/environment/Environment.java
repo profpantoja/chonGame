@@ -3,7 +3,6 @@ package chon.group.game.core.environment;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Entity;
@@ -142,14 +141,6 @@ public class Environment {
         this.currentLevel = currentLevel;
     }
 
-    // public Menu getCurrentMenu() {
-    // return currentMenu;
-    // }
-
-    // public void setCurrentMenu(Menu currentMenu) {
-    // this.currentMenu = currentMenu;
-    // }
-
     public List<Message> getMessages() {
         return messages;
     }
@@ -253,10 +244,10 @@ public class Environment {
              * It verifies agents vs. obstacles. The collision can only happens with non
              * collectible objects.
              */
-            for (Object object : this.currentLevel.getObjects().stream()
-                    .filter(o -> (!o.isCollectible() && !o.isDestroyed()))
-                    .collect(Collectors.toList())) {
-                this.onCollision(agent, object);
+            for (Object object : this.currentLevel.getObjects()) {
+                if (!object.isCollectible() && !object.isDestroyed()) {
+                    this.onCollision(agent, object);
+                }
             }
         }
         /**
@@ -264,10 +255,10 @@ public class Environment {
          * The collision can only happens with non
          * collectible objects.
          */
-        for (Object object : this.currentLevel.getObjects().stream()
-                .filter(o -> !o.isCollectible() && !o.isDestroyed())
-                .collect(Collectors.toList())) {
-            this.onCollision(protagonist, object);
+        for (Object object : this.currentLevel.getObjects()) {
+            if (!object.isCollectible() && !object.isDestroyed()) {
+                this.onCollision(protagonist, object);
+            }
         }
     }
 
@@ -343,14 +334,15 @@ public class Environment {
                 object.idle();
                 if (!object.isCollected() && object.isCollectible()) {
                     object.follow(protagonist);
+                    double collectRadius = 20;
                     double dx = object.getPosX() - protagonist.getPosX();
                     double dy = object.getPosY() - protagonist.getPosY();
-                    double distance = Math.sqrt(dx * dx + dy * dy);
+                    double squaredDistance = dx * dx + dy * dy;
                     /**
                      * If the radius between the agent and the object is less than 20 pxls then it
                      * is collected.
                      */
-                    if (distance < 20) {
+                    if (squaredDistance < collectRadius * collectRadius) {
                         this.getSounds().add(object.getSoundSet().get(SoundEvent.COLLECT));
                         object.onCollect();
                         collectedCount++;
@@ -383,83 +375,98 @@ public class Environment {
      * Handles movement, boundary removal, and collision with agents or protagonist.
      */
     public void updateShots() {
-        /* It gets the list of shots. */
-        Iterator<Shot> itShot = this.currentLevel.getShots().iterator();
+        // It caches the level.
+        Level level = this.currentLevel;
+        // It gets the list of shots.
+        Iterator<Shot> itShot = level.getShots().iterator();
         /*
          * While there is a next available shot. The position of each conditional block
          * defines the collision priority.
          */
-        currentShot: while (itShot.hasNext()) {
-
+        while (itShot.hasNext()) {
             Shot shot = itShot.next();
-            if (!shot.hasExpired()) {
-                /* if the shot's position went off the level width, it is removed. */
-                if ((shot.getPosX() > this.currentLevel.getWidth()) || ((shot.getPosX() + shot.getWidth()) < 0)) {
-                    itShot.remove();
-                    break currentShot;
-                }
-                /* If the remaining shots hit (in)destructible and no collectible objects. */
-                Iterator<Object> itObject = this.currentLevel.getObjects().iterator();
-                while (itObject.hasNext()) {
-                    Object object = itObject.next();
-                    /*
-                     * The shot hit an object if it is not terminated. The shot may pass by
-                     * terminated objects.
-                     */
-                    if (!object.isTerminated()) {
-                        if (intersect(object, shot)) {
-                            /* If the object is destructible, it must take some damage. */
-                            if (object.isDestructible()) {
-                                object.takeDamage(shot.getDamage(), messages, sounds);
-                                /* Then the shot is removed. */
-                                itShot.remove();
-                                break currentShot;
-                            } else {
-                                /*
-                                 * If the object is indestructible, it is necessary to verify if it collectible
-                                 * or not. If it is collectible, the shot must go on. Otherwise it should be
-                                 * removed.
-                                 */
-                                if (!object.isCollectible()) {
-                                    itShot.remove();
-                                    break currentShot;
-                                } else {
-                                    /*
-                                     * The shot must goes on. So, it leaves the object iterator and searches other
-                                     * conditions.
-                                     */
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-                /* The same as before but now with all other agents. */
-                Iterator<Agent> itAgent = this.currentLevel.getAgents().iterator();
-                while (itAgent.hasNext()) {
-                    Agent agent = itAgent.next();
-                    if (!agent.isDead()) {
-                        if (intersect(agent, shot)) {
-                            agent.takeDamage(shot.getDamage(), messages, sounds);
-                            itShot.remove();
-                            break currentShot;
-                        }
-                    }
-                }
-                /**
-                 * If any shot intersected the protagonist, the damage is taken, the message
-                 * system is informed, and the shot is removed.
-                 */
-                if (intersect(protagonist, shot)) {
-                    protagonist.takeDamage(shot.getDamage(), messages, sounds);
-                    itShot.remove();
-                    break currentShot;
-                }
-                /* The remaining shots move. */
-                shot.move(new ArrayList<>(List.of(shot.getDirection())));
-            } else {
+            // Shots can expire based on their range.
+            if (shot.hasExpired()) {
                 itShot.remove();
+                continue;
             }
+            /* if the shot's position went off the level width, it is removed. */
+            if (shot.getPosX() > level.getWidth() || shot.getPosX() + shot.getWidth() < 0) {
+                itShot.remove();
+                continue;
+            }
+            // Indicates whether the shot was removed.
+            boolean removed = false;
+            /* If the remaining shots hit (in)destructible and no collectible objects. */
+            for (Object object : level.getObjects()) {
+                /*
+                 * The shot hit an object if it is not terminated. The shot may pass by
+                 * terminated objects.
+                 */
+                if (object.isTerminated()) {
+                    continue;
+                }
+                /* If there is no intersection, the shot must go on. */
+                if (!intersect(object, shot)) {
+                    continue;
+                }
+                /* If the object is destructible, it must take some damage. */
+                if (object.isDestructible()) {
+                    object.takeDamage(shot.getDamage(), messages, sounds);
+                    /* Then the shot is removed. */
+                    itShot.remove();
+                    removed = true;
+                    break;
+                }
+                /*
+                 * If the object is indestructible, it is necessary to verify if it collectible
+                 * or not. If it is collectible, the shot must go on. Otherwise it should be
+                 * removed.
+                 */
+                if (!object.isCollectible()) {
+                    itShot.remove();
+                    removed = true;
+                    break;
+                }
+                /*
+                 * The shot must goes on. So, it leaves the object iterator and searches other
+                 * conditions.
+                 */
+                break;
+            }
+            /* If this shot was removed, then move to the next shot. */
+            if (removed) {
+                continue;
+            }
+            /* The same as before but now with all other agents. */
+            for (Agent agent : level.getAgents()) {
+                // The shot passes by dead agents.
+                if (agent.isDead()) {
+                    continue;
+                }
+                // If it hits an agent.
+                if (intersect(agent, shot)) {
+                    agent.takeDamage(shot.getDamage(), messages, sounds);
+                    itShot.remove();
+                    removed = true;
+                    break;
+                }
+            }
+            /* If this shot was removed, then move to the next shot. */
+            if (removed) {
+                continue;
+            }
+            /**
+             * If any shot intersected the protagonist, the damage is taken, the message
+             * system is informed, and the shot is removed.
+             */
+            if (intersect(protagonist, shot)) {
+                protagonist.takeDamage(shot.getDamage(), messages, sounds);
+                itShot.remove();
+                continue;
+            }
+            /* The remaining shots move. */
+            shot.move(List.of(shot.getDirection()));
         }
     }
 
@@ -480,58 +487,67 @@ public class Environment {
         updateObjects();
         updateShots();
         updateMessages();
-        updateCamera();
         detectCollision();
+        updateCamera();
         protagonist.recoverEnergy();
     }
 
     public void loadNextLevel() {
-        if (currentLevel == null)
+        if (this.levels == null || this.levels.isEmpty())
+            return;
+        int levelIndex = this.getLevels().indexOf(this.currentLevel);
+        // If the current level do not exist in Levels or it is null.
+        if (currentLevel == null || levelIndex < 0) {
             this.currentLevel = levels.get(0);
-        else {
-            int levelIndex = this.getLevels().indexOf(this.currentLevel);
-            if (levelIndex >= this.getLevels().size() - 1) {
-                levelIndex = this.getLevels().size() - 1;
-                this.currentLevel = this.getLevels().get(levelIndex);
-            } else {
-                this.currentLevel = this.getLevels().get(levelIndex + 1);
-                this.protagonist.setPosX(10);
-                this.protagonist.setPosY(600);
-                this.camera.setPosX(0);
-                this.camera.setLevelWidth(this.currentLevel.getWidth());
-            }
+            this.setupCurrentLevel();
+            return;
         }
-        Sound ambient = this.currentLevel.getSoundSet().get(SoundEvent.AMBIENT);
-        Sound background = this.currentLevel.getSoundSet().get(SoundEvent.BACKGROUND);
-        if (ambient != null)
-            this.sounds.add(ambient);
-        if (background != null)
-            this.sounds.add(background);
+        // This is the last level. So, we cannot setup the level again!
+        if (levelIndex >= this.levels.size() - 1)
+            return;
+        // Then, there is a next level to play.
+        this.currentLevel = this.levels.get(levelIndex + 1);
+        this.setupCurrentLevel();
     }
 
     public void loadNextPlayableLevel() {
-        if (this.levels == null || this.levels.isEmpty()) {
+        if (this.levels == null || this.levels.isEmpty())
             return;
-        }
         int startIndex = 0;
         if (this.currentLevel != null) {
-            startIndex = this.levels.indexOf(this.currentLevel) + 1;
+            int currentIndex = this.levels.indexOf(this.currentLevel);
+            if (currentIndex >= 0) {
+                startIndex = currentIndex + 1;
+            }
         }
-        this.currentLevel = this.levels.stream()
+        Level nextPlayableLevel = this.levels.stream()
                 .skip(startIndex)
                 .filter(level -> level.getType() == StoryType.PLAYABLE)
                 .findFirst()
                 .orElse(null);
+        if (nextPlayableLevel == null)
+            return;
+        this.currentLevel = nextPlayableLevel;
+        this.setupCurrentLevel();
+    }
+
+    private void setupCurrentLevel() {
         this.protagonist.setPosX(10);
-        this.protagonist.setPosY(600);
+        this.protagonist.setPosY(450);
         this.camera.setPosX(0);
         this.camera.setLevelWidth(this.currentLevel.getWidth());
+        this.loadSounds();
+    }
+
+    private void loadSounds() {
         Sound ambient = this.currentLevel.getSoundSet().get(SoundEvent.AMBIENT);
         Sound background = this.currentLevel.getSoundSet().get(SoundEvent.BACKGROUND);
-        if (ambient != null)
+        if (ambient != null) {
             this.sounds.add(ambient);
-        if (background != null)
+        }
+        if (background != null) {
             this.sounds.add(background);
+        }
     }
 
 }
