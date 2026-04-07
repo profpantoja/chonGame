@@ -210,7 +210,7 @@ public class GameMediator implements GameDrawer {
                 240,
                 85,
                 environment.getCamera().getPosX(),
-                environment.getMessages().size(),
+                environment.getMessenger().getMessages().size(),
                 environment.getCurrentLevel().getShots().size());
     }
 
@@ -290,7 +290,7 @@ public class GameMediator implements GameDrawer {
      */
     @Override
     public void drawMessages() {
-        for (Message message : this.game.getEnvironment().getMessages()) {
+        for (Message message : this.game.getEnvironment().getMessenger().getMessages()) {
             drawer.drawMessages(message.getSize(),
                     message.getOpacity(),
                     Color.BLACK,

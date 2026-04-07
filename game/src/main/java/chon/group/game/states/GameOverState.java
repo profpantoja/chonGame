@@ -26,7 +26,7 @@ public class GameOverState implements GameState {
     public void update(Game game) {
         Environment environment = game.getEnvironment();
         /* Although the game has ended, messages and shots keep flowing. */
-        environment.updateMessages();
+        environment.getMessenger().update();
         environment.updateShots();
         /* It animates the level. */
         game.getAnimator().animateLevel(

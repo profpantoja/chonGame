@@ -1,33 +1,18 @@
 package chon.group.game.core.environment;
 
-import java.util.Iterator;
-
-import chon.group.game.messaging.Message;
-
-public abstract class BaseBehavior implements EnvironmentBehavior {
-
+//public abstract class BaseBehavior implements EnvironmentBehavior {
+public class BaseBehavior implements EnvironmentBehavior {
     @Override
     public final void update(Environment environment) {
         updateWorld(environment);
-        updateMessages(environment);
+        environment.getMessenger().update();
         updateCamera(environment);
         recoverEnergy(environment);
     }
 
-    public abstract void updateWorld(Environment environment);
-
-    /**
-     * Updates and removes expired messages from the environment.
-     */
-    public void updateMessages(Environment environment) {
-        Iterator<Message> iterator = environment.getMessages().iterator();
-        while (iterator.hasNext()) {
-            Message message = iterator.next();
-            if (!message.update()) {
-                iterator.remove();
-            }
-        }
-    }
+    // public abstract void updateWorld(Environment environment);
+    public void updateWorld(Environment environment) {
+    };
 
     /**
      * Updates the camera based on the protagonist’s current position.

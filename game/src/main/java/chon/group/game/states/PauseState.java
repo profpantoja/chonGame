@@ -1,6 +1,7 @@
 package chon.group.game.states;
 
 import chon.group.game.Game;
+import chon.group.game.core.environment.Environment;
 import chon.group.game.drawer.service.GameDrawer;
 import chon.group.game.menu.Action;
 
@@ -17,8 +18,9 @@ public class PauseState implements GameState {
 
     @Override
     public void update(Game game) {
+        Environment environment = game.getEnvironment();
         /* Even if the game is paused, the messages keep flowing in the air. */
-        game.getEnvironment().updateMessages();
+        environment.getMessenger().update();
     }
 
     @Override

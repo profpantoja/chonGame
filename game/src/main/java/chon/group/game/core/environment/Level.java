@@ -31,6 +31,8 @@ public class Level extends Entity {
 
     private StoryType type = StoryType.PLAYABLE;
 
+    private EnvironmentBehavior behavior = new BaseBehavior();
+
     public Level(int posX, int posY, int topY, int bottomY, StoryType type) {
         super(posX, posY, 0, 0, 0, 0, 0, Direction.IDLE, false, false);
         this.topY = topY;
@@ -122,6 +124,14 @@ public class Level extends Entity {
 
     public void setType(StoryType type) {
         this.type = type;
+    }
+
+    public EnvironmentBehavior getBehavior() {
+        return behavior;
+    }
+
+    public void setBehavior(EnvironmentBehavior behavior) {
+        this.behavior = behavior;
     }
 
     /**

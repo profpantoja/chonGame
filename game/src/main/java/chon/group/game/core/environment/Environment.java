@@ -8,7 +8,7 @@ import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Entity;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.weapon.Shot;
-import chon.group.game.messaging.Message;
+import chon.group.game.messaging.Messenger;
 import chon.group.game.sound.Sound;
 import chon.group.game.sound.SoundEvent;
 import javafx.scene.image.Image;
@@ -39,8 +39,8 @@ public class Environment {
 
     private Level currentLevel;
 
-    /** List of messages currently being displayed. */
-    private List<Message> messages;
+    /** The messenger system. */
+    private Messenger messenger;
 
     /** List of sounds currently being emitted. */
     private List<Sound> sounds;
@@ -69,10 +69,10 @@ public class Environment {
      * @param pathImage   the path to the background image
      */
     public Environment(int width, double screenWidth, Panel panel) {
-        this.messages = new ArrayList<Message>();
         this.sounds = new ArrayList<Sound>();
         this.levels = new ArrayList<Level>();
         this.camera = new Camera(screenWidth, width, 0.49, 0.51);
+        this.messenger = new Messenger();
         this.panel = panel;
     }
 
@@ -141,12 +141,8 @@ public class Environment {
         this.currentLevel = currentLevel;
     }
 
-    public List<Message> getMessages() {
-        return messages;
-    }
-
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
+    public Messenger getMessenger() {
+        return this.messenger;
     }
 
     public List<Sound> getSounds() {
@@ -238,7 +234,7 @@ public class Environment {
             if (!agent.isDead())
                 if (protagonist != null && intersect(protagonist, agent)) {
                     int damage = 900;
-                    protagonist.takeDamage(damage, messages, sounds);
+                    protagonist.takeDamage(damage, messenger.getMessages(), sounds);
                 }
             /*
              * It verifies agents vs. obstacles. The collision can only happens with non
@@ -358,19 +354,6 @@ public class Environment {
     }
 
     /**
-     * Updates and removes expired messages from the environment.
-     */
-    public void updateMessages() {
-        Iterator<Message> iterator = messages.iterator();
-        while (iterator.hasNext()) {
-            Message message = iterator.next();
-            if (!message.update()) {
-                iterator.remove();
-            }
-        }
-    }
-
-    /**
      * Updates the state of all shots in the environment.
      * Handles movement, boundary removal, and collision with agents or protagonist.
      */
@@ -412,7 +395,7 @@ public class Environment {
                 }
                 /* If the object is destructible, it must take some damage. */
                 if (object.isDestructible()) {
-                    object.takeDamage(shot.getDamage(), messages, sounds);
+                    object.takeDamage(shot.getDamage(), messenger.getMessages(), sounds);
                     /* Then the shot is removed. */
                     itShot.remove();
                     removed = true;
@@ -446,7 +429,7 @@ public class Environment {
                 }
                 // If it hits an agent.
                 if (intersect(agent, shot)) {
-                    agent.takeDamage(shot.getDamage(), messages, sounds);
+                    agent.takeDamage(shot.getDamage(), messenger.getMessages(), sounds);
                     itShot.remove();
                     removed = true;
                     break;
@@ -461,21 +444,13 @@ public class Environment {
              * system is informed, and the shot is removed.
              */
             if (intersect(protagonist, shot)) {
-                protagonist.takeDamage(shot.getDamage(), messages, sounds);
+                protagonist.takeDamage(shot.getDamage(), messenger.getMessages(), sounds);
                 itShot.remove();
                 continue;
             }
             /* The remaining shots move. */
             shot.move(List.of(shot.getDirection()));
         }
-    }
-
-    /**
-     * Updates the camera based on the protagonist’s current position.
-     */
-    public void updateCamera() {
-        if (camera != null)
-            camera.update();
     }
 
     /**
@@ -486,10 +461,11 @@ public class Environment {
     public void update() {
         updateObjects();
         updateShots();
-        updateMessages();
+        // updateMessages();
         detectCollision();
-        updateCamera();
-        protagonist.recoverEnergy();
+        this.currentLevel.getBehavior().update(this);
+        // updateCamera();
+        // protagonist.recoverEnergy();
     }
 
     public void loadNextLevel() {
