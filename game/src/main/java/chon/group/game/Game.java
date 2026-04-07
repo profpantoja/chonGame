@@ -103,10 +103,15 @@ public class Game {
 
     public void loop() {
         if (this.run()) {
+            /* Manages how levels change. */
             this.updateLevel();
+            /* Manages the input from the current state. */
             this.currentState.handleInput(this);
+            /* Manages the update from the current state. */
             this.currentState.update(this);
+            /* Plays the buffered sounds. */
             this.playSounds();
+            /* renders the current level. */
             this.currentState.render(this);
         }
     }

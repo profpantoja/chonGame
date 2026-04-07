@@ -85,7 +85,7 @@ public class PlayableState implements GameState {
 
     private void updateBorders(Environment environment) {
         /* It checks if the protagonist is outside boundaries. */
-        environment.checkBorders();
+        environment.getCurrentLevel().getBehavior().checkBorders(environment);
     }
 
     private void updateAgents(Game game, Level currentLevel, Agent protagonist) {

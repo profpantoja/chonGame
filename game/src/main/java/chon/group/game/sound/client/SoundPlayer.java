@@ -2,9 +2,9 @@ package chon.group.game.sound.client;
 
 public abstract class SoundPlayer {
 
-    private double musicVolume = 0.05;
-    private double ambientVolume = 0.7;
-    private double sfxVolume = 0.7;
+    private double musicVolume = 0.3;
+    private double ambientVolume = 0.6;
+    private double sfxVolume = 0.6;
 
     public SoundPlayer() {
 

@@ -4,6 +4,8 @@ import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Direction;
 import chon.group.game.core.agent.Entity;
 import chon.group.game.core.agent.Object;
+import chon.group.game.core.environment.behavior.BaseBehavior;
+import chon.group.game.core.environment.behavior.EnvironmentBehavior;
 import chon.group.game.core.weapon.Shot;
 
 import java.util.ArrayList;
