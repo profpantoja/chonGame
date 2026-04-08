@@ -1,11 +1,9 @@
 package chon.group.game.states;
 
-import java.util.Iterator;
 import java.util.List;
 
 import chon.group.game.Game;
 import chon.group.game.core.agent.Agent;
-import chon.group.game.core.agent.Object;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.environment.Level;
 import chon.group.game.core.weapon.Shot;
@@ -36,16 +34,17 @@ public class PlayableState implements GameState {
 
     @Override
     public void update(Game game) {
+        /* It caches the environmen, the current level and the protagonist. */
         Environment environment = game.getEnvironment();
         Level currentLevel = environment.getCurrentLevel();
         Agent protagonist = environment.getProtagonist();
         /* Updating the Game Components. */
-        this.updateBorders(environment);
-        this.updateAgents(game, currentLevel, protagonist);
+        /* It updates the entire environment based on the level behavior (physics). */
         this.updateEnvironment(environment);
+        /* Updates the game state. */
         if (this.updateState(game))
             return;
-        this.updateObjects(game, currentLevel);
+        /* It animates the game's components. */
         this.animate(game, currentLevel, protagonist);
     }
 
@@ -83,40 +82,8 @@ public class PlayableState implements GameState {
         return false;
     }
 
-    private void updateBorders(Environment environment) {
-        /* It checks if the protagonist is outside boundaries. */
-        environment.getCurrentLevel().getBehavior().checkBorders(environment);
-    }
-
-    private void updateAgents(Game game, Level currentLevel, Agent protagonist) {
-        Iterator<Agent> itAgent = currentLevel.getAgents().iterator();
-        /* ChonBot's Automatic Movements */
-        /* Update the other agents' movements */
-        while (itAgent.hasNext()) {
-            Agent agent = itAgent.next();
-            if (agent.canRemove()) {
-                itAgent.remove();
-                continue;
-            }
-            /* Every agent chases the protagonist. */
-            agent.chase(protagonist.getPosX(),
-                    protagonist.getPosY());
-        }
-    }
-
     private void updateEnvironment(Environment environment) {
         environment.update();
-    }
-
-    private void updateObjects(Game game, Level currentLevel) {
-        Iterator<Object> itObject = currentLevel.getObjects().iterator();
-        while (itObject.hasNext()) {
-            Object object = itObject.next();
-            if (object.isDestroyed() && object.canRemove()) {
-                itObject.remove();
-                continue;
-            }
-        }
     }
 
     public void animate(Game game, Level currentLevel, Agent protagonist) {

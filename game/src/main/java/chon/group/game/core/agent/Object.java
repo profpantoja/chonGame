@@ -163,4 +163,8 @@ public class Object extends Entity {
         return copy;
     }
 
+    public boolean blocksMovement() {
+        return !this.collectible && !this.isDestroyed();
+    }
+
 }

@@ -104,7 +104,7 @@ public class Game {
     public void loop() {
         if (this.run()) {
             /* Manages how levels change. */
-            this.updateLevel();
+            this.changeLevel();
             /* Manages the input from the current state. */
             this.currentState.handleInput(this);
             /* Manages the update from the current state. */
@@ -152,7 +152,7 @@ public class Game {
             this.soundPlayer.playMusic(background);
     }
 
-    public void updateLevel() {
+    public void changeLevel() {
         if (this.environment.getCurrentLevel().isCompleted(this.environment)) {
             this.soundPlayer.stop();
             environment.loadNextLevel();
