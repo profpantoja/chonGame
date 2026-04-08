@@ -53,32 +53,12 @@ public abstract class Weapon extends Entity {
         return energyCost;
     }
 
-    public void setEnergyCost(double energyCost) {
-        this.energyCost = energyCost;
-    }
-
     public Shot getTypeShot() {
         return typeShot;
     }
 
-    public void setTypeShot(Shot typeShot) {
-        this.typeShot = typeShot;
-    }
-
-    public long getLastAttackTime() {
-        return lastAttackTime;
-    }
-
-    public void setLastAttackTime(long lastAttackTime) {
-        this.lastAttackTime = lastAttackTime;
-    }
-
     public long getCooldown() {
         return cooldown;
-    }
-
-    public void setCooldown(long cooldown) {
-        this.cooldown = cooldown;
     }
 
     protected abstract Shot createShot(

@@ -81,14 +81,6 @@ public class Object extends Entity {
         this.destructible = destructible;
     }
 
-    public double getAttractionRadius() {
-        return attractionRadius;
-    }
-
-    public void setAttractionRadius(double attractionRadius) {
-        this.attractionRadius = attractionRadius;
-    }
-
     /**
      * Defines the behavior when the object is collected.
      * Can be overridden in subclasses.
@@ -139,6 +131,10 @@ public class Object extends Entity {
         return (this.isTerminated());
     }
 
+    public boolean blocksMovement() {
+        return !this.collectible && !this.isDestroyed();
+    }
+
     public Object copy(int posX, int posY) {
         Object copy = new Object(
                 posX,
@@ -151,20 +147,16 @@ public class Object extends Entity {
                 this.getDirection(),
                 this.getAnimationState().isFlipped(),
                 this.isVisibleBars(),
-                this.isCollectible(),
-                this.isDestructible(),
-                this.getAttractionRadius());
-        copy.setCollected(this.isCollected());
+                this.collectible,
+                this.destructible,
+                this.attractionRadius);
+        copy.setCollected(collected);
         copy.setFullHealth(this.getFullHealth());
         copy.setStatus(this.getStatus());
         copy.setAnimationSet(this.getAnimationSet());
         copy.setSoundSet(this.getSoundSet());
         copy.getAnimationState().setCurrentAnimation(this.getAnimationState().getCurrentAnimation());
         return copy;
-    }
-
-    public boolean blocksMovement() {
-        return !this.collectible && !this.isDestroyed();
     }
 
 }

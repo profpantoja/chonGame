@@ -45,24 +45,12 @@ public abstract class Shot extends Entity {
         return damage;
     }
 
-    public void setDamage(int damage) {
-        this.damage = damage;
-    }
-
     public long getCreationPosX() {
         return creationPosX;
     }
 
-    public void setCreationPosX(int creationPosX) {
-        this.creationPosX = creationPosX;
-    }
-
     public int getRange() {
         return range;
-    }
-
-    public void setRange(int range) {
-        this.range = range;
     }
 
     @Override

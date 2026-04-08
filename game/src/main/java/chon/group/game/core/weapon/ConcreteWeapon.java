@@ -1,12 +1,8 @@
 package chon.group.game.core.weapon;
 
-import java.util.List;
-
 import chon.group.game.animation.AnimationSet;
 import chon.group.game.animation.AnimationType;
 import chon.group.game.core.agent.Direction;
-import chon.group.game.messaging.Message;
-import chon.group.game.sound.Sound;
 
 public class ConcreteWeapon extends Weapon {
 
@@ -44,10 +40,6 @@ public class ConcreteWeapon extends Weapon {
         return shot;
     }
 
-    public void setShot(ConcreteShot shot) {
-        this.shot = shot;
-    }
-
     @Override
     protected Shot createShot(int posX, int posY, int entityWidth, Direction direction) {
         if (direction.equals(Direction.RIGHT))
@@ -78,11 +70,6 @@ public class ConcreteWeapon extends Weapon {
         shot.setAnimationSet(animationSet);
         shot.getAnimationState().setCurrentAnimation(animationSet.get(AnimationType.IDLE));
         return shot;
-    }
-
-    @Override
-    public void takeDamage(int damage, List<Message> messages, List<Sound> sounds) {
-
     }
 
 }
