@@ -21,7 +21,7 @@ public class Agent extends Entity {
     private boolean invulnerable = false;
 
     /* Invulnerability (in milliseconds) */
-    private final long INVULNERABILITY_COOLDOWN = 1000;
+    private long cooldown = 1000;
 
     /** The Agent's Weapon */
     private Weapon weapon;
@@ -33,7 +33,7 @@ public class Agent extends Entity {
     private final double fullEnergy;
 
     /** The agent's energy recovery factor */
-    private final double recoveryFactor;
+    private double recoveryFactor;
 
     /**
      * Constructor to initialize the agent properties including its direction.
@@ -45,7 +45,15 @@ public class Agent extends Entity {
      * @param pathImage the path to the agent's image
      * @param flipped   the agent's direction (RIGHT=0 or LEFT=1)
      */
-    public Agent(int posX, int posY, int width, int height, double ratio, int speed, int health, Direction direction,
+    public Agent(
+            int posX,
+            int posY,
+            int width,
+            int height,
+            double ratio,
+            int speed,
+            int health,
+            Direction direction,
             boolean flipped,
             boolean visibleBars) {
         super(posX, posY, width, height, ratio, speed, health, direction, flipped, visibleBars);
@@ -54,29 +62,24 @@ public class Agent extends Entity {
         this.recoveryFactor = 0.0002;
     }
 
-    /**
-     * Gets the last hit taken.
-     */
-    public long getLastHitTime() {
-        return lastHitTime;
-    }
-
-    /**
-     * Sets the last hit taken.
-     *
-     * @param lastHitTime the new image
-     */
-    public void setLastHitTime(long lastHitTime) {
-        this.lastHitTime = lastHitTime;
-    }
-
-    /**
-     * Gets invulnerable cooldown time.
-     *
-     * @return the time is milliseconds
-     */
-    public long getInvulnerabilityCooldown() {
-        return INVULNERABILITY_COOLDOWN;
+    public Agent(
+            int posX,
+            int posY,
+            int width,
+            int height,
+            double ratio,
+            int speed,
+            int health,
+            Direction direction,
+            boolean flipped,
+            boolean visibleBars,
+            long recoveryFactor,
+            long cooldown) {
+        super(posX, posY, width, height, ratio, speed, health, direction, flipped, visibleBars);
+        this.energy = 1.0;
+        this.fullEnergy = 1.0;
+        this.recoveryFactor = recoveryFactor;
+        this.cooldown = cooldown;
     }
 
     /**
@@ -198,7 +201,7 @@ public class Agent extends Entity {
      * @return if the agent is still invulnerable
      */
     private boolean updateInvulnerability() {
-        if (System.currentTimeMillis() - lastHitTime >= INVULNERABILITY_COOLDOWN) {
+        if (System.currentTimeMillis() - lastHitTime >= cooldown) {
             return false;
         }
         return true;
