@@ -288,7 +288,12 @@ public class BaseBehavior implements EnvironmentBehavior {
 
     /**
      * Checks if two entities intersect (collide).
-     *
+     * 
+     * In some kind of games, the intersection considers an offset depth for each
+     * entity, giving the player a depth sensation.
+     * 
+     * So, a ratio is defined in the Hitbox class.
+     * 
      * @param a the first entity
      * @param b the second entity
      * @return true if their areas overlap, false otherwise
@@ -302,6 +307,13 @@ public class BaseBehavior implements EnvironmentBehavior {
 
     /**
      * Ensures the protagonist stays within the boundaries of the environment.
+     * 
+     * It considers only the X and Y boundaries and also a value for top and bottom
+     * Y.
+     * 
+     * It works for Beat'em Up, Shoot'em Up, Runners, Platforms, and Top-Down
+     * behaviors.
+     * 
      */
     public void checkBorders(Environment environment) {
         Level level = environment.getCurrentLevel();
@@ -320,8 +332,10 @@ public class BaseBehavior implements EnvironmentBehavior {
     }
 
     /**
-     * Checks if an agent and an object intersect (collide) based on a direction. If
-     * so, it adjusts its position.
+     * Checks if an agent and an object intersect (collide) based on a direction.
+     * 
+     * The consequences of colliding and customized behavior are left for the
+     * concrete classes.
      *
      * @param a the agent
      * @param b the object

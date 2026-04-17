@@ -33,9 +33,14 @@ public class Level extends Entity {
 
     private StoryType type = StoryType.PLAYABLE;
 
-    private EnvironmentBehavior behavior = new BaseBehavior();
+    private EnvironmentBehavior behavior;
 
-    public Level(int posX, int posY, int topY, int bottomY, StoryType type) {
+    public Level(int posX,
+            int posY,
+            int topY,
+            int bottomY,
+            StoryType type,
+            EnvironmentBehavior behavior) {
         super(posX, posY, 0, 0, 0, 0, 0, Direction.IDLE, false, false);
         this.topY = topY;
         this.bottomY = bottomY;
@@ -43,9 +48,10 @@ public class Level extends Entity {
         this.objects = new ArrayList<Object>();
         this.shots = new ArrayList<Shot>();
         this.type = type;
+        this.behavior = behavior;
     }
 
-    public Level(int topY, int bottomY, StoryType type) {
+    public Level(int topY, int bottomY, StoryType type, EnvironmentBehavior behavior) {
         super(0, 0, 0, 0, 0, 0, 0, Direction.IDLE, false, false);
         this.topY = topY;
         this.bottomY = bottomY;
@@ -53,6 +59,7 @@ public class Level extends Entity {
         this.objects = new ArrayList<Object>();
         this.shots = new ArrayList<Shot>();
         this.type = type;
+        this.behavior = behavior;
     }
 
     public Level(StoryType type) {
@@ -61,6 +68,7 @@ public class Level extends Entity {
         this.objects = new ArrayList<Object>();
         this.shots = new ArrayList<Shot>();
         this.type = type;
+        this.behavior = new BaseBehavior();
     }
 
     public Level(StoryType type, String description) {
@@ -70,6 +78,7 @@ public class Level extends Entity {
         this.objects = new ArrayList<Object>();
         this.shots = new ArrayList<Shot>();
         this.type = type;
+        this.behavior = new BaseBehavior();
     }
 
     public String getDescription() {

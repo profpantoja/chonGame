@@ -13,6 +13,7 @@ import chon.group.game.core.environment.Environment;
 import chon.group.game.core.environment.Level;
 import chon.group.game.core.environment.Panel;
 import chon.group.game.core.environment.StoryType;
+import chon.group.game.core.environment.behavior.BeatThemUp;
 import chon.group.game.core.weapon.ConcreteShot;
 import chon.group.game.core.weapon.ConcreteWeapon;
 import chon.group.game.core.weapon.Weapon;
@@ -193,7 +194,8 @@ public class GameSet {
                 Level level4 = new Level(
                                 260,
                                 canvasHeight,
-                                StoryType.PLAYABLE);
+                                StoryType.PLAYABLE,
+                                new BeatThemUp());
                 level4Animation.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/environment/castleLong.png")
                                                 .toExternalForm()),
@@ -217,7 +219,8 @@ public class GameSet {
                 Level level6 = new Level(
                                 380,
                                 590,
-                                StoryType.PLAYABLE);
+                                StoryType.PLAYABLE,
+                                new BeatThemUp());
                 level6Animation.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/environment/insideCastle.png")
                                                 .toExternalForm()),
