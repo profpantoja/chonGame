@@ -11,7 +11,7 @@ public class Hitbox {
         if (ratio == 0 || ratio > 1)
             this.ratio = 1;
         this.width = width;
-        this.height = (int) (height * this.ratio);
+        this.height = height;
     }
 
     public int getWidth() {
@@ -19,6 +19,10 @@ public class Hitbox {
     }
 
     public int getHeight() {
+        return (int) (height * this.ratio);
+    }
+
+    public int getBaseHeight() {
         return height;
     }
 

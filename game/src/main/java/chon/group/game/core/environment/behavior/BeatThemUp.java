@@ -2,6 +2,7 @@ package chon.group.game.core.environment.behavior;
 
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Object;
+import chon.group.game.core.environment.Environment;
 
 public class BeatThemUp extends BaseBehavior {
 
@@ -15,7 +16,7 @@ public class BeatThemUp extends BaseBehavior {
      *
      */
     @Override
-    protected void onCollision(Agent agent, Object object) {
+    protected void onCollision(Agent agent, Object object, Environment environments) {
         if (!this.intersect(agent, object)) {
             return;
         }
@@ -50,6 +51,10 @@ public class BeatThemUp extends BaseBehavior {
                 agent.setPosY(objectBottom + 1);
             }
         }
+    }
+
+    protected void recoverEnergy(Environment environment) {
+        environment.getProtagonist().recoverEnergy();
     }
 
 }

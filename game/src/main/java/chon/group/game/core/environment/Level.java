@@ -4,7 +4,6 @@ import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Direction;
 import chon.group.game.core.agent.Entity;
 import chon.group.game.core.agent.Object;
-import chon.group.game.core.environment.behavior.BaseBehavior;
 import chon.group.game.core.environment.behavior.EnvironmentBehavior;
 import chon.group.game.core.weapon.Shot;
 
@@ -62,23 +61,23 @@ public class Level extends Entity {
         this.behavior = behavior;
     }
 
-    public Level(StoryType type) {
+    public Level(StoryType type, EnvironmentBehavior behavior) {
         super(0, 0, 0, 0, 0, 0, 0, Direction.IDLE, false, false);
         this.agents = new ArrayList<Agent>();
         this.objects = new ArrayList<Object>();
         this.shots = new ArrayList<Shot>();
         this.type = type;
-        this.behavior = new BaseBehavior();
+        this.behavior = behavior;
     }
 
-    public Level(StoryType type, String description) {
+    public Level(StoryType type, String description, EnvironmentBehavior behavior) {
         super(0, 0, 0, 0, 0, 0, 0, Direction.IDLE, false, false);
         this.description = description;
         this.agents = new ArrayList<Agent>();
         this.objects = new ArrayList<Object>();
         this.shots = new ArrayList<Shot>();
         this.type = type;
-        this.behavior = new BaseBehavior();
+        this.behavior = behavior;
     }
 
     public String getDescription() {

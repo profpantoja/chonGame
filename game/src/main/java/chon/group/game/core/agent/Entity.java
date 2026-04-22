@@ -397,6 +397,24 @@ public abstract class Entity {
         }
     }
 
+    /**
+     * It destroys the Entity.
+     *
+     */
+    public void destroy(List<Message> messages, List<Sound> sounds) {
+        messages.add(new Message(
+                String.valueOf(health),
+                this.getPosX(),
+                this.getPosY(),
+                25));
+        /* Decrease health. */
+        this.health = 0;
+        this.terminate();
+        Sound sound = this.getSoundSet().get(SoundEvent.TERMINATE);
+        if (sound != null)
+            sounds.add(sound);
+    }
+
     private void terminate() {
         this.status = EntityStatus.TERMINATE;
         this.animationState.setCurrentFrameIndex(0);

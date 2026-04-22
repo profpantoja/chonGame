@@ -12,8 +12,7 @@ import chon.group.game.core.environment.Level;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.sound.SoundEvent;
 
-//public abstract class BaseBehavior implements EnvironmentBehavior {
-public class BaseBehavior implements EnvironmentBehavior {
+public abstract class BaseBehavior implements EnvironmentBehavior {
     @Override
     public final void update(Environment environment) {
         updateWorld(environment);
@@ -271,7 +270,7 @@ public class BaseBehavior implements EnvironmentBehavior {
                 if (protagonist != null
                         && protagonist != agent
                         && intersect(protagonist, agent)) {
-                    this.applyDamage(protagonist, 900, environment);
+                    this.applyDamage(protagonist, 1000, environment);
                 }
             /*
              * It verifies agents vs. obstacles. It verifies if the protagonist has collided
@@ -280,7 +279,7 @@ public class BaseBehavior implements EnvironmentBehavior {
              */
             for (Object object : level.getObjects()) {
                 if (object.blocksMovement()) {
-                    this.onCollision(agent, object);
+                    this.onCollision(agent, object, environment);
                 }
             }
         }
@@ -341,7 +340,7 @@ public class BaseBehavior implements EnvironmentBehavior {
      * @param b the object
      *
      */
-    protected void onCollision(Agent agent, Object object) {
+    protected void onCollision(Agent agent, Object object, Environment environment) {
         if (!intersect(agent, object)) {
             return;
         }
@@ -394,8 +393,6 @@ public class BaseBehavior implements EnvironmentBehavior {
         }
     }
 
-    protected void recoverEnergy(Environment environment) {
-        environment.getProtagonist().recoverEnergy();
-    }
+    protected abstract void recoverEnergy(Environment environment);
 
 }

@@ -14,6 +14,7 @@ import chon.group.game.core.environment.Level;
 import chon.group.game.core.environment.Panel;
 import chon.group.game.core.environment.StoryType;
 import chon.group.game.core.environment.behavior.BeatThemUp;
+import chon.group.game.core.environment.behavior.ShootThemUp;
 import chon.group.game.core.weapon.ConcreteShot;
 import chon.group.game.core.weapon.ConcreteWeapon;
 import chon.group.game.core.weapon.Weapon;
@@ -147,7 +148,7 @@ public class GameSet {
                                 winningMenu);
 
                 /* Initialize the game environment, levels, agents and weapons */
-                Level level0 = new Level(StoryType.START);
+                Level level0 = new Level(StoryType.START, new BeatThemUp());
                 Animation level0Animation = new Animation();
                 level0Animation.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/environment/chonGame.png")
@@ -158,7 +159,8 @@ public class GameSet {
                 level0.getAnimationState().setCurrentAnimation(level0Animation);
 
                 Level level1 = new Level(StoryType.STORY,
-                                "In Chon city, a scientific experiment is being held in a laboratory. ChonBota and his friends are nearby when something goes wrong...");
+                                "In Chon city, a scientific experiment is being held in a laboratory. ChonBota and his friends are nearby when something goes wrong...",
+                                new BeatThemUp());
                 Animation level1Animation = new Animation();
                 level1Animation.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/environment/stories/story001.png")
@@ -169,7 +171,8 @@ public class GameSet {
                 level1.getAnimationState().setCurrentAnimation(level1Animation);
 
                 Level level2 = new Level(StoryType.STORY,
-                                "... they were sent back in time to the medieval era! Now, ChonBots were corrupted by a strange virus, turning them crazy!");
+                                "... they were sent back in time to the medieval era! Now, ChonBots were corrupted by a strange virus, turning them crazy!",
+                                new BeatThemUp());
                 Animation level2Animation = new Animation();
                 level2Animation.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/environment/stories/story002.png")
@@ -180,7 +183,8 @@ public class GameSet {
                 level2.getAnimationState().setCurrentAnimation(level2Animation);
 
                 Level level3 = new Level(StoryType.STORY,
-                                "ChonBota now must fight back the rogue ChonBots and find a way to return back to the future.");
+                                "ChonBota now must fight back the rogue ChonBots and find a way to return back to the future.",
+                                new BeatThemUp());
                 Animation level3Animation = new Animation();
                 level3Animation.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/environment/stories/story003.png")
@@ -206,7 +210,8 @@ public class GameSet {
 
                 Animation level5Animation = new Animation();
                 Level level5 = new Level(StoryType.STORY,
-                                "ChonBota goes inside the Castle looking for some way of getting back to her time.");
+                                "ChonBota goes inside the Castle looking for some way of getting back to her time.",
+                                new BeatThemUp());
                 level5Animation.getFrames().add(new Frame(new Image(
                                 getClass().getResource("/images/environment/stories/story003.png")
                                                 .toExternalForm()),
@@ -228,6 +233,19 @@ public class GameSet {
                                 canvasHeight));
                 level6.getAnimationSet().add(AnimationType.IDLE, level6Animation);
                 level6.getAnimationState().setCurrentAnimation(level6Animation);
+
+                Animation level7Animation = new Animation();
+                Level level7 = new Level(0,
+                                canvasHeight,
+                                StoryType.PLAYABLE,
+                                new ShootThemUp());
+                level7Animation.getFrames().add(new Frame(new Image(
+                                getClass().getResource("/images/environment/spaceLong.png")
+                                                .toExternalForm()),
+                                16212,
+                                canvasHeight));
+                level7.getAnimationSet().add(AnimationType.IDLE, level7Animation);
+                level7.getAnimationState().setCurrentAnimation(level7Animation);
 
                 environment = new Environment(
                                 level1.getWidth(),
@@ -935,6 +953,10 @@ public class GameSet {
                 level4.setObjects(objects);
 
                 level6.getAgents().add(chonBot5);
+
+                Object box19 = box.copy(1200, 596);
+                level7.getObjects().add(box19);
+
                 environment.getLevels().add(level0);
                 environment.getLevels().add(level1);
                 environment.getLevels().add(level2);
@@ -942,6 +964,7 @@ public class GameSet {
                 environment.getLevels().add(level4);
                 environment.getLevels().add(level5);
                 environment.getLevels().add(level6);
+                environment.getLevels().add(level7);
                 environment.setCurrentLevel(level0);
         }
 
