@@ -1,4 +1,4 @@
-package chon.group.game;
+package chon.group.game.loader;
 
 import java.util.ArrayList;
 import java.util.List;

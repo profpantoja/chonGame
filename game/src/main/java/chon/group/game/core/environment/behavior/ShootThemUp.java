@@ -11,7 +11,7 @@ public class ShootThemUp extends BaseBehavior {
      * Checks if two entities intersect (collide).
      * 
      * In Shoot'em Up games, the intersection considers the full image size.
-     * It disconsiders the Hitbox.
+     * It disconsiders the Hitbox's ratio.
      * 
      * @param a the first entity
      * @param b the second entity
@@ -19,16 +19,17 @@ public class ShootThemUp extends BaseBehavior {
      */
     protected boolean intersect(Entity a, Entity b) {
         /* It is necessary to define a way of fixing the Hitbox size for all images. */
-        return a.getPosX() < b.getPosX() + b.getWidth() &&
+        return a.getPosX() < b.getPosX() + b.getHitbox().getWidth() &&
                 a.getPosX() + a.getHitbox().getWidth() > b.getPosX() &&
-                a.getPosY() < b.getPosY() + b.getHeight() &&
+                a.getPosY() < b.getPosY() + b.getHitbox().getBaseHeight() &&
                 a.getPosY() + a.getHitbox().getBaseHeight() > b.getPosY();
     }
 
     /**
      * Checks if an agent and an object intersect (collide) based on a direction.
      * 
-     * In beat'em Up games, it adjusts the agent position.
+     * In Shoot'em Up games, when the agent collides if an object, it gets hurt and
+     * the object is destroyed.
      *
      * @param a the agent
      * @param b the object

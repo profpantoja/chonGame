@@ -1,0 +1,394 @@
+{
+    "protagonist": "chonBota",
+    "agents": {
+        "chonBota": {
+            "position": {
+                "x": 400,
+                "y": 390
+            },
+            "size": {
+                "width": 65,
+                "height": 90,
+                "hitboxRatio": 0.4
+            },
+            "stats": {
+                "speed": 2,
+                "health": 5000
+            },
+            "state": {
+                "direction": "IDLE",
+                "flipped": false,
+                "visibleBars": true
+            },
+            "animations": {
+                "IDLE": "chonBota_idle",
+                "WALK": "chonBota_walk",
+                "ATTACK": "chonBota_punch",
+                "DAMAGE": "chonBota_hit",
+                "TERMINATE": "chonBota_dead"
+            },
+            "sounds": {
+                "ATTACK": "chonBota_lancer_shot",
+                "WALK": "chonBota_walk",
+                "DAMAGE": "chonBota_hit",
+                "TERMINATE": "chonBota_terminate"
+            },
+            "weapons": [
+                "cannon",
+                "bareHands",
+                "lancer"
+            ],
+            "defaultWeapon": "lancer"
+        }
+    },
+    "animations": {
+        "chonBota_idle": {
+            "duration": 200,
+            "loop": true,
+            "frames": [
+                {
+                    "image": "/images/agents/chonBota/idle/chonBota_001.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/idle/chonBota_002.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/idle/chonBota_003.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/idle/chonBota_004.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/idle/chonBota_004.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/idle/chonBota_005.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/idle/chonBota_005.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/idle/chonBota_006.png",
+                    "width": 65,
+                    "height": 90
+                }
+            ]
+        },
+        "chonBota_walk": {
+            "duration": 150,
+            "loop": true,
+            "frames": [
+                {
+                    "image": "/images/agents/chonBota/walk/chonBota_Walk_001.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/walk/chonBota_Walk_002.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/walk/chonBota_Walk_003.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/walk/chonBota_Walk_004.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/walk/chonBota_Walk_005.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/walk/chonBota_Walk_006.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/walk/chonBota_Walk_007.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/walk/chonBota_Walk_008.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/walk/chonBota_Walk_009.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/walk/chonBota_Walk_010.png",
+                    "width": 65,
+                    "height": 90
+                }
+            ]
+        },
+        "chonBota_punch": {
+            "duration": 50,
+            "loop": false,
+            "frames": [
+                {
+                    "image": "/images/agents/chonBota/punch/chonBota_Punch_001.png",
+                    "width": 106,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/punch/chonBota_Punch_002.png",
+                    "width": 106,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/punch/chonBota_Punch_003.png",
+                    "width": 106,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/punch/chonBota_Punch_002.png",
+                    "width": 106,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/punch/chonBota_Punch_001.png",
+                    "width": 106,
+                    "height": 90
+                }
+            ]
+        },
+        "chonBota_hit": {
+            "duration": 200,
+            "loop": false,
+            "frames": [
+                {
+                    "image": "/images/agents/chonBota/hit/chonBota_Hit_001.png",
+                    "width": 65,
+                    "height": 90
+                }
+            ]
+        },
+        "chonBota_dead": {
+            "duration": 100,
+            "loop": false,
+            "frames": [
+                {
+                    "image": "/images/agents/chonBota/dead/chonBota_Dead_001.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/dead/chonBota_Dead_002.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/dead/chonBota_Dead_003.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/dead/chonBota_Dead_004.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/dead/chonBota_Dead_005.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/dead/chonBota_Dead_006.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/dead/chonBota_Dead_007.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBota/dead/chonBota_Dead_007.png",
+                    "width": 65,
+                    "height": 90
+                }
+            ]
+        },
+        "missile_anim": {
+            "duration": 0,
+            "loop": true,
+            "frames": [
+                {
+                    "image": "/images/weapons/missile/missile001.png",
+                    "width": 88,
+                    "height": 64
+                },
+                {
+                    "image": "/images/weapons/missile/missile002.png",
+                    "width": 88,
+                    "height": 64
+                },
+                {
+                    "image": "/images/weapons/missile/missile003.png",
+                    "width": 88,
+                    "height": 64
+                },
+                {
+                    "image": "/images/weapons/missile/missile004.png",
+                    "width": 88,
+                    "height": 64
+                },
+                {
+                    "image": "/images/weapons/missile/missile005.png",
+                    "width": 88,
+                    "height": 64
+                },
+                {
+                    "image": "/images/weapons/missile/missile006.png",
+                    "width": 88,
+                    "height": 64
+                },
+                {
+                    "image": "/images/weapons/missile/missile007.png",
+                    "width": 88,
+                    "height": 64
+                },
+                {
+                    "image": "/images/weapons/missile/missile008.png",
+                    "width": 88,
+                    "height": 64
+                }
+            ]
+        },
+        "fireball_anim": {
+            "duration": 200,
+            "loop": true,
+            "frames": [
+                {
+                    "image": "/images/weapons/fireball/fireball001.png",
+                    "width": 64,
+                    "height": 42
+                },
+                {
+                    "image": "/images/weapons/fireball/fireball002.png",
+                    "width": 64,
+                    "height": 42
+                },
+                {
+                    "image": "/images/weapons/fireball/fireball003.png",
+                    "width": 64,
+                    "height": 42
+                }
+            ]
+        }
+    },
+    "sounds": {
+        "chonBota_lancer_shot": {
+            "path": "/sounds/agents/chonBota/lancer_shot.wav",
+            "type": "SFX",
+            "loop": false
+        },
+        "chonBota_walk": {
+            "path": "/sounds/agents/chonBota/walk.wav",
+            "type": "SFX",
+            "loop": false
+        },
+        "chonBota_hit": {
+            "path": "/sounds/agents/chonBota/hit.wav",
+            "type": "SFX",
+            "loop": false
+        },
+        "chonBota_terminate": {
+            "path": "/sounds/agents/chonBot/terminate.wav",
+            "type": "SFX",
+            "loop": false
+        }
+    },
+    "shots": {
+        "missile": {
+            "size": {
+                "width": 88,
+                "height": 64
+            },
+            "speed": 3,
+            "damage": 250,
+            "range": 1200,
+            "destructible": false,
+            "animation": "missile_anim"
+        },
+        "fireball": {
+            "size": {
+                "width": 64,
+                "height": 42
+            },
+            "speed": 3,
+            "damage": 500,
+            "range": 1200,
+            "destructible": false,
+            "animation": "fireball_anim"
+        },
+        "punch": {
+            "size": {
+                "width": 30,
+                "height": 15
+            },
+            "speed": 3,
+            "damage": 500,
+            "range": 15,
+            "destructible": false,
+            "animation": null
+        }
+    },
+    "weapons": {
+        "cannon": {
+            "offsetY": 20,
+            "energyCost": 0.05,
+            "cooldown": 150,
+            "shot": "missile"
+        },
+        "lancer": {
+            "offsetY": 30,
+            "energyCost": 0.05,
+            "cooldown": 300,
+            "shot": "fireball"
+        },
+        "bareHands": {
+            "offsetY": 30,
+            "energyCost": 0.05,
+            "cooldown": 250,
+            "shot": "punch"
+        }
+    },
+    "levels": [
+        {
+            "id": "level1",
+            "type": "PLAYABLE",
+            "behavior": "beatThemUp",
+            "protagonist": {
+                "ref": "chonBota",
+                "spawn": {
+                    "x": 400,
+                    "y": 390
+                }
+            }
+        }
+    ]
+}

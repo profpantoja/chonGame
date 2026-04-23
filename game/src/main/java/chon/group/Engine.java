@@ -3,10 +3,10 @@ package chon.group;
 import java.util.ArrayList;
 
 import chon.group.game.Game;
-import chon.group.game.GameSet;
 import chon.group.game.drawer.client.JavaFxDrawer;
 import chon.group.game.drawer.service.GameDrawer;
 import chon.group.game.drawer.service.GameMediator;
+import chon.group.game.loader.GameSet;
 import chon.group.game.sound.client.JavaFxPlayer;
 import chon.group.game.sound.service.GameSoundManager;
 import javafx.animation.AnimationTimer;
