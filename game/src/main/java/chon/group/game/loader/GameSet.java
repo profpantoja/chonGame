@@ -2,6 +2,7 @@ package chon.group.game.loader;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import chon.group.game.animation.Animation;
 import chon.group.game.animation.AnimationType;
@@ -17,7 +18,14 @@ import chon.group.game.core.environment.behavior.BeatThemUp;
 import chon.group.game.core.environment.behavior.ShootThemUp;
 import chon.group.game.core.weapon.ConcreteShot;
 import chon.group.game.core.weapon.ConcreteWeapon;
+import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Weapon;
+import chon.group.game.loader.config.agent.AgentConfig;
+import chon.group.game.loader.factory.AgentFactory;
+import chon.group.game.loader.factory.AnimationFactory;
+import chon.group.game.loader.factory.ShotFactory;
+import chon.group.game.loader.factory.SoundFactory;
+import chon.group.game.loader.factory.WeaponFactory;
 import chon.group.game.menu.Action;
 import chon.group.game.menu.Item;
 import chon.group.game.menu.Menu;
@@ -80,6 +88,21 @@ public class GameSet {
         }
 
         private void load() {
+                /* Just testing the loader. It needs to be removed. */
+                GameLoader loader = new GameLoader();
+                GameConfig config = loader.load("/game.json");
+                String protagonistId = config.getProtagonist();
+
+                AgentConfig agentConfig = config.getAgents().get(protagonistId);
+
+                Map<String, Animation> animations = new AnimationFactory().buildAll(config.getAnimations());
+                Map<String, Sound> sounds = new SoundFactory().buildAll(config.getSounds());
+                Map<String, Shot> shots = new ShotFactory().buildAll(config.getShots(), animations);
+                Map<String, Weapon> weapons = new WeaponFactory().buildAll(config.getWeapons(), shots);
+                AgentFactory agentFactory = new AgentFactory(animations, sounds, weapons);
+
+                Agent protagonist = agentFactory.create(protagonistId, agentConfig);
+
                 /* Define some size properties for both Canvas and Environment */
                 this.canvasWidth = 1280;
                 this.canvasHeight = 780;
@@ -662,7 +685,8 @@ public class GameSet {
                 Agent chonBot5 = chonBot.copy(1500, 500);
 
                 /* Setting the protagonist and some Images in the Environment system. */
-                environment.setProtagonist(chonBota);
+                //environment.setProtagonist(chonBota);
+                environment.setProtagonist(protagonist);
                 environment.setPauseImage("/images/environment/pause.png");
                 environment.setGameOverImage("/images/environment/gameover.png");
                 environment.setTheEndImage("/images/environment/theEnd.png");

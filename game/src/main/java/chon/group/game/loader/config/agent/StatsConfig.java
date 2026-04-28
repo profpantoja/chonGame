@@ -2,15 +2,15 @@ package chon.group.game.loader.config.agent;
 
 public class StatsConfig {
 
-    private double speed;
+    private int speed;
     private int health;
     private int energy;
 
-    public double getSpeed() {
+    public int getSpeed() {
         return speed;
     }
 
-    public void setSpeed(double speed) {
+    public void setSpeed(int speed) {
         this.speed = speed;
     }
 
