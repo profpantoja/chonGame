@@ -1,17 +1,21 @@
 package chon.group.game.loader;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import chon.group.game.animation.Animation;
 import chon.group.game.core.agent.Agent;
+import chon.group.game.core.environment.Level;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Weapon;
 import chon.group.game.loader.config.agent.AgentConfig;
+import chon.group.game.loader.config.level.LevelConfig;
 import chon.group.game.loader.factory.AgentFactory;
 import chon.group.game.loader.factory.AnimationFactory;
+import chon.group.game.loader.factory.LevelFactory;
 import chon.group.game.loader.factory.MenuFactory;
 import chon.group.game.loader.factory.ShotFactory;
 import chon.group.game.loader.factory.SoundFactory;
@@ -73,6 +77,20 @@ public class GameLoader {
         return new MenuFactory().buildMenuHandler(
                 this.game.getMenus(),
                 this.game.getMenuHandler());
+    }
+
+    public Level createLevel(int index) {
+        List<LevelConfig> levelConfigs = this.game.getLevels();
+        if (index < 0 || index >= levelConfigs.size()) {
+            throw new IllegalArgumentException("Invalid level index: " + index);
+        }
+        LevelFactory factory = new LevelFactory(this.animations, this.sounds);
+        return factory.build(levelConfigs.get(index));
+    }
+
+    public List<Level> createLevels() {
+        return new LevelFactory(this.animations, this.sounds)
+                .buildAll(this.game.getLevels());
     }
 
 }

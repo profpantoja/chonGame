@@ -54,13 +54,13 @@ public class AgentFactory {
             agent.getSoundSet().add(event, sound);
         }
 
-        // 🔫 weapons
-        for (String weaponId : config.getWeapons()) {
-            agent.setWeapon(weapons.get(weaponId));
-        }
-
         // default weapon (optional if your Agent supports it)
-        // agent.setCurrentWeapon(weapons.get(config.getDefaultWeapon()));
+          if (config.getDefaultWeapon() != null) {
+            Weapon defaultWeapon = weapons.get(config.getDefaultWeapon());
+            if (defaultWeapon != null) {
+                agent.setWeapon(defaultWeapon);
+            }
+        }
 
         return agent;
     }

@@ -137,7 +137,7 @@
                 "TERMINATE": "chonBota_dead"
             },
             "sounds": {
-                "ATTACK": "chonBota_lancer_shot",
+                "ATTACK": "chonBota_shot",
                 "WALK": "chonBota_walk",
                 "DAMAGE": "chonBota_hit",
                 "TERMINATE": "chonBota_terminate"
@@ -147,7 +147,7 @@
                 "bareHands",
                 "lancer"
             ],
-            "defaultWeapon": "lancer"
+            "defaultWeapon": "bareHands"
         }
     },
     "animations": {
@@ -253,6 +253,17 @@
                 }
             ]
         },
+        "chonBota_shooting": {
+            "duration": 100,
+            "loop": false,
+            "frames": [
+                {
+                    "image": "/images/agents/chonBota/attack/chonBota_Attack_001.png",
+                    "width": 65,
+                    "height": 90
+                }
+            ]
+        },
         "chonBota_punch": {
             "duration": 50,
             "loop": false,
@@ -342,7 +353,7 @@
             ]
         },
         "missile_anim": {
-            "duration": 0,
+            "duration": 200,
             "loop": true,
             "frames": [
                 {
@@ -407,10 +418,98 @@
                     "height": 42
                 }
             ]
+        },
+        "level0_background": {
+            "duration": 200,
+            "loop": true,
+            "frames": [
+                {
+                    "image": "/images/environment/chonGame.png",
+                    "width": 1280,
+                    "height": 780
+                }
+            ]
+        },
+        "level1_background": {
+            "duration": 200,
+            "loop": true,
+            "frames": [
+                {
+                    "image": "/images/environment/stories/story001.png",
+                    "width": 1800,
+                    "height": 780
+                }
+            ]
+        },
+        "level2_background": {
+            "duration": 200,
+            "loop": true,
+            "frames": [
+                {
+                    "image": "/images/environment/stories/story002.png",
+                    "width": 1280,
+                    "height": 780
+                }
+            ]
+        },
+        "level3_background": {
+            "duration": 200,
+            "loop": true,
+            "frames": [
+                {
+                    "image": "/images/environment/stories/story003.png",
+                    "width": 1280,
+                    "height": 780
+                }
+            ]
+        },
+        "level4_background": {
+            "duration": 200,
+            "loop": true,
+            "frames": [
+                {
+                    "image": "/images/environment/castleLong.png",
+                    "width": 8024,
+                    "height": 780
+                }
+            ]
+        },
+        "level5_background": {
+            "duration": 200,
+            "loop": true,
+            "frames": [
+                {
+                    "image": "/images/environment/stories/story003.png",
+                    "width": 1280,
+                    "height": 780
+                }
+            ]
+        },
+        "level6_background": {
+            "duration": 200,
+            "loop": true,
+            "frames": [
+                {
+                    "image": "/images/environment/insideCastle.png",
+                    "width": 8024,
+                    "height": 780
+                }
+            ]
+        },
+        "level7_background": {
+            "duration": 200,
+            "loop": true,
+            "frames": [
+                {
+                    "image": "/images/environment/spaceLong.png",
+                    "width": 16212,
+                    "height": 780
+                }
+            ]
         }
     },
     "sounds": {
-        "chonBota_lancer_shot": {
+        "chonBota_shot": {
             "path": "/sounds/agents/chonBota/lancer_shot.wav",
             "type": "SFX",
             "loop": false
@@ -429,6 +528,31 @@
             "path": "/sounds/agents/chonBot/terminate.wav",
             "type": "SFX",
             "loop": false
+        },
+        "openingMusic": {
+            "path": "/sounds/levels/openingMusic.mp3",
+            "type": "MUSIC",
+            "loop": true
+        },
+        "forestAmbient": {
+            "path": "/sounds/levels/forestAmbient.mp3",
+            "type": "AMBIENT",
+            "loop": true
+        },
+        "forestMusic": {
+            "path": "/sounds/levels/forestMusic.mp3",
+            "type": "MUSIC",
+            "loop": true
+        },
+        "castleAmbient": {
+            "path": "/sounds/levels/castleAmbient.mp3",
+            "type": "AMBIENT",
+            "loop": true
+        },
+        "castleMusic": {
+            "path": "/sounds/levels/castleMusic.mp3",
+            "type": "MUSIC",
+            "loop": true
         }
     },
     "shots": {
@@ -488,16 +612,73 @@
     },
     "levels": [
         {
-            "id": "level1",
-            "type": "PLAYABLE",
+            "id": "level0",
+            "type": "START",
             "behavior": "beatThemUp",
-            "protagonist": {
-                "ref": "chonBota",
-                "spawn": {
-                    "x": 400,
-                    "y": 390
-                }
+            "animation": "level0_background",
+            "sounds": {
+                "BACKGROUND": "openingMusic"
             }
+        },
+        {
+            "id": "level1",
+            "type": "STORY",
+            "text": "In Chon city, a scientific experiment is being held in a laboratory. ChonBota and his friends are nearby when something goes wrong...",
+            "behavior": "beatThemUp",
+            "animation": "level1_background"
+        },
+        {
+            "id": "level2",
+            "type": "STORY",
+            "text": "... they were sent back in time to the medieval era! Now, ChonBots were corrupted by a strange virus, turning them crazy!",
+            "behavior": "beatThemUp",
+            "animation": "level2_background"
+        },
+        {
+            "id": "level3",
+            "type": "STORY",
+            "text": "ChonBota now must fight back the rogue ChonBots and find a way to return back to the future.",
+            "behavior": "beatThemUp",
+            "animation": "level3_background"
+        },
+        {
+            "id": "level4",
+            "type": "PLAYABLE",
+            "topY": 260,
+            "bottomY": 780,
+            "behavior": "beatThemUp",
+            "animation": "level4_background",
+            "sounds": {
+                "AMBIENT": "forestAmbient",
+                "BACKGROUND": "forestMusic"
+            }
+        },
+        {
+            "id": "level5",
+            "type": "STORY",
+            "text": "ChonBota goes inside the Castle looking for some way of getting back to her time.",
+            "behavior": "beatThemUp",
+            "animation": "level5_background"
+        },
+        {
+            "id": "level6",
+            "type": "PLAYABLE",
+            "topY": 380,
+            "bottomY": 590,
+            "behavior": "beatThemUp",
+            "animation": "level6_background",
+            "sounds": {
+                "AMBIENT": "castleAmbient",
+                "BACKGROUND": "castleMusic"
+            }
+        },
+        {
+            "id": "level7",
+            "type": "PLAYABLE",
+            "topY": 0,
+            "bottomY": 780,
+            "behavior": "shootThemUp",
+            "animation": "level7_background"
         }
     ]
 }
