@@ -1,30 +1,78 @@
 package chon.group.game.loader;
 
 import java.io.InputStream;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import chon.group.game.animation.Animation;
+import chon.group.game.core.agent.Agent;
+import chon.group.game.core.weapon.Shot;
+import chon.group.game.core.weapon.Weapon;
+import chon.group.game.loader.config.agent.AgentConfig;
+import chon.group.game.loader.factory.AgentFactory;
+import chon.group.game.loader.factory.AnimationFactory;
+import chon.group.game.loader.factory.MenuFactory;
+import chon.group.game.loader.factory.ShotFactory;
+import chon.group.game.loader.factory.SoundFactory;
+import chon.group.game.loader.factory.WeaponFactory;
+import chon.group.game.menu.MenuHandler;
+import chon.group.game.sound.Sound;
 
 public class GameLoader {
 
     private final ObjectMapper objectMapper;
+    private final GameConfig game;
+    private Map<String, Animation> animations;
+    private Map<String, Sound> sounds;
+    private Map<String, Shot> shots;
+    private Map<String, Weapon> weapons;
 
-    public GameLoader() {
+    public GameLoader(String resourcePath) {
         this.objectMapper = new ObjectMapper();
+        this.game = this.load(resourcePath);
+        this.loadComponents();
     }
 
     public GameConfig load(String resourcePath) {
         try (InputStream inputStream = getClass().getResourceAsStream(resourcePath)) {
-
             if (inputStream == null) {
                 throw new IllegalArgumentException(
                         "JSON config file not found: " + resourcePath);
             }
-
             return objectMapper.readValue(inputStream, GameConfig.class);
-
         } catch (Exception e) {
             throw new RuntimeException(
                     "Could not load game config from: " + resourcePath, e);
         }
     }
+
+    private void loadComponents() {
+        this.loadMedia();
+        this.loadWeapons();
+    }
+
+    private void loadMedia() {
+        this.animations = new AnimationFactory().buildAll(this.game.getAnimations());
+        this.sounds = new SoundFactory().buildAll(this.game.getSounds());
+    }
+
+    private void loadWeapons() {
+        this.shots = new ShotFactory().buildAll(this.game.getShots(), this.animations);
+        this.weapons = new WeaponFactory().buildAll(this.game.getWeapons(), this.shots);
+    }
+
+    public Agent createProtagonist() {
+        String protagonistId = this.game.getProtagonist();
+        AgentConfig agentConfig = this.game.getAgents().get(protagonistId);
+        AgentFactory agentFactory = new AgentFactory(animations, sounds, weapons);
+        return agentFactory.create(protagonistId, agentConfig);
+    }
+
+    public MenuHandler createMenuHandler() {
+        return new MenuFactory().buildMenuHandler(
+                this.game.getMenus(),
+                this.game.getMenuHandler());
+    }
+
 }

@@ -1,4 +1,113 @@
 {
+    "menus": {
+        "settings": {
+            "title": "SETTINGS",
+            "heightProportion": 0.7,
+            "width": 400,
+            "items": [
+                {
+                    "title": "[-] Sound [+]",
+                    "action": "VOLUME"
+                },
+                {
+                    "title": "Return",
+                    "action": "POP"
+                }
+            ]
+        },
+        "start": {
+            "title": "MENU",
+            "heightProportion": 0.7,
+            "width": 400,
+            "items": [
+                {
+                    "title": "Start",
+                    "action": "START"
+                },
+                {
+                    "title": "Settings",
+                    "action": "ENTER",
+                    "target": "settings"
+                },
+                {
+                    "title": "About",
+                    "action": "NONE"
+                }
+            ]
+        },
+        "skip": {
+            "title": "",
+            "heightProportion": 0.7,
+            "width": 1000,
+            "items": [
+                {
+                    "title": "Next",
+                    "action": "START"
+                },
+                {
+                    "title": "Skip",
+                    "action": "SKIP"
+                }
+            ]
+        },
+        "pause": {
+            "title": "PAUSED",
+            "heightProportion": 0.63,
+            "width": 400,
+            "items": [
+                {
+                    "title": "Back",
+                    "action": "CONTINUE"
+                },
+                {
+                    "title": "Debug",
+                    "action": "DEBUG"
+                },
+                {
+                    "title": "Settings",
+                    "action": "ENTER",
+                    "target": "settings"
+                },
+                {
+                    "title": "Exit",
+                    "action": "RESET"
+                }
+            ]
+        },
+        "gameOver": {
+            "title": "GAME OVER",
+            "heightProportion": 0.7,
+            "width": 400,
+            "items": [
+                {
+                    "title": "Continue",
+                    "action": "CONTINUE"
+                },
+                {
+                    "title": "Exit",
+                    "action": "RESET"
+                }
+            ]
+        },
+        "winning": {
+            "title": "THE END",
+            "heightProportion": 0.7,
+            "width": 400,
+            "items": [
+                {
+                    "title": "Exit",
+                    "action": "RESET"
+                }
+            ]
+        }
+    },
+    "menuHandler": {
+        "start": "start",
+        "pause": "pause",
+        "skip": "skip",
+        "gameOver": "gameOver",
+        "winning": "winning"
+    },
     "protagonist": "chonBota",
     "agents": {
         "chonBota": {

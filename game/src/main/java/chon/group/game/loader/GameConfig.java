@@ -6,10 +6,13 @@ import java.util.Map;
 import chon.group.game.loader.config.agent.AgentConfig;
 import chon.group.game.loader.config.animation.AnimationConfig;
 import chon.group.game.loader.config.level.LevelConfig;
+import chon.group.game.loader.config.menu.MenuConfig;
+import chon.group.game.loader.config.menu.MenuHandlerConfig;
 import chon.group.game.loader.config.sound.SoundConfig;
 import chon.group.game.loader.config.weapon.ShotConfig;
 import chon.group.game.loader.config.weapon.WeaponConfig;
 
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public class GameConfig {
 
     private String protagonist;
@@ -19,6 +22,8 @@ public class GameConfig {
     private Map<String, SoundConfig> sounds;
     private Map<String, ShotConfig> shots;
     private Map<String, WeaponConfig> weapons;
+    private Map<String, MenuConfig> menus;
+    private MenuHandlerConfig menuHandler;
 
     private List<LevelConfig> levels;
 
@@ -70,6 +75,14 @@ public class GameConfig {
         this.weapons = weapons;
     }
 
+    public Map<String, MenuConfig> getMenus() {
+        return menus;
+    }
+
+    public void setMenus(Map<String, MenuConfig> menus) {
+        this.menus = menus;
+    }
+
     public List<LevelConfig> getLevels() {
         return levels;
     }
@@ -77,4 +90,13 @@ public class GameConfig {
     public void setLevels(List<LevelConfig> levels) {
         this.levels = levels;
     }
+
+    public MenuHandlerConfig getMenuHandler() {
+        return menuHandler;
+    }
+
+    public void setMenuHandler(MenuHandlerConfig menuHandler) {
+        this.menuHandler = menuHandler;
+    }
+
 }

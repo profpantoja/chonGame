@@ -2,7 +2,6 @@ package chon.group.game.loader;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import chon.group.game.animation.Animation;
 import chon.group.game.animation.AnimationType;
@@ -18,17 +17,7 @@ import chon.group.game.core.environment.behavior.BeatThemUp;
 import chon.group.game.core.environment.behavior.ShootThemUp;
 import chon.group.game.core.weapon.ConcreteShot;
 import chon.group.game.core.weapon.ConcreteWeapon;
-import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Weapon;
-import chon.group.game.loader.config.agent.AgentConfig;
-import chon.group.game.loader.factory.AgentFactory;
-import chon.group.game.loader.factory.AnimationFactory;
-import chon.group.game.loader.factory.ShotFactory;
-import chon.group.game.loader.factory.SoundFactory;
-import chon.group.game.loader.factory.WeaponFactory;
-import chon.group.game.menu.Action;
-import chon.group.game.menu.Item;
-import chon.group.game.menu.Menu;
 import chon.group.game.menu.MenuHandler;
 import chon.group.game.sound.Sound;
 import chon.group.game.sound.SoundEvent;
@@ -89,19 +78,9 @@ public class GameSet {
 
         private void load() {
                 /* Just testing the loader. It needs to be removed. */
-                GameLoader loader = new GameLoader();
-                GameConfig config = loader.load("/game.json");
-                String protagonistId = config.getProtagonist();
-
-                AgentConfig agentConfig = config.getAgents().get(protagonistId);
-
-                Map<String, Animation> animations = new AnimationFactory().buildAll(config.getAnimations());
-                Map<String, Sound> sounds = new SoundFactory().buildAll(config.getSounds());
-                Map<String, Shot> shots = new ShotFactory().buildAll(config.getShots(), animations);
-                Map<String, Weapon> weapons = new WeaponFactory().buildAll(config.getWeapons(), shots);
-                AgentFactory agentFactory = new AgentFactory(animations, sounds, weapons);
-
-                Agent protagonist = agentFactory.create(protagonistId, agentConfig);
+                GameLoader loader = new GameLoader("/game.json");
+                Agent protagonist = loader.createProtagonist();
+                this.menu = loader.createMenuHandler();
 
                 /* Define some size properties for both Canvas and Environment */
                 this.canvasWidth = 1280;
@@ -112,64 +91,7 @@ public class GameSet {
                                 240,
                                 110);
 
-                /** Define the game's menus. */
-                Item settingsMenu1 = new Item("[-] Sound [+]", Action.VOLUME);
-                Item settingsMenu2 = new Item("Return", Action.POP);
-                Menu settingsMenu = new Menu(
-                                "SETTINGS",
-                                List.of(settingsMenu1, settingsMenu2),
-                                0.7,
-                                400);
-
-                Item startMenu1 = new Item("Start", Action.START);
-                Item startMenu2 = new Item("Settings", Action.ENTER, settingsMenu);
-                Item startMenu3 = new Item("About", Action.NONE);
-                Menu startMenu = new Menu(
-                                "MENU",
-                                List.of(startMenu1, startMenu2, startMenu3),
-                                0.7,
-                                400);
-
-                Item skipMenu1 = new Item("Next", Action.START);
-                Item skipMenu2 = new Item("Skip", Action.SKIP);
-                Menu skipMenu = new Menu(
-                                "",
-                                List.of(skipMenu1, skipMenu2),
-                                0.7,
-                                1000);
-
-                Item pauseMenu1 = new Item("Back", Action.CONTINUE);
-                Item pauseMenu2 = new Item("Debug", Action.DEBUG);
-                Item pauseMenu3 = new Item("Settings", Action.ENTER, settingsMenu);
-                Item pauseMenu4 = new Item("Exit", Action.RESET);
-                Menu pauseMenu = new Menu(
-                                "PAUSED",
-                                List.of(pauseMenu1, pauseMenu2, pauseMenu3, pauseMenu4),
-                                0.63,
-                                400);
-
-                Item gameOverMenu1 = new Item("Continue", Action.CONTINUE);
-                Item gameOverMenu2 = new Item("Exit", Action.RESET);
-                Menu gaveOverMenu = new Menu(
-                                "GAME OVER",
-                                List.of(gameOverMenu1, gameOverMenu2),
-                                0.7,
-                                400);
-
-                Item winningMenu1 = new Item("Exit", Action.RESET);
-                Menu winningMenu = new Menu(
-                                "THE END",
-                                List.of(winningMenu1),
-                                0.7,
-                                400);
-
-                this.menu = new MenuHandler(
-                                startMenu,
-                                pauseMenu,
-                                skipMenu,
-                                gaveOverMenu,
-                                winningMenu);
-
+               
                 /* Initialize the game environment, levels, agents and weapons */
                 Level level0 = new Level(StoryType.START, new BeatThemUp());
                 Animation level0Animation = new Animation();
@@ -685,7 +607,7 @@ public class GameSet {
                 Agent chonBot5 = chonBot.copy(1500, 500);
 
                 /* Setting the protagonist and some Images in the Environment system. */
-                //environment.setProtagonist(chonBota);
+                // environment.setProtagonist(chonBota);
                 environment.setProtagonist(protagonist);
                 environment.setPauseImage("/images/environment/pause.png");
                 environment.setGameOverImage("/images/environment/gameover.png");
