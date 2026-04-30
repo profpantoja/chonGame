@@ -1,5 +1,6 @@
 package chon.group.game.loader.config.level;
 
+import java.util.List;
 import java.util.Map;
 
 public class LevelConfig {
@@ -13,6 +14,8 @@ public class LevelConfig {
     private String text;
     private String animation;
     private Map<String, String> sounds;
+    private List<LevelAgentConfig> agents;
+    private List<LevelObjectConfig> objects;
 
     public String getId() {
         return id;
@@ -80,6 +83,22 @@ public class LevelConfig {
 
     public Map<String, String> getSounds() {
         return sounds;
+    }
+
+    public List<LevelAgentConfig> getAgents() {
+        return agents;
+    }
+
+    public void setAgents(List<LevelAgentConfig> agents) {
+        this.agents = agents;
+    }
+
+    public List<LevelObjectConfig> getObjects() {
+        return objects;
+    }
+
+    public void setObjects(List<LevelObjectConfig> objects) {
+        this.objects = objects;
     }
 
 }

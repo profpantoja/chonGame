@@ -17,6 +17,7 @@ import chon.group.game.loader.factory.AgentFactory;
 import chon.group.game.loader.factory.AnimationFactory;
 import chon.group.game.loader.factory.LevelFactory;
 import chon.group.game.loader.factory.MenuFactory;
+import chon.group.game.loader.factory.ObjectFactory;
 import chon.group.game.loader.factory.ShotFactory;
 import chon.group.game.loader.factory.SoundFactory;
 import chon.group.game.loader.factory.WeaponFactory;
@@ -84,12 +85,30 @@ public class GameLoader {
         if (index < 0 || index >= levelConfigs.size()) {
             throw new IllegalArgumentException("Invalid level index: " + index);
         }
-        LevelFactory factory = new LevelFactory(this.animations, this.sounds);
+        LevelFactory factory = new LevelFactory(
+                this.animations,
+                this.sounds,
+                game.getAgents(),
+                new AgentFactory(
+                        this.animations,
+                        this.sounds,
+                        this.weapons),
+                game.getObjects(),
+                new ObjectFactory(this.animations, this.sounds));
         return factory.build(levelConfigs.get(index));
     }
 
     public List<Level> createLevels() {
-        return new LevelFactory(this.animations, this.sounds)
+        return new LevelFactory(
+                this.animations,
+                this.sounds,
+                game.getAgents(),
+                new AgentFactory(
+                        this.animations,
+                        this.sounds,
+                        this.weapons),
+                game.getObjects(),
+                new ObjectFactory(this.animations, this.sounds))
                 .buildAll(this.game.getLevels());
     }
 

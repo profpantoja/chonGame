@@ -8,6 +8,7 @@ import chon.group.game.loader.config.animation.AnimationConfig;
 import chon.group.game.loader.config.level.LevelConfig;
 import chon.group.game.loader.config.menu.MenuConfig;
 import chon.group.game.loader.config.menu.MenuHandlerConfig;
+import chon.group.game.loader.config.object.ObjectConfig;
 import chon.group.game.loader.config.sound.SoundConfig;
 import chon.group.game.loader.config.weapon.ShotConfig;
 import chon.group.game.loader.config.weapon.WeaponConfig;
@@ -18,6 +19,7 @@ public class GameConfig {
     private String protagonist;
 
     private Map<String, AgentConfig> agents;
+    private Map<String, ObjectConfig> objects;
     private Map<String, AnimationConfig> animations;
     private Map<String, SoundConfig> sounds;
     private Map<String, ShotConfig> shots;
@@ -41,6 +43,14 @@ public class GameConfig {
 
     public void setAgents(Map<String, AgentConfig> agents) {
         this.agents = agents;
+    }
+
+    public Map<String, ObjectConfig> getObjects() {
+        return objects;
+    }
+
+    public void setObjects(Map<String, ObjectConfig> objects) {
+        this.objects = objects;
     }
 
     public Map<String, AnimationConfig> getAnimations() {

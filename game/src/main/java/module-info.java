@@ -11,6 +11,7 @@ module chon.group {
     opens chon.group.game.loader.config.sound to com.fasterxml.jackson.databind;
     opens chon.group.game.loader.config.animation to com.fasterxml.jackson.databind;
     opens chon.group.game.loader.config.agent to com.fasterxml.jackson.databind;
+    opens chon.group.game.loader.config.object to com.fasterxml.jackson.databind;
     opens chon.group.game.loader.config.weapon to com.fasterxml.jackson.databind;
     opens chon.group.game.loader.config.menu to com.fasterxml.jackson.databind;
     opens chon.group.game.loader.config.level to com.fasterxml.jackson.databind;

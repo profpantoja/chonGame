@@ -139,7 +139,7 @@
             "sounds": {
                 "ATTACK": "chonBota_shot",
                 "WALK": "chonBota_walk",
-                "DAMAGE": "chonBota_hit",
+                "DAMAGE": "chonBota_shooting",
                 "TERMINATE": "chonBota_terminate"
             },
             "weapons": [
@@ -147,7 +147,93 @@
                 "bareHands",
                 "lancer"
             ],
-            "defaultWeapon": "bareHands"
+            "defaultWeapon": "lancer"
+        },
+        "chonBot": {
+            "position": {
+                "x": 920,
+                "y": 440
+            },
+            "size": {
+                "width": 65,
+                "height": 90,
+                "hitboxRatio": 0.6
+            },
+            "stats": {
+                "speed": 1,
+                "health": 500
+            },
+            "state": {
+                "direction": "IDLE",
+                "flipped": false,
+                "visibleBars": false
+            },
+            "animations": {
+                "IDLE": "chonBot_idle",
+                "TERMINATE": "chonBot_dead"
+            },
+            "sounds": {
+                "TERMINATE": "chonBota_terminate"
+            }
+        }
+    },
+    "objects": {
+        "coin": {
+            "size": {
+                "width": 32,
+                "height": 32,
+                "hitboxRatio": 1
+            },
+            "stats": {
+                "speed": 0,
+                "health": 0
+            },
+            "state": {
+                "direction": "IDLE",
+                "flipped": false,
+                "visibleBars": false
+            },
+            "properties": {
+                "collectible": true,
+                "destructible": false,
+                "value": 200
+            },
+            "animations": {
+                "IDLE": "coin_idle",
+                "TERMINATE": "coin_terminate"
+            },
+            "sounds": {
+                "COLLECT": "coin_collect"
+            }
+        },
+        "box": {
+            "size": {
+                "width": 64,
+                "height": 32,
+                "hitboxRatio": 0.4
+            },
+            "stats": {
+                "speed": 0,
+                "health": 1000
+            },
+            "state": {
+                "direction": "IDLE",
+                "flipped": false,
+                "visibleBars": false
+            },
+            "properties": {
+                "collectible": false,
+                "destructible": true,
+                "value": 1
+            },
+            "animations": {
+                "IDLE": "box_idle",
+                "DAMAGE": "box_hit",
+                "TERMINATE": "box_terminate"
+            },
+            "sounds": {
+                "TERMINATE": "box_terminate"
+            }
         }
     },
     "animations": {
@@ -419,6 +505,106 @@
                 }
             ]
         },
+        "coin_idle": {
+            "duration": 200,
+            "loop": true,
+            "frames": [
+                {
+                    "image": "/images/objects/chonCoin/coin_001.png",
+                    "width": 32,
+                    "height": 32
+                },
+                {
+                    "image": "/images/objects/chonCoin/coin_002.png",
+                    "width": 32,
+                    "height": 32
+                },
+                {
+                    "image": "/images/objects/chonCoin/coin_003.png",
+                    "width": 32,
+                    "height": 32
+                },
+                {
+                    "image": "/images/objects/chonCoin/coin_004.png",
+                    "width": 32,
+                    "height": 32
+                },
+                {
+                    "image": "/images/objects/chonCoin/coin_003.png",
+                    "width": 32,
+                    "height": 32
+                },
+                {
+                    "image": "/images/objects/chonCoin/coin_002.png",
+                    "width": 32,
+                    "height": 32
+                }
+            ]
+        },
+        "coin_terminate": {
+            "duration": 100,
+            "loop": false,
+            "frames": [
+                {
+                    "image": "/images/objects/chonCoin/coin_001.png",
+                    "width": 32,
+                    "height": 32
+                }
+            ]
+        },
+        "box_idle": {
+            "duration": 200,
+            "loop": true,
+            "frames": [
+                {
+                    "image": "/images/objects/box/box_001.png",
+                    "width": 64,
+                    "height": 64
+                }
+            ]
+        },
+        "box_terminate": {
+            "duration": 100,
+            "loop": false,
+            "frames": [
+                {
+                    "image": "/images/objects/box/box_002.png",
+                    "width": 64,
+                    "height": 64
+                },
+                {
+                    "image": "/images/objects/box/box_003.png",
+                    "width": 64,
+                    "height": 64
+                },
+                {
+                    "image": "/images/objects/box/box_004.png",
+                    "width": 64,
+                    "height": 64
+                },
+                {
+                    "image": "/images/objects/box/box_005.png",
+                    "width": 64,
+                    "height": 64
+                },
+                {
+                    "image": "/images/objects/box/box_006.png",
+                    "width": 64,
+                    "height": 64
+                }
+            ]
+        },
+        "box_hit": {
+            "duration": 100,
+            "loop": false,
+            "frames": [
+                {
+                    "image": "/images/objects/box/box_002.png",
+                    "width": 64,
+                    "height": 64
+                }
+            ]
+        },
         "level0_background": {
             "duration": 200,
             "loop": true,
@@ -506,6 +692,78 @@
                     "height": 780
                 }
             ]
+        },
+        "chonBot_idle": {
+            "duration": 200,
+            "loop": true,
+            "frames": [
+                {
+                    "image": "/images/agents/chonBot/idle/chonBot_001.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBot/idle/chonBot_002.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBot/idle/chonBot_003.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBot/idle/chonBot_004.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBot/idle/chonBot_004.png",
+                    "width": 65,
+                    "height": 90
+                }
+            ]
+        },
+        "chonBot_dead": {
+            "duration": 200,
+            "loop": false,
+            "frames": [
+                {
+                    "image": "/images/agents/chonBot/dead/chonBot_dead_001.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBot/dead/chonBot_dead_002.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBot/dead/chonBot_dead_002.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBot/dead/chonBot_dead_003.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBot/dead/chonBot_dead_003.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBot/dead/chonBot_dead_004.png",
+                    "width": 65,
+                    "height": 90
+                },
+                {
+                    "image": "/images/agents/chonBot/dead/chonBot_dead_005.png",
+                    "width": 65,
+                    "height": 90
+                }
+            ]
         }
     },
     "sounds": {
@@ -553,6 +811,16 @@
             "path": "/sounds/levels/castleMusic.mp3",
             "type": "MUSIC",
             "loop": true
+        },
+        "box_terminate": {
+            "path": "/sounds/objects/crate_terminate.wav",
+            "type": "SFX",
+            "loop": false
+        },
+        "coin_collect": {
+            "path": "/sounds/objects/coin.wav",
+            "type": "SFX",
+            "loop": false
         }
     },
     "shots": {
@@ -651,7 +919,264 @@
             "sounds": {
                 "AMBIENT": "forestAmbient",
                 "BACKGROUND": "forestMusic"
-            }
+            },
+            "agents": [
+                {
+                    "ref": "chonBot",
+                    "spawn": {
+                        "x": 920,
+                        "y": 440
+                    }
+                },
+                {
+                    "ref": "chonBot",
+                    "spawn": {
+                        "x": 2920,
+                        "y": 640
+                    },
+                    "visibleBars": true
+                },
+                {
+                    "ref": "chonBot",
+                    "spawn": {
+                        "x": 4920,
+                        "y": 300
+                    }
+                },
+                {
+                    "ref": "chonBot",
+                    "spawn": {
+                        "x": 6920,
+                        "y": 500
+                    },
+                    "visibleBars": true
+                }
+            ],
+            "objects": [
+                {
+                    "ref": "coin",
+                    "spawn": {
+                        "x": 200,
+                        "y": 380
+                    }
+                },
+                {
+                    "ref": "coin",
+                    "spawn": {
+                        "x": 30,
+                        "y": 300
+                    }
+                },
+                {
+                    "ref": "coin",
+                    "spawn": {
+                        "x": 400,
+                        "y": 380
+                    },
+                    "destructible": true,
+                    "visibleBars": true
+                },
+                {
+                    "ref": "coin",
+                    "spawn": {
+                        "x": 1000,
+                        "y": 280
+                    }
+                },
+                {
+                    "ref": "coin",
+                    "spawn": {
+                        "x": 2300,
+                        "y": 300
+                    }
+                },
+                {
+                    "ref": "coin",
+                    "spawn": {
+                        "x": 3400,
+                        "y": 600
+                    }
+                },
+                {
+                    "ref": "coin",
+                    "spawn": {
+                        "x": 4100,
+                        "y": 320
+                    }
+                },
+                {
+                    "ref": "coin",
+                    "spawn": {
+                        "x": 5000,
+                        "y": 500
+                    }
+                },
+                {
+                    "ref": "coin",
+                    "spawn": {
+                        "x": 6200,
+                        "y": 600
+                    }
+                },
+                {
+                    "ref": "coin",
+                    "spawn": {
+                        "x": 6400,
+                        "y": 350
+                    }
+                },
+                {
+                    "ref": "coin",
+                    "spawn": {
+                        "x": 7000,
+                        "y": 600
+                    }
+                },
+                {
+                    "ref": "coin",
+                    "spawn": {
+                        "x": 7200,
+                        "y": 500
+                    }
+                },
+                {
+                    "ref": "coin",
+                    "spawn": {
+                        "x": 7400,
+                        "y": 500
+                    }
+                },
+                {
+                    "ref": "box",
+                    "spawn": {
+                        "x": 1200,
+                        "y": 596
+                    }
+                },
+                {
+                    "ref": "box",
+                    "spawn": {
+                        "x": 1200,
+                        "y": 650
+                    }
+                },
+                {
+                    "ref": "box",
+                    "spawn": {
+                        "x": 1200,
+                        "y": 704
+                    },
+                    "destructible": false
+                },
+                {
+                    "ref": "box",
+                    "spawn": {
+                        "x": 1900,
+                        "y": 350
+                    }
+                },
+                {
+                    "ref": "box",
+                    "spawn": {
+                        "x": 2150,
+                        "y": 550
+                    }
+                },
+                {
+                    "ref": "box",
+                    "spawn": {
+                        "x": 2500,
+                        "y": 680
+                    }
+                },
+                {
+                    "ref": "box",
+                    "spawn": {
+                        "x": 2700,
+                        "y": 450
+                    }
+                },
+                {
+                    "ref": "box",
+                    "spawn": {
+                        "x": 2850,
+                        "y": 650
+                    },
+                    "visibleBars": true,
+                    "health": 5000,
+                    "flipped": true
+                },
+                {
+                    "ref": "box",
+                    "spawn": {
+                        "x": 3150,
+                        "y": 450
+                    }
+                },
+                {
+                    "ref": "box",
+                    "spawn": {
+                        "x": 3500,
+                        "y": 350
+                    }
+                },
+                {
+                    "ref": "box",
+                    "spawn": {
+                        "x": 3850,
+                        "y": 550
+                    }
+                },
+                {
+                    "ref": "box",
+                    "spawn": {
+                        "x": 4350,
+                        "y": 550
+                    }
+                },
+                {
+                    "ref": "box",
+                    "spawn": {
+                        "x": 4550,
+                        "y": 550
+                    }
+                },
+                {
+                    "ref": "box",
+                    "spawn": {
+                        "x": 4650,
+                        "y": 350
+                    }
+                },
+                {
+                    "ref": "box",
+                    "spawn": {
+                        "x": 4850,
+                        "y": 600
+                    }
+                },
+                {
+                    "ref": "box",
+                    "spawn": {
+                        "x": 5150,
+                        "y": 450
+                    }
+                },
+                {
+                    "ref": "box",
+                    "spawn": {
+                        "x": 5350,
+                        "y": 300
+                    }
+                },
+                {
+                    "ref": "box",
+                    "spawn": {
+                        "x": 5600,
+                        "y": 550
+                    }
+                }
+            ]
         },
         {
             "id": "level5",
@@ -670,7 +1195,24 @@
             "sounds": {
                 "AMBIENT": "castleAmbient",
                 "BACKGROUND": "castleMusic"
-            }
+            },
+            "agents": [
+                {
+                    "ref": "chonBot",
+                    "spawn": {
+                        "x": 920,
+                        "y": 440
+                    }
+                },
+                {
+                    "ref": "chonBot",
+                    "spawn": {
+                        "x": 2920,
+                        "y": 640
+                    },
+                    "visibleBars": true
+                }
+            ]
         },
         {
             "id": "level7",
@@ -678,7 +1220,16 @@
             "topY": 0,
             "bottomY": 780,
             "behavior": "shootThemUp",
-            "animation": "level7_background"
+            "animation": "level7_background",
+            "objects": [
+                {
+                    "ref": "box",
+                    "spawn": {
+                        "x": 1200,
+                        "y": 596
+                    }
+                }
+            ]
         }
     ]
 }
