@@ -1,10 +1,18 @@
-package chon.group.game.loader.config.agent;
+package chon.group.game.loader.config.media.animation;
 
-public class SizeConfig {
+public class FrameConfig {
 
+    private String image;
     private int width;
     private int height;
-    private double hitboxRatio;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public int getWidth() {
         return width;
@@ -20,13 +28,5 @@ public class SizeConfig {
 
     public void setHeight(int height) {
         this.height = height;
-    }
-
-    public double getHitboxRatio() {
-        return hitboxRatio;
-    }
-
-    public void setHitboxRatio(double hitboxRatio) {
-        this.hitboxRatio = hitboxRatio;
     }
 }

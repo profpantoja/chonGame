@@ -1,4 +1,4 @@
-package chon.group.game.loader.config.weapon;
+package chon.group.game.loader.config.entity.weapon;
 
 public class WeaponConfig {
 

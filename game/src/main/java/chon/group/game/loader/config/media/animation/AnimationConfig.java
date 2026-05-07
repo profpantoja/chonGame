@@ -1,4 +1,4 @@
-package chon.group.game.loader.config.animation;
+package chon.group.game.loader.config.media.animation;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package chon.group.game.loader.config.sound;
+package chon.group.game.loader.config.media.sound;
 
 public class SoundConfig {
 

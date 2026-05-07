@@ -55,7 +55,7 @@ public class GameMediator implements GameDrawer {
     @Override
     public void renderGame() {
         this.beatThemUp();
-        // this.layeredGame();
+        //this.layeredGame();
     }
 
     @SuppressWarnings("unused")

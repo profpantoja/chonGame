@@ -12,11 +12,11 @@ import chon.group.game.core.environment.StoryType;
 import chon.group.game.core.environment.behavior.BeatThemUp;
 import chon.group.game.core.environment.behavior.EnvironmentBehavior;
 import chon.group.game.core.environment.behavior.ShootThemUp;
-import chon.group.game.loader.config.agent.AgentConfig;
+import chon.group.game.loader.config.entity.agent.AgentConfig;
+import chon.group.game.loader.config.entity.object.ObjectConfig;
 import chon.group.game.loader.config.level.LevelAgentConfig;
 import chon.group.game.loader.config.level.LevelConfig;
 import chon.group.game.loader.config.level.LevelObjectConfig;
-import chon.group.game.loader.config.object.ObjectConfig;
 import chon.group.game.sound.Sound;
 import chon.group.game.sound.SoundEvent;
 

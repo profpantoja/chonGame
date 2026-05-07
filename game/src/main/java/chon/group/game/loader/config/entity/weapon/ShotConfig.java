@@ -1,6 +1,6 @@
-package chon.group.game.loader.config.weapon;
+package chon.group.game.loader.config.entity.weapon;
 
-import chon.group.game.loader.config.agent.SizeConfig;
+import chon.group.game.loader.config.entity.agent.SizeConfig;
 
 public class ShotConfig {
 

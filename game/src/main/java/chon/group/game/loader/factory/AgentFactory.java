@@ -5,7 +5,7 @@ import java.util.Map;
 import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Direction;
 import chon.group.game.core.weapon.Weapon;
-import chon.group.game.loader.config.agent.AgentConfig;
+import chon.group.game.loader.config.entity.agent.AgentConfig;
 import chon.group.game.animation.Animation;
 import chon.group.game.animation.AnimationType;
 import chon.group.game.sound.Sound;

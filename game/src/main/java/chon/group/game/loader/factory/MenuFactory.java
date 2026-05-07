@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import chon.group.game.loader.config.menu.MenuConfig;
-import chon.group.game.loader.config.menu.MenuHandlerConfig;
-import chon.group.game.loader.config.menu.MenuItemConfig;
+import chon.group.game.loader.config.environment.menu.MenuConfig;
+import chon.group.game.loader.config.environment.menu.MenuHandlerConfig;
+import chon.group.game.loader.config.environment.menu.MenuItemConfig;
 import chon.group.game.menu.Action;
 import chon.group.game.menu.Item;
 import chon.group.game.menu.Menu;

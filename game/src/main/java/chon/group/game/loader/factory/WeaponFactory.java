@@ -7,7 +7,7 @@ import chon.group.game.core.weapon.ConcreteShot;
 import chon.group.game.core.weapon.ConcreteWeapon;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Weapon;
-import chon.group.game.loader.config.weapon.WeaponConfig;
+import chon.group.game.loader.config.entity.weapon.WeaponConfig;
 
 public class WeaponFactory {
 

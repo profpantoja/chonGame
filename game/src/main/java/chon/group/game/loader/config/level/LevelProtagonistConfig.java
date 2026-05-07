@@ -1,6 +1,6 @@
 package chon.group.game.loader.config.level;
 
-import chon.group.game.loader.config.agent.PositionConfig;
+import chon.group.game.loader.config.entity.agent.PositionConfig;
 
 public class LevelProtagonistConfig {
 

@@ -3,7 +3,7 @@ package chon.group.game.loader.factory;
 import java.util.HashMap;
 import java.util.Map;
 
-import chon.group.game.loader.config.sound.SoundConfig;
+import chon.group.game.loader.config.media.sound.SoundConfig;
 import chon.group.game.sound.Sound;
 import chon.group.game.sound.SoundType;
 

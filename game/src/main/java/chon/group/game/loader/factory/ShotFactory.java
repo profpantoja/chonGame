@@ -7,7 +7,7 @@ import chon.group.game.animation.Animation;
 import chon.group.game.animation.AnimationType;
 import chon.group.game.core.weapon.ConcreteShot;
 import chon.group.game.core.weapon.Shot;
-import chon.group.game.loader.config.weapon.ShotConfig;
+import chon.group.game.loader.config.entity.weapon.ShotConfig;
 
 public class ShotFactory {
 

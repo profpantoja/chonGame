@@ -5,8 +5,8 @@ import java.util.Map;
 
 import chon.group.game.animation.Animation;
 import chon.group.game.animation.Frame;
-import chon.group.game.loader.config.animation.AnimationConfig;
-import chon.group.game.loader.config.animation.FrameConfig;
+import chon.group.game.loader.config.media.animation.AnimationConfig;
+import chon.group.game.loader.config.media.animation.FrameConfig;
 import javafx.scene.image.Image;
 
 public class AnimationFactory {

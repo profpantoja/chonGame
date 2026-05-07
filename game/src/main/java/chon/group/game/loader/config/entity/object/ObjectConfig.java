@@ -1,28 +1,19 @@
-package chon.group.game.loader.config.agent;
+package chon.group.game.loader.config.entity.object;
 
-import java.util.List;
 import java.util.Map;
 
-public class AgentConfig {
+import chon.group.game.loader.config.entity.agent.SizeConfig;
+import chon.group.game.loader.config.entity.agent.StateConfig;
+import chon.group.game.loader.config.entity.agent.StatsConfig;
 
-    private PositionConfig position;
+public class ObjectConfig {
+
     private SizeConfig size;
     private StatsConfig stats;
     private StateConfig state;
-
+    private ObjectPropertiesConfig properties;
     private Map<String, String> animations;
     private Map<String, String> sounds;
-
-    private List<String> weapons;
-    private String defaultWeapon;
-
-    public PositionConfig getPosition() {
-        return position;
-    }
-
-    public void setPosition(PositionConfig position) {
-        this.position = position;
-    }
 
     public SizeConfig getSize() {
         return size;
@@ -48,6 +39,14 @@ public class AgentConfig {
         this.state = state;
     }
 
+    public ObjectPropertiesConfig getProperties() {
+        return properties;
+    }
+
+    public void setProperties(ObjectPropertiesConfig properties) {
+        this.properties = properties;
+    }
+
     public Map<String, String> getAnimations() {
         return animations;
     }
@@ -62,21 +61,5 @@ public class AgentConfig {
 
     public void setSounds(Map<String, String> sounds) {
         this.sounds = sounds;
-    }
-
-    public List<String> getWeapons() {
-        return weapons;
-    }
-
-    public void setWeapons(List<String> weapons) {
-        this.weapons = weapons;
-    }
-
-    public String getDefaultWeapon() {
-        return defaultWeapon;
-    }
-
-    public void setDefaultWeapon(String defaultWeapon) {
-        this.defaultWeapon = defaultWeapon;
     }
 }

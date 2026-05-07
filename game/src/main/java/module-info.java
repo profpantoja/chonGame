@@ -8,12 +8,15 @@ module chon.group {
     requires com.fasterxml.jackson.annotation;
 
     opens chon.group.game.loader to com.fasterxml.jackson.databind;
-    opens chon.group.game.loader.config.sound to com.fasterxml.jackson.databind;
-    opens chon.group.game.loader.config.animation to com.fasterxml.jackson.databind;
-    opens chon.group.game.loader.config.agent to com.fasterxml.jackson.databind;
-    opens chon.group.game.loader.config.object to com.fasterxml.jackson.databind;
-    opens chon.group.game.loader.config.weapon to com.fasterxml.jackson.databind;
-    opens chon.group.game.loader.config.menu to com.fasterxml.jackson.databind;
+    opens chon.group.game.loader.config.media to com.fasterxml.jackson.databind;
+    opens chon.group.game.loader.config.media.sound to com.fasterxml.jackson.databind;
+    opens chon.group.game.loader.config.media.animation to com.fasterxml.jackson.databind;
+    opens chon.group.game.loader.config.entity to com.fasterxml.jackson.databind;
+    opens chon.group.game.loader.config.entity.agent to com.fasterxml.jackson.databind;
+    opens chon.group.game.loader.config.entity.object to com.fasterxml.jackson.databind;
+    opens chon.group.game.loader.config.entity.weapon to com.fasterxml.jackson.databind;
+    opens chon.group.game.loader.config.environment to com.fasterxml.jackson.databind;
+    opens chon.group.game.loader.config.environment.menu to com.fasterxml.jackson.databind;
     opens chon.group.game.loader.config.level to com.fasterxml.jackson.databind;
 
     exports chon.group;

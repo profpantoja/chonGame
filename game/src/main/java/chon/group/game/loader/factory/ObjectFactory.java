@@ -6,7 +6,7 @@ import chon.group.game.animation.Animation;
 import chon.group.game.animation.AnimationType;
 import chon.group.game.core.agent.Direction;
 import chon.group.game.core.agent.Object;
-import chon.group.game.loader.config.object.ObjectConfig;
+import chon.group.game.loader.config.entity.object.ObjectConfig;
 import chon.group.game.sound.Sound;
 import chon.group.game.sound.SoundEvent;
 

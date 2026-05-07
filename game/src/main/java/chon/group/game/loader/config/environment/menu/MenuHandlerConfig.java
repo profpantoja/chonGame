@@ -1,4 +1,4 @@
-package chon.group.game.loader.config.menu;
+package chon.group.game.loader.config.environment.menu;
 
 public class MenuHandlerConfig {
 

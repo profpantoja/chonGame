@@ -11,7 +11,7 @@ import chon.group.game.core.agent.Agent;
 import chon.group.game.core.environment.Level;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Weapon;
-import chon.group.game.loader.config.agent.AgentConfig;
+import chon.group.game.loader.config.entity.agent.AgentConfig;
 import chon.group.game.loader.config.level.LevelConfig;
 import chon.group.game.loader.factory.AgentFactory;
 import chon.group.game.loader.factory.AnimationFactory;
@@ -58,26 +58,26 @@ public class GameLoader {
     }
 
     private void loadMedia() {
-        this.animations = new AnimationFactory().buildAll(this.game.getAnimations());
-        this.sounds = new SoundFactory().buildAll(this.game.getSounds());
+        this.animations = new AnimationFactory().buildAll(this.game.getMedia().getAnimations());
+        this.sounds = new SoundFactory().buildAll(this.game.getMedia().getSounds());
     }
 
     private void loadWeapons() {
-        this.shots = new ShotFactory().buildAll(this.game.getShots(), this.animations);
-        this.weapons = new WeaponFactory().buildAll(this.game.getWeapons(), this.shots);
+        this.shots = new ShotFactory().buildAll(this.game.getEntities().getShots(), this.animations);
+        this.weapons = new WeaponFactory().buildAll(this.game.getEntities().getWeapons(), this.shots);
     }
 
     public Agent createProtagonist() {
-        String protagonistId = this.game.getProtagonist();
-        AgentConfig agentConfig = this.game.getAgents().get(protagonistId);
+        String protagonistId = this.game.getEnvironment().getProtagonist();
+        AgentConfig agentConfig = this.game.getEntities().getAgents().get(protagonistId);
         AgentFactory agentFactory = new AgentFactory(animations, sounds, weapons);
         return agentFactory.create(protagonistId, agentConfig);
     }
 
     public MenuHandler createMenuHandler() {
         return new MenuFactory().buildMenuHandler(
-                this.game.getMenus(),
-                this.game.getMenuHandler());
+                this.game.getEnvironment().getMenus(),
+                this.game.getEnvironment().getMenuHandler());
     }
 
     public Level createLevel(int index) {
@@ -88,12 +88,12 @@ public class GameLoader {
         LevelFactory factory = new LevelFactory(
                 this.animations,
                 this.sounds,
-                game.getAgents(),
+                game.getEntities().getAgents(),
                 new AgentFactory(
                         this.animations,
                         this.sounds,
                         this.weapons),
-                game.getObjects(),
+                game.getEntities().getObjects(),
                 new ObjectFactory(this.animations, this.sounds));
         return factory.build(levelConfigs.get(index));
     }
@@ -102,12 +102,12 @@ public class GameLoader {
         return new LevelFactory(
                 this.animations,
                 this.sounds,
-                game.getAgents(),
+                game.getEntities().getAgents(),
                 new AgentFactory(
                         this.animations,
                         this.sounds,
                         this.weapons),
-                game.getObjects(),
+                game.getEntities().getObjects(),
                 new ObjectFactory(this.animations, this.sounds))
                 .buildAll(this.game.getLevels());
     }

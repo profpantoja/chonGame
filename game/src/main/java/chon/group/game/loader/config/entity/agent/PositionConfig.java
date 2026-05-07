@@ -1,4 +1,4 @@
-package chon.group.game.loader.config.agent;
+package chon.group.game.loader.config.entity.agent;
 
 public class PositionConfig {
 

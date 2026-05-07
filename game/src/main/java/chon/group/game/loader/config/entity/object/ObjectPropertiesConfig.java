@@ -1,4 +1,4 @@
-package chon.group.game.loader.config.object;
+package chon.group.game.loader.config.entity.object;
 
 public class ObjectPropertiesConfig {
 
