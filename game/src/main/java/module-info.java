@@ -9,8 +9,9 @@ module chon.group {
 
     opens chon.group.game.loader to com.fasterxml.jackson.databind;
     opens chon.group.game.loader.config.media to com.fasterxml.jackson.databind;
-    opens chon.group.game.loader.config.media.sound to com.fasterxml.jackson.databind;
     opens chon.group.game.loader.config.media.animation to com.fasterxml.jackson.databind;
+    opens chon.group.game.loader.config.media.screen to com.fasterxml.jackson.databind;
+    opens chon.group.game.loader.config.media.sound to com.fasterxml.jackson.databind;
     opens chon.group.game.loader.config.entity to com.fasterxml.jackson.databind;
     opens chon.group.game.loader.config.entity.agent to com.fasterxml.jackson.databind;
     opens chon.group.game.loader.config.entity.object to com.fasterxml.jackson.databind;

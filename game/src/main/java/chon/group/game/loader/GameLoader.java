@@ -22,6 +22,7 @@ import chon.group.game.loader.factory.AnimationFactory;
 import chon.group.game.loader.factory.LevelFactory;
 import chon.group.game.loader.factory.MenuFactory;
 import chon.group.game.loader.factory.ObjectFactory;
+import chon.group.game.loader.factory.ScreenFactory;
 import chon.group.game.loader.factory.ShotFactory;
 import chon.group.game.loader.factory.SoundFactory;
 import chon.group.game.loader.factory.WeaponFactory;
@@ -94,6 +95,9 @@ public class GameLoader {
         environment.getLevels().addAll(this.createLevels());
         environment.setCurrentLevel(environment.getLevels().get(0));
         environment.setProtagonist(this.createProtagonist());
+        new ScreenFactory().apply(
+                environment,
+                this.game.getMedia().getScreens());
         return environment;
     }
 

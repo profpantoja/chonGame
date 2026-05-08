@@ -14,7 +14,7 @@
         "camera": {
             "width": 1280,
             "height": 780,
-            "leftBoundaryRate": 0.0,
+            "leftBoundaryRate": 0.49,
             "rightBoundaryRate": 0.51
         },
         "menus": {
@@ -128,6 +128,11 @@
         }
     },
     "media": {
+        "screens": {
+            "pause": "/images/environment/pause.png",
+            "gameOver": "/images/environment/gameover.png",
+            "theEnd": "/images/environment/theEnd.png"
+        },
         "animations": {
             "chonBota_idle": {
                 "duration": 200,

@@ -58,18 +58,11 @@ public class GameSet {
 
         private void load() {
                 GameLoader loader = new GameLoader("/game.json");
-
                 this.menu = loader.createMenuHandler();
                 this.environment = loader.createEnvironment();
-
                 /* Define some size properties for both Canvas and Environment */
                 this.canvasWidth = loader.getDisplayWidth();
                 this.canvasHeight = loader.getDisplayHeight();
-
-                environment.setPauseImage("/images/environment/pause.png");
-                environment.setGameOverImage("/images/environment/gameover.png");
-                environment.setTheEndImage("/images/environment/theEnd.png");
-
         }
 
 }
