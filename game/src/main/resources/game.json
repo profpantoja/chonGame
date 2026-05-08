@@ -1,6 +1,22 @@
 {
     "environment": {
         "protagonist": "chonBota",
+        "display": {
+            "canvasWidth": 1280,
+            "canvasHeight": 780
+        },
+        "ui": {
+            "panel": {
+                "width": 240,
+                "height": 110
+            }
+        },
+        "camera": {
+            "width": 1280,
+            "height": 780,
+            "leftBoundaryRate": 0.0,
+            "rightBoundaryRate": 0.51
+        },
         "menus": {
             "settings": {
                 "title": "SETTINGS",

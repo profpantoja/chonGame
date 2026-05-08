@@ -8,9 +8,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import chon.group.game.animation.Animation;
 import chon.group.game.core.agent.Agent;
+import chon.group.game.core.environment.Environment;
 import chon.group.game.core.environment.Level;
+import chon.group.game.core.environment.Panel;
 import chon.group.game.core.weapon.Shot;
 import chon.group.game.core.weapon.Weapon;
+import chon.group.game.loader.config.environment.EnvironmentConfig;
+import chon.group.game.loader.config.environment.camera.CameraConfig;
 import chon.group.game.loader.config.entity.agent.AgentConfig;
 import chon.group.game.loader.config.level.LevelConfig;
 import chon.group.game.loader.factory.AgentFactory;
@@ -72,6 +76,37 @@ public class GameLoader {
         AgentConfig agentConfig = this.game.getEntities().getAgents().get(protagonistId);
         AgentFactory agentFactory = new AgentFactory(animations, sounds, weapons);
         return agentFactory.create(protagonistId, agentConfig);
+    }
+
+    public Environment createEnvironment() {
+        EnvironmentConfig environmentConfig = this.game.getEnvironment();
+        CameraConfig cameraConfig = environmentConfig.getCamera();
+        Panel panel = new Panel(
+                environmentConfig.getUi().getPanel().getWidth(),
+                environmentConfig.getUi().getPanel().getHeight());
+        Level firstLevel = this.createLevel(0);
+        Environment environment = new Environment(
+                firstLevel.getWidth(),
+                cameraConfig.getWidth(),
+                panel,
+                cameraConfig.getLeftBoundaryRate(),
+                cameraConfig.getRightBoundaryRate());
+        environment.getLevels().addAll(this.createLevels());
+        environment.setCurrentLevel(environment.getLevels().get(0));
+        environment.setProtagonist(this.createProtagonist());
+        return environment;
+    }
+
+    public int getDisplayWidth() {
+        return this.game.getEnvironment()
+                .getDisplay()
+                .getCanvasWidth();
+    }
+
+    public int getDisplayHeight() {
+        return this.game.getEnvironment()
+                .getDisplay()
+                .getCanvasHeight();
     }
 
     public MenuHandler createMenuHandler() {
