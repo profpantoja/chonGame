@@ -139,59 +139,44 @@
                 "loop": true,
                 "frames": [
                     {
-                        "image": "/images/agents/teddy/idle/teddy-idle-001.png",
-                        "width": 90,
-                        "height": 80
+                        "image": "/images/agents/chonBota/idle/chonBota_001.png",
+                        "width": 65,
+                        "height": 90
                     },
                     {
-                        "image": "/images/agents/teddy/idle/teddy-idle-002.png",
-                        "width": 90,
-                        "height": 80
+                        "image": "/images/agents/chonBota/idle/chonBota_002.png",
+                        "width": 65,
+                        "height": 90
                     },
                     {
-                        "image": "/images/agents/teddy/idle/teddy-idle-003.png",
-                        "width": 90,
-                        "height": 80
+                        "image": "/images/agents/chonBota/idle/chonBota_003.png",
+                        "width": 65,
+                        "height": 90
                     },
                     {
-                        "image": "/images/agents/teddy/idle/teddy-idle-004.png",
-                        "width": 90,
-                        "height": 80
+                        "image": "/images/agents/chonBota/idle/chonBota_004.png",
+                        "width": 65,
+                        "height": 90
                     },
                     {
-                        "image": "/images/agents/teddy/idle/teddy-idle-004.png",
-                        "width": 90,
-                        "height": 80
+                        "image": "/images/agents/chonBota/idle/chonBota_004.png",
+                        "width": 65,
+                        "height": 90
                     },
                     {
-                        "image": "/images/agents/teddy/idle/teddy-idle-005.png",
-                        "width": 90,
-                        "height": 80
+                        "image": "/images/agents/chonBota/idle/chonBota_005.png",
+                        "width": 65,
+                        "height": 90
                     },
                     {
-                        "image": "/images/agents/teddy/idle/teddy-idle-005.png",
-                        "width": 90,
-                        "height": 80
+                        "image": "/images/agents/chonBota/idle/chonBota_005.png",
+                        "width": 65,
+                        "height": 90
                     },
                     {
-                        "image": "/images/agents/teddy/idle/teddy-idle-006.png",
-                        "width": 90,
-                        "height": 80
-                    },
-                    {
-                        "image": "/images/agents/teddy/idle/teddy-idle-007.png",
-                        "width": 90,
-                        "height": 80
-                    },
-                    {
-                        "image": "/images/agents/teddy/idle/teddy-idle-008.png",
-                        "width": 90,
-                        "height": 80
-                    },
-                    {
-                        "image": "/images/agents/teddy/idle/teddy-idle-009.png",
-                        "width": 90,
-                        "height": 80
+                        "image": "/images/agents/chonBota/idle/chonBota_006.png",
+                        "width": 65,
+                        "height": 90
                     }
                 ]
             },
@@ -200,54 +185,54 @@
                 "loop": true,
                 "frames": [
                     {
-                        "image": "/images/agents/teddy/walk/teddy-walking-001.png",
-                        "width": 90,
-                        "height": 80
+                        "image": "/images/agents/chonBota/walk/chonBota_Walk_001.png",
+                        "width": 65,
+                        "height": 90
                     },
                     {
-                        "image": "/images/agents/teddy/walk/teddy-walking-002.png",
-                        "width": 90,
-                        "height": 80
+                        "image": "/images/agents/chonBota/walk/chonBota_Walk_002.png",
+                        "width": 65,
+                        "height": 90
                     },
                     {
-                        "image": "/images/agents/teddy/walk/teddy-walking-003.png",
-                        "width": 90,
-                        "height": 80
+                        "image": "/images/agents/chonBota/walk/chonBota_Walk_003.png",
+                        "width": 65,
+                        "height": 90
                     },
                     {
-                        "image": "/images/agents/teddy/walk/teddy-walking-004.png",
-                        "width": 90,
-                        "height": 80
+                        "image": "/images/agents/chonBota/walk/chonBota_Walk_004.png",
+                        "width": 65,
+                        "height": 90
                     },
                     {
-                        "image": "/images/agents/teddy/walk/teddy-walking-005.png",
-                        "width": 90,
-                        "height": 80
+                        "image": "/images/agents/chonBota/walk/chonBota_Walk_005.png",
+                        "width": 65,
+                        "height": 90
                     },
                     {
-                        "image": "/images/agents/teddy/walk/teddy-walking-006.png",
-                        "width": 90,
-                        "height": 80
+                        "image": "/images/agents/chonBota/walk/chonBota_Walk_006.png",
+                        "width": 65,
+                        "height": 90
                     },
                     {
-                        "image": "/images/agents/teddy/walk/teddy-walking-007.png",
-                        "width": 90,
-                        "height": 80
+                        "image": "/images/agents/chonBota/walk/chonBota_Walk_007.png",
+                        "width": 65,
+                        "height": 90
                     },
                     {
-                        "image": "/images/agents/teddy/walk/teddy-walking-008.png",
-                        "width": 90,
-                        "height": 80
+                        "image": "/images/agents/chonBota/walk/chonBota_Walk_008.png",
+                        "width": 65,
+                        "height": 90
                     },
                     {
-                        "image": "/images/agents/teddy/walk/teddy-walking-009.png",
-                        "width": 90,
-                        "height": 80
+                        "image": "/images/agents/chonBota/walk/chonBota_Walk_009.png",
+                        "width": 65,
+                        "height": 90
                     },
                     {
-                        "image": "/images/agents/teddy/walk/teddy-walking-010.png",
-                        "width": 90,
-                        "height": 80
+                        "image": "/images/agents/chonBota/walk/chonBota_Walk_010.png",
+                        "width": 65,
+                        "height": 90
                     }
                 ]
             },
@@ -256,9 +241,9 @@
                 "loop": false,
                 "frames": [
                     {
-                        "image": "/images/agents/teddy/attack/teddy-bark-001.png",
-                        "width": 90,
-                        "height": 80
+                        "image": "/images/agents/chonBota/attack/chonBota_Attack_001.png",
+                        "width": 65,
+                        "height": 90
                     }
                 ]
             },
@@ -744,8 +729,8 @@
                     "y": 390
                 },
                 "size": {
-                    "width": 90,
-                    "height": 80,
+                    "width": 65,
+                    "height": 90,
                     "hitboxRatio": 0.4
                 },
                 "stats": {
@@ -755,7 +740,7 @@
                 "state": {
                     "direction": "IDLE",
                     "flipped": false,
-                    "visibleBars": false
+                    "visibleBars": true
                 },
                 "animations": {
                     "IDLE": "chonBota_idle",
