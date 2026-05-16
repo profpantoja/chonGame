@@ -397,23 +397,32 @@
                 ]
             },
             "fireball_anim": {
-                "duration": 200,
-                "loop": true,
+                "duration": 50,
+                "loop": false,
                 "frames": [
                     {
-                        "image": "/images/weapons/fireball/fireball001.png",
-                        "width": 64,
-                        "height": 42
+                        "image": "/images/weapons/bark/bark-001.png",
+                        "width": 60,
+                        "height": 80
                     },
                     {
-                        "image": "/images/weapons/fireball/fireball002.png",
-                        "width": 64,
-                        "height": 42
+                        "image": "/images/weapons/bark/bark-002.png",
+                        "width": 60,
+                        "height": 80
                     },
                     {
-                        "image": "/images/weapons/fireball/fireball003.png",
-                        "width": 64,
-                        "height": 42
+                        "image": "/images/weapons/bark/bark-003.png",
+                        "width": 60,
+                        "height": 80
+                    },
+                                        {
+                        "image": "/images/weapons/bark/bark-004.png",
+                        "width": 60,
+                        "height": 80
+                    },                    {
+                        "image": "/images/weapons/bark/bark-005.png",
+                        "width": 60,
+                        "height": 80
                     }
                 ]
             },
@@ -680,7 +689,7 @@
         },
         "sounds": {
             "chonBota_shot": {
-                "path": "/sounds/agents/chonBota/lancer_shot.wav",
+                "path": "/sounds/agents/teddy/bark.wav",
                 "type": "SFX",
                 "loop": false
             },
@@ -749,7 +758,7 @@
                     "hitboxRatio": 0.4
                 },
                 "stats": {
-                    "speed": 2,
+                    "speed": 1,
                     "health": 5000
                 },
                 "state": {
@@ -878,12 +887,12 @@
             },
             "fireball": {
                 "size": {
-                    "width": 64,
-                    "height": 42
+                    "width": 60,
+                    "height": 80
                 },
-                "speed": 3,
+                "speed": 2,
                 "damage": 500,
-                "range": 1200,
+                "range": 150,
                 "destructible": false,
                 "animation": "fireball_anim"
             },
@@ -907,7 +916,7 @@
                 "shot": "missile"
             },
             "lancer": {
-                "offsetY": 30,
+                "offsetY": 5,
                 "energyCost": 0.05,
                 "cooldown": 300,
                 "shot": "fireball"
