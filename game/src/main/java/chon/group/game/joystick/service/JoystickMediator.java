@@ -19,8 +19,8 @@ public final class JoystickMediator implements GameJoystick {
     }
 
     @Override
-    public boolean consumePress(GameCommand command) {
-        return joystick.consumePress(command);
+    public boolean press(GameCommand command) {
+        return joystick.inPress(command);
     }
 
     @Override

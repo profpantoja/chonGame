@@ -91,7 +91,7 @@ public class PlayableState implements GameState {
         /**
          * If the player pressed the Pause buttom, the game moves to the pause state.
          */
-        if (!game.getJoystick().consumePress(GameCommand.PAUSE)) {
+        if (!game.getJoystick().press(GameCommand.PAUSE)) {
             return false;
         }
 
@@ -103,7 +103,7 @@ public class PlayableState implements GameState {
     private boolean handleAttack(Game game) {
         /** The protagonist Shoots Somebody Who Outdrew You */
         /** But only if it has enough energy */
-        if (!game.getJoystick().consumePress(GameCommand.ATTACK)) {
+        if (!game.getJoystick().press(GameCommand.ATTACK)) {
             return false;
         }
 

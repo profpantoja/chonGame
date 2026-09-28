@@ -91,6 +91,7 @@ public class GameMediator implements GameDrawer {
      * <li>Arcade-style 2D games with predefined visual layers</li>
      * </ul>
      */
+    @SuppressWarnings("unused")
     private void layeredGame() {
         this.drawBackground();
         this.drawAgents();

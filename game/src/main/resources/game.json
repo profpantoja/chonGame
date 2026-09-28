@@ -1,4 +1,10 @@
 {
+    "platform": {
+        "control": "LOCAL",
+        "api": {
+            "port": 8765
+        }
+    },
     "environment": {
         "protagonist": "chonBota",
         "display": {
@@ -415,11 +421,12 @@
                         "width": 60,
                         "height": 80
                     },
-                                        {
+                    {
                         "image": "/images/weapons/bark/bark-004.png",
                         "width": 60,
                         "height": 80
-                    },                    {
+                    },
+                    {
                         "image": "/images/weapons/bark/bark-005.png",
                         "width": 60,
                         "height": 80
@@ -758,7 +765,7 @@
                     "hitboxRatio": 0.4
                 },
                 "stats": {
-                    "speed": 4,
+                    "speed": 1,
                     "health": 5000
                 },
                 "state": {
@@ -797,7 +804,7 @@
                     "hitboxRatio": 0.6
                 },
                 "stats": {
-                    "speed": 2,
+                    "speed": 1,
                     "health": 500
                 },
                 "state": {
@@ -879,7 +886,7 @@
                     "width": 88,
                     "height": 64
                 },
-                "speed": 9,
+                "speed": 3,
                 "damage": 250,
                 "range": 1200,
                 "destructible": false,
@@ -890,7 +897,7 @@
                     "width": 60,
                     "height": 80
                 },
-                "speed": 9,
+                "speed": 2,
                 "damage": 500,
                 "range": 150,
                 "destructible": false,
@@ -901,7 +908,7 @@
                     "width": 30,
                     "height": 15
                 },
-                "speed": 9,
+                "speed": 3,
                 "damage": 500,
                 "range": 15,
                 "destructible": false,
@@ -1259,7 +1266,7 @@
                     "ref": "chonBot",
                     "spawn": {
                         "x": 2920,
-                        "y": 440
+                        "y": 640
                     },
                     "visibleBars": true
                 }

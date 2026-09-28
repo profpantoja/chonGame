@@ -31,7 +31,7 @@ public class ExternalJoystick extends Joystick {
     }
 
     @Override
-    public synchronized boolean consumePress(GameCommand command) {
+    public synchronized boolean inPress(GameCommand command) {
         return pressedCommands.remove(command);
     }
 

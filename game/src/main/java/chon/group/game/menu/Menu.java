@@ -85,18 +85,18 @@ public class Menu {
     }
 
     public Action handleAction(GameJoystick joystick) {
-        if (joystick.consumePress(GameCommand.CONFIRM)) {
+        if (joystick.press(GameCommand.CONFIRM)) {
             return this.items.get(this.index).getAction();
         }
 
-        if (joystick.consumePress(GameCommand.UP)) {
+        if (joystick.press(GameCommand.UP)) {
             this.index = (this.index - 1 + this.items.size())
                     % this.items.size();
 
             return Action.NONE;
         }
 
-        if (joystick.consumePress(GameCommand.DOWN)) {
+        if (joystick.press(GameCommand.DOWN)) {
             this.index = (this.index + 1) % this.items.size();
 
             return Action.NONE;

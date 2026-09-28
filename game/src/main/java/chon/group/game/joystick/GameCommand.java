@@ -7,5 +7,5 @@ public enum GameCommand {
     RIGHT,
     ATTACK,
     CONFIRM,
-    PAUSE,                             
+    PAUSE,
 }

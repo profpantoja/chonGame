@@ -4,6 +4,7 @@ import java.util.EnumSet;
 
 import chon.group.game.joystick.GameCommand;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 public class JavaFxJoystick extends Joystick {
@@ -38,7 +39,7 @@ public class JavaFxJoystick extends Joystick {
     }
 
     @Override
-    public boolean consumePress(GameCommand command) {
+    public boolean inPress(GameCommand command) {
         return pressedCommands.remove(command);
     }
 
@@ -53,7 +54,7 @@ public class JavaFxJoystick extends Joystick {
         pressedCommands.clear();
     }
 
-    private GameCommand map(javafx.scene.input.KeyCode keyCode) {
+    private GameCommand map(KeyCode keyCode) {
         return switch (keyCode) {
             case UP -> GameCommand.UP;
             case DOWN -> GameCommand.DOWN;

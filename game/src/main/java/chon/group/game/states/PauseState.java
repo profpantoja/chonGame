@@ -40,7 +40,7 @@ public class PauseState implements GameState {
          * If the player press Pause, the game returns to the Running State (since it is
          * at Pause State).
          */
-        if (game.getJoystick().consumePress(GameCommand.PAUSE)) {
+        if (game.getJoystick().press(GameCommand.PAUSE)) {
             game.setCurrentState(new PlayableState());
             return true;
         }
@@ -60,10 +60,10 @@ public class PauseState implements GameState {
                 game.getEnvironment().setDebugMode(!game.getEnvironment().isDebugMode());
                 break;
             case VOLUME:
-                if (game.getJoystick().consumePress(GameCommand.LEFT))
+                if (game.getJoystick().press(GameCommand.LEFT))
                     game.getSoundPlayer().decreaseVolume();
 
-                if (game.getJoystick().consumePress(GameCommand.RIGHT))
+                if (game.getJoystick().press(GameCommand.RIGHT))
                     game.getSoundPlayer().increaseVolume();
                 break;
             case RESET:

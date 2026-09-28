@@ -172,7 +172,7 @@ public class ExternalAgentController {
     }
 
     private void applyAttack(Agent agent, Level level, Environment environment) {
-        if (level == null || !joystick.consumePress(GameCommand.ATTACK)) {
+        if (level == null || !joystick.inPress(GameCommand.ATTACK)) {
             return;
         }
         Shot shot = agent.useWeapon();

@@ -24,6 +24,9 @@ module chon.group {
     opens chon.group.game.loader.config.environment.menu to com.fasterxml.jackson.databind;
     opens chon.group.game.loader.config.environment.camera to com.fasterxml.jackson.databind;
     opens chon.group.game.loader.config.environment.ui to com.fasterxml.jackson.databind;
+    opens chon.group.game.loader.config.platform to com.fasterxml.jackson.databind;
+
+    opens chon.group.game.core.platform.config to com.fasterxml.jackson.databind;
 
     exports chon.group;
 }

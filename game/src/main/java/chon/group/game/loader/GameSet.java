@@ -2,6 +2,7 @@ package chon.group.game.loader;
 
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.environment.Panel;
+import chon.group.game.core.platform.config.ControlType;
 import chon.group.game.menu.MenuHandler;
 
 public class GameSet {
@@ -11,6 +12,7 @@ public class GameSet {
         private Environment environment;
         private MenuHandler menu;
         private Panel panel;
+        private ControlType control;
 
         public GameSet() {
                 this.load();
@@ -54,6 +56,14 @@ public class GameSet {
 
         public void setPanel(Panel panel) {
                 this.panel = panel;
+        }
+
+        public ControlType getControl() {
+                return control;
+        }
+
+        public void setControl(ControlType control) {
+                this.control = control;
         }
 
         private void load() {

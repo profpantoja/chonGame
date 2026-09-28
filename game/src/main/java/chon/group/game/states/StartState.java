@@ -40,10 +40,10 @@ public class StartState implements GameState {
                 this.start(game);
                 break;
             case VOLUME:
-                if (game.getJoystick().consumePress(GameCommand.LEFT))
+                if (game.getJoystick().press(GameCommand.LEFT))
                     game.getSoundPlayer().decreaseVolume();
 
-                if (game.getJoystick().consumePress(GameCommand.RIGHT))
+                if (game.getJoystick().press(GameCommand.RIGHT))
                     game.getSoundPlayer().increaseVolume();
                 break;
             default:

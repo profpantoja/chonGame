@@ -14,7 +14,7 @@ public interface GameJoystick {
      * Returns true only once per press.
      * Suitable for confirm, pause, and attack actions.
      */
-    boolean consumePress(GameCommand command);
+    boolean press(GameCommand command);
 
     /**
      * Discards unconsumed single-frame commands at the end of the frame.
