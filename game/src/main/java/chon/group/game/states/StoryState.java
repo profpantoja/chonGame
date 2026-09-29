@@ -7,7 +7,10 @@ public class StoryState implements GameState {
 
     @Override
     public void handleInput(Game game) {
-        Action action = game.getMenu().getCurrentMenu().handleAction(game.getInput());
+        Action action = game.getMenu()
+                .getCurrentMenu()
+                .handleAction(game.getJoystick());
+
         switch (action) {
             case SKIP:
                 game.skip();

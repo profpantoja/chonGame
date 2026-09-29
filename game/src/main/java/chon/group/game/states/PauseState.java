@@ -2,6 +2,7 @@ package chon.group.game.states;
 
 import chon.group.game.Game;
 import chon.group.game.drawer.service.GameDrawer;
+import chon.group.game.joystick.GameCommand;
 import chon.group.game.menu.Action;
 
 public class PauseState implements GameState {
@@ -11,7 +12,10 @@ public class PauseState implements GameState {
         if (this.handlePause(game))
             return;
         /* It gets which action the player has chosen in the menu. */
-        Action action = game.getMenu().getCurrentMenu().handleAction(game.getInput());
+        Action action = game.getMenu()
+                .getCurrentMenu()
+                .handleAction(game.getJoystick());
+
         this.handleMenuAction(game, action);
     }
 
@@ -36,9 +40,7 @@ public class PauseState implements GameState {
          * If the player press Pause, the game returns to the Running State (since it is
          * at Pause State).
          */
-        if (game.getInput().contains("P")) {
-            /* The Pause needs to be removed. Otherwise, it will stay forever paused. */
-            game.getInput().remove("P");
+        if (game.getJoystick().press(GameCommand.PAUSE)) {
             game.setCurrentState(new PlayableState());
             return true;
         }
@@ -58,11 +60,11 @@ public class PauseState implements GameState {
                 game.getEnvironment().setDebugMode(!game.getEnvironment().isDebugMode());
                 break;
             case VOLUME:
-                if (game.getInput().contains("LEFT"))
+                if (game.getJoystick().press(GameCommand.LEFT))
                     game.getSoundPlayer().decreaseVolume();
-                if (game.getInput().contains("RIGHT"))
+
+                if (game.getJoystick().press(GameCommand.RIGHT))
                     game.getSoundPlayer().increaseVolume();
-                game.getInput().clear();
                 break;
             case RESET:
                 /* The Game is reset to the Start State. */
@@ -78,5 +80,4 @@ public class PauseState implements GameState {
                 break;
         }
     }
-
 }

@@ -1,22 +1,14 @@
 package chon.group;
 
-import java.util.ArrayList;
-
 import chon.group.game.Game;
-import chon.group.game.drawer.client.JavaFxDrawer;
-import chon.group.game.drawer.service.GameDrawer;
-import chon.group.game.drawer.service.GameMediator;
+import chon.group.game.core.platform.JavaFxPlatform;
+import chon.group.game.core.platform.Platform;
+import chon.group.game.core.platform.PlatformAssembler;
+import chon.group.game.gateway.GameSnapshotBuilder;
 import chon.group.game.loader.GameSet;
-import chon.group.game.sound.client.JavaFxPlayer;
-import chon.group.game.sound.service.GameSoundManager;
+import chon.group.game.gateway.GameGateway;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 /**
@@ -24,6 +16,8 @@ import javafx.stage.Stage;
  * and serves as the game engine for "Chon: The Learning Game."
  */
 public class Engine extends Application {
+
+    private final GameSnapshotBuilder snapshotBuilder = new GameSnapshotBuilder();
 
     /**
      * Main entry point of the application.
@@ -38,55 +32,55 @@ public class Engine extends Application {
     public void start(Stage theStage) {
         try {
             GameSet gameSet = new GameSet();
+            PlatformAssembler assembler = new PlatformAssembler();
+            Platform platform = assembler.construct(
+                    new JavaFxPlatform(theStage, gameSet), gameSet.getControl());
 
-            /* Set up the graphical canvas */
-            Canvas canvas = new Canvas(gameSet.getCanvasWidth(), gameSet.getCanvasHeight());
-            GraphicsContext gc = canvas.getGraphicsContext2D();
+            Game chonGame = new Game(
+                    gameSet.getEnvironment(),
+                    platform.getSoundManager(),
+                    platform.getDrawer(),
+                    gameSet.getMenu(),
+                    platform.getJoystick(),
+                    0);
 
-            /* Set up the scene and stage */
-            StackPane root = new StackPane();
-            Scene scene = new Scene(root, gameSet.getCanvasWidth(), gameSet.getCanvasHeight());
-            theStage.setTitle("Chon: The Learning Game");
-            theStage.setScene(scene);
+            final GameGateway gateway = platform.getGateway();
 
-            root.getChildren().add(canvas);
+            // Start the game loop
+            AnimationTimer timer = new AnimationTimer() {
+                public void handle(long now) {
+                    try {
+                        if (gateway != null) {
+                            gateway.processPendingActions(chonGame.getTick());
+                            gateway.updateControlledAgents(chonGame);
+                        }
+                        chonGame.loop();
 
-            /* Handle keyboard input */
-            ArrayList<String> input = new ArrayList<>();
-            scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-                public void handle(KeyEvent e) {
-                    String code = e.getCode().toString();
-                    if (!input.contains(code)) {
-                        input.add(code);
+                        var snapshot = snapshotBuilder.build(
+                                chonGame,
+                                chonGame.getTick());
+
+                        if (gateway != null) {
+                            gateway.publish(snapshot);
+                        }
+                    } catch (RuntimeException exception) {
+                        exception.printStackTrace();
+                    }
+                }
+            };
+
+            theStage.setOnCloseRequest(event -> {
+                timer.stop();
+                if (gateway != null) {
+                    try {
+                        gateway.close();
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
                     }
                 }
             });
 
-            scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
-                public void handle(KeyEvent e) {
-                    String code = e.getCode().toString();
-                    if (!code.equals("P"))
-                        input.remove(code);
-                }
-            });
-
-            GameSoundManager soundManager = new GameSoundManager(new JavaFxPlayer());
-            GameDrawer mediator = new GameMediator(new JavaFxDrawer(gc));
-
-            Game chonGame = new Game(
-                    gameSet.getEnvironment(),
-                    soundManager,
-                    mediator,
-                    gameSet.getMenu(),
-                    input,
-                    0);
-
-            // Start the game loop
-            new AnimationTimer() {
-                public void handle(long now) {
-                    chonGame.loop();
-                }
-            }.start();
+            timer.start();
 
             theStage.show();
         } catch (Exception e) {

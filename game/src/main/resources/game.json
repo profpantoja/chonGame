@@ -1,4 +1,10 @@
 {
+    "platform": {
+        "control": "API",
+        "api": {
+            "port": 8765
+        }
+    },
     "environment": {
         "protagonist": "chonBota",
         "display": {
@@ -415,11 +421,12 @@
                         "width": 60,
                         "height": 80
                     },
-                                        {
+                    {
                         "image": "/images/weapons/bark/bark-004.png",
                         "width": 60,
                         "height": 80
-                    },                    {
+                    },
+                    {
                         "image": "/images/weapons/bark/bark-005.png",
                         "width": 60,
                         "height": 80

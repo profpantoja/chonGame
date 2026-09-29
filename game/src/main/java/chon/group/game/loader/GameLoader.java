@@ -17,6 +17,7 @@ import chon.group.game.loader.config.environment.EnvironmentConfig;
 import chon.group.game.loader.config.environment.camera.CameraConfig;
 import chon.group.game.loader.config.entity.agent.AgentConfig;
 import chon.group.game.loader.config.level.LevelConfig;
+import chon.group.game.loader.config.platform.PlatformConfig;
 import chon.group.game.loader.factory.AgentFactory;
 import chon.group.game.loader.factory.AnimationFactory;
 import chon.group.game.loader.factory.LevelFactory;
@@ -99,6 +100,10 @@ public class GameLoader {
                 environment,
                 this.game.getMedia().getScreens());
         return environment;
+    }
+
+    public PlatformConfig getPlatform() {
+        return this.game.getPlatform();
     }
 
     public int getDisplayWidth() {

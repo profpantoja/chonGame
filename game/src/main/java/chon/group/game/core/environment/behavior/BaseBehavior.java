@@ -51,6 +51,10 @@ public abstract class BaseBehavior implements EnvironmentBehavior {
                 itAgent.remove();
                 continue;
             }
+            /* Externally controlled agents move via ExternalAgentController instead. */
+            if (agent.isExternallyControlled()) {
+                continue;
+            }
             /* Every agent chases the protagonist. */
             agent.chase(protagonist.getPosX(),
                     protagonist.getPosY());

@@ -1,13 +1,17 @@
 package chon.group.game.states;
 
 import chon.group.game.Game;
+import chon.group.game.joystick.GameCommand;
 import chon.group.game.menu.Action;
 
 public class StartState implements GameState {
 
     @Override
     public void handleInput(Game game) {
-        Action action = game.getMenu().getCurrentMenu().handleAction(game.getInput());
+        Action action = game.getMenu()
+                .getCurrentMenu()
+                .handleAction(game.getJoystick());
+
         this.handleMenuAction(game, action);
     }
 
@@ -36,11 +40,11 @@ public class StartState implements GameState {
                 this.start(game);
                 break;
             case VOLUME:
-                if (game.getInput().contains("LEFT"))
+                if (game.getJoystick().press(GameCommand.LEFT))
                     game.getSoundPlayer().decreaseVolume();
-                if (game.getInput().contains("RIGHT"))
+
+                if (game.getJoystick().press(GameCommand.RIGHT))
                     game.getSoundPlayer().increaseVolume();
-                game.getInput().clear();
                 break;
             default:
                 break;
@@ -65,5 +69,4 @@ public class StartState implements GameState {
                 break;
         }
     }
-
 }

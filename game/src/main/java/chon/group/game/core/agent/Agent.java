@@ -26,6 +26,9 @@ public class Agent extends Entity {
     /** The Agent's Weapon */
     private Weapon weapon;
 
+    /** Whether this agent's movement is driven by an external client instead of AI. */
+    private boolean externallyControlled = false;
+
     /** The initial agent's energy */
     private double energy;
 
@@ -80,6 +83,24 @@ public class Agent extends Entity {
         this.fullEnergy = 1.0;
         this.recoveryFactor = recoveryFactor;
         this.cooldown = cooldown;
+    }
+
+    /**
+     * Gets if this agent's movement is driven by an external client.
+     *
+     * @return if the agent is externally controlled
+     */
+    public boolean isExternallyControlled() {
+        return externallyControlled;
+    }
+
+    /**
+     * Sets whether this agent's movement is driven by an external client.
+     *
+     * @param externallyControlled the new externally controlled status
+     */
+    public void setExternallyControlled(boolean externallyControlled) {
+        this.externallyControlled = externallyControlled;
     }
 
     /**
@@ -208,20 +229,21 @@ public class Agent extends Entity {
     }
 
     public Shot useWeapon() {
-        if (this.energy >= this.getWeapon().getEnergyCost()) {
-            boolean isFlipped = this.getAnimationState().isFlipped();
-            Shot shot = this.weapon.fire(
-                    isFlipped ? this.getFlippedPosX() : this.getPosX(),
-                    this.getPosY(),
-                    this.getWidth(),
-                    isFlipped ? Direction.LEFT : Direction.RIGHT);
-            if (shot != null) {
-                this.setStatus(EntityStatus.ATTACK);
-                this.consumeEnergy(this.getWeapon().getEnergyCost());
-                return shot;
-            }
+        if (this.weapon == null || this.energy < this.weapon.getEnergyCost()) {
+            return null;
         }
-        return null;
+
+        boolean isFlipped = this.getAnimationState().isFlipped();
+        Shot shot = this.weapon.fire(
+                isFlipped ? this.getFlippedPosX() : this.getPosX(),
+                this.getPosY(),
+                this.getWidth(),
+                isFlipped ? Direction.LEFT : Direction.RIGHT);
+        if (shot != null) {
+            this.setStatus(EntityStatus.ATTACK);
+            this.consumeEnergy(this.weapon.getEnergyCost());
+        }
+        return shot;
     }
 
     public Agent copy(int posX, int posY) {

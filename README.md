@@ -54,4 +54,10 @@ Teaching Units: <strong>Linguagens e Técnicas de Programação II</strong> e <s
 ```
 git checkout -b wip-nova-branch
 ```
+- **Criar uma branch a partir de um PR de um fork**: necessário para analisar PR de um fork.
+> Exemplo de como criar a branch pr-116 a partir do Pull Request #116.
+```
+git fetch main pull/116/head:pr-116
+git checkout pr-116
+```
 

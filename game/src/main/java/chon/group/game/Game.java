@@ -8,6 +8,8 @@ import chon.group.game.core.agent.Direction;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.environment.Level;
 import chon.group.game.drawer.service.GameDrawer;
+import chon.group.game.joystick.GameCommand;
+import chon.group.game.joystick.service.GameJoystick;
 import chon.group.game.loader.GameSet;
 import chon.group.game.menu.MenuHandler;
 import chon.group.game.sound.Sound;
@@ -23,21 +25,22 @@ public class Game {
     private GameSoundManager soundPlayer;
     private MenuHandler menu;
     private Animator animator = new Animator();
-    private ArrayList<String> input;
     private GameState currentState = new StartState();
     private long lastLoop = 0;
     private long interval = 0;
+    private GameJoystick joystick;
+    private long tick;
 
     public Game(
             Environment environment,
             GameSoundManager soundPlayer,
             GameDrawer mediator,
             MenuHandler menu,
-            ArrayList<String> input,
+            GameJoystick joystick,
             long interval) {
         this.environment = environment;
         this.menu = menu;
-        this.input = input;
+        this.joystick = joystick;
         this.soundPlayer = soundPlayer;
         this.mediator = mediator;
         this.mediator.setGame(this);
@@ -86,12 +89,12 @@ public class Game {
         this.animator = animator;
     }
 
-    public ArrayList<String> getInput() {
-        return input;
+    public GameJoystick getJoystick() {
+        return joystick;
     }
 
-    public void setInput(ArrayList<String> input) {
-        this.input = input;
+    public void setJoystick(GameJoystick joystick) {
+        this.joystick = joystick;
     }
 
     public GameState getCurrentState() {
@@ -109,13 +112,20 @@ public class Game {
             /* Manages the input from the current state. */
             this.currentState.handleInput(this);
             /* Manages the update from the current state. */
+            this.joystick.endFrame();
             this.currentState.update(this);
             /* Plays the buffered sounds. */
             this.playSounds();
             /* renders the current level. */
             this.currentState.render(this);
+            this.tick++;
         }
     }
+
+    public long getTick() {
+        return tick;
+    }
+
 
     private void playSounds() {
         for (Sound sound : this.environment.getSounds()) {
@@ -143,7 +153,7 @@ public class Game {
     public void reset() {
         this.environment = new GameSet().getEnvironment();
         this.mediator.setGame(this);
-        this.input.clear();
+        this.joystick.clear();
         this.soundPlayer.stop();
         Sound ambient = this.environment.getCurrentLevel().getSoundSet().get(SoundEvent.AMBIENT);
         Sound background = this.environment.getCurrentLevel().getSoundSet().get(SoundEvent.BACKGROUND);
@@ -172,7 +182,7 @@ public class Game {
         this.environment.getCamera().setLevelWidth(newLevel.getWidth());
         this.environment.setCollectedCount(0);
         this.environment.setScore(0);
-        this.input.clear();
+        this.joystick.clear();
         this.soundPlayer.stop();
         Sound ambient = this.environment.getCurrentLevel().getSoundSet().get(SoundEvent.AMBIENT);
         Sound background = this.environment.getCurrentLevel().getSoundSet().get(SoundEvent.BACKGROUND);
@@ -182,24 +192,22 @@ public class Game {
             soundPlayer.playMusic(background);
     }
 
-    public List<Direction> getDirections(List<String> input) {
-        ArrayList<Direction> directions = new ArrayList<Direction>();
-        for (String command : input) {
-            switch (command) {
-                case "RIGHT":
-                    directions.add(Direction.RIGHT);
-                    break;
-                case "LEFT":
-                    directions.add(Direction.LEFT);
-                    break;
-                case "DOWN":
-                    directions.add(Direction.DOWN);
-                    break;
-                case "UP":
-                    directions.add(Direction.UP);
-                    break;
-            }
+    public List<Direction> getDirections() {
+        ArrayList<Direction> directions = new ArrayList<>();
+
+        if (joystick.isHeld(GameCommand.RIGHT)) {
+            directions.add(Direction.RIGHT);
         }
+        if (joystick.isHeld(GameCommand.LEFT)) {
+            directions.add(Direction.LEFT);
+        }
+        if (joystick.isHeld(GameCommand.DOWN)) {
+            directions.add(Direction.DOWN);
+        }
+        if (joystick.isHeld(GameCommand.UP)) {
+            directions.add(Direction.UP);
+        }
+
         return directions;
     }
 

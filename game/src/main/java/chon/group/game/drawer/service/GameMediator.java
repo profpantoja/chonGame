@@ -58,7 +58,6 @@ public class GameMediator implements GameDrawer {
         //this.layeredGame();
     }
 
-    @SuppressWarnings("unused")
     private void beatThemUp() {
         this.drawBackground();
         this.drawEntities();

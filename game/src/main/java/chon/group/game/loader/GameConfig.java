@@ -6,8 +6,11 @@ import chon.group.game.loader.config.environment.EnvironmentConfig;
 import chon.group.game.loader.config.entity.EntitiesConfig;
 import chon.group.game.loader.config.level.LevelConfig;
 import chon.group.game.loader.config.media.MediaConfig;
+import chon.group.game.loader.config.platform.PlatformConfig;
 
 public class GameConfig {
+
+    private PlatformConfig platform;
 
     private EnvironmentConfig environment;
 
@@ -18,6 +21,14 @@ public class GameConfig {
     private List<LevelConfig> levels;
 
     public GameConfig() {
+    }
+
+    public PlatformConfig getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(PlatformConfig platform) {
+        this.platform = platform;
     }
 
     public EnvironmentConfig getEnvironment() {
@@ -51,5 +62,4 @@ public class GameConfig {
     public void setLevels(List<LevelConfig> levels) {
         this.levels = levels;
     }
-
 }

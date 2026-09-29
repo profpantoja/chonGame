@@ -8,7 +8,10 @@ public class WinState implements GameState {
     @Override
     public void handleInput(Game game) {
         /* It gets which action the player has chosen in the menu. */
-        Action action = game.getMenu().getCurrentMenu().handleAction(game.getInput());
+        Action action = game.getMenu()
+                .getCurrentMenu()
+                .handleAction(game.getJoystick());
+
         if (action.equals(Action.RESET)) {
             /* The Game is reset to the Start State. */
             game.reset();
@@ -33,5 +36,4 @@ public class WinState implements GameState {
         game.getMediator().drawTheEndScreen();
         game.getMediator().drawMenu();
     }
-
 }

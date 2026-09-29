@@ -2,6 +2,7 @@ package chon.group.game.core.agent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import chon.group.game.animation.AnimationSet;
 import chon.group.game.animation.AnimationState;
@@ -11,6 +12,8 @@ import chon.group.game.sound.SoundEvent;
 import chon.group.game.sound.SoundSet;
 
 public abstract class Entity {
+
+    private final String id = UUID.randomUUID().toString();
 
     /** X position (horizontal) of the entity. */
     private int posX;
@@ -97,6 +100,10 @@ public abstract class Entity {
      */
     public int getPosX() {
         return posX;
+    }
+
+    public String getId() {
+        return id;
     }
 
     /**

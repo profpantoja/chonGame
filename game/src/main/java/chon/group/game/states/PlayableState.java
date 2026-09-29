@@ -4,31 +4,28 @@ import java.util.List;
 
 import chon.group.game.Game;
 import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.Direction;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.environment.Level;
 import chon.group.game.core.weapon.Shot;
+import chon.group.game.joystick.GameCommand;
 import chon.group.game.sound.SoundEvent;
 
 public class PlayableState implements GameState {
 
     @Override
     public void handleInput(Game game) {
-        /** ChonBota Only Moves if the Player Press Something */
-        /** Update the protagonist's movements if game.getInput() exists */
-        if (game.getInput().isEmpty()) {
-            /* If nothing happens, the protagonist stays IDLE. */
-            game.getEnvironment().getProtagonist().idle();
-            return;
-        }
         /**
          * If the player pressed the Pause buttom, the game moves to the pause state.
          */
         if (this.handlePause(game))
             return;
+
         /** The protagonist Shoots Somebody Who Outdrew You */
         /** But only if it has enough energy */
         if (this.handleAttack(game))
             return;
+
         this.handleMovement(game);
     }
 
@@ -94,22 +91,22 @@ public class PlayableState implements GameState {
         /**
          * If the player pressed the Pause buttom, the game moves to the pause state.
          */
-        if (!game.getInput().contains("P")) {
+        if (!game.getJoystick().press(GameCommand.PAUSE)) {
             return false;
         }
+
         game.setCurrentState(new PauseState());
         game.getMenu().openPause();
-        /* The Pause needs to be removed. Otherwise, it will stay forever paused. */
-        game.getInput().remove("P");
         return true;
     }
 
     private boolean handleAttack(Game game) {
         /** The protagonist Shoots Somebody Who Outdrew You */
         /** But only if it has enough energy */
-        if (!game.getInput().contains("SPACE")) {
+        if (!game.getJoystick().press(GameCommand.ATTACK)) {
             return false;
         }
+
         Shot shot = game.getEnvironment().getProtagonist().useWeapon();
         /* If there is an associate shot with the weapon. Some weapons don't shoot. */
         if (shot != null) {
@@ -118,24 +115,19 @@ public class PlayableState implements GameState {
             /* The shot is added to the environment's current level. */
             game.getEnvironment().getCurrentLevel().getShots().add(shot);
         }
-        game.getInput().remove("SPACE");
         return true;
     }
 
     private void handleMovement(Game game) {
-        /* If there is any movement key pressed. */
-        if (this.hasMovement(game.getInput())) {
-            /* Protagonist's Moves based on Joystick inputs. */
-            game.getEnvironment().getProtagonist().move(
-                    game.getDirections(game.getInput()));
+        /* Protagonist's Moves based on Joystick inputs. */
+        List<Direction> directions = game.getDirections();
+
+        /* If nothing happens, the protagonist stays IDLE. */
+        if (directions.isEmpty()) {
+            game.getEnvironment().getProtagonist().idle();
+            return;
         }
-    }
 
-    private boolean hasMovement(List<String> input) {
-        return input.contains("RIGHT") ||
-                input.contains("LEFT") ||
-                input.contains("DOWN") ||
-                input.contains("UP");
+        game.getEnvironment().getProtagonist().move(directions);
     }
-
 }

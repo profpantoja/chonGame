@@ -7,7 +7,11 @@ module chon.group {
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.annotation;
 
+    /* Dependencies for the game gateway. */
+    opens chon.group.game.loader.config.level to com.fasterxml.jackson.databind;
+    opens chon.group.game.gateway to com.fasterxml.jackson.databind;
     opens chon.group.game.loader to com.fasterxml.jackson.databind;
+
     opens chon.group.game.loader.config.media to com.fasterxml.jackson.databind;
     opens chon.group.game.loader.config.media.animation to com.fasterxml.jackson.databind;
     opens chon.group.game.loader.config.media.screen to com.fasterxml.jackson.databind;
@@ -20,7 +24,9 @@ module chon.group {
     opens chon.group.game.loader.config.environment.menu to com.fasterxml.jackson.databind;
     opens chon.group.game.loader.config.environment.camera to com.fasterxml.jackson.databind;
     opens chon.group.game.loader.config.environment.ui to com.fasterxml.jackson.databind;
-    opens chon.group.game.loader.config.level to com.fasterxml.jackson.databind;
+    opens chon.group.game.loader.config.platform to com.fasterxml.jackson.databind;
+
+    opens chon.group.game.core.platform.config to com.fasterxml.jackson.databind;
 
     exports chon.group;
 }

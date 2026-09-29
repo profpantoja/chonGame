@@ -2,12 +2,14 @@ package chon.group.game.menu;
 
 import java.util.List;
 
+import chon.group.game.joystick.GameCommand;
+import chon.group.game.joystick.service.GameJoystick;
+
 public class Menu {
 
     private int index = 0;
     private String title;
     private List<Item> items;
-    /** It adjusts the Y position considering a ratio. */
     private double heightProportion = 0.7;
     private double width = 400;
     private double span = 45;
@@ -19,7 +21,13 @@ public class Menu {
         this.width = width;
     }
 
-    public Menu(int index, String title, List<Item> items, double proportion, double width, double span) {
+    public Menu(
+            int index,
+            String title,
+            List<Item> items,
+            double proportion,
+            double width,
+            double span) {
         this.index = index;
         this.title = title;
         this.items = items;
@@ -29,7 +37,7 @@ public class Menu {
     }
 
     public int getIndex() {
-        return index;
+        return this.index;
     }
 
     public void setIndex(int index) {
@@ -37,7 +45,7 @@ public class Menu {
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public void setTitle(String title) {
@@ -45,7 +53,7 @@ public class Menu {
     }
 
     public List<Item> getItems() {
-        return items;
+        return this.items;
     }
 
     public void setItems(List<Item> items) {
@@ -53,7 +61,7 @@ public class Menu {
     }
 
     public double getHeightProportion() {
-        return heightProportion;
+        return this.heightProportion;
     }
 
     public void setHeightProportion(double heightProportion) {
@@ -61,7 +69,7 @@ public class Menu {
     }
 
     public double getWidth() {
-        return width;
+        return this.width;
     }
 
     public void setWidth(double width) {
@@ -69,30 +77,39 @@ public class Menu {
     }
 
     public double getSpan() {
-        return span;
+        return this.span;
     }
 
     public void setSpan(double span) {
         this.span = span;
     }
 
-    public Action handleAction(List<String> input) {
-        if (!input.isEmpty()) {
-            if (input.contains("ENTER")) {
-                input.clear();
-                return items.get(this.index).getAction();
-            }
-            if (input.contains("UP"))
-                this.index = (this.index - 1 + items.size()) % items.size();
-            if (input.contains("DOWN"))
-                this.index = (this.index + 1) % items.size();
-            if (input.contains("LEFT") || input.contains("RIGHT")) {
-                Action action = items.get(this.index).getAction();
-                if (action.equals(Action.VOLUME))
-                    return action;
-            }
-            input.clear();
+    public Action handleAction(GameJoystick joystick) {
+        if (joystick.press(GameCommand.CONFIRM)) {
+            return this.items.get(this.index).getAction();
         }
+
+        if (joystick.press(GameCommand.UP)) {
+            this.index = (this.index - 1 + this.items.size())
+                    % this.items.size();
+
+            return Action.NONE;
+        }
+
+        if (joystick.press(GameCommand.DOWN)) {
+            this.index = (this.index + 1) % this.items.size();
+
+            return Action.NONE;
+        }
+
+        Action selectedAction = this.items.get(this.index).getAction();
+
+        if (selectedAction == Action.VOLUME
+                && (joystick.isHeld(GameCommand.LEFT)
+                        || joystick.isHeld(GameCommand.RIGHT))) {
+            return Action.VOLUME;
+        }
+
         return Action.NONE;
     }
 
@@ -103,5 +120,4 @@ public class Menu {
     public void reset() {
         this.index = 0;
     }
-
 }
