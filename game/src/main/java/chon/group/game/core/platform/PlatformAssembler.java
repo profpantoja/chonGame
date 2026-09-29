@@ -1,12 +1,13 @@
 package chon.group.game.core.platform;
 
 import chon.group.game.core.platform.config.ControlType;
+import chon.group.game.gateway.GameGateway;
 import chon.group.game.joystick.client.ExternalJoystick;
 import chon.group.game.joystick.client.Joystick;
 
 public class PlatformAssembler {
 
-    public Platform construct(PlatformBuilder builder, ControlType control) {
+    public Platform construct(PlatformBuilder builder, ControlType control, int apiPort) {
         builder.buildDrawer();
         Joystick joystick = null;
         if (control == ControlType.API) {
@@ -14,6 +15,11 @@ public class PlatformAssembler {
         }
         builder.buildJoystick(joystick);
         builder.buildSoundPlayer();
-        return builder.build();
+        Platform platform = builder.build();
+        if (joystick instanceof ExternalJoystick externalJoystick) {
+            platform.setGateway(
+                    new GameGateway(apiPort, externalJoystick));
+        }
+        return platform;
     }
 }

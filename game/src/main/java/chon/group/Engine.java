@@ -34,7 +34,7 @@ public class Engine extends Application {
             GameSet gameSet = new GameSet();
             PlatformAssembler assembler = new PlatformAssembler();
             Platform platform = assembler.construct(
-                    new JavaFxPlatform(theStage, gameSet), gameSet.getControl());
+                    new JavaFxPlatform(theStage, gameSet), gameSet.getControl(), gameSet.getApiPort());
 
             Game chonGame = new Game(
                     gameSet.getEnvironment(),

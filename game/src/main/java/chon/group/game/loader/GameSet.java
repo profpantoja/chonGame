@@ -14,6 +14,7 @@ public class GameSet {
         private MenuHandler menu;
         private Panel panel;
         private ControlType control;
+        private int apiPort;
         private GameGateway gateway;
 
         public GameSet() {
@@ -67,6 +68,14 @@ public class GameSet {
         public void setControl(ControlType control) {
                 this.control = control;
         }
+        
+        public int getApiPort() {
+                return apiPort;
+        }
+
+        public void setApiPort(int apiPort) {
+                this.apiPort = apiPort;
+        }
 
         public GameGateway getGateway() {
                 return gateway;
@@ -85,6 +94,7 @@ public class GameSet {
                 this.canvasHeight = loader.getDisplayHeight();
                 /* Define the Joystick Type for controlling the game */
                 this.control = loader.getPlatform().getControl();
+                this.apiPort = loader.getPlatform().getApi().getPort();
         }
 
 }
