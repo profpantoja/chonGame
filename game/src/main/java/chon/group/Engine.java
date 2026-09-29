@@ -34,7 +34,7 @@ public class Engine extends Application {
             GameSet gameSet = new GameSet();
             PlatformAssembler assembler = new PlatformAssembler();
             Platform platform = assembler.construct(
-                    new JavaFxPlatform(theStage, gameSet));
+                    new JavaFxPlatform(theStage, gameSet), gameSet.getControl());
 
             Game chonGame = new Game(
                     gameSet.getEnvironment(),
@@ -44,7 +44,7 @@ public class Engine extends Application {
                     platform.getJoystick(),
                     0);
 
-            final GameGateway gateway = null;
+            final GameGateway gateway = platform.getGateway();
 
             // Start the game loop
             AnimationTimer timer = new AnimationTimer() {

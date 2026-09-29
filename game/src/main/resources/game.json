@@ -1,6 +1,6 @@
 {
     "platform": {
-        "control": "LOCAL",
+        "control": "API",
         "api": {
             "port": 8765
         }

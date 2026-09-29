@@ -1,9 +1,7 @@
 package chon.group.game.core.platform;
 
-import chon.group.game.core.platform.config.ControlType;
 import chon.group.game.drawer.client.JavaFxDrawer;
 import chon.group.game.drawer.service.GameMediator;
-import chon.group.game.joystick.client.ExternalJoystick;
 import chon.group.game.joystick.client.JavaFxJoystick;
 import chon.group.game.joystick.client.Joystick;
 import chon.group.game.joystick.service.JoystickMediator;
@@ -37,8 +35,7 @@ public class JavaFxPlatform implements PlatformBuilder {
                 gameSet.getCanvasWidth(),
                 gameSet.getCanvasHeight());
 
-        GraphicsContext graphicsContext =
-                canvas.getGraphicsContext2D();
+        GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
 
         StackPane root = new StackPane();
         root.getChildren().add(canvas);
@@ -57,15 +54,12 @@ public class JavaFxPlatform implements PlatformBuilder {
     }
 
     @Override
-    public void buildJoystick() {
-        Joystick joystickClient;
-        if (gameSet.getControl() == ControlType.API) {
-            joystickClient = new ExternalJoystick();
-        } else {
-            joystickClient = new JavaFxJoystick(scene);
+    public void buildJoystick(Joystick joystick) {
+        if (joystick == null) {
+            joystick = new JavaFxJoystick(scene);
         }
         platform.setJoystick(
-                new JoystickMediator(joystickClient));
+                new JoystickMediator(joystick));
     }
 
     @Override

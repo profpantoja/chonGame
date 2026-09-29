@@ -3,6 +3,7 @@ package chon.group.game.loader;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.environment.Panel;
 import chon.group.game.core.platform.config.ControlType;
+import chon.group.game.gateway.GameGateway;
 import chon.group.game.menu.MenuHandler;
 
 public class GameSet {
@@ -13,6 +14,7 @@ public class GameSet {
         private MenuHandler menu;
         private Panel panel;
         private ControlType control;
+        private GameGateway gateway;
 
         public GameSet() {
                 this.load();
@@ -66,6 +68,14 @@ public class GameSet {
                 this.control = control;
         }
 
+        public GameGateway getGateway() {
+                return gateway;
+        }
+
+        public void setGameGateway(GameGateway gateway) {
+                this.gateway = gateway;
+        }
+
         private void load() {
                 GameLoader loader = new GameLoader("/game.json");
                 this.menu = loader.createMenuHandler();
@@ -73,6 +83,8 @@ public class GameSet {
                 /* Define some size properties for both Canvas and Environment */
                 this.canvasWidth = loader.getDisplayWidth();
                 this.canvasHeight = loader.getDisplayHeight();
+                /* Define the Joystick Type for controlling the game */
+                this.control = loader.getPlatform().getControl();
         }
 
 }
