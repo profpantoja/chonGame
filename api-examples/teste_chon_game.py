@@ -21,7 +21,25 @@ import sys
 import time
 import uuid
 
-HOST = "localhost"
+# Control structure to setup SERVER_HOST in the two use cases (localhost or remote machine).
+print("Are you running the script on another machine?")
+print("1. Yes")
+print("2. No")
+option = input("Select an option: ")
+option = str(option).strip().lower()
+
+# Match case to initialize hostAdress based on the option selected by the user.
+match option:
+    case "1" | "yes" | "y":
+        hostAdress = input("Type server's IP address: ")
+           
+    case "2" | "no" | "n":
+        hostAdress = "localhost"
+        
+    case _:
+        print("Invalid option!")
+
+HOST = hostAdress
 PORT = 8765
 AGENT_ID = "python-agent"
 
