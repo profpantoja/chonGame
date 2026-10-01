@@ -17,6 +17,8 @@ import javafx.stage.Stage;
  */
 public class Engine extends Application {
 
+    private static final System.Logger LOGGER = System.getLogger(Engine.class.getName());
+
     private final GameSnapshotBuilder snapshotBuilder = new GameSnapshotBuilder();
 
     /**
@@ -45,6 +47,9 @@ public class Engine extends Application {
                     0);
 
             final GameGateway gateway = platform.getGateway();
+            if (gateway != null) {
+                gateway.start();
+            }
 
             // Start the game loop
             AnimationTimer timer = new AnimationTimer() {
@@ -64,7 +69,7 @@ public class Engine extends Application {
                             gateway.publish(snapshot);
                         }
                     } catch (RuntimeException exception) {
-                        exception.printStackTrace();
+                        LOGGER.log(System.Logger.Level.ERROR, "Game loop failed", exception);
                     }
                 }
             };
@@ -75,7 +80,7 @@ public class Engine extends Application {
                     try {
                         gateway.close();
                     } catch (Exception exception) {
-                        exception.printStackTrace();
+                        LOGGER.log(System.Logger.Level.ERROR, "Could not close game gateway", exception);
                     }
                 }
             });
@@ -83,8 +88,8 @@ public class Engine extends Application {
             timer.start();
 
             theStage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            LOGGER.log(System.Logger.Level.ERROR, "Could not start game", exception);
         }
     }
 
