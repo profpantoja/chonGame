@@ -12,7 +12,26 @@ from typing import Any, Optional
 # Configuração da conexão
 # =============================================================================
 
-SERVER_HOST = "192.168.103.61"
+# Control structure to setup SERVER_HOST in the two use cases (localhost or remote machine).
+print("Are you running the script on another machine?")
+print("1. Yes")
+print("2. No")
+option = input("Select an option: ")
+option = str(option).strip().lower()
+
+# Match case to initialize hostAdress based on the option selected by the user.
+while True:
+    match option:
+        case "1" | "yes" | "y":
+            hostAdress = input("Type server's IP address: ")
+            
+        case "2" | "no" | "n":
+            hostAdress = "localhost"
+            
+        case _:
+            print("Invalid option!")
+
+SERVER_HOST = hostAdress
 SERVER_PORT = 8765
 
 # Intervalo principal do cliente, equivalente aos 20 ms do PowerShell.

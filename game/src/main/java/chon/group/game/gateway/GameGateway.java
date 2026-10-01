@@ -17,11 +17,14 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -37,6 +40,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class GameGateway implements AutoCloseable {
 
+    private static final System.Logger LOGGER = System.getLogger(GameGateway.class.getName());
+    private static final long SHUTDOWN_TIMEOUT_SECONDS = 2;
+
     private final int requestedPort;
     private final ExternalJoystick protagonistJoystick;
     private final ObjectMapper mapper = new ObjectMapper();
@@ -46,9 +52,12 @@ public class GameGateway implements AutoCloseable {
     private final ConcurrentLinkedQueue<ExternalAgentController> pendingBotControllers = new ConcurrentLinkedQueue<>();
     private final ConcurrentHashMap<ExternalAgentController, ClientSession> sessions = new ConcurrentHashMap<>();
     private final AtomicBoolean protagonistClaimed = new AtomicBoolean(false);
+    private final AtomicBoolean closing = new AtomicBoolean(false);
+    private final Object lifecycleLock = new Object();
     private final AtomicInteger nextBotSlot = new AtomicInteger(1);
     private volatile boolean running;
-    private ServerSocket serverSocket;
+    private volatile ServerSocket serverSocket;
+    private volatile Thread acceptorThread;
     private volatile String latestObservation;
     private volatile GameSnapshotBuilder.GameSnapshot latestSnapshot;
 
@@ -58,11 +67,16 @@ public class GameGateway implements AutoCloseable {
     }
 
     public void start() throws IOException {
-        serverSocket = new ServerSocket(requestedPort);
-        running = true;
-        Thread acceptor = new Thread(this::acceptClients, "chon-game-gateway");
-        acceptor.setDaemon(true);
-        acceptor.start();
+        synchronized (lifecycleLock) {
+            if (serverSocket != null || closing.get()) {
+                throw new IllegalStateException("Game gateway cannot be started more than once");
+            }
+            serverSocket = new ServerSocket(requestedPort);
+            running = true;
+            acceptorThread = new Thread(this::acceptClients, "chon-game-gateway");
+            acceptorThread.setDaemon(true);
+            acceptorThread.start();
+        }
     }
 
     public int getPort() {
@@ -74,7 +88,7 @@ public class GameGateway implements AutoCloseable {
         try {
             message = mapper.writeValueAsString(new ObservationMessage(snapshot));
         } catch (IOException exception) {
-            exception.printStackTrace();
+            LOGGER.log(System.Logger.Level.ERROR, "Could not serialize game observation", exception);
             return;
         }
         latestSnapshot = snapshot;
@@ -88,10 +102,24 @@ public class GameGateway implements AutoCloseable {
         while (running) {
             try {
                 Socket socket = serverSocket.accept();
-                clients.submit(() -> handleClient(socket));
+                synchronized (lifecycleLock) {
+                    if (!running) {
+                        socket.close();
+                        continue;
+                    }
+                    try {
+                        clients.submit(() -> handleClient(socket));
+                    } catch (RejectedExecutionException exception) {
+                        socket.close();
+                        if (running) {
+                            LOGGER.log(System.Logger.Level.ERROR,
+                                    "Could not process a client connection", exception);
+                        }
+                    }
+                }
             } catch (IOException exception) {
                 if (running) {
-                    exception.printStackTrace();
+                    LOGGER.log(System.Logger.Level.ERROR, "Could not accept a client connection", exception);
                 }
             }
         }
@@ -99,24 +127,30 @@ public class GameGateway implements AutoCloseable {
 
     private void handleClient(Socket socket) {
         ClientSession client = null;
-        ExternalAgentController control = assignController();
-        controllers.add(control);
-        if (!control.isProtagonist()) {
-            pendingBotControllers.offer(control);
-        }
+        ExternalAgentController control = null;
         try (socket;
                 BufferedReader reader = new BufferedReader(
                         new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
                 BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8))) {
             client = new ClientSession(socket, writer);
-            connectedClients.add(client);
-            sessions.put(control, client);
+            synchronized (lifecycleLock) {
+                if (!running) {
+                    return;
+                }
+                control = assignController();
+                controllers.add(control);
+                if (!control.isProtagonist()) {
+                    pendingBotControllers.offer(control);
+                }
+                connectedClients.add(client);
+                sessions.put(control, client);
+                clients.submit(client::writeLatestObservation);
+            }
             client.sendControl(helloMessage(control));
             if (latestObservation != null) {
                 client.offerObservation(latestObservation);
             }
-            clients.submit(client::writeLatestObservation);
             String line;
             while ((line = reader.readLine()) != null) {
                 try {
@@ -142,20 +176,24 @@ public class GameGateway implements AutoCloseable {
             }
         } catch (SocketException exception) {
             if (running && !"Connection reset".equals(exception.getMessage())) {
-                exception.printStackTrace();
+                LOGGER.log(System.Logger.Level.ERROR, "Client connection failed", exception);
             }
         } catch (IOException exception) {
             if (running) {
-                exception.printStackTrace();
+                LOGGER.log(System.Logger.Level.ERROR, "Client connection failed", exception);
             }
         } finally {
             if (client != null) {
                 connectedClients.remove(client);
-                sessions.remove(control);
+                if (control != null) {
+                    sessions.remove(control);
+                }
                 client.close();
             }
             /* The game thread finishes releasing the bound agent and frees the slot. */
-            control.close();
+            if (control != null) {
+                control.close();
+            }
         }
     }
 
@@ -452,12 +490,62 @@ public class GameGateway implements AutoCloseable {
         }
     }
 
+    private void closeAllConnections(List<ClientSession> clientsToClose) {
+        for (ClientSession client : clientsToClose) {
+            client.closeConnection();
+        }
+    }
+
     @Override
     public void close() throws IOException {
-        running = false;
-        clients.close();
-        if (serverSocket != null) {
-            serverSocket.close();
+        if (!closing.compareAndSet(false, true)) {
+            return;
+        }
+
+        List<ClientSession> clientsToClose;
+        ServerSocket socket;
+        synchronized (lifecycleLock) {
+            running = false;
+            socket = serverSocket;
+            clientsToClose = List.copyOf(connectedClients);
+        }
+
+        IOException closeFailure = null;
+        if (socket != null) {
+            try {
+                socket.close();
+            } catch (IOException exception) {
+                closeFailure = exception;
+                LOGGER.log(System.Logger.Level.ERROR, "Could not close server socket", exception);
+            }
+        }
+
+        for (ClientSession client : clientsToClose) {
+            client.sendEvent("server_closing", "SERVER_SHUTDOWN");
+        }
+        closeAllConnections(clientsToClose);
+
+        clients.shutdown();
+        try {
+            if (!clients.awaitTermination(SHUTDOWN_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
+                clients.shutdownNow();
+            }
+        } catch (InterruptedException exception) {
+            clients.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+
+        Thread acceptor = acceptorThread;
+        if (acceptor != null) {
+            try {
+                acceptor.join(TimeUnit.SECONDS.toMillis(SHUTDOWN_TIMEOUT_SECONDS));
+            } catch (InterruptedException exception) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        if (closeFailure != null) {
+            throw closeFailure;
         }
     }
 }
