@@ -1,6 +1,6 @@
 {
     "platform": {
-        "control": "API",
+        "control": "HYBRID",
         "api": {
             "port": 8765
         }
