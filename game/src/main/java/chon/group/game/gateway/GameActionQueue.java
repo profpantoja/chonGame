@@ -10,7 +10,8 @@ public class GameActionQueue {
 
     public synchronized boolean offer(GameAction action) {
         if ("MOVE".equalsIgnoreCase(action.name())) {
-            actions.removeIf(existing -> "MOVE".equalsIgnoreCase(existing.name()));
+            actions.removeIf(existing -> "MOVE".equalsIgnoreCase(existing.name())
+                    && existing.slotId().equals(action.slotId()));
         }
         if (actions.size() >= MAX_SIZE) {
             return false;
@@ -20,5 +21,9 @@ public class GameActionQueue {
 
     public synchronized GameAction poll() {
         return actions.poll();
+    }
+
+    public synchronized void clear() {
+        actions.clear();
     }
 }

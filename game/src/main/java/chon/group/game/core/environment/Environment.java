@@ -1,9 +1,12 @@
 package chon.group.game.core.environment;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.Entity;
+import chon.group.game.core.agent.TeamType;
 import chon.group.game.messaging.Messenger;
 import chon.group.game.sound.Sound;
 import chon.group.game.sound.SoundEvent;
@@ -123,6 +126,52 @@ public class Environment {
         this.protagonist = protagonist;
         if (camera != null)
             camera.setTarget(protagonist);
+    }
+
+    public List<Agent> getLivingAllies() {
+        List<Agent> allies = new ArrayList<>();
+        if (isAlly(protagonist) && !protagonist.isDead()) {
+            allies.add(protagonist);
+        }
+        if (currentLevel == null) {
+            return allies;
+        }
+        for (Agent agent : currentLevel.getAgents()) {
+            if (agent != protagonist && isAlly(agent) && !agent.isDead()) {
+                allies.add(agent);
+            }
+        }
+        return allies;
+    }
+
+    public boolean hasLivingAllies() {
+        return !getLivingAllies().isEmpty();
+    }
+
+    public Agent findNearestLivingAlly(Entity source) {
+        return getLivingAllies().stream()
+                .min(Comparator.comparingLong(ally -> squaredDistance(source, ally)))
+                .orElse(null);
+    }
+
+    public boolean focusNextLivingAlly() {
+        Agent nextAlly = getLivingAllies().stream().findFirst().orElse(null);
+        if (nextAlly == null || nextAlly == protagonist) {
+            return false;
+        }
+        setProtagonist(nextAlly);
+        return true;
+    }
+
+    private boolean isAlly(Agent agent) {
+        return agent != null && agent.getTeam() != null
+                && agent.getTeam().getType() == TeamType.ALLY;
+    }
+
+    private long squaredDistance(Entity source, Agent target) {
+        long dx = (long) source.getPosX() - target.getPosX();
+        long dy = (long) source.getPosY() - target.getPosY();
+        return dx * dx + dy * dy;
     }
 
     public List<Level> getLevels() {

@@ -7,6 +7,7 @@ import chon.group.game.Game;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.joystick.GameCommand;
 import chon.group.game.joystick.client.ExternalJoystick;
+import chon.group.game.states.PlayableState;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,6 +18,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,10 +35,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * TCP/JSON gateway for agents running outside the game JVM.
  *
  * <p>
- * Every connecting client is given its own {@link ExternalAgentController}: the
- * first connection controls the protagonist, and each subsequent connection
- * controls the next available agent from the current level (slot {@code n}
- * maps to {@code Level.getAgents().get(n - 1)}).
+ * Every connecting MAS client is assigned one available team. Actions identify
+ * the controlled runtime member by entity ID.
  * </p>
  */
 public class GameGateway implements AutoCloseable {
@@ -45,25 +46,29 @@ public class GameGateway implements AutoCloseable {
 
     private final int requestedPort;
     private final ExternalJoystick protagonistJoystick;
+    private final boolean hybridMode;
     private final ObjectMapper mapper = new ObjectMapper();
     private final ExecutorService clients = Executors.newCachedThreadPool();
     private final CopyOnWriteArrayList<ClientSession> connectedClients = new CopyOnWriteArrayList<>();
     private final CopyOnWriteArrayList<ExternalAgentController> controllers = new CopyOnWriteArrayList<>();
-    private final ConcurrentLinkedQueue<ExternalAgentController> pendingBotControllers = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<ExternalAgentController> pendingTeamControllers = new ConcurrentLinkedQueue<>();
     private final ConcurrentHashMap<ExternalAgentController, ClientSession> sessions = new ConcurrentHashMap<>();
-    private final AtomicBoolean protagonistClaimed = new AtomicBoolean(false);
     private final AtomicBoolean closing = new AtomicBoolean(false);
     private final Object lifecycleLock = new Object();
-    private final AtomicInteger nextBotSlot = new AtomicInteger(1);
+    private final AtomicInteger nextControllerSlot = new AtomicInteger();
     private volatile boolean running;
     private volatile ServerSocket serverSocket;
     private volatile Thread acceptorThread;
     private volatile String latestObservation;
-    private volatile GameSnapshotBuilder.GameSnapshot latestSnapshot;
 
     public GameGateway(int port, ExternalJoystick protagonistJoystick) {
+        this(port, protagonistJoystick, false);
+    }
+
+    public GameGateway(int port, ExternalJoystick protagonistJoystick, boolean hybridMode) {
         this.requestedPort = port;
         this.protagonistJoystick = protagonistJoystick;
+        this.hybridMode = hybridMode;
     }
 
     public void start() throws IOException {
@@ -91,7 +96,6 @@ public class GameGateway implements AutoCloseable {
             LOGGER.log(System.Logger.Level.ERROR, "Could not serialize game observation", exception);
             return;
         }
-        latestSnapshot = snapshot;
         for (ClientSession client : connectedClients) {
             client.offerObservation(message);
         }
@@ -140,9 +144,7 @@ public class GameGateway implements AutoCloseable {
                 }
                 control = assignController();
                 controllers.add(control);
-                if (!control.isProtagonist()) {
-                    pendingBotControllers.offer(control);
-                }
+                pendingTeamControllers.offer(control);
                 connectedClients.add(client);
                 sessions.put(control, client);
                 clients.submit(client::writeLatestObservation);
@@ -155,7 +157,15 @@ public class GameGateway implements AutoCloseable {
             while ((line = reader.readLine()) != null) {
                 try {
                     JsonNode message = mapper.readTree(line);
-                    if ("action".equals(message.path("type").asText())) {
+                    String messageType = message.path("type").asText();
+                    if ("join".equals(messageType)) {
+                        List<String> slotIds = new ArrayList<>();
+                        JsonNode slots = message.path("slots");
+                        if (slots.isArray()) {
+                            slots.forEach(slot -> slotIds.add(slot.asText()));
+                        }
+                        control.requestTeam(message.path("teamId").asText(""), slotIds);
+                    } else if ("action".equals(messageType)) {
                         String requestId = message.path("requestId").asText("");
                         String validationError = validateAction(message);
                         if (validationError != null) {
@@ -197,65 +207,50 @@ public class GameGateway implements AutoCloseable {
         }
     }
 
-    /** Assigns the protagonist first, then the nearest unassigned living bot. */
+    /** Creates a controller that is assigned to the next available team by the game thread. */
     private synchronized ExternalAgentController assignController() {
-        if (protagonistClaimed.compareAndSet(false, true)) {
-            return new ExternalAgentController(0, protagonistJoystick, null);
-        }
-        int slot = nextBotSlot.getAndIncrement();
-        return new ExternalAgentController(slot, new ExternalJoystick(), null);
+        return new ExternalAgentController(nextControllerSlot.getAndIncrement());
     }
 
-    private String findNearestAvailableAgentId() {
-        if (latestSnapshot == null || latestSnapshot.self() == null) {
-            return null;
-        }
-
-        String nearestId = null;
-        long nearestDistance = Long.MAX_VALUE;
-        for (GameSnapshotBuilder.EntitySnapshot agent : latestSnapshot.agents()) {
-            if (agent.dead() || isAgentAssigned(agent.id())) {
-                continue;
-            }
-            int dx = agent.x() - latestSnapshot.self().x();
-            int dy = agent.y() - latestSnapshot.self().y();
-            long distance = (long) dx * dx + (long) dy * dy;
-            if (distance < nearestDistance) {
-                nearestDistance = distance;
-                nearestId = agent.id();
-            }
-        }
-        return nearestId;
-    }
-
-    private boolean isAgentAssigned(String agentId) {
+    private boolean isTeamAssigned(String teamId) {
         return controllers.stream()
-                .anyMatch(control -> agentId.equals(control.getAssignedAgentId()));
+                .anyMatch(control -> teamId.equals(control.getTeamId()));
     }
 
     private String helloMessage(ExternalAgentController control) {
-        String role = control.isProtagonist() ? "protagonist" : ("agent-" + control.getSlot());
-        String agentId = control.getAssignedAgentId();
-        return "{\"type\":\"hello\",\"protocolVersion\":1,\"controls\":\""
-            + role + "\",\"controlledAgentId\":"
-            + (agentId == null ? "null" : "\"" + agentId + "\"") + "}";
+        return "{\"type\":\"hello\",\"protocolVersion\":1,\"controls\":\"team-"
+            + control.getSlot() + "\",\"controlledTeamId\":"
+            + (control.getTeamId() == null ? "null" : "\"" + control.getTeamId() + "\"") + "}";
     }
 
     /**
      * Applies queued actions to each client's own joystick. Must only be called
      * from the game thread.
      */
-    public void processPendingActions(long currentTick) {
+    public void processPendingActions(Game game) {
+        long currentTick = game.getTick();
+        if (hybridMode && !(game.getCurrentState() instanceof PlayableState)) {
+            controllers.forEach(ExternalAgentController::discardPendingActions);
+            return;
+        }
         for (ExternalAgentController control : controllers) {
             GameActionQueue queue = control.getActionQueue();
             GameAction action;
+            List<GameAction> teamActions = new ArrayList<>();
             while ((action = queue.poll()) != null) {
                 if (action.expectedTick() >= 0 && action.expectedTick() > currentTick) {
-                    queue.offer(action);
+                    teamActions.add(action);
                     break;
                 }
-                applyExternalAction(control.getJoystick(), action);
+                if (isGlobalAction(action)) {
+                    if (!hybridMode && protagonistJoystick != null) {
+                        applyExternalAction(protagonistJoystick, action);
+                    }
+                } else {
+                    teamActions.add(action);
+                }
             }
+            teamActions.forEach(queue::offer);
         }
     }
 
@@ -265,62 +260,94 @@ public class GameGateway implements AutoCloseable {
      */
     public void updateControlledAgents(Game game) {
         Environment environment = game.getEnvironment();
-        if (environment.getCurrentLevel() != null) {
-            environment.getCurrentLevel().getAgents().forEach(agent -> {
-                if (!agent.isDead()) {
-                    agent.setExternallyControlled(true);
-                    agent.idle();
-                }
-            });
-        }
-        assignPendingBots();
+        assignPendingTeams(environment);
+        boolean playableState = game.getCurrentState() instanceof PlayableState;
         for (ExternalAgentController control : controllers) {
             if (control.isClosed()) {
                 closeController(control);
                 continue;
             }
-            if (control.update(environment)) {
+            if (control.update(environment, hybridMode, playableState)) {
                 closeController(control);
+            }
+            publishControllerEvents(control);
+        }
+    }
+
+    private void publishControllerEvents(ExternalAgentController control) {
+        ClientSession session = sessions.get(control);
+        if (session == null) {
+            control.drainEvents();
+            return;
+        }
+        for (ExternalAgentController.ControllerEvent event : control.drainEvents()) {
+            JsonNode message = mapper.valueToTree(event);
+            try {
+                session.sendControl(mapper.writeValueAsString(message));
+            } catch (IOException exception) {
+                LOGGER.log(System.Logger.Level.WARNING, "Could not publish controller event", exception);
             }
         }
     }
 
-    private void assignPendingBots() {
-        while (true) {
-            ExternalAgentController control = pendingBotControllers.peek();
+    private void assignPendingTeams(Environment environment) {
+        int pendingCount = pendingTeamControllers.size();
+        for (int index = 0; index < pendingCount; index++) {
+            ExternalAgentController control = pendingTeamControllers.poll();
             if (control == null) {
                 return;
             }
             if (control.isClosed()) {
-                pendingBotControllers.poll();
                 continue;
             }
 
-            String assignedAgentId = findNearestAvailableAgentId();
-            if (assignedAgentId == null) {
-                return;
+            String requestedTeamId = control.getRequestedTeamId();
+            if (requestedTeamId == null) {
+                pendingTeamControllers.offer(control);
+                continue;
             }
 
-            pendingBotControllers.poll();
-            control.assignAgent(assignedAgentId);
+            String assignedTeamId = findAvailableTeamId(environment, requestedTeamId);
+            if (assignedTeamId == null) {
+                if (control.markWaitingNotified()) {
+                    ClientSession waitingSession = sessions.get(control);
+                    if (waitingSession != null) {
+                        waitingSession.sendEvent("team_waiting", requestedTeamId);
+                    }
+                }
+                pendingTeamControllers.offer(control);
+                continue;
+            }
+
+            control.assignTeam(assignedTeamId);
             ClientSession session = sessions.get(control);
             if (session != null) {
-                session.sendEvent("agent_assigned", assignedAgentId);
+                session.sendEvent("team_assigned", assignedTeamId);
             }
         }
     }
 
-    private void closeController(ExternalAgentController control) {
-        if (control.isProtagonist()) {
-            control.getJoystick().clear();
-            ClientSession session = sessions.get(control);
-            if (session != null) {
-                session.sendEvent("game_over", "GAME_OVER");
-            }
-            return;
-        } else {
-            control.release();
+    private String findAvailableTeamId(Environment environment, String requestedTeamId) {
+        LinkedHashSet<String> teamIds = new LinkedHashSet<>();
+        if (environment.getProtagonist() != null && environment.getProtagonist().getTeam() != null) {
+            teamIds.add(environment.getProtagonist().getTeam().getId());
         }
+        if (environment.getCurrentLevel() != null) {
+            environment.getCurrentLevel().getAgents().forEach(agent -> {
+                if (agent.getTeam() != null) {
+                    teamIds.add(agent.getTeam().getId());
+                }
+            });
+        }
+        return teamIds.stream()
+            .filter(requestedTeamId::equals)
+            .filter(teamId -> !isTeamAssigned(teamId))
+            .findFirst()
+            .orElse(null);
+    }
+
+    private void closeController(ExternalAgentController control) {
+        control.release();
 
         ClientSession session = sessions.remove(control);
         if (session != null) {
@@ -328,6 +355,14 @@ public class GameGateway implements AutoCloseable {
             session.closeConnection();
         }
         controllers.remove(control);
+    }
+
+    private boolean isGlobalAction(GameAction action) {
+        return switch (action.name().toUpperCase()) {
+            case "CONFIRM", "PAUSE", "MENU_UP", "MENU_DOWN", "MENU_LEFT", "MENU_RIGHT",
+                    "UP", "DOWN", "LEFT", "RIGHT" -> true;
+            default -> false;
+        };
     }
 
     private String validateAction(JsonNode message) {
@@ -338,6 +373,9 @@ public class GameGateway implements AutoCloseable {
                 "UP", "DOWN", "LEFT", "RIGHT").contains(name)) {
             return "UNKNOWN_ACTION";
         }
+        if (hybridMode && isGlobalActionName(name)) {
+            return "GLOBAL_ACTION_DISABLED";
+        }
         if ("MOVE".equals(name)) {
             String direction = action.path("direction").asText("").toUpperCase();
             if (!java.util.Set.of("UP", "DOWN", "LEFT", "RIGHT").contains(direction)) {
@@ -347,11 +385,17 @@ public class GameGateway implements AutoCloseable {
         return null;
     }
 
+    private boolean isGlobalActionName(String name) {
+        return java.util.Set.of("CONFIRM", "PAUSE", "MENU_UP", "MENU_DOWN", "MENU_LEFT", "MENU_RIGHT",
+                "UP", "DOWN", "LEFT", "RIGHT").contains(name);
+    }
+
     private GameAction toGameAction(JsonNode message) {
         JsonNode action = message.path("action");
         return new GameAction(
                 message.path("requestId").asText(""),
                 message.path("agentId").asText(""),
+                message.path("slotId").asText(message.path("agentId").asText("")),
                 message.path("expectedTick").asLong(-1),
                 action.path("name").asText(""),
                 action.path("direction").asText(null));

@@ -4,6 +4,7 @@ import chon.group.game.core.agent.Agent;
 import chon.group.game.core.agent.Direction;
 import chon.group.game.core.agent.Entity;
 import chon.group.game.core.agent.Object;
+import chon.group.game.core.agent.TeamType;
 import chon.group.game.core.environment.behavior.EnvironmentBehavior;
 import chon.group.game.core.weapon.Shot;
 
@@ -169,7 +170,10 @@ public class Level extends Entity {
         if (!reachedLevelEnd) {
             return false;
         }
-        return this.agents.stream().allMatch(Agent::isDead);
+        return this.agents.stream()
+            .filter(agent -> agent.getTeam() != null
+                && agent.getTeam().getType() == TeamType.ENEMY)
+            .allMatch(Agent::isDead);
     }
 
 }

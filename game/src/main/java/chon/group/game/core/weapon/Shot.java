@@ -15,6 +15,7 @@ public abstract class Shot extends Entity {
     private int creationPosX;
     /** Duration in milliseconds that the shot/hit is effectible. */
     private int range = 15;
+    private String sourceTeamId;
 
     public Shot(
             int posX,
@@ -51,6 +52,14 @@ public abstract class Shot extends Entity {
 
     public int getRange() {
         return range;
+    }
+
+    public String getSourceTeamId() {
+        return sourceTeamId;
+    }
+
+    public void setSourceTeamId(String sourceTeamId) {
+        this.sourceTeamId = sourceTeamId;
     }
 
     @Override

@@ -5,8 +5,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.AgentControlOwner;
 import chon.group.game.core.agent.Entity;
 import chon.group.game.core.agent.Object;
+import chon.group.game.core.agent.TeamBehavior;
+import chon.group.game.core.agent.TeamType;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.core.environment.Level;
 import chon.group.game.core.weapon.Shot;
@@ -41,23 +44,36 @@ public abstract class BaseBehavior implements EnvironmentBehavior {
     }
 
     protected void updateAgents(Environment environment) {
-        Agent protagonist = environment.getProtagonist();
         Iterator<Agent> itAgent = environment.getCurrentLevel().getAgents().iterator();
-        /* ChonBot's Automatic Movements */
-        /* Update the other agents' movements */
         while (itAgent.hasNext()) {
             Agent agent = itAgent.next();
             if (agent.canRemove()) {
                 itAgent.remove();
                 continue;
             }
-            /* Externally controlled agents move via ExternalAgentController instead. */
-            if (agent.isExternallyControlled()) {
+            if (agent.getControlOwner() == AgentControlOwner.MAS
+                    || agent.getControlOwner() == AgentControlOwner.LOCAL) {
                 continue;
             }
-            /* Every agent chases the protagonist. */
-            agent.chase(protagonist.getPosX(),
-                    protagonist.getPosY());
+            if (agent.getControlOwner() == AgentControlOwner.DORMANT) {
+                agent.idle();
+                continue;
+            }
+            updateAgentBehavior(agent, environment);
+        }
+    }
+
+    private void updateAgentBehavior(Agent agent, Environment environment) {
+        if (agent.getTeam() == null || agent.getTeam().getBehavior() == TeamBehavior.IDLE) {
+            agent.idle();
+            return;
+        }
+
+        Agent target = agent.getTeam().getType() == TeamType.ENEMY
+                ? environment.findNearestLivingAlly(agent)
+                : environment.getProtagonist();
+        if (target != null && target != agent && !target.isDead()) {
+            agent.chase(target.getPosX(), target.getPosY());
         }
     }
 
@@ -68,7 +84,6 @@ public abstract class BaseBehavior implements EnvironmentBehavior {
 
     protected void updateObjects(Environment environment) {
         Level level = environment.getCurrentLevel();
-        Agent protagonist = environment.getProtagonist();
         Iterator<Object> iterator = level.getObjects().iterator();
         while (iterator.hasNext()) {
             Object object = iterator.next();
@@ -98,10 +113,14 @@ public abstract class BaseBehavior implements EnvironmentBehavior {
             /*
              * Since the object is collectible and collected, it will chase the protagonist.
              */
-            object.follow(protagonist);
+            Agent collector = environment.findNearestLivingAlly(object);
+            if (collector == null) {
+                continue;
+            }
+            object.follow(collector);
             double collectRadius = 20;
-            double dx = object.getPosX() - protagonist.getPosX();
-            double dy = object.getPosY() - protagonist.getPosY();
+            double dx = object.getPosX() - collector.getPosX();
+            double dy = object.getPosY() - collector.getPosY();
             double squaredDistance = dx * dx + dy * dy;
             /**
              * If the radius between the agent and the object is less than 20 pxls then it
@@ -221,7 +240,7 @@ public abstract class BaseBehavior implements EnvironmentBehavior {
                 continue;
             }
             // If it hits an agent.
-            if (intersect(agent, shot)) {
+            if (!isFriendlyFire(shot, agent) && intersect(agent, shot)) {
                 this.applyDamage(agent, shot.getDamage(), environment);
                 itShot.remove();
                 /* If this shot was removed, then move to the next shot. */
@@ -244,7 +263,7 @@ public abstract class BaseBehavior implements EnvironmentBehavior {
          * If any shot intersected the protagonist, the damage is taken, the message
          * system is informed, and the shot is removed.
          */
-        if (intersect(protagonist, shot)) {
+        if (!isFriendlyFire(shot, protagonist) && intersect(protagonist, shot)) {
             this.applyDamage(protagonist, shot.getDamage(), environment);
             itShot.remove();
             return true;
@@ -258,10 +277,8 @@ public abstract class BaseBehavior implements EnvironmentBehavior {
      */
     protected void detectCollision(Environment environment) {
         Level level = environment.getCurrentLevel();
-        Agent protagonist = environment.getProtagonist();
-
         List<Agent> movingAgents = new ArrayList<>();
-        movingAgents.add(protagonist);
+        movingAgents.add(environment.getProtagonist());
         movingAgents.addAll(level.getAgents());
 
         /**
@@ -269,13 +286,14 @@ public abstract class BaseBehavior implements EnvironmentBehavior {
          * verifies if any agents has collided with non-collectible obstacles.
          */
         for (Agent agent : movingAgents) {
-            /* It verifies a live agents vs. protagonist. */
-            if (!agent.isDead())
-                if (protagonist != null
-                        && protagonist != agent
-                        && intersect(protagonist, agent)) {
-                    this.applyDamage(protagonist, 1000, environment);
+            if (!agent.isDead() && agent.getTeam() != null
+                    && agent.getTeam().getType() == TeamType.ENEMY) {
+                for (Agent ally : environment.getLivingAllies()) {
+                    if (intersect(ally, agent)) {
+                        this.applyDamage(ally, 1000, environment);
+                    }
                 }
+            }
             /*
              * It verifies agents vs. obstacles. It verifies if the protagonist has collided
              * with non-collectible obstacles. The collision can only happens with non
@@ -320,18 +338,18 @@ public abstract class BaseBehavior implements EnvironmentBehavior {
      */
     public void checkBorders(Environment environment) {
         Level level = environment.getCurrentLevel();
-        Agent protagonist = environment.getProtagonist();
         int bottomY = level.getBottomY();
         int topY = level.getTopY();
-        if (protagonist.getPosX() < 0)
-            protagonist.setPosX(0);
-        if ((protagonist.getPosX() + protagonist.getWidth()) > level.getWidth())
-            protagonist.setPosX(level.getWidth() - protagonist.getWidth());
-        /* It ensures an internal pre-defined boundary in Y. */
-        if (protagonist.getPosY() < topY)
-            protagonist.setPosY(topY);
-        if (protagonist.getPosY() + protagonist.getHeight() > bottomY)
-            protagonist.setPosY(bottomY - protagonist.getHeight());
+        for (Agent ally : environment.getLivingAllies()) {
+            if (ally.getPosX() < 0)
+                ally.setPosX(0);
+            if ((ally.getPosX() + ally.getWidth()) > level.getWidth())
+                ally.setPosX(level.getWidth() - ally.getWidth());
+            if (ally.getPosY() < topY)
+                ally.setPosY(topY);
+            if (ally.getPosY() + ally.getHeight() > bottomY)
+                ally.setPosY(bottomY - ally.getHeight());
+        }
     }
 
     /**
@@ -386,6 +404,11 @@ public abstract class BaseBehavior implements EnvironmentBehavior {
                 damage,
                 environment.getMessenger().getMessages(),
                 environment.getSounds());
+    }
+
+    private boolean isFriendlyFire(Shot shot, Agent target) {
+        return shot.getSourceTeamId() != null && target.getTeam() != null
+                && shot.getSourceTeamId().equals(target.getTeam().getId());
     }
 
     /**

@@ -4,7 +4,17 @@ package chon.group.game.gateway;
 public record GameAction(
         String requestId,
         String agentId,
+                String slotId,
         long expectedTick,
         String name,
-        String direction) {
+                String direction) {
+
+        public GameAction(
+                        String requestId,
+                        String agentId,
+                        long expectedTick,
+                        String name,
+                        String direction) {
+                this(requestId, agentId, agentId, expectedTick, name, direction);
+        }
 }

@@ -1,12 +1,13 @@
 {
     "platform": {
-        "control": "API",
+        "control": "HYBRID",
         "api": {
             "port": 8765
         }
     },
     "environment": {
         "protagonist": "chonBota",
+        "protagonistTeam": "allies",
         "display": {
             "canvasWidth": 1280,
             "canvasHeight": 780
@@ -754,7 +755,8 @@
     },
     "entities": {
         "agents": {
-            "chonBota": {
+            "definitions": {
+                "chonBota": {
                 "position": {
                     "x": 400,
                     "y": 390
@@ -792,8 +794,86 @@
                     "lancer"
                 ],
                 "defaultWeapon": "lancer"
-            },
-            "chonBot": {
+                },
+                "chonBota1": {
+                    "position": {
+                        "x": 480,
+                        "y": 390
+                    },
+                    "size": {
+                        "width": 90,
+                        "height": 80,
+                        "hitboxRatio": 0.4
+                    },
+                    "stats": {
+                        "speed": 1,
+                        "health": 5000
+                    },
+                    "state": {
+                        "direction": "IDLE",
+                        "flipped": false,
+                        "visibleBars": false
+                    },
+                    "animations": {
+                        "IDLE": "chonBota_idle",
+                        "WALK": "chonBota_walk",
+                        "ATTACK": "chonBota_shooting",
+                        "DAMAGE": "chonBota_hit",
+                        "TERMINATE": "chonBota_dead"
+                    },
+                    "sounds": {
+                        "ATTACK": "chonBota_shot",
+                        "WALK": "chonBota_walk",
+                        "DAMAGE": "chonBota_hit",
+                        "TERMINATE": "chonBota_terminate"
+                    },
+                    "weapons": [
+                        "cannon",
+                        "bareHands",
+                        "lancer"
+                    ],
+                    "defaultWeapon": "lancer"
+                },
+                "chonBota2": {
+                    "position": {
+                        "x": 560,
+                        "y": 390
+                    },
+                    "size": {
+                        "width": 90,
+                        "height": 80,
+                        "hitboxRatio": 0.4
+                    },
+                    "stats": {
+                        "speed": 1,
+                        "health": 5000
+                    },
+                    "state": {
+                        "direction": "IDLE",
+                        "flipped": false,
+                        "visibleBars": false
+                    },
+                    "animations": {
+                        "IDLE": "chonBota_idle",
+                        "WALK": "chonBota_walk",
+                        "ATTACK": "chonBota_shooting",
+                        "DAMAGE": "chonBota_hit",
+                        "TERMINATE": "chonBota_dead"
+                    },
+                    "sounds": {
+                        "ATTACK": "chonBota_shot",
+                        "WALK": "chonBota_walk",
+                        "DAMAGE": "chonBota_hit",
+                        "TERMINATE": "chonBota_terminate"
+                    },
+                    "weapons": [
+                        "cannon",
+                        "bareHands",
+                        "lancer"
+                    ],
+                    "defaultWeapon": "lancer"
+                },
+                "chonBot": {
                 "position": {
                     "x": 920,
                     "y": 440
@@ -818,6 +898,39 @@
                 },
                 "sounds": {
                     "TERMINATE": "chonBota_terminate"
+                }
+                }
+            },
+            "teams": {
+                "allies": {
+                    "type": "ALLY",
+                    "behavior": "FOLLOW",
+                    "agentRefs": [
+                        "chonBota",
+                        "chonBota1",
+                        "chonBota2"
+                    ],
+                    "allowedCommands": [
+                        "UP",
+                        "DOWN",
+                        "LEFT",
+                        "RIGHT",
+                        "ATTACK"
+                    ]
+                },
+                "enemies": {
+                    "type": "ENEMY",
+                    "behavior": "CHASE",
+                    "agentRefs": [
+                        "chonBot"
+                    ],
+                    "allowedCommands": [
+                        "UP",
+                        "DOWN",
+                        "LEFT",
+                        "RIGHT",
+                        "ATTACK"
+                    ]
                 }
             }
         },
@@ -980,7 +1093,24 @@
             },
             "agents": [
                 {
+                    "ref": "chonBota1",
+                    "team": "allies",
+                    "spawn": {
+                        "x": 520,
+                        "y": 390
+                    }
+                },
+                {
+                    "ref": "chonBota2",
+                    "team": "allies",
+                    "spawn": {
+                        "x": 640,
+                        "y": 390
+                    }
+                },
+                {
                     "ref": "chonBot",
+                    "team": "enemies",
                     "spawn": {
                         "x": 920,
                         "y": 440
@@ -988,6 +1118,7 @@
                 },
                 {
                     "ref": "chonBot",
+                    "team": "enemies",
                     "spawn": {
                         "x": 2920,
                         "y": 640
@@ -996,6 +1127,7 @@
                 },
                 {
                     "ref": "chonBot",
+                    "team": "enemies",
                     "spawn": {
                         "x": 4920,
                         "y": 300
@@ -1003,6 +1135,7 @@
                 },
                 {
                     "ref": "chonBot",
+                    "team": "enemies",
                     "spawn": {
                         "x": 6920,
                         "y": 500
@@ -1257,6 +1390,7 @@
             "agents": [
                 {
                     "ref": "chonBot",
+                    "team": "enemies",
                     "spawn": {
                         "x": 920,
                         "y": 440
@@ -1264,6 +1398,7 @@
                 },
                 {
                     "ref": "chonBot",
+                    "team": "enemies",
                     "spawn": {
                         "x": 2920,
                         "y": 640

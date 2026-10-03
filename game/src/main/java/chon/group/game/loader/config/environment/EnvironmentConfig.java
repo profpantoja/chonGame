@@ -11,6 +11,7 @@ import chon.group.game.loader.config.environment.menu.MenuHandlerConfig;
 public class EnvironmentConfig {
 
     private String protagonist;
+    private String protagonistTeam;
     private DisplayConfig display;
     private UiConfig ui;
     private CameraConfig camera;
@@ -26,6 +27,14 @@ public class EnvironmentConfig {
 
     public void setProtagonist(String protagonist) {
         this.protagonist = protagonist;
+    }
+
+    public String getProtagonistTeam() {
+        return protagonistTeam;
+    }
+
+    public void setProtagonistTeam(String protagonistTeam) {
+        this.protagonistTeam = protagonistTeam;
     }
 
     public DisplayConfig getDisplay() {

@@ -26,8 +26,11 @@ public class Agent extends Entity {
     /** The Agent's Weapon */
     private Weapon weapon;
 
-    /** Whether this agent's movement is driven by an external client instead of AI. */
-    private boolean externallyControlled = false;
+    /** Identifies which controller currently owns this agent. */
+    private AgentControlOwner controlOwner = AgentControlOwner.AI;
+
+    /** The team this runtime agent belongs to. */
+    private Team team;
 
     /** The initial agent's energy */
     private double energy;
@@ -91,7 +94,7 @@ public class Agent extends Entity {
      * @return if the agent is externally controlled
      */
     public boolean isExternallyControlled() {
-        return externallyControlled;
+        return controlOwner == AgentControlOwner.MAS;
     }
 
     /**
@@ -100,7 +103,23 @@ public class Agent extends Entity {
      * @param externallyControlled the new externally controlled status
      */
     public void setExternallyControlled(boolean externallyControlled) {
-        this.externallyControlled = externallyControlled;
+        controlOwner = externallyControlled ? AgentControlOwner.MAS : AgentControlOwner.AI;
+    }
+
+    public AgentControlOwner getControlOwner() {
+        return controlOwner;
+    }
+
+    public void setControlOwner(AgentControlOwner controlOwner) {
+        this.controlOwner = controlOwner;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 
     /**
@@ -242,6 +261,9 @@ public class Agent extends Entity {
         if (shot != null) {
             this.setStatus(EntityStatus.ATTACK);
             this.consumeEnergy(this.weapon.getEnergyCost());
+            if (this.team != null) {
+                shot.setSourceTeamId(this.team.getId());
+            }
         }
         return shot;
     }
@@ -262,6 +284,7 @@ public class Agent extends Entity {
         copy.setStatus(this.getStatus());
         copy.setAnimationSet(this.getAnimationSet());
         copy.setSoundSet(this.getSoundSet());
+        copy.setTeam(this.team);
         copy.getAnimationState().setCurrentAnimation(this.getAnimationState().getCurrentAnimation());
         return copy;
     }

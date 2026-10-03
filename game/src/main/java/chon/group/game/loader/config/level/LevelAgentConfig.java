@@ -5,6 +5,7 @@ import chon.group.game.loader.config.entity.agent.PositionConfig;
 public class LevelAgentConfig {
 
     private String ref;
+    private String team;
     private PositionConfig spawn;
     private Boolean visibleBars;
 
@@ -14,6 +15,14 @@ public class LevelAgentConfig {
 
     public void setRef(String ref) {
         this.ref = ref;
+    }
+
+    public String getTeam() {
+        return team;
+    }
+
+    public void setTeam(String team) {
+        this.team = team;
     }
 
     public PositionConfig getSpawn() {

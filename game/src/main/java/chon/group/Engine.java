@@ -17,6 +17,7 @@ import javafx.stage.Stage;
  */
 public class Engine extends Application {
 
+    private static final long OBSERVATION_INTERVAL_NANOS = 100_000_000L;
     private static final System.Logger LOGGER = System.getLogger(Engine.class.getName());
 
     private final GameSnapshotBuilder snapshotBuilder = new GameSnapshotBuilder();
@@ -53,19 +54,20 @@ public class Engine extends Application {
 
             // Start the game loop
             AnimationTimer timer = new AnimationTimer() {
+                private long lastObservationNanos;
+
                 public void handle(long now) {
                     try {
                         if (gateway != null) {
-                            gateway.processPendingActions(chonGame.getTick());
+                            gateway.processPendingActions(chonGame);
                             gateway.updateControlledAgents(chonGame);
                         }
                         chonGame.loop();
 
-                        var snapshot = snapshotBuilder.build(
-                                chonGame,
-                                chonGame.getTick());
-
-                        if (gateway != null) {
+                        if (gateway != null
+                                && now - lastObservationNanos >= OBSERVATION_INTERVAL_NANOS) {
+                            lastObservationNanos = now;
+                            var snapshot = snapshotBuilder.build(chonGame, chonGame.getTick());
                             gateway.publish(snapshot);
                         }
                     } catch (RuntimeException exception) {
