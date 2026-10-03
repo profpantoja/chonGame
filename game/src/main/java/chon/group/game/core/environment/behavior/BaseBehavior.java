@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import chon.group.game.core.agent.Agent;
+import chon.group.game.core.agent.AgentControlOwner;
 import chon.group.game.core.agent.Entity;
 import chon.group.game.core.agent.Object;
 import chon.group.game.core.agent.TeamBehavior;
@@ -50,8 +51,12 @@ public abstract class BaseBehavior implements EnvironmentBehavior {
                 itAgent.remove();
                 continue;
             }
-            /* Externally controlled agents move via ExternalAgentController instead. */
-            if (agent.isExternallyControlled()) {
+            if (agent.getControlOwner() == AgentControlOwner.MAS
+                    || agent.getControlOwner() == AgentControlOwner.LOCAL) {
+                continue;
+            }
+            if (agent.getControlOwner() == AgentControlOwner.DORMANT) {
+                agent.idle();
                 continue;
             }
             updateAgentBehavior(agent, environment);
