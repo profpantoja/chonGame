@@ -44,6 +44,7 @@ public class GameSnapshotBuilder {
         return new EntitySnapshot(
                 entity.getId(),
                 entity.getClass().getSimpleName(),
+                entity instanceof Agent agent && agent.getTeam() != null ? agent.getTeam().getId() : null,
                 entity.getPosX(),
                 entity.getPosY(),
                 entity.getWidthOffset(),
@@ -81,6 +82,7 @@ public class GameSnapshotBuilder {
     public record EntitySnapshot(
             String id,
             String kind,
+            String teamId,
             int x,
             int y,
             int width,
