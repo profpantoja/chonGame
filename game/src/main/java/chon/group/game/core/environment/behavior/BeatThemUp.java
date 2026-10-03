@@ -54,7 +54,7 @@ public class BeatThemUp extends BaseBehavior {
     }
 
     protected void recoverEnergy(Environment environment) {
-        environment.getProtagonist().recoverEnergy();
+        environment.getLivingAllies().forEach(Agent::recoverEnergy);
     }
 
 }

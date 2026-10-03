@@ -21,6 +21,10 @@ public class PlayableState implements GameState {
         if (this.handlePause(game))
             return;
 
+        if (game.getEnvironment().getProtagonist().isExternallyControlled()) {
+            return;
+        }
+
         /** The protagonist Shoots Somebody Who Outdrew You */
         /** But only if it has enough energy */
         if (this.handleAttack(game))
@@ -33,8 +37,6 @@ public class PlayableState implements GameState {
     public void update(Game game) {
         /* It caches the environmen, the current level and the protagonist. */
         Environment environment = game.getEnvironment();
-        Level currentLevel = environment.getCurrentLevel();
-        Agent protagonist = environment.getProtagonist();
         /* Updating the Game Components. */
         /* It updates the entire environment based on the level behavior (physics). */
         this.updateEnvironment(environment);
@@ -42,7 +44,7 @@ public class PlayableState implements GameState {
         if (this.updateState(game))
             return;
         /* It animates the game's components. */
-        this.animate(game, currentLevel, protagonist);
+        this.animate(game, environment.getCurrentLevel(), environment.getProtagonist());
     }
 
     @Override
@@ -54,13 +56,13 @@ public class PlayableState implements GameState {
     private boolean updateState(Game game) {
         Environment environment = game.getEnvironment();
         Level currentLevel = environment.getCurrentLevel();
-        Agent protagonist = environment.getProtagonist();
-        /* If the agent died in this loop, the state changes. */
-        if (protagonist.isDead()) {
+        if (!environment.hasLivingAllies()) {
             game.getMenu().openGameOver();
-            /* If the agent dies, the game moves to the Game Over state. */
             game.setCurrentState(new GameOverState());
             return true;
+        }
+        if (environment.getProtagonist().isDead()) {
+            environment.focusNextLivingAlly();
         }
         if (game.isGameCompleted()) {
             game.getMenu().openWin();
