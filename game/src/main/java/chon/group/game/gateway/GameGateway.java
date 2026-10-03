@@ -7,6 +7,7 @@ import chon.group.game.Game;
 import chon.group.game.core.environment.Environment;
 import chon.group.game.joystick.GameCommand;
 import chon.group.game.joystick.client.ExternalJoystick;
+import chon.group.game.states.PlayableState;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,6 +46,7 @@ public class GameGateway implements AutoCloseable {
 
     private final int requestedPort;
     private final ExternalJoystick protagonistJoystick;
+    private final boolean hybridMode;
     private final ObjectMapper mapper = new ObjectMapper();
     private final ExecutorService clients = Executors.newCachedThreadPool();
     private final CopyOnWriteArrayList<ClientSession> connectedClients = new CopyOnWriteArrayList<>();
@@ -60,8 +62,13 @@ public class GameGateway implements AutoCloseable {
     private volatile String latestObservation;
 
     public GameGateway(int port, ExternalJoystick protagonistJoystick) {
+        this(port, protagonistJoystick, false);
+    }
+
+    public GameGateway(int port, ExternalJoystick protagonistJoystick, boolean hybridMode) {
         this.requestedPort = port;
         this.protagonistJoystick = protagonistJoystick;
+        this.hybridMode = hybridMode;
     }
 
     public void start() throws IOException {
@@ -152,7 +159,12 @@ public class GameGateway implements AutoCloseable {
                     JsonNode message = mapper.readTree(line);
                     String messageType = message.path("type").asText();
                     if ("join".equals(messageType)) {
-                        control.requestTeam(message.path("teamId").asText(""));
+                        List<String> slotIds = new ArrayList<>();
+                        JsonNode slots = message.path("slots");
+                        if (slots.isArray()) {
+                            slots.forEach(slot -> slotIds.add(slot.asText()));
+                        }
+                        control.requestTeam(message.path("teamId").asText(""), slotIds);
                     } else if ("action".equals(messageType)) {
                         String requestId = message.path("requestId").asText("");
                         String validationError = validateAction(message);
@@ -215,7 +227,12 @@ public class GameGateway implements AutoCloseable {
      * Applies queued actions to each client's own joystick. Must only be called
      * from the game thread.
      */
-    public void processPendingActions(long currentTick) {
+    public void processPendingActions(Game game) {
+        long currentTick = game.getTick();
+        if (hybridMode && !(game.getCurrentState() instanceof PlayableState)) {
+            controllers.forEach(ExternalAgentController::discardPendingActions);
+            return;
+        }
         for (ExternalAgentController control : controllers) {
             GameActionQueue queue = control.getActionQueue();
             GameAction action;
@@ -226,7 +243,9 @@ public class GameGateway implements AutoCloseable {
                     break;
                 }
                 if (isGlobalAction(action)) {
-                    applyExternalAction(protagonistJoystick, action);
+                    if (!hybridMode && protagonistJoystick != null) {
+                        applyExternalAction(protagonistJoystick, action);
+                    }
                 } else {
                     teamActions.add(action);
                 }
@@ -242,39 +261,64 @@ public class GameGateway implements AutoCloseable {
     public void updateControlledAgents(Game game) {
         Environment environment = game.getEnvironment();
         assignPendingTeams(environment);
+        boolean playableState = game.getCurrentState() instanceof PlayableState;
         for (ExternalAgentController control : controllers) {
             if (control.isClosed()) {
                 closeController(control);
                 continue;
             }
-            if (control.update(environment)) {
+            if (control.update(environment, hybridMode, playableState)) {
                 closeController(control);
+            }
+            publishControllerEvents(control);
+        }
+    }
+
+    private void publishControllerEvents(ExternalAgentController control) {
+        ClientSession session = sessions.get(control);
+        if (session == null) {
+            control.drainEvents();
+            return;
+        }
+        for (ExternalAgentController.ControllerEvent event : control.drainEvents()) {
+            JsonNode message = mapper.valueToTree(event);
+            try {
+                session.sendControl(mapper.writeValueAsString(message));
+            } catch (IOException exception) {
+                LOGGER.log(System.Logger.Level.WARNING, "Could not publish controller event", exception);
             }
         }
     }
 
     private void assignPendingTeams(Environment environment) {
-        while (true) {
-            ExternalAgentController control = pendingTeamControllers.peek();
+        int pendingCount = pendingTeamControllers.size();
+        for (int index = 0; index < pendingCount; index++) {
+            ExternalAgentController control = pendingTeamControllers.poll();
             if (control == null) {
                 return;
             }
             if (control.isClosed()) {
-                pendingTeamControllers.poll();
                 continue;
             }
 
             String requestedTeamId = control.getRequestedTeamId();
             if (requestedTeamId == null) {
-                return;
+                pendingTeamControllers.offer(control);
+                continue;
             }
 
             String assignedTeamId = findAvailableTeamId(environment, requestedTeamId);
             if (assignedTeamId == null) {
-                return;
+                if (control.markWaitingNotified()) {
+                    ClientSession waitingSession = sessions.get(control);
+                    if (waitingSession != null) {
+                        waitingSession.sendEvent("team_waiting", requestedTeamId);
+                    }
+                }
+                pendingTeamControllers.offer(control);
+                continue;
             }
 
-            pendingTeamControllers.poll();
             control.assignTeam(assignedTeamId);
             ClientSession session = sessions.get(control);
             if (session != null) {
@@ -329,6 +373,9 @@ public class GameGateway implements AutoCloseable {
                 "UP", "DOWN", "LEFT", "RIGHT").contains(name)) {
             return "UNKNOWN_ACTION";
         }
+        if (hybridMode && isGlobalActionName(name)) {
+            return "GLOBAL_ACTION_DISABLED";
+        }
         if ("MOVE".equals(name)) {
             String direction = action.path("direction").asText("").toUpperCase();
             if (!java.util.Set.of("UP", "DOWN", "LEFT", "RIGHT").contains(direction)) {
@@ -338,11 +385,17 @@ public class GameGateway implements AutoCloseable {
         return null;
     }
 
+    private boolean isGlobalActionName(String name) {
+        return java.util.Set.of("CONFIRM", "PAUSE", "MENU_UP", "MENU_DOWN", "MENU_LEFT", "MENU_RIGHT",
+                "UP", "DOWN", "LEFT", "RIGHT").contains(name);
+    }
+
     private GameAction toGameAction(JsonNode message) {
         JsonNode action = message.path("action");
         return new GameAction(
                 message.path("requestId").asText(""),
                 message.path("agentId").asText(""),
+                message.path("slotId").asText(message.path("agentId").asText("")),
                 message.path("expectedTick").asLong(-1),
                 action.path("name").asText(""),
                 action.path("direction").asText(null));
