@@ -59,7 +59,7 @@ public class Engine extends Application {
                 public void handle(long now) {
                     try {
                         if (gateway != null) {
-                            gateway.processPendingActions(chonGame.getTick());
+                            gateway.processPendingActions(chonGame);
                             gateway.updateControlledAgents(chonGame);
                         }
                         chonGame.loop();

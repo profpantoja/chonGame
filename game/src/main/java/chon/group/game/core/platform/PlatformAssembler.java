@@ -16,9 +16,12 @@ public class PlatformAssembler {
         builder.buildJoystick(joystick);
         builder.buildSoundPlayer();
         Platform platform = builder.build();
-        if (joystick instanceof ExternalJoystick externalJoystick) {
+        if (control == ControlType.API || control == ControlType.HYBRID) {
+            ExternalJoystick externalJoystick = joystick instanceof ExternalJoystick
+                    ? (ExternalJoystick) joystick
+                    : null;
             platform.setGateway(
-                    new GameGateway(apiPort, externalJoystick));
+                    new GameGateway(apiPort, externalJoystick, control == ControlType.HYBRID));
         }
         return platform;
     }
