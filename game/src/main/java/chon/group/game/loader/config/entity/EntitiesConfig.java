@@ -2,14 +2,14 @@ package chon.group.game.loader.config.entity;
 
 import java.util.Map;
 
-import chon.group.game.loader.config.entity.agent.AgentConfig;
+import chon.group.game.loader.config.entity.agent.AgentCatalogConfig;
 import chon.group.game.loader.config.entity.object.ObjectConfig;
 import chon.group.game.loader.config.entity.weapon.ShotConfig;
 import chon.group.game.loader.config.entity.weapon.WeaponConfig;
 
 public class EntitiesConfig {
 
-    private Map<String, AgentConfig> agents;
+    private AgentCatalogConfig agents;
 
     private Map<String, ObjectConfig> objects;
 
@@ -20,11 +20,11 @@ public class EntitiesConfig {
     public EntitiesConfig() {
     }
 
-    public Map<String, AgentConfig> getAgents() {
+    public AgentCatalogConfig getAgents() {
         return agents;
     }
 
-    public void setAgents(Map<String, AgentConfig> agents) {
+    public void setAgents(AgentCatalogConfig agents) {
         this.agents = agents;
     }
 

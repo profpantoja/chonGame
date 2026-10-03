@@ -26,6 +26,7 @@ import chon.group.game.loader.factory.ObjectFactory;
 import chon.group.game.loader.factory.ScreenFactory;
 import chon.group.game.loader.factory.ShotFactory;
 import chon.group.game.loader.factory.SoundFactory;
+import chon.group.game.loader.factory.TeamFactory;
 import chon.group.game.loader.factory.WeaponFactory;
 import chon.group.game.menu.MenuHandler;
 import chon.group.game.sound.Sound;
@@ -75,9 +76,11 @@ public class GameLoader {
 
     public Agent createProtagonist() {
         String protagonistId = this.game.getEnvironment().getProtagonist();
-        AgentConfig agentConfig = this.game.getEntities().getAgents().get(protagonistId);
-        AgentFactory agentFactory = new AgentFactory(animations, sounds, weapons);
-        return agentFactory.create(protagonistId, agentConfig);
+        AgentConfig agentConfig = this.game.getEntities().getAgents().getDefinitions().get(protagonistId);
+        return createTeamFactory().createAgent(
+            protagonistId,
+            agentConfig,
+            this.game.getEnvironment().getProtagonistTeam());
     }
 
     public Environment createEnvironment() {
@@ -132,11 +135,8 @@ public class GameLoader {
         LevelFactory factory = new LevelFactory(
                 this.animations,
                 this.sounds,
-                game.getEntities().getAgents(),
-                new AgentFactory(
-                        this.animations,
-                        this.sounds,
-                        this.weapons),
+            game.getEntities().getAgents().getDefinitions(),
+                createTeamFactory(),
                 game.getEntities().getObjects(),
                 new ObjectFactory(this.animations, this.sounds));
         return factory.build(levelConfigs.get(index));
@@ -146,14 +146,17 @@ public class GameLoader {
         return new LevelFactory(
                 this.animations,
                 this.sounds,
-                game.getEntities().getAgents(),
-                new AgentFactory(
-                        this.animations,
-                        this.sounds,
-                        this.weapons),
+            game.getEntities().getAgents().getDefinitions(),
+                createTeamFactory(),
                 game.getEntities().getObjects(),
                 new ObjectFactory(this.animations, this.sounds))
                 .buildAll(this.game.getLevels());
+    }
+
+    private TeamFactory createTeamFactory() {
+        return new TeamFactory(
+                this.game.getEntities().getAgents().getTeams(),
+                new AgentFactory(this.animations, this.sounds, this.weapons));
     }
 
 }

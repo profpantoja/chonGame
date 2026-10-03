@@ -25,7 +25,7 @@ public class LevelFactory {
     private final Map<String, Animation> animations;
     private final Map<String, Sound> sounds;
     private final Map<String, AgentConfig> agentConfigs;
-    private final AgentFactory agentFactory;
+    private final TeamFactory teamFactory;
     private final Map<String, ObjectConfig> objectConfigs;
     private final ObjectFactory objectFactory;
 
@@ -33,13 +33,13 @@ public class LevelFactory {
             Map<String, Animation> animations,
             Map<String, Sound> sounds,
             Map<String, AgentConfig> agentConfigs,
-            AgentFactory agentFactory,
+            TeamFactory teamFactory,
             Map<String, ObjectConfig> objectConfigs,
             ObjectFactory objectFactory) {
         this.animations = animations;
         this.sounds = sounds;
         this.agentConfigs = agentConfigs;
-        this.agentFactory = agentFactory;
+        this.teamFactory = teamFactory;
         this.objectConfigs = objectConfigs;
         this.objectFactory = objectFactory;
     }
@@ -134,7 +134,8 @@ public class LevelFactory {
                         "Agent config not found: " + agentInstance.getRef());
             }
 
-            Agent agent = agentFactory.create(agentInstance.getRef(), baseConfig);
+                Agent agent = teamFactory.createAgent(
+                    agentInstance.getRef(), baseConfig, agentInstance.getTeam());
 
             agent.setPosX(agentInstance.getSpawn().getX());
             agent.setPosY(agentInstance.getSpawn().getY());

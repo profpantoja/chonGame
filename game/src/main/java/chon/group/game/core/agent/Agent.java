@@ -29,6 +29,9 @@ public class Agent extends Entity {
     /** Whether this agent's movement is driven by an external client instead of AI. */
     private boolean externallyControlled = false;
 
+    /** The team this runtime agent belongs to. */
+    private Team team;
+
     /** The initial agent's energy */
     private double energy;
 
@@ -101,6 +104,14 @@ public class Agent extends Entity {
      */
     public void setExternallyControlled(boolean externallyControlled) {
         this.externallyControlled = externallyControlled;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 
     /**
@@ -242,6 +253,9 @@ public class Agent extends Entity {
         if (shot != null) {
             this.setStatus(EntityStatus.ATTACK);
             this.consumeEnergy(this.weapon.getEnergyCost());
+            if (this.team != null) {
+                shot.setSourceTeamId(this.team.getId());
+            }
         }
         return shot;
     }
@@ -262,6 +276,7 @@ public class Agent extends Entity {
         copy.setStatus(this.getStatus());
         copy.setAnimationSet(this.getAnimationSet());
         copy.setSoundSet(this.getSoundSet());
+        copy.setTeam(this.team);
         copy.getAnimationState().setCurrentAnimation(this.getAnimationState().getCurrentAnimation());
         return copy;
     }
