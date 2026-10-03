@@ -26,8 +26,8 @@ public class Agent extends Entity {
     /** The Agent's Weapon */
     private Weapon weapon;
 
-    /** Whether this agent's movement is driven by an external client instead of AI. */
-    private boolean externallyControlled = false;
+    /** Identifies which controller currently owns this agent. */
+    private AgentControlOwner controlOwner = AgentControlOwner.AI;
 
     /** The team this runtime agent belongs to. */
     private Team team;
@@ -94,7 +94,7 @@ public class Agent extends Entity {
      * @return if the agent is externally controlled
      */
     public boolean isExternallyControlled() {
-        return externallyControlled;
+        return controlOwner == AgentControlOwner.MAS;
     }
 
     /**
@@ -103,7 +103,15 @@ public class Agent extends Entity {
      * @param externallyControlled the new externally controlled status
      */
     public void setExternallyControlled(boolean externallyControlled) {
-        this.externallyControlled = externallyControlled;
+        controlOwner = externallyControlled ? AgentControlOwner.MAS : AgentControlOwner.AI;
+    }
+
+    public AgentControlOwner getControlOwner() {
+        return controlOwner;
+    }
+
+    public void setControlOwner(AgentControlOwner controlOwner) {
+        this.controlOwner = controlOwner;
     }
 
     public Team getTeam() {
